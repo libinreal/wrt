@@ -1,0 +1,76 @@
+<!-- $Id: bill_notice_list.htm 2014-09-13 xy $ -->
+
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js,../js/WebCalendar.js"}
+
+<!-- 商品搜索 -->
+<div class="form-div">
+    <form action="javascript:searchBill_notice()" name="searchForm" >
+        <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+        {$lang.cusName}：<input type="text" name="keyword" id="keyword" />
+        {$lang.billEndDate}：{$lang.starttime}<input type="text" maxlength="100" name="starttime" size="18"  onclick="SelectDate(this,'yyyy-MM-dd hh:mm',0,-60)" readonly="true" style="cursor:pointer" />
+        {$lang.endtime}<input type="text" maxlength="100" name="endtime" size="18"  onclick="SelectDate(this,'yyyy-MM-dd hh:mm',0,-60)" readonly="true" style="cursor:pointer" />
+        <input type="submit" value="{$lang.button_search}" class="button" />
+    </form>
+</div>
+
+<form method="POST" action="" name="listForm">
+    <!-- start cat list -->
+    <div class="list-div" id="listDiv">
+        {/if}
+
+        <table cellspacing='1' cellpadding='3' id='list-table'>
+            <tr>
+                <th><a href="javascript:listTable.sort('id'); ">{$lang.id}</a>{$sort_id}</th>
+                <th>{$lang.cusName}</th>
+                <th>{$lang.billFnum}</th>
+                <th>{$lang.billNo}</th>
+                <th>{$lang.billAmt}</th>
+                <th><a href="javascript:listTable.sort('billStrDate'); ">{$lang.billStrDate}</a>{$sort_billStrDate}</th>
+                <th><a href="javascript:listTable.sort('billEndDate'); ">{$lang.billEndDate}</a>{$sort_billEndDate}</th>
+            </tr>
+            {foreach from=$bill_notice_list item=list}
+            <tr>
+                <td align="center"><span>{$list.id}</span></td>
+                <td align="center"><span>{$list.user_name}</span></td>
+                <td align="center"><span>{$list.billFnum}</span></td>
+                <td align="center"><span>{$list.billNO}</span></td>
+                <td align="center"><span>{$list.billAmt}</span></td>
+                <td align="center"><span>{$list.billStrDate}</span></td>
+                <td align="center"><span>{$list.billEndDate}</span></td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="11">{$lang.no_bill_notice}</td></tr>
+            {/foreach}
+            <tr>
+                <td align="right" nowrap="true" colspan="11">{include file="page.htm"}</td>
+            </tr>
+        </table>
+
+        {if $full_page}
+    </div>
+</form>
+
+<!-- end cat list -->
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+
+    {foreach from=$filter item=item key=key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+
+
+function searchBill_notice()
+{
+    listTable.filter.keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter.starttime = Utils.trim(document.forms['searchForm'].elements['starttime'].value);
+    listTable.filter.endtime = Utils.trim(document.forms['searchForm'].elements['endtime'].value);
+    listTable.filter.page = 1;
+    listTable.loadList();
+}
+
+</script>
+{include file="pagefooter.htm"}
+{/if}

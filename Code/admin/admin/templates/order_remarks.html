@@ -1,0 +1,58 @@
+{include file="pageheader.htm"}
+{insert_scripts files="topbar.js,../js/utils.js,listtable.js,selectzone.js,../js/common.js"}
+
+<form id="myform" action="order.php?act=remarks_save" method="post" name="theForm">
+    <input name="order_id" type="hidden" value="{$order.order_id}"/>
+    <div class="list-div">
+        <table width="100%" cellpadding="3" cellspacing="1">
+            <tr>
+                <th colspan="2">{$lang.order_info}</th>
+            </tr>
+            <tr>
+                <th width="120">{$lang.label_order_sn}</th>
+                <td>{$order.order_sn}</td>
+            </tr>
+            <tr>
+                <th width="120">{$lang.label_all_status}</th>
+                <td>{$lang.os[$order.order_status]}</td>
+            </tr>
+            <tr>
+                <th width="120">{$lang.label_consignee}</th>
+                <td>{$order.consignee}</td>
+            </tr>
+            <tr>
+                <th width="120">{$lang.label_address}</th>
+                <td>{$order.address}</td>
+            </tr>
+            <tr>
+                <th width="120">{$lang.label_postscript}</th>
+                <td><textarea name="postscript" id="postscript" cols="60" rows="3">{$order.postscript}</textarea>
+                    {$lang.require_field}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" class="button send" value="{$lang.label_submit}"/></td>
+            </tr>
+        </table>
+    </div>
+</form>
+
+<script language="JavaScript">
+    {literal}
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+    $('.send').click(function(e){
+        e.preventDefault();
+        if($('#myform').find('textarea').val()) {
+            $('#myform').submit();
+        }else {
+            alert('订单备注必须填写');
+        }
+    });
+    {/literal}
+</script>
+
+{include file="pagefooter.htm"}

@@ -1,0 +1,584 @@
+body{
+	/*width: 1024px;*/
+	height: 768px;
+	margin:  0 auto;
+    font: .24rem/1.5 Arial, "Microsoft Yahei";
+	color: #595959;
+	background-color: #dcdcdc;
+	background-image: url(../images/help-ipad/bg.png);
+	background-size: 100% auto;
+	background-position: top center;
+}
+a:link, a:hover, a:visited, a:active {
+    color: #595959;
+    text-decoration: none;
+}
+.header{
+	display: none;
+	height: .88rem;
+	border-bottom: 1px solid #c5c5c5;
+	background-color: #fafafa;
+}
+
+/* help center */
+.help-nav{
+	width: 10.8rem;
+	height: 6.73rem;
+	margin: 2.84rem auto 0;
+}
+.help-nav-item{
+	float: left;
+	display: inline-block;
+	width: 3.04rem;
+	height: 3.04rem;
+	margin-left: .84rem;
+	margin-bottom: .65rem;
+	border-radius: .22rem;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: auto 1.78rem;
+}
+.help-nav-item1{
+	margin-left: 0;
+	background-color: #00a651;
+	background-image: url(../images/help-ipad/nav-1.png);
+}
+.help-nav-item2{
+	background-color: #47b488;
+	background-image: url(../images/help-ipad/nav-2.png);
+}
+.help-nav-item3{
+	background-color: #00a99d;
+	background-image: url(../images/help-ipad/nav-3.png);
+}
+.help-nav-item4{
+	margin-left: 0;
+	background-color: #128dbb;
+	background-image: url(../images/help-ipad/nav-4.png);
+}
+.help-nav-item5{
+	background-color: #2fbedb;
+	background-image: url(../images/help-ipad/nav-5.png);
+}
+.help-nav-item6{
+	background-color: #7cb234;
+	background-image: url(../images/help-ipad/nav-6.png);
+}
+
+/* help center self */
+.self-nav{
+	width: 16.82rem;
+	height: 6.54rem;
+	margin: 2.42rem auto 0;
+}
+.self-nav-item{
+	float: left;
+	display: inline-block;
+	width: 2.98rem;
+	height: 2.98rem;
+	margin-left: .48rem;
+	margin-bottom: .59rem;
+	border-radius: .22rem;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: auto 100%;
+}
+.self-nav-item1{
+	margin-left: 0;
+	background-image: url(../images/help-ipad/self-1.png);
+}
+.self-nav-item2{
+	background-image: url(../images/help-ipad/self-2.png);
+}
+.self-nav-item3{
+	background-image: url(../images/help-ipad/self-3.png);
+}
+.self-nav-item4{
+	background-image: url(../images/help-ipad/self-4.png);
+}
+.self-nav-item5{
+	background-image: url(../images/help-ipad/self-5.png);
+}
+.self-nav-item6{
+	margin-left: 0;
+	background-image: url(../images/help-ipad/self-6.png);
+}
+.self-nav-item7{
+	background-image: url(../images/help-ipad/self-7.png);
+}
+.self-nav-item8{
+	background-image: url(../images/help-ipad/self-8.png);
+}
+.self-nav-item9{
+	background-image: url(../images/help-ipad/self-9.png);
+}
+.self-nav-item10{
+	background-image: url(../images/help-ipad/self-10.png);
+}
+
+/* help center maunal */
+.manual{
+	width: 8.3rem;
+	height: 100%;
+	margin: 0 auto;
+	color: #4b4b4b;
+	background-image: url(../images/help-ipad/manual-bg.png);
+	background-size: 100% auto;
+	background-repeat: repeat-y;
+}
+.manual-item{
+	height: 1.79rem;
+	margin-bottom: .75rem;
+}
+.manual-item:first-child{
+	padding-top: 1.46rem;
+}
+.manual-icon{
+	display: block;
+	float: left;
+	width: 1.79rem;
+	height: 1.79rem;
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 100% auto;
+}
+.manual-icon1{
+	background-image: url(../images/help-ipad/manual-1.png);
+}
+.manual-icon2{
+	background-image: url(../images/help-ipad/manual-2.png);
+}
+.manual-icon3{
+	background-image: url(../images/help-ipad/manual-3.png);
+}
+.manual-icon4{
+	background-image: url(../images/help-ipad/manual-4.png);
+}
+.manual-content{
+	float: right;
+	width: 5.94rem;
+}
+.manual-content h3{
+	padding-top: .36rem;
+	font-size: .36rem;
+}
+.manual-content h3 span{
+	font-size: .3rem;
+}
+.manual-content p{
+	padding-top: .1rem;
+	font-size: .3rem;
+}
+/*.dialog {
+	width: 635px;
+	display: none;
+	-webkit-box-shadow: 0px 0px 25px 10px #737373;
+	-moz-box-shadow: 0px 0px 25px 10px #737373;
+	box-shadow: 0px 0px 25px 10px #737373;
+	margin: auto;
+	border: none;
+	border-radius: 11px;
+	z-index: 99;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-left: -271px;
+	margin-top: -215px;
+	background-color: white;
+}
+.dialog >.dialog-head{
+	border-top-right-radius: 10px;
+	border-top-left-radius: 10px;
+	background-color: #575859;
+	height: 38px;
+	text-align: center;
+	line-height: 38px;
+	position: relative;
+	border: 1px solid #616162;
+	border-bottom: none;
+}
+.dialog >.dialog-head>.dialog-back{
+	position: absolute;
+	left: 15px;
+	color: white;
+	cursor: pointer;
+}
+.dialog >.dialog-head>.dialog-close{
+	position: absolute;
+	right: 15px;
+	color: white;
+	cursor: pointer;
+}
+.dialog >.dialog-head>.dialog-title{
+	font-size: 15px;
+	color: white;
+	margin: auto;
+}
+.dialog >.dialog-content{
+	border-bottom-right-radius: 10px;
+	border-bottom-left-radius: 10px;
+	border: 1px solid #949494;
+}
+
+.suggest-from{
+	padding:36px;
+	padding-top: 34px;
+}
+.input-group{
+	margin-bottom: 18px;
+}
+.input-group >*{
+	display: inline-block;
+}
+.input-group >label{
+	width: 95px;
+	text-align: right;
+	margin-right: 10px;
+}
+.input-v >label{
+	height: 34px;
+	line-height: 34px;
+}
+.input-group >label>span{
+	color: red;
+}
+.input-group .input-radio>label{
+	margin-right: 30px; 
+}
+.input-group .input-radio>label>input[type="radio"]{
+	width: 15px;
+	height: 15px;
+	border: none;
+	margin-top: -2px;
+	-webkit-appearance: none;
+	background-image: url(../images/login/checkbox_off_a.png);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100% auto;
+	outline: none;
+	margin-right: 5px; 
+}
+.input-group .input-radio>label>input[type="radio"]:checked{
+	background-image: url(../images/login/checkbox_on_a.png);
+}
+.input-group >input[type="text"],.input-group >textarea,.input-group >select{
+	border: 2px solid #cacaca;
+}
+.input-group >input[type="text"],.input-group >select{
+	padding: 10px;
+}
+.input-group >.suggest-content{
+	width: 370px;
+	height: 132px;
+	resize: none;
+	padding: 10px;
+}
+.input-group >.order{
+	width: 222px;
+	height: 12px;
+	padding: 10px;
+}
+.from-btn{
+	text-align: center;
+}
+.top-line{
+	border-top: 1px solid #cacaca;
+	padding-top: 22px;
+}
+.from-btn >button,.from-btn >input[type="submit"]{
+	border: none;
+	width: 130px;
+	height: 40px;
+}
+
+.input-xl >label{
+	width: 124px;
+}
+.p_from{
+	padding: 30px;
+	padding-left: 50px;
+	padding-right: 50px;
+}
+.input-phone{
+	width: 320px;
+}
+.input-group .l-b-m>label{
+	margin-right: 45px;
+}
+.input-xl >select{
+	width: 76px;
+}
+.input-xl .lg-select{
+	width: 105px;
+	margin-right: 10px;
+}
+.input-xl >span{
+	width: 32px;
+	text-align: center;
+}
+.top-line-h{
+	margin-top: 32px;
+}*/
+
+.green-btn {
+border: none;
+background-color: #7cb234;
+color: white;
+padding: 0px;
+border-radius: 10px;
+}.p-form .msg-box {
+margin-left: 135px;
+}
+.form .msg-box {
+position: absolute;
+/* margin-left: 185px; */
+line-height: normal;
+color: #f00;
+font-weight: bold;
+}
+.dialog {
+    position: absolute;
+    z-index: 99;
+    top: 50%;
+    left: 50%;
+    display: none;
+    width: 635px;
+    height: 455px;
+    margin-left: -317px;
+    margin-top: -228px;
+    border: none;
+    border-radius: 11px;
+    background-color: white;
+    -webkit-box-shadow: 0px 0px 25px 10px #737373;
+    -moz-box-shadow: 0px 0px 25px 10px #737373;
+    box-shadow: 0px 0px 25px 10px #737373;
+}
+#suggestDialog{
+    width: 700px;
+    height: 450px;
+    margin-left: -350px;
+    margin-top: -225px;
+}
+.dialog >.dialog-head {
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+    background-color: #575859;
+    height: 38px;
+    text-align: center;
+    line-height: 38px;
+    position: relative;
+    border: 1px solid #616162;
+    border-bottom: none;
+}
+.dialog >.dialog-head>.dialog-back {
+    position: absolute;
+    left: 15px;
+    color: white;
+    cursor: pointer;
+}
+.dialog >.dialog-head>.dialog-close {
+    position: absolute;
+    cursor: pointer;
+	right: 0px;
+	color: white;
+	padding: 0 20px;
+}
+.dialog >.dialog-head>.dialog-title {
+    font-size: 15px;
+    color: white;
+    margin: auto;
+}
+/*.dialog >.dialog-content {
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border: 1px solid #949494;
+}*/
+/*建议表单*/
+
+.suggest-form {
+    padding: 36px;
+    padding-top: 34px;
+}
+.s-form .msg-box {
+    margin-left: 105px;
+}
+.input-group {
+    margin-bottom: 18px;
+}
+.input-group label, .input-group input {
+    display: inline-block;
+}
+.input-group >label {
+    width: 95px;
+    text-align: right;
+    margin-right: 10px;
+}
+.input-v >label {
+    height: 34px;
+    line-height: 34px;
+}
+.input-group >label>span {
+    color: red;
+}
+.input-group .input-radio {
+    display: inline-block;
+}
+.input-group .input-radio>label {
+    margin-right: 30px;
+}
+.input-group .input-radio input[type="radio"] {
+    width: 15px;
+    height: 15px;
+    border: none;
+    margin-top: -2px;
+    -webkit-appearance: none;
+    background-image: url(../images/common/checkbox_off_a.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 100% auto;
+    outline: none;
+    margin-right: 5px;
+}
+.input-group .input-radio input[type="radio"]:checked {
+    background-image: url(../images/common/checkbox_on_a.png);
+}
+.input-group >input, .input-group >textarea, .input-group >select {
+    border: 1px solid #cacaca;
+    padding: 10px;
+}
+.input-group >select {
+	height: 37px;
+}
+.input-group >.suggest-content {
+    width: 370px;
+    height: 132px;
+    resize: none;
+    padding: 10px;
+}
+.input-group >.order {
+    width: 222px;
+    /*height: 12px;*/
+    padding: 10px;
+}
+.form-btn {
+    text-align: center;
+}
+.top-line {
+    border-top: 1px solid #cacaca;
+    padding-top: 22px;
+}
+.form-btn >button, .form-btn >input[type="submit"] {
+    border: none;
+    width: 130px;
+    height: 40px;
+}
+/*电话预约表单*/
+
+.p-form {
+    padding: 30px;
+    padding-left: 50px;
+    padding-right: 50px;
+}
+.p-form .msg-box {
+    margin-left: 135px;
+}
+.input-xl >label {
+    width: 124px;
+}
+.input-phone {
+    width: 320px;
+}
+.input-group .l-b-m>label {
+    margin-right: 45px;
+}
+.input-xl >select {
+    width: 76px;
+}
+.input-xl .lg-select {
+    width: 110px;
+    margin-right: 10px;
+}
+.input-xl >span {
+    width: 32px;
+    text-align: center;
+}
+.top-line-h {
+    margin-top: 32px;
+}
+
+
+/* help center detail */
+.content .content-left{
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	width: 2.7rem;
+	border-right: .02rem solid #cacaca;
+	float: left;
+	background: #fafafa;
+}
+.content-left a{
+	display: block;
+	padding: 0 15%;
+	color: #4b4b4b;
+	text-align: center;
+}
+.content-left a.active{
+	color: #fff;
+	background-color: #7cb234;
+}
+.content-left a span{
+	display: block;
+	height: 1.22rem;
+	line-height: 1.22rem;
+	font-size: .3rem;
+	border-bottom: 1px solid #e6e6e6;
+}
+.content-left a:last-child span{
+	border-bottom: none;
+}
+.content-left a.active span{
+	border-color: #7cb234;
+}
+.content-right{
+	margin-left: 2.72rem;
+	padding: .22rem .2rem .2rem .2rem;
+}
+.content-right-detail{
+	min-height: 500px;
+	border: .02rem solid rgba(167,167,167,0.5);
+	background: #fff;
+	padding: .63rem .66rem;
+}
+.content-right-detail img{
+	display: inline;
+	max-width: 100%;
+}
+
+/*在线客服*/
+
+.online-nav {
+    width: 13.36rem;
+    /*height: 421px;*/
+	margin: 2.42rem auto 0;
+}
+.online-nav li {
+    float: left;
+    margin-left: .48rem;
+    /*margin-right: 25px;*/
+}
+.online-nav li:first-child{
+	margin-left: 0;
+}
+.online-nav li img {
+    width: 2.98rem;
+    height: 2.98rem;
+}
+.online-nav li.last-icon {
+    margin-right: 0px;
+}
+.online-nav .online-text{
+    padding-left: .7rem;
+    line-height: 2em;
+}

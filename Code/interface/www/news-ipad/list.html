@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>物融新闻-中交物融平台IPAD</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<link rel="stylesheet" href="../content/css/global-ipad.css" />
+	<link rel="stylesheet" href="../content/css/news-ipad.css" />
+</head>
+<body>
+
+<div class="header">&nbsp;</div><!--//header-->
+
+<div class="section content">
+	<div class="content-left" id="menu">
+		<a href="list.html?type=1002" data-type="1002"><span>品牌新闻</span></a>
+		<a href="list.html?type=1003" data-type="1003"><span>市场活动</span></a>
+		<a href="list.html?type=1001" data-type="1001"><span>媒体声音</span></a>
+		<a href="../help-ipad/list.html?type=3004"><span>关于我们</span></a>
+	</div>
+	<div class="content-right">
+		<div id="rec-detail"></div>
+		<div class="content-mv clearfix">
+			<div class="list-news">
+				<div id="wrapper"  class="list-scroller" >
+					<div id="scroller">
+						<div id="pullDown">
+							<span class="pullDownIcon"></span><span class="pullDownLabel">Pull down to refresh...</span>
+						</div>
+						<ul id="thelist"></ul>
+						<div id="pullUp">
+							<span class="pullUpIcon"></span><span class="pullUpLabel">Pull up to refresh...</span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="list-ad" id="zj-ad">
+				<img src="../content/images/res/news-ipad-list-ad.jpg">
+			</div>
+		</div>
+	</div>
+</div><!--//section-->
+
+<script id="zj-rec-tmpl" type="text/html">
+	<div class="slider">
+		<div class="scroller">
+			<!--[for(i = 0; i< fileUrl.length; i++){]-->
+			<div class="item">
+				<img id="img-<!--[= i]-->" src="../content/images/common/d300x300.png" data-src="<!--[= $absImg(fileUrl[i])]-->" alt="" />
+			</div>
+			<!--[}]-->
+		</div>
+		<div class="subscript"></div>
+	</div>
+	<div class="intro clearfix">
+		<div class="title">
+			<h3><!--[= title]--></h3><span><!--[= $formatDate(createAt,'yyyy-MM-dd')]--></span>
+		</div>
+		<div class="jieshao"><!--[= brief]--></div>
+		<div class="intro-more">
+			<a href="detail.html?type=<!--[= type]-->&id=<!--[= id]-->">详情 ></a>
+		</div>
+	</div>
+</script>
+<script id="zj-list-tmpl" type="text/html">
+    <!--[for(i = 0; i < list.length; i ++) {]-->
+	<li>
+		<a href="detail.html?type=<!--[= type]-->&id=<!--[= list[i].id]-->">
+			<div class="list-news-text"><!--[= list[i].title]--></div>
+			<div class="list-news-time"><!--[= $formatDate(list[i].createAt)]--></div>
+		</a>
+	</li>
+    <!--[}]-->
+</script>
+<script id="zj-ad-tmpl" type="text/html">
+    <!--[for(i = 0; i < list.length; i ++) {]-->
+    <a href="<!--[= list[i].adlink]-->" target="_blank"><img src="<!--[= $absImg(list[i].adimg)]-->" /></a>
+    <!--[}]-->
+</script>
+
+<script type="text/javascript" src="../content/js/base-ipad/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/template.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/iscroll4.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/global.js"></script>
+<script type="text/javascript" src="../content/js/news-ipad/list.js"></script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!-- $Id: customize_info_list.htm 2014-09-03 xy $ -->
+
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+
+<form method="POST" action="" name="listForm">
+    <!-- start cat list -->
+    <div class="list-div" id="listDiv">
+        {/if}
+
+        <table cellspacing='1' cellpadding='3' id='list-table'>
+            <tr>
+                <th><a href="javascript:listTable.sort('id'); ">{$lang.apply_info_id}</a>{$sort_id}</th>
+                <th>{$lang.goods_name}</th>
+                <th>{$lang.contacts}</th>
+                <th>{$lang.telephone}</th>
+                <th>{$lang.address}</th>
+                <th>{$lang.number}</th>
+                <th><a href="javascript:listTable.sort('createAt'); ">{$lang.createAt}</a>{$sort_createAt}</th>
+                <th>{$lang.handler}</th>
+            </tr>
+            {foreach from=$applyinfo_list item=list}
+            <tr>
+                <td align="center"><span>{$list.id}</span></td>
+                <td align="center"><span>{$list.goodsName|escape:html}</span></td>
+                <td align="center"><span>{$list.contacts}</span></td>
+                <td align="center"><span>{$list.telephone}</span></td>
+                <td align="center"><span>{$list.address}</span></td>
+                <td align="center"><span>{$list.number}</span></td>
+                <td align="center"><span>{$list.createAt}</span></td>
+                <td align="center" id="state_{$list.id}">
+                    <span>
+                        {if $list.state == 0}
+                            <a href="javascript:void(0);" class="state_a" listid="{$list.id}">{$lang.accept_apply}</a>
+                        {elseif $list.state == 1}
+                            <a href="javascript:void(0);" class="state_a" listid="{$list.id}">{$lang.success_apply}</a>
+                        {elseif $list.state == 2}
+                            {$lang.apply_successed}
+                        {/if}
+                    </span>
+                    <a href="customize_info.php?act=applyinfo&applyId={$list.id}" style="padding-left: 10px;">查看详情</a>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="10">{$lang.no_customize_info}</td></tr>
+            {/foreach}
+            <tr>
+                <td align="right" nowrap="true" colspan="10">{include file="page.htm"}</td>
+            </tr>
+        </table>
+
+        {if $full_page}
+    </div>
+
+</form>
+<!-- end cat list -->
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+
+    {foreach from=$filter item=item key=key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    {literal}
+    $(function(){
+        $('.state_a').click(function(){
+            var listid = $(this).attr('listid');
+            update_state(listid);
+        });
+        function update_state(applyid){
+            $.ajax({
+                'type':'get',
+                'dataType':'text',
+                'url':'customize_info.php?act=state&applyid='+applyid,
+                'success':function(msg){
+                    if(msg == 1){
+                        $('#state_'+applyid+' a').text('{$lang.success_apply}');
+                    }else{
+                        $('#state_'+applyid).text('{$lang.apply_successed}');
+                    }
+                }
+            });
+        }
+    });
+    {/literal}
+</script>
+{include file="pagefooter.htm"}
+{/if}

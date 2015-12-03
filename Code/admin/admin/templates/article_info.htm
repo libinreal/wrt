@@ -1,0 +1,369 @@
+<!-- $Id: article_info.htm 2014-09-03 xy $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,selectzone.js,validator.js"}
+<!-- start goods form -->
+<div class="tab-div">
+    <div id="tabbar-div">
+        <p>
+            <span class="tab-front" id="general-tab">{$lang.tab_general}</span>
+            <span class="tab-back" id="detail-tab">{$lang.tab_content}</span>
+            <!--<span class="tab-back" id="goods-tab">{$lang.tab_goods}</span>-->
+        </p>
+    </div>
+
+    <div id="tabbody-div">
+        <form  action="article.php" method="post" enctype="multipart/form-data" id="myform" name="theForm" onsubmit="return validate()">
+            <table width="90%" id="general-table">
+                <tr>
+                    <td class="narrow-label">{$lang.title}{$lang.require_field}</td>
+                    <td><input type="text" name="title" size ="40" maxlength="60" value="{$article.title|escape}" /></td>
+                </tr>
+                <!-- {if $article.cat_id >= 0} -->
+                <tr>
+                    <td class="narrow-label">{$lang.cat}{$lang.require_field} </td>
+                    <td>
+                        <select name="article_cat" id="article_cat" onchange="catChanged()">
+                            <option value="0">{$lang.select_plz}</option>
+                            {$cat_select}
+                        </select>
+                    </td>
+                    <input type="hidden" id="cat_type" name="cat_type" value="{$article.cat_type}" />
+                </tr>
+                <!-- {else} -->
+                <input type="hidden" name="article_cat" value="-1" />
+                <!-- {/if} -->
+                {if $article.cat_id >= 0}
+                <tr class="nothelp">
+                    <td class="narrow-label">{$lang.article_type}{$lang.require_field}</td>
+                    <td><input type="radio" id="type_ge" name="article_type" value="0" {if $article.article_type eq 0}checked{/if}>{$lang.common}
+                        <input type="radio" id="type_top" name="article_type" value="1" onclick="typechange()" {if $article.article_type eq 1}checked{/if}>{$lang.top}
+                    </td>
+                </tr>
+                <!--<tr>
+                  <td class="narrow-label">{$lang.is_open}</td>
+                  <td>
+                  <input type="radio" name="is_open" value="1" {if $article.is_open eq 1}checked{/if}> {$lang.isopen}
+                <input type="radio" name="is_open" value="0" {if $article.is_open eq 0}checked{/if}> {$lang.isclose}{$lang.require_field}        </td>
+                </tr>-->
+                {else}
+                <tr style="display:none">
+                    <td colspan="2"><input type="hidden" name="article_type" value="0" /><input type="hidden" name="is_open" value="1" /></td>
+                </tr>
+                {/if}
+                <!--<tr>
+                  <td class="narrow-label">{$lang.author}</td>
+                  <td><input type="text" name="author" maxlength="60" value="{$article.author|escape}" /></td>
+                </tr>
+                <tr>
+                  <td class="narrow-label">{$lang.email}</td>
+                  <td><input type="text" name="author_email" maxlength="60" value="{$article.author_email|escape}" /></td>
+                </tr>
+                <tr>
+                  <td class="narrow-label">{$lang.keywords}</td>
+                  <td><input type="text" name="keywords" maxlength="60" value="{$article.keywords|escape}" /></td>
+                </tr>-->
+                <tr class="nothelp">
+                    <td class="narrow-label">{$lang.lable_description}<span class="require-field"></span> </td>
+                    <td><textarea name="description" id="description" cols="40" rows="5">{$article.description|escape}</textarea></td>
+                </tr>
+                <!--<tr>
+                  <td class="narrow-label">{$lang.external_links}</td>
+                  <td><input name="link_url" type="text" id="link_url" value="{if $article.link neq ''}{$article.link|escape}{else}http://{/if}" maxlength="60" /></td>
+                </tr>-->
+                <tr class="nothelp">
+                    <td class="narrow-label">{$lang.upload_titleimg}{$lang.require_field}</td>
+                    <td>
+                        <div class="up_tit">
+                            {if $article.imgurl neq ''}
+                            <div class="pic_box" id="img4" style="float:left; text-align:center; border: 1px solid #DADADA; margin: 4px; padding:2px;">
+                                <a href="javascript:;" onclick="del_pic('img4')">[-]</a><br />
+                                <img style="vertical-align: middle;" src="../{$article.imgurl}" width="90" height="85" border="0" />
+                                <br />
+                            </div>
+                            {/if}
+                        </div>
+                        <div style="display: block;clear:both;">
+                            <input type="file" name="img4" id="uimg4" imgvalue="{$article.imgurl|escape}">
+                        </div>
+                    </td>
+                </tr>
+                <tr><td>&nbsp;</td></tr>
+                <tr class="nothelp">
+                    <td class="narrow-label">{$lang.upload_file}<span class="require-field"></span> </td>
+                    <td>
+                        <div style="width:100%;" class="file_img">
+                            {foreach from=$article.img_list item=img key=i}
+                            {if $img neq ''}
+                            <div class="pic_box" id="{$i}" style="float:left; text-align:center; border: 1px solid #DADADA; margin: 4px; padding:2px;">
+                                <a href="javascript:;" onclick="del_pic('{$i}')">[-]</a><br />
+                                <img style="vertical-align: middle;" src="../{$img}" width="90" height="85" border="0" />
+                                <br />
+                            </div>
+                            {/if}
+                            {/foreach}
+                        </div>
+                        <div style="display: block;clear:both;">
+                            {$lang.upload_file1}：<input type="file" name="img1" id="uimg1" value="{$article.img1|escape}"><br />
+                            {$lang.upload_file2}：<input type="file" name="img2" id="uimg2" value="{$article.img2|escape}"><br />
+                            {$lang.upload_file3}：<input type="file" name="img3" id="uimg3" value="{$article.img3|escape}">
+                        </div>
+
+                    </td>
+                </tr>
+            </table>
+
+            <table width="90%" id="detail-table" style="display:none">
+                <tr><td>{$FCKeditor}</td></tr>
+            </table>
+
+            <div class="button-div">
+                <input type="hidden" name="act" value="{$form_action}" />
+                <input type="hidden" name="old_title" value="{$article.title}"/>
+                <input type="hidden" name="id" value="{$article.article_id}" />
+                <input type="submit" value="{$lang.button_submit}" class="button" />
+                <input type="reset" value="{$lang.button_reset}" class="button" />
+            </div>
+        </form>
+    </div>
+
+</div>
+<!-- end goods form -->
+<script language="JavaScript">
+
+var articleId = {$article.article_id|default:0};
+var elements  = document.forms['theForm'].elements;
+var sz        = new SelectZone(1, elements['source_select'], elements['target_select'], '');
+var ArtType = {$article.cat_type|default:1001};
+{literal}
+onload = function()
+{
+    if(ArtType == 3001 || ArtType == 3002 || ArtType == 3003 || ArtType == 3004){
+        $('.nothelp').hide();
+    }else{
+        $('.nothelp').show();
+    }
+    // 开始检查订单
+    startCheckOrder();
+}
+
+function validate()
+{
+    var validator = new Validator('theForm');
+    validator.required('title', no_title);
+    {/literal}
+    {if $article.cat_id >= 0}
+    validator.isNullOption('article_cat',no_cat);
+    {/if}
+    {literal}
+    var obj = document.forms['theForm'].elements['article_cat'];
+    cat_type = obj.options[obj.selectedIndex].getAttribute('cat_type');
+    if(cat_type != 3001 && cat_type != 3002 && cat_type != 3003 &&  cat_type != 3004){
+        $img_c = checkImgType();
+        if($img_c === false){
+            return false
+        }
+    }
+    return validator.passed();
+}
+
+function typechange(){
+    var obj = document.forms['theForm'].elements['article_cat'];
+    var cat_id = obj.options[obj.selectedIndex].value;
+    var r=true;
+    if($('#type_top').val() != '{$article.article_type}'){
+        $.ajax({
+            'type':'get',
+            'dataType':'text',
+            'url':"article.php?act=chang_type&article_type="+$('#type_top').val()+"&cat_id="+cat_id,
+            'success':function(data){
+                if(data == 'error'){
+                    alert(not_allow_type);
+                    $('#type_ge').attr("checked",true);
+                    return false;
+                }else if(data == 'ok'){
+                    return true;
+                }
+            }
+        });
+    }
+
+}
+
+function checkImgType(){
+    var img1 = $('#uimg1');
+    var img2 = $('#uimg2');
+    var img3 = $('#uimg3');
+    var img4 = $('#uimg4');
+    var imgi;
+    if(img4.attr('imgvalue') == "" && img4.val() == ""){
+        alert("标题图片不能为空！");
+        return false;
+    }else{
+        for(var i=1;i<=4;i++){
+            imgi = $('#uimg'+i);
+            if(imgi.val() != ""){
+                if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(imgi.val())) {
+                    if(i == 4){
+                        alert("图片类型必须是.gif,jpeg,jpg,png中的一种,标题图片类型错误");
+                    }else{
+                        alert("图片类型必须是.gif,jpeg,jpg,png中的一种,第"+i+"张图片类型错误");
+                    }
+                    imgi.val('');
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
+function del_pic(id){
+    if(confirm('{$lang.drop_img_confirm}')){
+        if(id){
+            $.ajax({
+                'type':'get',
+                'dataType':'text',
+                'url':"article.php?act=drop_image&img_id="+id+"&article_id={$article.article_id}",
+                'success':function(data){
+                    if(id == 'img4'){
+                        ajax_del_titlepic(data);
+                    }else{
+                        ajax_del_listpic(data);
+                    }
+                }
+            });
+        }
+    }
+}
+function ajax_del_listpic(data){
+    if(data == 'pic_empty'){
+        $('.file_img').html('');
+    }else{
+        $('.file_img').html('');
+        var r= $.parseJSON(data);
+        if(r){
+            var count=1;
+            var html="";
+            while(r['img'+count]){
+                var i = 'img'+count;
+                html += "<div class='pic_box' id='img"+count+"' style='float:left; text-align:center; border: 1px solid #DADADA; margin: 4px; padding:2px;'><a href='javascript:;' onclick=del_pic('"+i+"')>[-]</a><br /><img style='vertical-align: middle;' src='../"+r['img'+count]+"' width='90' height='85' border='0' /><br /></div>";
+                count++;
+            }
+            $('.file_img').html(html);
+        }
+    }
+}
+function ajax_del_titlepic(data){
+    $('.up_tit').html('');
+    $('#uimg4').attr('imgvalue','')
+}
+
+document.getElementById("tabbar-div").onmouseover = function(e){
+    var obj = Utils.srcElement(e);
+
+    if (obj.className == "tab-back")
+    {
+        obj.className = "tab-hover";
+    }
+}
+
+document.getElementById("tabbar-div").onmouseout = function(e){
+    var obj = Utils.srcElement(e);
+
+    if (obj.className == "tab-hover")
+    {
+        obj.className = "tab-back";
+    }
+}
+
+document.getElementById("tabbar-div").onclick = function(e){
+    var obj = Utils.srcElement(e);
+
+    if (obj.className == "tab-front")
+    {
+        return;
+    }
+    else
+    {
+        objTable = obj.id.substring(0, obj.id.lastIndexOf("-")) + "-table";
+
+        var tables = document.getElementsByTagName("table");
+        var spans  = document.getElementsByTagName("span");
+
+        for (i = 0; i < tables.length; i++)
+        {
+            if (tables[i].id == objTable)
+            {
+                tables[i].style.display = (Browser.isIE) ? "block" : "table";
+            }
+            else
+            {
+                tables[i].style.display = "none";
+            }
+        }
+        for (i = 0; spans.length; i++)
+        {
+            if (spans[i].className == "tab-front")
+            {
+                spans[i].className = "tab-back";
+                obj.className = "tab-front";
+                break;
+            }
+        }
+    }
+}
+
+function showNotice(objId){
+    var obj = document.getElementById(objId);
+
+    if (obj)
+    {
+        if (obj.style.display != "block")
+        {
+            obj.style.display = "block";
+        }
+        else
+        {
+            obj.style.display = "none";
+        }
+    }
+}
+
+function searchGoods(){
+    var elements  = document.forms['theForm'].elements;
+    var filters   = new Object;
+
+    filters.cat_id = elements['cat_id'].value;
+    filters.brand_id = elements['brand_id'].value;
+    filters.keyword = Utils.trim(elements['keyword'].value);
+
+    sz.loadOptions('get_goods_list', filters);
+}
+
+
+/**
+ * 选取上级分类时判断选定的分类是不是底层分类
+ */
+function catChanged(){
+    var obj = document.forms['theForm'].elements['article_cat'];
+    cat_type = obj.options[obj.selectedIndex].getAttribute('cat_type');
+    if ((obj.selectedIndex > 0) && (cat_type == 1000 || cat_type == 2000 || cat_type == 3000)){
+        alert(not_allow_add);
+        obj.selectedIndex = 0;
+        return false;
+    }
+
+    typechange();
+    $('#cat_type').val(cat_type);
+
+    if(cat_type == 3001 || cat_type == 3002 || cat_type == 3003 || cat_type == 3004){
+        $('.nothelp').hide();
+    }else{
+        $('.nothelp').show();
+    }
+    return true;
+}
+{/literal}
+</script>
+
+{include file="pagefooter.htm"}

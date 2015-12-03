@@ -1,0 +1,855 @@
+/*reset common start*/
+
+.form .msg-box {
+    bottom: -19px;
+    margin-left: 0;
+    line-height: normal;
+}
+.form .form-value {
+    position: relative;
+}
+.form .form-image {
+    float: left;
+}
+.form .form-tip {
+    float: left;
+    line-height: 21px;
+    padding-left: 10px;
+    padding-top: 105px;
+}
+.scroll-img {
+    width: 836px;
+    height: 242px;
+    border: none;
+}
+.scroll-img .items img {
+    width: 836px;
+    height: 242px;
+}
+/*reset common end*/
+/*modal start*/
+
+.credit-bg {
+    padding: 20px 30px 0;
+    border: 1px solid #d3d3d3;
+    background-color: #fff;
+}
+.credit-title {
+    border-bottom: 1px solid #e2e2e2;
+    font-size: 18px;
+}
+.credit-title h3 {
+    display: inline-block;
+    padding: 7px 0;
+    border-bottom: 4px solid #7cb234;
+}
+/*modal start*/
+/* 信用池首页 */
+.credit-index {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.pool-top .scroll-img {
+    width: 777px;
+    height: 256px;
+    border: none;
+}
+.pool-top .scroll-img .items img {
+    width: 777px;
+    height: 256px;
+}
+.pool-top .pool-r {
+    float: right;
+    height: 256px;
+    width: 255px;
+    background-image: url(../images/credit/bg-r.png);
+}
+.pool-r {
+    position: relative;
+}
+.pool-top .pool-r a {
+    display:block;
+    width: 123px;
+    height: 123px;
+}
+.pool-r-one {
+    float: left;
+}
+.pool-r-two {
+    float: left;
+    margin-top: 8px;
+}
+.pool-r-three {
+    float: right;
+}
+.pool-r-four {
+    float: right;
+    margin-top: 8px;
+}
+.pool-center {
+    margin-top: 15px;
+}
+.pool-center .pool-left {
+    width: 296px;
+    float: left;
+}
+.pool-center .pool-left .t, .pool-right .t {
+    background: #b7b7b7;
+    line-height: 46px;
+    text-align: center;
+    font-size: 17px;
+    color: #fff;
+    border: 1px solid #b7b7b7;
+}
+.pool-center .pool-left .ul {
+    background: #fff;
+    padding: 21px 39px 17px 39px;
+}
+.pool-center .pool-left .img{
+    width: 84px;
+    height: 84px;
+    float: left;
+    margin-top: 4px;
+}
+.pool-center .pool-left .img-1 {
+    background: url(../images/credit/credit_l_1.gif) no-repeat;
+}
+.pool-center .pool-left .img-2 {
+    background: url(../images/credit/credit_l_2.gif) no-repeat;
+}
+.pool-center .pool-left .img-3 {
+    background: url(../images/credit/credit_l_3.gif) no-repeat;
+}
+.pool-center .pool-left .img-4 {
+    background: url(../images/credit/credit_l_4.gif) no-repeat;
+}
+.pool-center .pool-left .word {
+    float: right;
+    padding-right: 10px;
+    width: 100px;
+}
+.pool-center .pool-left .word li.size {
+    font-size: 16px;
+    color: #1eb546;
+    margin-bottom: 5px;
+}
+.pool-center .pool-left .word li {
+    font-size: 14px;
+    color: #4f4f4f;
+}
+.pool-center .pool-right {
+    width: 733px;
+    float: right;
+}
+.pool-center .pool-right .t {
+    background: #7cb234;
+    line-height: 46px;
+    text-align: center;
+    font-size: 17px;
+    color: #fff;
+    border: 1px solid #7cb234;
+}
+.pool-center .pool-right .r {
+    background: #fff;
+    padding-top: 24px;
+    padding-bottom: 38px;
+}
+.pool-center .pool-right .r .img {
+    background: url(../images/credit/credit_r_t.gif) no-repeat;
+    width: 520px;
+    height: 55px;
+    margin: 0 auto;
+    margin-bottom: 22px;
+}
+.pool-center .pool-right .content {
+    background: url(../images/credit/credit_content.gif) no-repeat;
+    width: 670px;
+    height: 292px;
+    margin: 0 auto;
+    font-size: 15px;
+    color: #737373;
+}
+.pool-center .pool-right .content-l {
+    float: left;
+    width: 150px;
+    line-height: 38px;
+    margin-left: 68px;
+    margin-top: 38px;
+}
+.pool-center .pool-right .content-c {
+    float: left;
+    width: 165px;
+    line-height: 38px;
+    margin-left: 50px;
+    margin-top: 38px;
+}
+.pool-center .pool-right .content-r {
+    float: right;
+    width: 100px;
+    line-height: 51px;
+    margin-top: 30px;
+    margin-right: 35px;
+}
+.pool-center .pool-right .ljpc {
+    position: absolute;
+    top: 251px;
+    left: 15px;
+    display: block;
+    width: 150px;
+    height: 40px;
+    text-indent: -999999em;
+    font-size: 0;
+}
+.pool-center .pool-right .ljck {
+    position: absolute;
+    top: 251px;
+    left: 260px;
+    display: block;
+    width: 150px;
+    height: 40px;
+    text-indent: -999999em;
+    font-size: 0;
+}
+.pool-center .pool-right .ljzj {
+    position: absolute;
+    top: 251px;
+    left: 507px;
+    display: block;
+    width: 150px;
+    height: 40px;
+    text-indent: -999999em;
+    font-size: 0;
+}
+.pool-center .pool-right .btm-img {
+    width: 733px;
+    height: 82px;
+    margin-top: 8px;
+}
+.pool-bottom {
+    margin-top: 15px;
+}
+.pool-bottom .lt {
+    width: 389px;
+    float: left;
+    background: #fff;
+    height: 342px;
+}
+.pool-bottom .lt .t {
+    background: #b7b7b7;
+    line-height: 47px;
+    text-align: center;
+    font-size: 17px;
+    color: #fff;
+    border: 1px solid #b7b7b7;
+}
+.pool-bottom .lt .adv-img {
+    background: url(../images/credit/img.jpg) no-repeat;
+    width: 354px;
+    height: 246px;
+    margin: 0 auto;
+    margin-top: 18px;
+    margin-bottom: 28px;
+}
+.pool-bottom .rt {
+    width: 646px;
+    float: right;
+    height: 342px;
+}
+.pool-bottom .online-title {
+    background: #7cb234;
+    line-height: 47px;
+    text-align: center;
+    font-size: 17px;
+    color: #fff;
+    border: 1px solid #7cb234;
+}
+.pool-bottom .online-header {
+    height: 53px;
+    line-height: 53px;
+    background: #d9d9d9;
+    color: #4b4b4b;
+    font-size: 15px;
+}
+.pool-bottom .online-header th{
+    font-weight: normal;
+}
+.pool-bottom .online-scroll{
+    position: relative;
+    height: 240px;
+    background-color: #fff;
+    overflow: hidden;
+}
+.pool-bottom .online-scroll .items{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    line-height: 48px;
+}
+.pool-bottom .rt .tb-r {
+    float: right;
+}
+.pool-bottom .rt .t-2 {
+    background: #f3f3f3;
+}
+.pool-bottom .rt table {
+    text-align: center;
+}
+.pool-bottom .rt .t-1 {
+    background-color: #fff;
+}
+.pool-bottom .online-scroll tr:hover{
+    background-color: #eee;
+}
+.pool-bottom .word-udc {
+    display: inline-block;
+    padding-left: 15px;
+    color: #ed1c24;
+    background-image: url(../images/project/arrow-up1.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+}
+.pool-friends {
+    height: 24px;
+    margin-top: 15px;
+    padding: 30px 39px;
+    background-color: #fff;
+}
+.pool-friends .wrd {
+    float: left;
+    width: 100px;
+    font-size: 15px;
+    color: #565656;
+    line-height: 24px;
+}
+.pool-friends .bank-img {
+    width: 556px;
+    float: left;
+}
+
+/* 申请信用评测 */
+
+.credit-box {
+    margin-bottom: 14px;
+    padding: 30px 41px 0px;
+    border: 1px solid #cacaca;
+    background-color: #fff;
+}
+.credit-info {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.credit-info .form-item {
+    padding-bottom: 0;
+    line-height: 40px;
+    border-top: 1px solid #ccc;
+}
+.credit-info .form-item:first-child {
+    border-top: none;
+}
+.credit-info .form-label {
+    height: 40px;
+    line-height: 40px;
+}
+.credit-info .form-value1 {
+    width: 255px;
+}
+.credit-info .form-label2 {
+    width: 150px;
+}
+.credit-info .form-value2 {
+    width: 240px;
+}
+/*.credit-info .btn-alter {
+    width: 286px;
+    height: 35px;
+    line-height: 35px;
+    border: 1px solid #bfbfbf;
+    font-size: 16px;
+    color: #737373;
+    background-color: #eee;
+}
+.credit-info .btn-alter:hover {
+    background-color: #ccc;
+}*/
+
+.apply-form .form-label {
+    width: 290px;
+}
+.apply-form .form-value {
+    width: 660px;
+}
+.apply-form input[type="text"], .apply-form textarea {
+    width: 458px;
+}
+.credit-extra input[type="text"] {
+    width: 400px;
+}
+.credit-extra .form-buttons {
+    border-top: 1px solid #cacaca;
+}
+/*了解更多*/
+.credit-banner {
+    height: 242px;
+}
+.credit-banner img {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.credit-more-content {
+    min-height: 300px;
+    padding: 20px 0;
+}
+/*信用追加*/
+
+.additional-form {
+    padding: 30px 58px 0;
+}
+.additional-form .form-label {
+    width: 190px;
+}
+.additional-form .form-value {
+    width: 585px;
+}
+.additional-form input[type="text"], .additional-form textarea, .additional-form select {
+    width: 420px;
+}
+.additional-form .form-buttons {
+    border-top: 1px solid #cacaca;
+}
+.additional-form .form-buttons .button {
+    width: 138px;
+    padding: 12px 15px;
+}
+.additional-form .zj-select{
+    width: 442px;
+}
+.additional-form .zj-select .default{
+    border-color: #cacaca;
+}
+.additional-form .zj-select.active .default{
+    border-color: #7cb234;
+}
+/*信用评测*/
+
+.credit-options {
+    padding: 20px 0;
+}
+.credit-options .btn-primary {
+    width: 204px;
+}
+.credit-history-list {
+    width: 100%;
+    border-collapse: collapse;
+}
+.credit-history-list tr:hover {
+    color: #7cb234;
+    background-color: #eee;
+}
+.credit-history-list td {
+    height: 66px;
+    line-height: 66px;
+    border-bottom: 1px solid #cacaca;
+}
+.credit-history-list .time {
+    width: 540px;
+    padding-left: 10px;
+}
+.credit-history-list .status {
+    width: 130px;
+}
+.credit-history-list .buttons {
+    width: 120px;
+}
+/*信用评测状态*/
+
+.credit-test-header {
+    width: 1045px;
+    margin: 0 auto;
+}
+.credit-progress {
+    font-size: 18px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.credit-progress-bg {
+    background-image: url(../images/credit/progress-bg.jpg);
+    height: 45px;
+    margin: 0 108px;
+    background-repeat: repeat-x;
+    background-position: 0px center;
+}
+.credit-progress ul {
+    height: 27px;
+    padding: 5px 0;
+}
+.credit-progress li {
+    position: relative;
+    float: left;
+    width: 25%;
+    text-align: center;
+}
+.credit-progress i {
+    position: absolute;
+    top: 33px;
+    left: 108px;
+    display: block;
+    width: 45px;
+    height: 45px;
+    background: url(../images/credit/progress-on.png) no-repeat center center;
+}
+.credit-progress li.active {
+    color: #7cb234;
+}
+.credit-progress li.active i {
+    background: url(../images/credit/progress-off.png) no-repeat center center;
+}
+/*信用管理*/
+
+.user-icon {
+    width: 95px;
+    height: 95px;
+    border: 1px solid #c1c1c1;
+    -webkit-border-radius: 360px;
+    -moz-border-radius: 360px;
+    -o-border-radius: 360px;
+    border-radius: 360px;
+}
+.bank {
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 100% auto;
+    vertical-align: middle;
+}
+.bank-01 {
+    background-image: url(../images/personal/bank-01.png);
+}
+.bank-02 {
+    background-image: url(../images/personal/bank-02.png);
+}
+.bank-03 {
+    background-image: url(../images/personal/bank-03.png);
+}
+.bank-04 {
+    background-image: url(../images/personal/bank-04.png);
+}
+.bank-05 {
+    background-image: url(../images/personal/bank-05.png);
+}
+.bank-06 {
+    background-image: url(../images/personal/bank-06.png);
+}
+.bank-07 {
+    background-image: url(../images/personal/bank-07.png);
+}
+.header-right .my-creditb {
+    display: block;
+}
+.header-right .my-creditb em {
+    margin-right: 43px;
+}
+.header-right .my-creditb span {
+    margin-left: 15px;
+}
+.creditB {
+    height: 165px;
+    padding: 35px 0px;
+    margin-bottom: 10px;
+    border: 1px solid #d8d8d8;
+    background: #fff;
+}
+.creditB .credit_level_r {
+    float: left;
+}
+.creditB .credit_level_l_m {
+    float: left;
+    width: 169px;
+    height: 165px;
+    text-align: center;
+    line-height: 30px;
+    border-right: 1px solid #e6e6e6;
+}
+.creditB .credit_level_l_m .img {
+    width: 97px;
+    height: 97px;
+    margin: 0 auto 10px;
+}
+.creditB .credit_level_l_m .level_name, .level_value {
+    font-size: 17px;
+    color: #535353;
+}
+.credit_level_l_t {
+    float: left;
+    width: 177px;
+    height: 165px;
+    padding-left: 35px;
+    line-height: 30px;
+    border-right: 1px solid #e6e6e6;
+    color: #959595;
+}
+.credit_level_l_t .label {
+    float: left;
+    width: 60px;
+    color: #959595;
+}
+.credit_level_l_t .value {
+    float: left;
+    width: 110px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: #535353;
+}
+.credit_level_l_t .button {
+    display: block;
+    width: 116px;
+    margin-top: 10px;
+}
+.credit_ok {
+    background: url(../images/personal/credit_ok_level.gif) no-repeat;
+    width: 147px;
+    height: 37px;
+    margin-top: 10px;
+    /*margin: 10px auto;*/
+}
+.credit_pool {
+    display: block;
+    width: 146px;
+    height: 37px;
+    margin-top: 10px;
+    background: url(../images/personal/credit_pool.gif) no-repeat;
+}
+.creditB .credit_level_r {
+    width: 463px;
+    float: right;
+    height: 165px;
+    padding: 0 30px;
+}
+.creditB .credit_level_r_left {
+    float: left;
+    width: 310px;
+    padding-left: 30px;
+    color: #959595;
+    line-height: 40px;
+}
+.credit_level_r .count_ct {
+    padding-left: 28px;
+}
+.creditB .credit_level_r .left span {
+    color: #535353;
+    margin-left: 10px;
+}
+.creditB .credit_level_r_right {
+    float: left;
+    padding-top: 10px;
+    height: 164px;
+}
+.creditB_list {} .creditB_list .list_l {
+    float: left;
+    width: 523px;
+    height: 1053px;
+    background: #fff;
+    border: 1px solid #ccc;
+}
+.creditB_list .list_l .t {
+    width: 483px;
+    margin: 0 auto;
+    border-bottom: 1px solid #e6e6e6;
+    height: 50px;
+    line-height: 50px;
+    padding-left: 10px;
+    font-size: 15px;
+    color: #737373;
+}
+.creditB_list .list_l .body {
+    width: 493px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    color: #818181;
+}
+.creditB_list .list_l .body .body_l {
+    width: 70px;
+    float: left;
+    margin-top: 10px;
+}
+.creditB_list .body_l .bank {
+    width: 70px;
+    padding-top: 50px;
+    background-size: auto auto;
+    background-position: top center;
+    text-align: center;
+    color: #404040;
+}
+.creditB_list .list_l .body .body_c {
+    width: 147px;
+    float: left;
+    background: ;
+    border-right: 1px solid #e6e6e6;
+    padding-left: 20px;
+    line-height: 30px;
+}
+.creditB_list .list_l .body .body_c .red {
+    color: #ed1c24;
+    font-size: 15px;
+    font-weight: bold;
+}
+.creditB_list .list_l .body .body_r {
+    width: 235px;
+    float: right;
+    padding-left: 20px;
+    line-height: 30px;
+    background: ;
+}
+.creditB_list .list_l .body .body_r em {
+    margin-left: 10px;
+}
+.creditB_list .list_l .body .body_c .t-d, .creditB_list .list_l .body .body_r .t-d {
+    color: #535353;
+}
+.creditB_list .list_l .body .body_c .t-t {
+    color: #959595;
+}
+.creditB_list .list_r {
+    float: right;
+    width: 341px;
+    height: 1053px;
+    background: #fff;
+    border: 1px solid #ccc;
+    padding: 0px 15px;
+    overflow-y: auto;
+}
+.list_r .t {
+    height: 50px;
+    line-height: 50px;
+    padding-left: 10px;
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 15px;
+    color: #737373;
+}
+.list_r .items {
+    border-top: 1px solid #e6e6e6;
+    padding: 20px 0px;
+    font-size: 13px;
+    color: #818181;
+}
+.list_r .items:first-child {
+    border-top: none;
+}
+.list_r .items .t-r {
+    width: 130px;
+    line-height: 30px;
+}
+.list_r .items .t-d {
+    padding-left: 10px;
+    color: #535353;
+}
+.list_r .items .credit_button {
+    width: 327px;
+    height: 41px;
+    margin: 20px 0px 0px 0px;
+}
+.list_r .bank {
+    width: 30px;
+    height: 30px;
+}
+.credit_button_history {
+    float: left;
+    display: block;
+    width: 155px;
+    height: 41px;
+    margin-right: 17px;
+    background: url(../images/personal/btn-cght.jpg) no-repeat;
+}
+.credit_button_apply {
+    float: left;
+    display: inline-block;
+    width: 155px;
+    height: 41px;
+    background: url(../images/personal/btn-cgzj.jpg) no-repeat;
+}
+.list_r .items .unit {
+    padding-left: 15px;
+    color: #818181;
+}
+/*动态效果*/
+.credit-index .btn:hover {
+    position: absolute;
+    display: block;
+    background: #000;
+    filter:alpha(opacity=30);
+    opacity: 0.3;
+    z-index: 1;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -o-border-radius: 10px;
+    border-radius: 10px;
+    outline: none;     
+}
+.pool-right .btn:hover {
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    -o-border-radius: 0px;
+    border-radius: 0px;
+    outline: none;     
+}
+.pool-r-one:hover {
+    left: 0;
+    top: 0;
+}
+.pool-r-three:hover {
+    top: 0;
+    right: 0;
+}
+.pool-r-two:hover {
+    bottom: 0;
+    left: 0;
+}
+.pool-r-four:hover {
+    bottom: 0;
+    right: 0;
+}
+.credit_button .button{
+	padding:10px 15px;
+	width: 123px;
+}
+.credit_button .button.btn-blue {
+	color: #fff;
+	border-color: #5a698a;
+	background-color: #5a698a;
+}
+.credit_button .button.btn-blue:hover {
+	color: #fff;
+	border-color: #4c5873;
+	background-color: #4c5873;
+}
+.credit_level_r_right .button {
+    display: block;
+    width: 118px;padding:7px 17px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    line-height:20px;
+    text-align: center;
+}
+.credit_level_r_right .btn-yellow {
+    color: #fff;
+    border-color: #fc9208;
+    background-color: #fc9208;
+}
+.credit_level_r_right .button.btn-yellow:hover {
+    color: #fff;
+    border-color: #d37905;
+    background-color: #d37905;
+}
+.credit_level_r_right .btn-cgdd {
+    color: #fff;
+    border-color: #1c94e0;
+    background-color: #1c94e0;
+}
+.credit_level_r_right .button.btn-cgdd:hover {
+    color: #fff;
+    border-color: #197ebd;
+    background-color: #197ebd;
+}

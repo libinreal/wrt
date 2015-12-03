@@ -1,0 +1,576 @@
+﻿/*reset common start*/
+body {
+    background-color: #12202C;
+    background-image: url(../images/common/bg-1920.jpg);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 100% 100%;
+}
+.clear{
+    clear: both;
+    line-height: 0;
+    font-size: 0;
+}
+/*reset common end*/
+.content-left .pro-1 {
+    background-position: 10px 25px;
+}
+.content-left .pro-2{
+    background-position: 10px -45px;
+}
+.content-left .pro-3{
+    background-position: 10px -108px;
+}
+.content-left .pro-4{
+    background-position: 9px -168px;
+}
+.content-left .pro-5{
+    background-position: 10px -238px;
+}
+.content-left .pro-6{
+    background-position: 10px -298px;
+}
+.content-left .pro-7{
+    background-position: 7px -365px;
+}
+.content-left .pro-1,.content-left .pro-2,.content-left .pro-3,.content-left .pro-4,.content-left .pro-5,.content-left .pro-6{
+    padding-left: 20px;
+}
+.content-left .pro-7{
+    padding-left: 30px;
+}
+.content-left a {
+    margin: 0px 0;
+    line-height: 65px;
+    background-image: url(../images/project/nav-gray.png);
+    background-repeat: no-repeat;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    -ms-border-radius: 0px;
+    -o-border-radius: 0px;
+    border-radius: 0px;
+}
+.content-left a:hover, .content-left a.active {
+    background-color:#7cb234;
+    background-image: url(../images/project/nav-white.png);
+}
+.content-left {
+    width: 125px;
+    min-height: 100px;
+    float: left;
+    padding-right: 0px;
+}
+/*project home start*/
+.project-home .page-vertical {
+    width: 735px;
+    height: 534px;
+    padding-top: 113px;
+    padding-bottom: 160px;
+}
+.project-home-item {
+    float: left;
+    display: block;
+    width: 350px;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+.project-home-item:first-child {
+    margin-right: 35px;
+}
+.project-home-link {
+    display: block;
+    width: 100%;
+    height: 296px;
+}
+.project-home-thumb {
+    width: 350px;
+    height: 221px;
+}
+.project-home-thumb img {
+    display: block;
+    width: 350px;
+    height: 221px;
+}
+.project-home-title {
+    position: relative;
+    height: 75px;
+    padding-right: 25px;
+    text-align: right;
+    color: #fff;
+}
+.project-home-title h3 {
+    padding-top: 12px;
+    font-size: 18px;
+}
+.project-home-title p {
+    margin-top: 1px;
+}
+.project-home-icon {
+    position: absolute;
+    left: 29px;
+    top: -27px;
+    width: 69px;
+    height: 69px;
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+}
+.project-home-icon-1 {
+    background-image: url(../images/project/icon-sqzx.png);
+}
+.project-home-icon-2 {
+    background-image: url(../images/project/icon-gczb.png);
+}
+.project-home-item:hover{
+    text-decoration: none;
+}
+.project-home-item:hover .project-home-icon {
+    -webkit-transition: all 400ms ease-in;
+    -moz-transition: all 400ms ease-in;
+    -ms-transition: all 400ms ease-in;
+    -o-transition: all 400ms ease-in;
+    transition: all 400ms ease-in;
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    transform: rotate(360deg);
+}
+.project-home-list {
+    margin: 0 17px;
+}
+.project-home-list li {
+    border-top: 1px solid #595959;
+    height: 58px;
+    line-height: 58px;
+    padding: 0 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.project-home-list li a{
+    color: #fff;font-size: 16px;
+}
+.project-home-name {
+    width: 160px;
+    -o-text-overflow: ellipsis;
+    -webkit-text-overflow: ellipsis;
+    -moz-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    word-spacing: normal;
+    display: block;
+    float: left;
+}
+.project-home-list li{
+    color: #fff;font-size: 16px;
+}
+.project-home-name .company-name{
+	width: 60px;
+	display: block;
+	float: left;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.project-home-price {
+    display: inline-block;
+    width: 85px;
+}
+.project-home-amount {
+    display: inline-block;
+    width: 30px;
+}
+.project-home-flag {
+    display: inline-block;
+    width: 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.project-home-flag.no {
+    background-image: url(../images/project/arrow-no.png);
+}
+.project-home-flag.up {
+    background-image: url(../images/project/arrow-up.png);
+}
+.project-home-flag.down {
+    background-image: url(../images/project/arrow-down.png);
+}
+/*project home end*/
+
+/*business center start*/
+.business {
+    font-size: 14px;
+    padding-bottom: 50px;
+    background-color: #fff;
+}
+.business-nav {
+    height: 52px;
+    padding-top: 17px;
+    background-color: #666;
+    text-align: center;
+}
+.business-nav a {
+    display: inline-block;
+    padding: 0 25px;
+    margin-right: 20px;
+    line-height: 35px;
+    font-size: 14px;
+    color: #fff;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+}
+.business-nav a:hover{
+    color: #7cb234;
+    /*background-color: #7cb234;*/
+    /*text-decoration: none;*/
+}
+.business-nav a.active {
+    color: #fff;
+    background-color: #7cb234;
+    text-decoration: none;
+}
+.business-chart {
+    float: left;
+    width: 655px;
+    margin-top: 20px;
+}
+.business-chart .charts {
+    height: 430px;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+.business-buttons {
+    text-align: center;
+    margin-top: 20px;
+}
+.business-data {
+    float: right;
+    width: 388px;
+    /*height: 499px;*/
+    border-left: 1px solid #f0f0f0;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #dadada;
+}
+.business-rec {
+    padding: 0 26px 21px;
+    font-size: 14px;
+}
+.business-rec-type {
+    font-size: 25px;
+    color: #303030;
+    padding: 15px 0 18px;
+}
+.business-rec-type .fl{
+    width: 50%;
+    height: 37px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.business-rec-type .fr{
+    /*width: 50%;*/
+    text-align: right;
+    overflow: hidden;
+    height: 37px;
+    line-height: 37px;
+    font-size: 18px;
+}
+.business-rec-type .fr span {
+    float:left;
+    overflow: hidden;
+    max-width: 130px;
+}
+.business-rec-type i {
+    float:left;
+    min-width: 35px;
+    font-size: 12px;
+    font-style: normal;
+}
+.business-list {
+    /*padding: 0 13px;*/
+}
+.business-list li{
+    cursor: pointer;
+}
+.business-list li:hover{
+    background-color: #efefef;
+}
+.business-list li.active{
+    background-color: #dadada;
+}
+.business-item {
+    padding: 0 13px;
+    height: 61px;
+    line-height: 60px;
+    text-align: center;
+}
+.business-item-name {
+    float: left;
+    display: block;
+    width: 90px;
+    border-top: 1px solid #dadada;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.business-item-price {
+    float: left;
+    display: block;
+    width: 207px;
+    text-align: center;
+    border-top: 1px solid #dadada;
+}
+.business-item-amount {
+    float: left;
+    display: block;
+    width: 30px;
+    border-top: 1px solid #dadada;
+}
+.business-item-flag {
+    float: left;
+    display: block;
+    width: 20px;
+    border-top: 1px solid #dadada;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-image: url(../images/project/arrow-no1.png);
+}
+.business-item-no .business-item-flag {
+    background-image: url(../images/project/arrow-no1.png);
+}
+.business-item-up .business-item-flag {
+    background-image: url(../images/project/arrow-up1.png);
+}
+.business-item-down .business-item-flag {
+    background-image: url(../images/project/arrow-down1.png);
+}
+.business-item-up .business-item-price, .business-item-up .business-item-amount {
+    color: #ed1c24;
+}
+.business-item-down .business-item-price, .business-item-down .business-item-amount {
+    color: #7cb234;
+}
+/*business center end*/
+
+/*project more start*/
+.bidding-item {
+    margin-bottom: 10px;
+    border: 1px solid #d3d3d3;
+    background-color: #fff;
+}
+.bidding-item-title {
+    height: 24px;
+    padding: 13px 0 13px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #7cb234;
+}
+.bidding-item-content {
+    padding: 20px 0 0px 20px;
+    font-size: 14px;
+}
+.bidding-item-name {
+    float: left;
+    width: 140px;
+    text-align: right;
+}
+.bidding-item-text, .bidding-item-text2 {
+    float: left;
+    width: 232px;
+    text-align: left;
+}
+.bidding-item-title .bidding-item-text,
+.bidding-item-title .bidding-item-text2{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.bidding-item-content .bidding-item-text, .bidding-item-content .bidding-item-text2 {
+    margin-bottom: 30px;
+    word-break: break-all;
+}
+.bidding-item-text2 {
+    width: 318px;
+}
+.bidding-item-content1 {
+    float: left;
+    width: 372px;
+}
+.bidding-item-content2 {
+    float: left;
+    width: 458px;
+}
+.links li {
+    width: 102px;
+    padding: 20px;
+    float: left;
+}
+.links a {
+    display: block;
+    border: 1px solid #fff;
+}
+.links a:hover {
+    border-color: #7cb234;
+}
+.links img {
+    width: 100%;
+    height: 35px;
+}
+/*project more end*/
+
+/*project start*/
+.bidding-map{
+    position: relative;
+    width: 920px;
+    height: 600px;
+    padding-left: 0;
+    padding-bottom: 0;
+    overflow: hidden;
+}
+.bidding-map-content{
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.bidding-tooltip{
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    width: 91px;
+    height: 67px;
+    padding: 9px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 1px 0 15px rgba(25,25,25,0.1);
+}
+.bidding-tooltip:hover{
+    text-decoration: none;
+}
+.bidding-tooltip h3{
+    height: 21px;
+    padding: 0 3px 5px;
+    border-bottom: 1px solid #d3d3d3;
+    overflow: hidden;
+}
+.bidding-tooltip h3 .area{
+    float: left;
+    width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.bidding-tooltip h3 .count{
+    float: right;
+    width: 50%;
+    text-align: right;
+}
+.bidding-tooltip h3 em{
+    color: #00a0e9;
+}
+.bidding-tooltip p{
+    font-size: 12px;
+    line-height: 21px;
+}
+.bidding-tooltip i{
+    position: absolute;
+    z-index: 2;
+    right: 0px;
+    bottom: -12px;
+    display: block;
+    border-width: 10px;
+    border-style: solid;
+    border-right-color: #fff;
+    border-top-color: #fff;
+    border-bottom-color:  rgba(0,0,0,0);
+    border-left-color: rgba(0,0,0,0);
+}
+.bidding-tooltip:after{
+    content: '';
+    position: absolute;
+    z-index: 1;
+    display: block;
+    right: -7px;
+    bottom: -16px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #7cb234;
+}
+.bidding-friend{
+    height: 152px;
+    background-color: #fff;
+}
+.bidding-friend-more{
+    float: left;
+    display: table;
+    width: 106px;
+    height: 58px;
+    color: #fff;
+    border-right: 1px solid #d3d3d3;
+    background-color: #7cb234;
+    margin-top: 50px;
+    margin-right: 39px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
+}
+.bidding-friend-more span{
+    display: table-cell;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+}
+.bidding-friend-more:hover{
+    text-decoration: none;
+}
+.bidding-friend-content{
+    float: left;
+    width: 797px;
+    padding: 24px 50px 0;
+}
+.bidding-friend-title{
+    float: left;
+    width: 80px;
+    line-height: 40px;
+}
+.bidding-friend-links{
+    float: left;
+    width: 717px;
+}
+.bidding-friend-links li{
+    float: left;
+    width: 20%;
+    height: 40px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+.bidding-friend-links a{
+    display: block;
+    width: 116px;
+    height: 40px;
+    margin: 0 auto;
+    border: 1px solid #fff;
+}
+.bidding-friend-links img{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.bidding-friend-links .qianlima:hover{
+	color: #fff;
+	border-color: #c4c1c1;
+	background-color: #c4c1c1;
+}
+.business-nav .sqzx-t {
+	width:1045px;
+	margin: 0 auto;
+}
+.business-nav .sqzx-t .goback {
+	float: right;
+	margin-right:0px
+}
+/*project end*/

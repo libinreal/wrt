@@ -1,0 +1,87 @@
+{if $full_page}
+{include file="pageheader.htm"}
+{/if}
+<!--
+    [thumb] => thumbs/201410/141438958193.jpeg
+    [originalImg] => pics/201410/141438958193.jpeg
+    [state] => 0
+
+-->
+<div class="list-div" style="margin-bottom: 5px">
+    <table width="100%" cellpadding="3" cellspacing="1">
+        <tr>
+            <th colspan="2">{$lang.base_info}</th>
+        </tr>
+        <tr>
+            <th style="width: 120px;">{$lang.contacts}</th>
+            <td>{$list.contacts}</td>
+        </tr>
+        <tr>
+            <th>{$lang.telephone}</th>
+            <td>{$list.telephone}</td>
+        </tr>
+        <tr>
+            <th>{$lang.address}</th>
+            <td>{$list.address}</td>
+        </tr>
+        <tr>
+            <th>{$lang.categoryNo}</th>
+            <td>{$list.cat_name}</td>
+        </tr>
+        <tr>
+            <th>{$lang.goodsName}</th>
+            <td>{$list.goodsName}</td>
+        </tr>
+        <tr>
+            <th>{$lang.thumb}</th>
+            <td><img src="{$list.thumb}" alt=""/></td>
+        </tr>
+        <tr>
+            <th>{$lang.goodsSpec}</th>
+            <td>{$list.goodsSpec}</td>
+        </tr>
+        <tr>
+            <th>{$lang.goodsModel}</th>
+            <td>{$list.goodsModel}</td>
+        </tr>
+        <tr>
+            <th>{$lang.goodsPrice}</th>
+            <td>{$list.goodsPrice}</td>
+        </tr>
+        <tr>
+            <th>{$lang.number}</th>
+            <td>{$list.number}</td>
+        </tr>
+        <tr>
+            <th>{$lang.goodsUnit}</th>
+            <td>{$list.goodsUnit}</td>
+        </tr>
+        <tr>
+            <th>{$lang.areaId}</th>
+            <td>{$list.region_name}</td>
+        </tr>
+        <tr>
+            <th>{$lang.state}</th>
+            <td>{$lang.cus[$list.state]}</td>
+        </tr>
+        <tr>
+            <th>{$lang.expirationAt}</th>
+            <td>{$list.expirationAt}</td>
+        </tr>
+        <tr>
+            <th>{$lang.createAt}</th>
+            <td>{$list.createAt}</td>
+        </tr>
+        <tr>
+            <th>{$lang.updateAt}</th>
+            <td>{$list.updateAt}</td>
+        </tr>
+        <tr>
+            <th>{$lang.remark}</th>
+            <td>{$list.remark}</td>
+        </tr>
+    </table>
+</div>
+{if $full_page}
+{include file="pagefooter.htm"}
+{/if}

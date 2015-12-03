@@ -1,0 +1,144 @@
+<!-- $Id: purchase_quotaadd_list.htm 2014-09-15 xy $ -->
+
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js,../js/WebCalendar.js"}
+
+<!-- 商品搜索 -->
+<div class="form-div">
+    <form action="javascript:searchpurchase_quotaadd()" name="searchForm" >
+        <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+        {$lang.name}<input type="text" name="keyword" id="keyword" />
+        {$lang.starttime}<input type="text" maxlength="100" name="starttime" size="18"  onclick="SelectDate(this,'yyyy-MM-dd hh:mm',0,-60)" readonly="true" style="cursor:pointer" />
+        {$lang.endtime}<input type="text" maxlength="100" name="endtime" size="18"  onclick="SelectDate(this,'yyyy-MM-dd hh:mm',0,-60)" readonly="true" style="cursor:pointer" />
+        <input type="submit" value="{$lang.button_search}" class="button" />
+    </form>
+</div>
+
+<form method="POST" action="" name="listForm">
+    <!-- start cat list -->
+    <div class="list-div" id="listDiv">
+        {/if}
+
+        <table cellspacing='1' cellpadding='3' id='list-table'>
+            <tr>
+                <th><a href="javascript:listTable.sort('id'); ">{$lang.id}</a>{$sort_id}</th>
+                <th>{$lang.name}</th>
+                <th>{$lang.phone}</th>
+                <th>{$lang.contractNo}</th>
+                <th>{$lang.amount}</th>
+                <th><a href="javascript:listTable.sort('createAt'); ">{$lang.createAt}</a>{$sort_createAt}</th>
+                <th>{$lang.purchase_quotaadd_handler}</a></th>
+                <th>{$lang.handler}</th>
+            </tr>
+            {foreach from=$purchase_quotaadd_list item=list}
+            <tr>
+                <td align="center"><span>{$list.id}</span></td>
+                <td align="center"><span>{$list.name}</span></td>
+                <td align="center"><span>{$list.phone}</span></td>
+                <td align="center"><span>{$list.contractNo}</span></td>
+                <td align="center"><span>{$list.amount}</span></td>
+                <td align="center"><span>{$list.createAt}</span></td>
+                <td align="center" id="state_{$list.id}">
+                    <span>
+                        {if $list.status == 0}
+                            <a href="javascript:void(0);" class="state_a" listid="{$list.id}">{$lang.accept_purchase_quotaadd}</a>
+                        {elseif $list.status == 1}
+                           {$lang.success_purchase_quotaadd}
+                        {/if}
+                    </span>
+                </td>
+                <td align="center" nowrap="true">
+                    <span>
+                        <a href="purchase_quota_add.php?act=info&comid={$list.id}" title="{$lang.view}">{$lang.check_info}</a>&nbsp;
+                    </span>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="10">{$lang.no_purchase_quotaadd}</td></tr>
+            {/foreach}
+            <tr>
+                <td align="right" nowrap="true" colspan="12">{include file="page.htm"}</td>
+            </tr>
+        </table>
+
+        {if $full_page}
+    </div>
+</form>
+
+<div class="modal" id="zj-modal" style="display: none;">
+    <div class="modal-bg">
+        <div class="modal-head">
+            <a class="modal-return" href="javascript:;"><</a>
+            <div class="modal-title">备注</div>
+            <a class="modal-close" href="javascript:;">X</a>
+        </div>
+        <div class="modal-content">
+            <div class="modal-tip">{$lang.addremark}</div>
+            <div class="modal-form"><textarea name="remark" id="remark" cols="40" rows="5" ></textarea></div>
+        </div>
+        <div class="modal-footer modal-buttons">
+            <a href="#" class="button btn-confirm">确认</a>
+            <a href="#" class="button btn-cancel">取消</a>
+        </div>
+    </div>
+</div>
+<div id="zj-modal-bg" class="panel-bg"></div>
+
+
+<!-- end cat list -->
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+
+    {foreach from=$filter item=item key=key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+
+$(function(){
+    var listid;
+    $('.state_a').click(function(){
+        listid = $(this).attr('listid');
+        $('#zj-modal').show();
+        $('#zj-modal-bg').show();
+    });
+    $('.btn-confirm').click(function(){
+        $('#zj-modal').hide();
+        $('#zj-modal-bg').hide();
+        var remark = $('#remark').val();
+        update_state(listid,remark);
+    });
+    $('.btn-cancel, .modal-close').click(function(){
+        $('#remark').val('');
+        $('#zj-modal').hide();
+        $('#zj-modal-bg').hide();
+    });
+    function update_state(id,remark){
+        $.ajax({
+            'type':'post',
+            'dataType':'text',
+            'data':{comid:id,remark:remark},
+            'url':'purchase_quota_add.php?act=state',
+            'success':function(msg){
+                msg = $.parseJSON(msg);
+                if(msg.status == 1){
+                    $('#state_'+id).text('{$lang.success_purchase_quotaadd}');
+                    $('#remark').val('');
+                }
+            }
+        });
+    }
+});
+
+function searchpurchase_quotaadd()
+{
+    listTable.filter.keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter.starttime = Utils.trim(document.forms['searchForm'].elements['starttime'].value);
+    listTable.filter.endtime = Utils.trim(document.forms['searchForm'].elements['endtime'].value);
+    listTable.filter.page = 1;
+    listTable.loadList();
+}
+
+</script>
+{include file="pagefooter.htm"}
+{/if}

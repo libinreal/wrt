@@ -1,0 +1,130 @@
+﻿body{
+	background-color: #12202C;
+	background-image: url(../images/common/bg-1920.jpg);
+	min-width: 1440px;
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-size: 100% 100%;
+}
+.page-vertical{
+	position: relative;
+	min-height: 800px;
+}
+
+/* register start*/
+.register-head{
+	height: 52px;
+	margin: auto;
+	border-bottom: 1px solid gray;
+	text-align: center;
+	line-height: 52px;
+	color: white;
+	font-size: 16px;
+}
+#register-form{
+	padding-top: 33px;
+	padding-bottom: 33px;
+}
+#register-form .msg-box{
+	position: absolute;
+	margin-left: 185px;
+}
+.register{
+	width: 835px;
+	background-color: white;
+	height: 1096px;
+	margin: auto;
+}
+.register-border{
+	width: 622px;
+	margin: auto;
+}
+.form-horizontal{
+	margin-bottom: 20px;
+}
+.form-horizontal label{
+	display: block;
+	float: left;
+	width: 163px;
+	text-align: right;
+	height: 35px;
+	line-height: 35px;
+	margin-right: 18px;
+}
+.form-horizontal input{
+	height: 31px;
+	width: 315px;
+	border: 1px solid #e0e0e0;
+	padding-left: 15px;
+}
+.form-horizontal span{
+	color: red;
+	font-weight: bold;
+}
+.form-radio{
+	margin-bottom: 20px;
+}
+.form-radio label{
+	margin-right: 0px;
+	text-align: left;
+	margin-left: 15px;
+}
+.form-radio label:first-child{
+	text-align: right;
+	margin-right: 18px;
+	margin-left: 0px;
+}
+.form-radio input{
+	width: 16px;
+	height: 16px;
+	border: none;
+	padding: 0px;
+	margin-right: 14px;
+	-webkit-appearance: none;
+	background-image: url(../images/login/checkbox_off_a.png);
+	outline: none;
+}
+.form-radio input:checked{
+	background-image: url(../images/login/checkbox_on_a.png);	
+}
+.input-sm input{
+	width: 199px;
+}
+.input-sm .green-btn{
+	width: 109px;
+	height: 35px;
+	margin-left: 3px;
+	border-radius: 0px;
+}
+.input-sm .disable-btn{
+	background-color: #eaeaea;
+	color: black;
+}
+.hr{
+	border-bottom: 1px solid #dcdcdc;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.register-btn{
+	text-align: center;
+}
+.register-btn input{
+	border: none;
+	background-color:#7cb234;
+	width:153px;
+	height: 42px;
+	color: white;
+	border-radius: 5px;
+	margin-left:50px;
+}
+.error-tip{
+    height: 35px;
+    line-height: 35px;
+    margin-left: 181px;
+}
+.register-btn .button.btn-secondary:hover {
+	color: #fff;
+	border-color: #648f2b;
+	background-color: #648f2b;
+}
+/* register end*/

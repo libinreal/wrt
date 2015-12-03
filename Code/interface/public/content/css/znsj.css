@@ -1,0 +1,368 @@
+/*reset common start*/
+
+.section .page-vertical {
+    padding-top: 30px;
+}
+.header-right .znsj-header {
+    display: block;
+}
+.scroll-img {
+    width: 670px;
+    height: 434px;
+}
+.scroll-img .items img {
+    width: 670px;
+    height: 434px;
+}
+/*reset common end*/
+
+.znsj-top .left {
+    width: 670px;
+    height: 434px;
+    float: left;
+    border: 1px solid #ccc;
+}
+.znsj-top .right {
+    position: relative;
+    background: url(../images/znsj/bg-btn.png) no-repeat;
+    width: 357px;
+    height: 436px;
+    float: right;
+}
+.right .zform {
+    height: 436px;
+}
+.znsj-top .m_c_s {
+    background: #fff;
+    border: 1px solid #ccc;
+    width: 292px;
+    display: none;
+    position: absolute;
+    top: 117px;
+    left: 30px;
+}
+.znsj-top .m_c_s li{
+    padding: 5px 0 5px 15px;
+    cursor: pointer;
+}
+.znsj-top .m_c_s li:hover{
+    background-color: lightblue;
+}
+/**********************/
+
+.t {
+    margin-left: 30px;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #221d23;
+}
+.name, .verify {
+    margin-left: 30px;
+    margin-top: 7px;
+    font-size: 13px;
+    color: #4b4b4b;
+}
+.pwd {
+    margin-left: 30px;
+    margin-top: 5px;
+    font-size: 13px;
+    color: #4b4b4b;
+}
+.method {
+    margin-left: 30px;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #4b4b4b;
+    height: 30px;
+    line-height: 30px;
+}
+.m_c {
+    margin-left: 30px;
+    background: url(../images/wrt/method.gif) no-repeat;
+    width: 281px;
+    height: 44px;
+    line-height: 44px;
+    font-size: 13px;
+    color: #8d8d8e;
+    padding-left: 13px;
+    border: 0;
+    cursor: pointer;
+}
+.name_c input {
+    width: 262px;
+    margin-left: 35px;
+    margin-top: 6px;
+    padding: 0 13px;
+    height: 35px;
+    border: 1px solid #d1d4dc;
+    border: none;
+    background: inherit;
+}
+.pwd_c input {
+    width: 185px;
+    margin-left: 35px;
+    margin-top: 8px;
+    padding: 0 13px;
+    height: 35px;
+    border: none;
+    background: inherit;
+}
+.pwd_c span {
+    margin-left: 23px;
+    height: 35px;
+    line-height: 35px;
+    /*font-size: 16px;*/
+    
+    color: #4b4b4b;
+}
+.verify_c input {
+    width: 122px;
+    height: 35px;
+    margin-left: 35px;
+    margin-top: 7px;
+    padding: 0 13px;
+    border: none;
+    background: inherit;
+}
+.verify_c .verify_img {
+    height: 46px;
+    width: 95px;
+    float: right;
+    margin-top: px;
+    margin-right: 60px;
+}
+.verify span {
+    margin-left: 125px;
+    color: #4b4b4b;
+}
+.log_btn {
+    position: relative;
+    top: 0;
+    left: 0;
+}
+.log_btn .btn {
+    position: absolute;
+    left: 33px;
+    top: 26px;
+    width: 292px;
+    height: 45px;
+    background-color: initial;
+}
+.bott {
+    margin-left: 30px;
+    margin-top: 80px;
+}
+.bott a {
+    color: #7f7f7f;
+}
+.bott .reg {
+    margin-left: 50px;
+}
+.bott .hp {
+    margin-left: 15px;
+    margin-right: 15px;
+}
+/************************/
+
+.znsj-nav {
+    height: 46px;
+    line-height: 46px;
+    font-size: 18px;
+    padding-left: 25px;
+    margin-top: 20px;
+    background-color: #f1f1f1;
+    -webkit-box-shadow: 0 -0px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 -0px 5px rgba(0, 0, 0, 0.2);
+    -ms-box-shadow: 0 -0px 5px rgba(0, 0, 0, 0.2);
+    -o-box-shadow: 0 -0px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 -0px 5px rgba(0, 0, 0, 0.2);
+}
+.content-1 {
+    height: 187px;
+    width:1045px;
+    background: #fff;
+    background: url(../images/znsj/content-1.png) no-repeat;
+}
+.content-1 a {
+    position: absolute;
+    top: 0;
+    right: 23px;
+    width: 241px;
+    height: 59px;
+    text-indent: -9999px;
+    font-size: 0;
+}
+.content-1 .btn1 {
+    top: 25px;
+}
+.content-1 .btn2 {
+    top: 99px;
+}
+.content-2 {
+    background: url(../images/znsj/content-2.png) no-repeat;
+    height: 207px;
+    width:1045px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.content-2 a {
+    position: absolute;
+    top: 0;
+    right: 23px;
+    width: 199px;
+    height: 42px;
+    text-indent: -9999px;
+    font-size: 0;
+}
+.content-2 .btn1 {
+    width: 50px;
+    height: 25px;
+    top: 18px;
+    left: 442px;
+}
+.content-2 .btn2 {
+    top: 144px;
+    left: 264px;
+}
+.content-2 .btn3 {
+    width: 50px;
+    height: 25px;
+    top: 18px;
+    left: 975px;
+}
+.content-2 .btn4 {
+    top: 144px;
+    left: 798px;
+}
+.content-3 {
+    background: url(../images/znsj/content-3.png) no-repeat;
+    height: 207px;
+    background-size: 100% auto;
+    width: 1045px;
+    margin-bottom: 50px;
+}
+.content-3 a {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    width: 199px;
+    height: 42px;
+    text-indent: -9999px;
+    font-size: 0;
+}
+.content-3 .btn1 {
+    width: 50px;
+    height: 25px;
+    top: 18px;
+    left: 442px;
+}
+.content-3 .btn2 {
+    top: 144px;
+    left: 264px;
+}
+.content-3 .btn3 {
+    width: 50px;
+    height: 25px;
+    top: 18px;
+    left: 975px;
+}
+.content-3 .btn4 {
+    top: 144px;
+    left: 798px;
+}
+/**/
+
+.in-top {
+    background: url(../images/znsj/top.png) no-repeat;
+    height: 393px;
+    max-width: 100%;
+    background-size: 100%;
+    margin-bottom: 17px;
+}
+.content {
+    background: #fff;
+    padding-bottom: 0px;
+}
+.navigater, .APP .navigater {
+    height: 60px;
+    line-height: 60px;
+    font-size: 17px;
+    color: #5c5c5c;
+    padding-left: 40px;
+}
+.in-content {
+    margin: 0 20px;
+    background: url(../images/znsj/center_1.png) no-repeat;
+    height: 145px;
+    max-width: 100%;
+    background-size: 100%;
+}
+.APP {
+    background: #fff;
+    padding-bottom: 26px;
+}
+.APP .in-content {
+    background: url(../images/znsj/center_2.png) no-repeat;
+    height: 146px;
+    max-width: 100%;
+    background-size: 100%;
+}
+.middle-content {
+    padding: 0px auto;
+    background: #fff;
+    margin-top: 10px;
+}
+.middle-content .one {
+    background: url(../images/znsj/center_3.png) no-repeat;
+    height: 262px;
+    max-width: 100%;
+    background-size: 100%;
+}
+.middle-content .two {
+    background: url(../images/znsj/text.png) no-repeat;
+    height: 657px;
+    max-width: 100%;
+    background-size: 100%;
+}
+.middle-content .three {
+    background: url(../images/znsj/page.png) no-repeat;
+    height: 828px;
+    max-width: 100%;
+    background-size: 100%;
+}
+/* 售后服务 */
+
+.content-detail {
+    background-color: #fff;
+    padding: 30px;
+    border: 1px solid #d3d3d3;
+    margin-bottom: 17px;
+    min-height: 300px;
+}
+.content-detail img {
+    display: inline;
+}
+.news-index {
+    background-image: url(../images/news/news_bg.png);
+    background-size: 100% 100%;
+    background-repeat: repeat-y;
+}
+.content {
+    background-image: url(../images/news/news_content_bg.png);
+    background-size: 100% 100%;
+    background-repeat: repeat-y;
+}
+.content-1 .btn:hover {
+	right: 23px;
+}
+.znsj .btn:hover{
+    background: #000;
+    border-color: #000;
+    filter:alpha(opacity=30);
+    opacity: 0.3;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -o-border-radius: 5px;
+    border-radius: 5px;
+    outline: none;
+}

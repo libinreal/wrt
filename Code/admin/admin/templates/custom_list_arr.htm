@@ -1,0 +1,23 @@
+{if $full_page}
+{include file="pageheader.htm"}
+{/if}
+        
+<div class="ArrList">
+	<a href="custom.php?act=list">工程定制</a>
+	<a href="customize.php?act=list">物资定制</a>
+</div>
+
+{if $full_page} 
+<script language="JavaScript">
+{literal}
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+
+</script>
+{/literal}
+
+{include file="pagefooter.htm"}
+{/if}

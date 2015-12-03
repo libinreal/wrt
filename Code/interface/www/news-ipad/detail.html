@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>物融新闻-中交物融平台IPAD</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<link rel="stylesheet" href="../content/css/global-ipad.css" />
+	<link rel="stylesheet" href="../content/css/news-ipad.css" />
+</head>
+<body>
+
+<div class="header">&nbsp;</div><!--//header-->
+
+<div class="section content">
+	<div class="content-left" id="menu">
+		<a href="list.html?type=1002"><span>品牌新闻</span></a>
+		<a href="list.html?type=1003"><span>市场活动</span></a>
+		<a href="list.html?type=1001"><span>媒体声音</span></a>
+	</div>
+	<div class="content-right">
+		<div class="content-right-detail" id="news-detail"></div>
+	</div>
+</div><!--//section-->
+
+<script id="zj-detail-tmpl" type="text/html">
+    <div class="new_detail_title"><!--[= title]--></div>
+    <div class="new_detail_time">
+    	<span>时间：<!--[= $formatDate(createAt,'yyyy-MM-dd')]--></span><span>阅读：<!--[= browserNum]-->次</span>
+    </div>
+    <!--<div class="new_detail_img">
+    	<img src="../content/images/news/newdetail.png">
+    </div>-->
+    <div class="new_detail_detail"><!--[== content]--></div>
+</script>
+
+<script type="text/javascript" src="../content/js/base-ipad/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/template.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/global.js"></script>
+<script type="text/javascript" src="../content/js/news-ipad/detail.js"></script>
+</body>
+</html>

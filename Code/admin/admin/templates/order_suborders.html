@@ -1,0 +1,84 @@
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+<!-- 子订单列表 -->
+<form method="post" action="" name="listForm">
+    <div class="list-div" id="listDiv" style="position: relative">
+        {/if}
+        <table cellpadding="3" cellspacing="1">
+            <tr>
+                <th>{$lang.order_sn}</th>
+                <th>{$lang.contract_sn}</th>
+                <th>{$lang.order_time}</th>
+                <th>{$lang.consignee}</th>
+                <th>{$lang.total_fee}</th>
+                <th>{$lang.all_status}</th>
+            <tr>
+            {foreach from=$suborders item=order key=okey}
+            <tr style="position: relative;">
+                <td valign="top" nowrap="nowrap">
+                    <a class="stateOrder" style="display: block;width:240px;height: 30px;" data-order="{$order.order_id}" href="order.php?act=info&order_id={$order.order_id}" id="order_{$okey}">{$order.order_sn}</a>
+                    <div class="order-goods" order_id="{$order.order_id}" style="width: 80%;border:1px solid #ccc;height: auto;background: #fff;position: absolute;display:none;left: 5%;top: 30;z-index: 9999;"></div>
+                </td>
+                <td>{$order.contract_sn|default:N/A}</td>
+                <td>{$order.buyer|escape}<br />{$order.short_order_time}</td>
+                <td align="left"><a href="mailto:{$order.email}"> {$order.consignee|escape}</a>{if $order.tel} [TEL: {$order.tel|escape}]{/if} <br />{$order.address|escape}</td>
+                <td align="right" valign="top" nowrap="nowrap">{$order.formated_total_fee}</td>
+            <td align="center" valign="top" nowrap="nowrap">
+                {if $order.order_status neq '-1'}  {$lang.cos[$order.order_status]}{else}
+                    <a href="order.php?act=push&order_id={$order.order_id}">重新推送</a>
+                  {/if}
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="10">{$lang.no_suborders}</td></tr>
+            {/foreach}
+        </table>
+        {if $full_page}
+    </div>
+</form>
+<script language="JavaScript">
+    {foreach from=$filter item=item key=key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    {literal}
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+
+    $(document).ready(function(){
+        $(document).mouseover(function(){
+            $('.order-goods').hide();
+        });
+        $('.list-div tr').each(function(){
+            $(this).find('td').eq(0).find('a').mouseover(function(){
+                $('.order-goods').hide();
+            var order_id=$(this).attr('data-order');
+            ajax_get_goods($(this).parent().find('.order-goods'),order_id);
+            });
+            $(this).find('td').eq(0).find('a').mouseout(function(){
+                $(this).parent().find('.order-goods').hide();
+            });
+        });
+    });
+    function ajax_get_goods(obj,order_id){
+        $.ajax({
+            'type':'post',
+            'dataType':'text',
+            'data':{'order_id':order_id},
+            'url':'order.php?is_ajax=1&act=get_goods_info',
+            'success':function(msg){
+                msg = msg.replace(/\\r\\n/g,' ');
+                msg = JSON.parse(msg);
+                obj.html(msg.content[0].str);
+                $('.order-goods').hide();
+                obj.show();
+            }
+        });
+    }
+    {/literal}
+</script>
+{include file="pagefooter.htm"}
+{/if}

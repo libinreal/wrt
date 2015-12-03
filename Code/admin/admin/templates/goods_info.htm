@@ -1,0 +1,514 @@
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,selectzone.js,colorselector.js"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+{if $warning}
+<ul style="padding:0; margin: 0; list-style-type:none; color: #CC0000;">
+    <li style="border: 1px solid #CC0000; background: #FFFFCC; padding: 10px; margin-bottom: 5px;" >{$warning}</li>
+</ul>
+{/if}
+<div class="tab-div">
+<div id="tabbar-div">
+    <p>
+        <span class="tab-front" id="general-tab">{$lang.tab_general}</span>
+        <span class="tab-back" id="detail-tab">{$lang.tab_detail}</span>
+        <span class="tab-back" id="mix-tab">{$lang.tab_mix}</span>
+        <span class="tab-back" id="properties-tab">{$lang.tab_properties}</span>
+        <span class="tab-back" id="gallery-tab">{$lang.tab_gallery}</span>
+        <span class="tab-back" id="linkgoods-tab">{$lang.tab_explain}</span>
+        <span class="tab-back" id="groupgoods-tab">{$lang.tab_sales}</span>
+    </p>
+</div>
+<!-- tab body -->
+<div id="tabbody-div">
+<form enctype="multipart/form-data" action="goods.php" method="post" name="theForm" onsubmit="return fnGoodsform();">
+    <!-- 最大文件限制 -->
+    <input type="hidden" name="MAX_FILE_SIZE" value="2097152" />
+    <!-- 通用信息 -->
+    <table width="90%" id="general-table" align="center">
+        <tr>
+            <td class="label">{$lang.lab_goods_name}</td>
+            <td>
+                <input type="text" name="goods_name" id="goods_name" value="{$goods.goods_name|escape}" style="float:left;color:{$goods_name_color};" size="30" />
+                {$lang.require_field}
+            </td>
+        </tr>
+        <tr>
+            <td class="label">{$lang.lab_goods_cat}</td>
+            <td><select name="cat_id" id="category_selected" onchange="get_categoryChange();">
+                <option value="0">{$lang.select_please}</option>{$cat_list}</select>
+                {$lang.require_field}
+            </td>
+        </tr>
+        <tr>
+            <td class="label">{$lang.lab_goods_brand}</td>
+            <td style="position: relative;">
+                <span>
+                    <input type="hidden" name="brand_id" id="send_id" value="{$goods.brand_id}"/>
+                    <input style="width: 250px;" type="text" id="tt" autocomplete="off" placeholder="请输入拼音简码选择厂商" value="{$goods.brand_name}"/>
+                    {$lang.require_field}
+                </span>
+                <div class="brandsInfo" style="">
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="label">{$lang.lab_shop_price}</td>
+            <td><input type="text" name="shop_price" id="shop_price" value="{$goods.shop_price}" size="20" onblur="get_shop_price();" />
+                {$lang.require_field}</td>
+        </tr>
+        <tr>
+            <td class="label">{$lang.lab_market_price}</td>
+            <td>
+                <input type="text" name="market_price" id="market_price" value="{$goods.market_price}" size="20" onblur="get_market_price();" />
+                {$lang.require_field}
+            </td>
+        </tr>
+        <tr>
+            <td class="label">{$lang.lab_picture}</td>
+            <td>
+                <input type="file" name="goods_img" size="35" />
+                {if $goods.goods_img}
+                <a href="goods.php?act=show_image&img_url={$goods.goods_img}" target="_blank"><img src="images/yes.gif" border="0" /></a>
+                {else}
+                <img src="images/no.gif" />
+                {/if}
+                <br /><input type="text" size="40" value="{$lang.lab_picture_url}" style="color:#aaa;" onfocus="if (this.value == '{$lang.lab_picture_url}'){this.value='http://';this.style.color='#000';}" name="goods_img_url"/>
+            </td>
+        </tr>
+        <tr id="auto_thumb_1">
+            <td class="label"> {$lang.lab_thumb}</td>
+            <td id="auto_thumb_3">
+                <input type="file" name="goods_thumb" size="35" />
+                {if $goods.goods_thumb}
+                <a href="goods.php?act=show_image&img_url={$goods.goods_thumb}" target="_blank"><img src="images/yes.gif" border="0" /></a>
+                {else}
+                <img src="images/no.gif" />
+                {/if}
+                <br /><input type="text" size="40" value="{$lang.lab_thumb_url}" style="color:#aaa;" onfocus="if (this.value == '{$lang.lab_thumb_url}'){this.value='http://';this.style.color='#000';}" name="goods_thumb_url"/>
+                {if $gd > 0}
+                <br /><label for="auto_thumb"><input type="checkbox" id="auto_thumb" name="auto_thumb" checked="true" value="1" onclick="handleAutoThumb(this.checked)" />{$lang.auto_thumb}</label>{/if}
+            </td>
+        </tr>
+        <tr>
+            <td id="tbody-goodsAttr" colspan="2" style="padding:0">{$goods_attr_html}</td>
+        </tr>
+    </table>
+
+    <!-- 详细描述 -->
+    <table width="90%" id="detail-table" style="display:none">
+        <tr>
+            <td>{$FCKeditor}</td>
+        </tr>
+    </table>
+
+    <!-- 其他信息 -->
+    <table width="90%" id="mix-table" style="display:none" align="center">
+        {if $cfg.use_storage}
+        <tr>
+            <td class="label"><a href="javascript:showNotice('noticeStorage');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a> {$lang.lab_goods_number}</td>
+            <!--            <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" {if $code neq '' || $goods._attribute neq ''}readonly="readonly"{/if} /><br />-->
+            <td><input type="text" name="goods_number" value="{$goods.goods_number}" size="20" /><br />
+                <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeStorage">{$lang.notice_storage}</span></td>
+        </tr>
+        <tr>
+            <td class="label">{$lang.lab_warn_number}</td>
+            <td><input type="text" name="warn_number" value="{$goods.warn_number}" size="20" /></td>
+        </tr>
+        {/if}
+        <tr>
+            <td class="label">{$lang.lab_area}</td>
+            <td>
+                <select name="area" id="area_id">
+                    <option value="">{$lang.selected_area}</option>
+                    <option value="1" {if $goods.area_id==1}selected{/if}>{$lang.selected_All}</option>
+                    {foreach from=$areas item=area_region}
+                    <option value="{$area_region.region_id}" {if $goods.area_id==$area_region.region_id}selected{/if}>{$area_region.region_name}</option>
+                    {/foreach}
+                </select>
+                {$lang.require_field}
+            </td>
+        </tr>
+        <tr>
+            <td class="label">{$lang.lab_shiplocal}</td>
+            <td>
+                <input type="text" name="shiplocal" id="" value="{$goods.shiplocal}"/>
+            </td>
+        </tr>
+        <tr id="alone_sale_1">
+            <td class="label" id="alone_sale_2">{$lang.lab_is_on_sale}</td>
+            <td id="alone_sale_3"><input type="checkbox" name="is_on_sale" value="1" {if $goods.is_on_sale}checked="checked"{/if} /> {$lang.on_sale_desc}</td>
+        </tr>
+    </table>
+
+    <!-- 属性与规格 -->
+    <table width="90%" id="properties-table" style="display:none">
+        <tr>
+            <td>{$goods_brief_FCKeditor}</td>
+        </tr>
+    </table>
+    <!-- 商品相册 -->
+    <table width="90%" id="gallery-table" style="display:none" align="center">
+        <!-- 图片列表 -->
+        <tr>
+            <td>
+                {foreach from=$img_list item=img key=i}
+                <div id="gallery_{$img.img_id}" style="float:left; text-align:center; border: 1px solid #DADADA; margin: 4px; padding:2px;">
+                    <a href="javascript:;" onclick="if (confirm('{$lang.drop_img_confirm}')) dropImg('{$img.img_id}')">[-]</a><br />
+                    <a href="goods.php?act=show_image&img_url={$img.img_url}" target="_blank">
+                        <img src="../{if $img.thumb_url}{$img.thumb_url}{else}{$img.img_url}{/if}" {if $thumb_width neq 0}width="{$thumb_width}"{/if} {if $thumb_height neq 0}height="{$thumb_height}"{/if} border="0" />
+                    </a><br />
+                    <input type="text" value="{$img.img_desc|escape}" size="15" name="old_img_desc[{$img.img_id}]" />
+                </div>
+                {/foreach}
+            </td>
+        </tr>
+        <tr><td>&nbsp;</td></tr>
+        <!-- 上传图片 -->
+        <tr>
+            <td>
+                <a href="javascript:;" onclick="addImg(this)">[+]</a>
+                {$lang.img_desc} <input type="text" name="img_desc[]" size="20" />
+                {$lang.img_url} <input type="file" name="img_url[]" />
+                <input type="text" size="40" value="{$lang.img_file}" style="color:#aaa;" onfocus="if (this.value == '{$lang.img_file}'){this.value='http://';this.style.color='#000';}" name="img_file[]"/>
+            </td>
+        </tr>
+    </table>
+
+    <table width="90%" id="linkgoods-table" style="display:none">
+        <tr>
+            <td>{$explain_FCKeditor}</td>
+        </tr>
+    </table>
+
+    <!-- 售后保障 -->
+    <table width="90%" id="groupgoods-table" style="display:none">
+        <tr>
+            <td>{$SalesFCKeditor}</td>
+        </tr>
+    </table>
+    <div class="button-div">
+        <input type="hidden" id="goods_id" name="goods_id" value="{$goods.goods_id}" />
+        {if $code neq ''}
+        <input type="hidden" name="extension_code" value="{$code}" />
+        {/if}
+        <input type="submit" value="{$lang.button_submit}" class="button" />
+        <input type="reset" value="{$lang.button_reset}" class="button" />
+        <input type="hidden" name="act" value="{$form_act}" />
+    </div>
+
+</form>
+</div>
+</div>
+<!-- end goods form -->
+{insert_scripts files="validator.js,tab.js"}
+
+<script type="text/javascript" charset="utf-8" language="JavaScript">
+var categoryId = [];
+{foreach from=$insertCategory item=category}
+
+    categoryId.push({$category.cat_id});
+{/foreach}
+
+var goodsId = '{$goods.goods_id}';
+var elements = document.forms['theForm'].elements;
+var sz1 = new SelectZone(1, elements['source_select1'], elements['target_select1']);
+var sz2 = new SelectZone(2, elements['source_select2'], elements['target_select2'], elements['price2']);
+var sz3 = new SelectZone(1, elements['source_select3'], elements['target_select3']);
+var marketPriceRate = {$cfg.market_price_rate|default:1};
+var integralPercent = {$cfg.integral_percent|default:0};
+
+{literal}
+onload = function()
+{
+    if (document.forms['theForm'].elements['auto_thumb'])
+    {
+        handleAutoThumb(document.forms['theForm'].elements['auto_thumb'].checked);
+    }
+    // 检查新订单
+    startCheckOrder();
+    document.forms['theForm'].reset();
+}
+function get_categoryChange() {
+    //alert($('#goods_id').val());
+    var catValue = $("#category_selected").val();
+    var goodsId = $("#goods_id").val();
+    var len = categoryId.length;
+    var flag = true;
+    for(var i=0;i<len;i++) {
+        if(catValue == categoryId[i]) {
+            flag = true;
+            break;
+        }else{
+            flag = false;
+        }
+    }
+    console.log(catValue);
+    if(flag){
+        Ajax.call('goods.php?act=goods_type', "id="+catValue+"&goodsId="+goodsId, goodsAttrResponse, "POST", "JSON");
+    }else{
+        alert('不可以添加');
+        $("#category_selected").val('0');
+    }
+}
+
+function goodsAttrResponse(msg) {
+    $("#tbody-goodsAttr").html('');
+    $("#tbody-goodsAttr").append(msg.content);
+    //alert(msg.content);
+}
+function get_shop_price() {
+    var shop_price = document.getElementById("shop_price").value;
+    if(shop_price=='') {
+        alert('Vip价格不能为空');
+        document.getElementById("shop_price").value = '0.00';
+    }
+    if(shop_price<0) {
+        alert('Vip价格不能小于0');
+        document.getElementById("shop_price").value = '0.00';
+    }
+    if(!((/^[0-9]+(.[0-9]+)|[0-9]$/).test(shop_price))) {
+        alert('Vip价格格式不正确');
+        document.getElementById("shop_price").value = '0.00';
+    }
+}
+function get_market_price() {
+    var market_price = document.getElementById("market_price").value;
+    if(market_price=='') {
+        alert('出厂价格不能为空');
+        document.getElementById("market_price").value = '0.00';
+    }
+    if(market_price<0) {
+        alert('出厂价格不能小于0');
+        document.getElementById("market_price").value = '0.00';
+    }
+    if(!((/^[0-9]+(.[0-9]+)|[0-9]$/).test(market_price))) {
+        alert('出厂价格格式不正确');
+        document.getElementById("market_price").value = '0.00';
+    }
+}
+
+function fnGoodsform() {
+    if($('#goods_name').val()=='') {
+        alert(goods_name_not_null)
+        return false;
+    }
+    if($('#category_selected').val()==0) {
+        alert(goods_cat_not_null);
+        return false;
+    }
+    if($('#tt').val()=='') {
+        alert('物料厂商必须选择');
+        return false;
+    }
+    if($("#shop_price").val()=='') {
+        alert('Vip价格不能为空');
+        $("#shop_price").val('0.00');
+        return false;
+    }
+    if($("#shop_price").val()<0) {
+        alert('Vip价格不能小于0');
+        $("#shop_price").val('0.00');
+        return false;
+    }
+    if(!((/^[0-9]+(.[0-9]+)|[0-9]$/).test($("#shop_price").val()))) {
+        alert('Vip价格格式不正确');
+        $("#shop_price").val('0.00');
+        return false;
+    }
+    if($("#market_price").val()=='') {
+        alert('出厂价格不能为空');
+        $("#market_price").val('0.00');
+        return false;
+    }
+    if($("#market_price").val()<0) {
+        alert('出厂价格不能小于0');
+        $("#market_price").val('0.00');
+        return false;
+    }
+    if(!((/^[0-9]+(.[0-9]+)|[0-9]$/).test($("#market_price").val()))) {
+        alert('出厂价格格式不正确');
+        $("#market_price").val('0.00');
+        return false;
+    }
+    if($('#area_id').val()=='') {
+        alert(no_selected_area);
+        return false;
+    }
+    if($('.goods_type').val()=='') {
+        alert('商品规格属性必须选择');
+        return false;
+    }
+    var doc = document.getElementById('attrTable').rows;
+    var len = doc.length;
+    var i = 0;
+    var selectStr = '';
+    for(i;i<len;i++) {
+        var tdNodes = doc[i].getElementsByTagName('td')[1];
+        var selectOption = tdNodes.getElementsByTagName('select')[0];
+        var index=selectOption.options.selectedIndex;
+        var OptionVal = selectOption.options[index].value;
+        selectStr +=OptionVal;
+
+    }
+    if(selectStr.indexOf('default')!= -1) {
+        alert('您有规格属性没有选择');
+        return false;
+    }
+    return true;
+}
+{/literal}
+/**
+ * 切换商品类型
+ */
+function getAttrList(goodsId)
+{
+    var selGoodsType = document.forms['theForm'].elements['goods_type'];
+
+    if (selGoodsType != undefined)
+    {
+        var goodsType = selGoodsType.options[selGoodsType.selectedIndex].value;
+
+        Ajax.call('goods.php?is_ajax=1&act=get_attr', 'goods_id=' + goodsId + "&goods_type=" + goodsType, setAttrList, "GET", "JSON");
+    }
+}
+
+function setAttrList(result, text_result)
+{
+    document.getElementById('tbody-goodsAttr').innerHTML = result.content;
+}
+
+function handleAutoThumb(checked)
+{
+    document.forms['theForm'].elements['goods_thumb'].disabled = checked;
+    document.forms['theForm'].elements['goods_thumb_url'].disabled = checked;
+}
+
+
+
+/**
+ * 新增一个图片
+ */
+function addImg(obj)
+{
+    var src  = obj.parentNode.parentNode;
+    var idx  = rowindex(src);
+    var tbl  = document.getElementById('gallery-table');
+    var row  = tbl.insertRow(idx + 1);
+    var cell = row.insertCell(-1);
+    cell.innerHTML = src.cells[0].innerHTML.replace(/(.*)(addImg)(.*)(\[)(\+)/i, "$1removeImg$3$4-");
+}
+
+/**
+ * 删除图片上传
+ */
+function removeImg(obj)
+{
+    var row = rowindex(obj.parentNode.parentNode);
+    var tbl = document.getElementById('gallery-table');
+
+    tbl.deleteRow(row);
+}
+
+/**
+ * 删除图片
+ */
+function dropImg(imgId)
+{
+    Ajax.call('goods.php?is_ajax=1&act=drop_image', "img_id="+imgId, dropImgResponse, "GET", "JSON");
+}
+
+function dropImgResponse(result)
+{
+    if (result.error == 0)
+    {
+        document.getElementById('gallery_' + result.content).style.display = 'none';
+    }
+}
+
+function fnBrandResponse(msg) {
+    var i = 0;
+    var brandInfos = '';
+    var len = msg.length;
+    var brandInfos = '';
+    for(i;i<len;i++) {
+        brandInfos +='<span data-id="'+msg[i].brand_id+'">'+msg[i].brand_name+'</span>'
+    }
+    $('.brandsInfo').html(brandInfos).show();
+    $('.brandsInfo span').hover(function(){
+        $(this).css({'background':'red','cursor':'pointer'});
+    },function(){
+        $(this).css({'background':''});
+    });
+}
+
+var historyContainer = $('.brandsInfo'),
+        indexLI,
+        si = 9,
+        wi = 0,
+        upCount = 0,downCount = 0;
+$("#tt").click(function(e){
+    var pinyin = $("#tt").val().toUpperCase();
+    //if(!pinyin) return;
+    Ajax.call('goods.php?act=brands&code='+pinyin, "", fnBrandResponse, "GET", "JSON");
+})
+$("#tt").on('keyup', function(e) {
+    if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
+        var pinyin = $("#tt").val().toUpperCase();
+        Ajax.call('goods.php?act=brands&code='+pinyin, "", fnBrandResponse, "GET", "JSON");
+    }else{
+        var max = historyContainer.children().length;
+        historyContainer.find('span').removeClass('active');
+        //down=40 up=38
+        if (e.keyCode == 40) {
+            if(typeof indexLI == 'undefined') indexLI = -1;
+            indexLI++;
+            downCount++;
+            upCount = 0;
+        } else if (e.keyCode == 38) {
+            if(typeof indexLI == 'undefined') indexLI = 0;
+            indexLI--;
+            upCount ++;
+            downCount = 0;
+        }
+        if (indexLI >= max - 1) {
+            indexLI = max - 1;
+        }
+        if (indexLI < 0) {
+            indexLI = 0;
+        }
+        var cur = historyContainer.find('span:eq(' + indexLI + ')');
+        cur.addClass('active');
+        $('#tt').val(cur.text());
+        $("#send_id").val(cur.attr('data-id'));
+    }
+});
+$('#shop_price').on('focusin', function(e) {
+    closeHistoryContainer();
+});
+historyContainer.on('click', 'span', function() {
+    $('#tt').val($(this).text());
+    $("#send_id").val($(this).attr('data-id'));
+    closeHistoryContainer();
+});
+$(document).on('click', function(event) {
+    if ($(event.target).parent().hasClass('brandsInfo') || $(event.target).attr('id') == 'tt') return;
+    closeHistoryContainer();
+});
+
+//关闭弹出下拉框，重置数据
+function closeHistoryContainer(){
+    historyContainer.hide();
+    historyContainer.find('span').removeClass('active');
+    indexLI = undefined;
+}
+{/literal}
+</script>
+{include file="pagefooter.htm"}
+{literal}
+<style type="text/css">
+    .brandsInfo {overflow-y:auto;display: none;position: absolute;top:22px;z-index:555;background:#fff;height: 200px;width: 250px;border:1px solid #cccccc;}
+    .brandsInfo span {display: block;line-height: 20px;padding-left: 3px;}
+    .active{background: red;color: #ffffff;}
+</style>
+{/literal}

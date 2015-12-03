@@ -1,0 +1,121 @@
+<!-- $Id: articlecat_info.htm 16752 2009-10-20 09:59:38Z wangleisvn $ -->
+{include file="pageheader.htm"}
+<div class="main-div">
+<form method="post" action="articlecat.php" name="theForm"  onsubmit="return validate()">
+<table cellspacing="1" cellpadding="3" width="100%">
+  <tr>
+    <td class="label">{$lang.cat_name}</td>
+    <td><input type="text" name="cat_name" maxlength="60" size = "30" value="{$cat.cat_name|escape}" />{$lang.require_field}</td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.parent_cat}</td>
+    <td>
+      <select name="parent_id" onchange="catChanged()" {if $disabled }disabled="disabled"{/if} >
+        <!--<option value="0">{$lang.cat_top}</option>-->
+        {$cat_select}
+      </select>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.sort_order}:</td>
+    <td>
+      <input type="text" name='sort_order' {if $cat.sort_order}value='{$cat.sort_order}'{else} value="0"{/if} size="15" />
+    </td>
+  </tr>
+  <!--<tr>
+    <td class="label">{$lang.show_in_nav}:</td>
+    <td>
+      <input type="radio" name="show_in_nav" value="1" {if $cat.show_in_nav neq 0} checked="true"{/if}/> {$lang.yes}
+      <input type="radio" name="show_in_nav" value="0" {if $cat.show_in_nav eq 0} checked="true"{/if} /> {$lang.no}
+    </td>
+  </tr>-->
+   <tr>
+       <td class="label">{$lang.cat_type}:</td>
+       <td>
+        <input type="radio" {if $cat.cat_type neq 3000 && $cat.cat_type neq 0}class="no_type"{/if} name="cat_type" value="3000" {if $cat.cat_type eq 3000} checked="true"{/if} checked/> <span {if $cat.cat_type neq 3000 && $cat.cat_type neq 0}class="no_type"{/if}>{$lang.helpcenter}</span>
+        <input type="radio" {if $cat.cat_type neq 1000}class="no_type"{/if} name="cat_type" value="1000" {if $cat.cat_type eq 1000} checked="true"{/if} /><span {if $cat.cat_type neq 1000}class="no_type"{/if}>{$lang.wr_news}</span>
+        <input type="radio" {if $cat.cat_type neq 1001}class="no_type"{/if} name="cat_type" value="1001" {if $cat.cat_type eq 1001} checked="true"{/if} /><span {if $cat.cat_type neq 1001}class="no_type"{/if}>{$lang.media_voice}</span>
+        <input type="radio" {if $cat.cat_type neq 1002}class="no_type"{/if} name="cat_type" value="1002" {if $cat.cat_type eq 1002} checked="true"{/if} /><span {if $cat.cat_type neq 1002}class="no_type"{/if}>{$lang.brand_news}</span>
+        <input type="radio" {if $cat.cat_type neq 1003}class="no_type"{/if} name="cat_type" value="1003" {if $cat.cat_type eq 1003} checked="true"{/if} /><span {if $cat.cat_type neq 1003}class="no_type"{/if}>{$lang.market_ac}</span>
+        <input type="radio" {if $cat.cat_type neq 2000}class="no_type"{/if} name="cat_type" value="2000" {if $cat.cat_type eq 2001} checked="true"{/if} /><span {if $cat.cat_type neq 2000}class="no_type"{/if}>{$lang.notice}</span>
+        <input type="radio" {if $cat.cat_type neq 2002}class="no_type"{/if} name="cat_type" value="2002" {if $cat.cat_type eq 2002} checked="true"{/if} /><span {if $cat.cat_type neq 2002}class="no_type"{/if}>{$lang.notice_mall}</span>
+        <input type="radio" {if $cat.cat_type neq 2003}class="no_type"{/if} name="cat_type" value="2003" {if $cat.cat_type eq 2003} checked="true"{/if} /><span {if $cat.cat_type neq 2003}class="no_type"{/if}>{$lang.notice_customize}</span>
+        <input type="radio" {if $cat.cat_type neq 2004}class="no_type"{/if} name="cat_type" value="2004" {if $cat.cat_type eq 2004} checked="true"{/if} /><span {if $cat.cat_type neq 2004}class="no_type"{/if}>{$lang.notice_scroe}</span>
+        <input type="radio" {if $cat.cat_type neq 3001}class="no_type"{/if} name="cat_type" value="3001" {if $cat.cat_type eq 3001} checked="true"{/if} /><span {if $cat.cat_type neq 3001}class="no_type"{/if}>{$lang.aftersale}</span>
+        <input type="radio" {if $cat.cat_type neq 3002}class="no_type"{/if} name="cat_type" value="3002" {if $cat.cat_type eq 3002} checked="true"{/if} /><span {if $cat.cat_type neq 3002}class="no_type"{/if}>{$lang.guide}</span>
+        <input type="radio" {if $cat.cat_type neq 3003}class="no_type"{/if} name="cat_type" value="3003" {if $cat.cat_type eq 3003} checked="true"{/if} /><span {if $cat.cat_type neq 3003}class="no_type"{/if}>{$lang.teach}</span>
+        <input type="radio" {if $cat.cat_type neq 3004}class="no_type"{/if} name="cat_type" value="3004" {if $cat.cat_type eq 3004} checked="true"{/if} /><span {if $cat.cat_type neq 3004}class="no_type"{/if}>{$lang.aboutus}</span>
+       </td>
+   </tr>
+  <!--<tr>
+    <td class="label"><a href="javascript:showNotice('notice_keywords');" title="{$lang.form_notice}">
+        <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.cat_keywords}</td>
+    <td><input type="text" name="keywords" maxlength="60" size="50" value="{$cat.keywords|escape}" />
+    <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="notice_keywords">{$lang.notice_keywords}</span>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.cat_desc}</td>
+    <td><textarea  name="cat_desc" cols="60" rows="4">{$cat.cat_desc|escape}</textarea></td>
+  </tr>
+  -->
+  <tr>
+    <td colspan="2" align="center"><br />
+      <input type="submit" class="button" value="{$lang.button_submit}" />
+      <input type="reset" class="button" value="{$lang.button_reset}" />
+      <input type="hidden" name="act" value="{$form_action}" />
+      <input type="hidden" name="id" value="{$cat.cat_id}" />
+      <input type="hidden" name="old_catname" value="{$cat.cat_name}" />
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+<!--
+/**
+ * 检查表单输入的数据
+ */
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("cat_name",  no_catname);
+    return validator.passed();
+}
+
+/**
+ * 选取上级分类时判断选定的分类是不是底层分类
+ */
+function catChanged()
+{
+  var obj = document.forms['theForm'].elements['parent_id'];
+
+  cat_type = obj.options[obj.selectedIndex].getAttribute('cat_type');
+  /*if (cat_type == undefined)
+  {
+    cat_type = 1;
+  }*/
+
+  if ((obj.selectedIndex > 0) &&
+          (cat_type == 1000 || cat_type == 1001 || cat_type == 1002 || cat_type == 1003
+                 || cat_type == 2000 || cat_type == 2002 || cat_type == 2003 || cat_type == 2004 ))
+  {
+    alert(sys_hold);
+    obj.selectedIndex = 0;
+    return false;
+  }
+
+  return true;
+}
+
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+//-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

@@ -1,0 +1,447 @@
+﻿/*reset common start*/
+.scroll-img{
+    width: 780px;
+    height: 344px;
+    border: none;
+}
+.scroll-img .items img{
+    width: 780px;
+    height: 344px;
+}
+.header-right .header-customize{
+    display: block;
+}
+.overlay-customize {
+    top: 53px;
+    left: -91px;
+    width: 182px;
+    padding: 0 25px;
+}
+.overlay-customize a {
+    display: block;
+    width: 100%;
+    height: 46px;
+    line-height: 46px;
+    color: #737373;
+    border-top: 1px solid #e6e6e6;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.overlay-customize a:hover{
+    color: #7cb234;
+}
+/*reset common end*/
+
+/*module start*/
+.customize {
+    padding-bottom: 25px;
+}
+/* 内容上半部分 */
+
+.content-top {
+    padding: 20px 0 5px 0;
+}
+.content-top .notice {
+    float: right;
+    width: 253px;
+    height: 235px;
+    background-color: #ffffff;
+}
+.notice li {
+    line-height: 38px;
+}
+.notice li a {
+    display: block;
+    height: 38px;
+    margin: 0 5px;
+    padding: 0 5px;
+    border-top: 1px solid #e6e6e6;
+    overflow: hidden;
+}
+.notice li:first-child a {
+    border-top: none;
+}
+.notice li a label {
+    width: 183px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    float: left;
+    cursor: pointer;
+}
+.notice-title {
+    height: 38px;
+    padding-right: 10px;
+    line-height: 38px;
+    border-bottom: 2px solid #eee;
+}
+.notice .notice-bar {
+    float: left;
+    display: block;
+    width: 84px;
+    margin-bottom: -2px;
+    border-bottom: 2px solid #7cb234;
+    font-size: 16px;
+    text-align: center;
+}
+.notice .notice-more {
+    float: right;
+}
+.notice li span {
+    float: right;
+}
+.applying {
+    float: right;
+    width: 253px;
+    height: 99px;
+    margin-top: 10px;
+    font-size: 16px;
+    text-align: center;
+}
+.applying span {
+    display: block;
+    padding-top: 60px;
+    color: #ffffff;
+    background-repeat: no-repeat;
+    background-position: center 15px;
+}
+.applying .apply {
+    float: left;
+    width: 100px;
+    height: 99px;
+    background-color: #7cb334;
+}
+.applying .apply:hover {
+    background-color: #648f2b;
+    text-decoration: none;
+}
+.applying .record {
+    float: right;
+    width: 141px;
+    height: 99px;
+    background-color: #495465;
+    margin-bottom: 10px;
+}
+.applying .record:hover {
+    background-color: #333A44;
+    text-decoration: none;
+}
+.applying .apply span {
+    background-image: url(../images/customize/apply.png);
+    ;
+}
+.applying .record span {
+    background-position: center 26px;
+    background-image: url(../images/customize/apply_record.png);
+}
+/* 内容下半部分 */
+
+.content-bottom {
+    margin-left: -17px;
+    /*margin-top: 38px;*/
+}
+.content-bottom .list-item {
+    position: relative;
+    float: left;
+    width: 338px;
+    margin-left: 16px;
+    margin-top: 34px;
+    background-color: #ffffff;
+    box-shadow: 1px 0 15px rgba(0, 0, 0, 0.1);
+}
+.list-item .label {
+    color: #818181;
+}
+.list-item .list-block {
+    height: 213px;
+    padding: 0 20px;
+}
+.list-block .title {
+    width: 190px;
+    padding: 17px 0;
+    font-size: 16px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.list-block .standard {
+    padding-top: 9px;
+    padding-bottom: 15px;
+    line-height: 30px;
+}
+.list-block .standard .model, .list-block .standard .area {
+    width: 48%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.list-block .lafc {
+    width: 122px;
+    margin-top: -4px;
+}
+.list-block .price {
+    display: block;
+    font-size: 25px;
+    color: #ed1c24;
+}
+.list-block .bor {
+    padding-left: 30px;
+    border-left: 1px solid #cbcbcb;
+    line-height: 58px;
+}
+.list-block .bor .button {
+    display: block;
+    width: 93px;
+    font-size: 16px;
+}
+.list-block .bor .past {
+    background: #eaeaea;
+    color: #7a7a7a;
+}
+.list-block .shop-img {
+    position: absolute;
+    right: 20px;
+    top: -18px;
+    width: 98px;
+    height: 98px;
+    border: 2px solid #fcfcfc;
+    background-color: #eee;
+}
+.list-block .shop-img img {
+    display: block;
+    width: 98px;
+    height: 98px;
+}
+.content-bottom .list-num {
+    padding: 14px 20px;
+    line-height: 24px;
+    background: #f0f0f0;
+}
+/* 定制申请表导航部分 */
+
+.apply-form {
+    background: #fff;
+    padding: 36px 83px 52px 32px;
+    border: 1px solid #e6e6e6;
+}
+.groupbox {
+    width: 545px;
+    float: left;
+}
+.apply-form .group {
+    line-height: 62px;
+    position: relative;
+}
+.group .sel-drop {
+    position: absolute;
+    right: 0px;
+    top: 12px;
+    z-index: 2;
+}
+.group label {
+    display: block;
+    width: 130px;
+    float: left;
+    margin-right: 20px;
+    text-align: right;
+}
+.group label .color {
+    color: #ff0000;
+}
+.group input, textarea {
+    border: 1px solid #e6e6e6;
+    height: 38px;
+    width: 390px;
+    text-indent: 1em;
+}
+.group input[readonly], .group select[disabled] {
+    background-color: #efefef;
+}
+.group textarea {
+    padding-top: 15px;
+}
+.group select {
+    width: 394px;
+    height: 41px;
+    border: 1px solid #e6e6e6;
+    text-indent: 1em;
+    position: absolute;
+    top: 11px;
+    right: 0px;
+    z-index: 2;
+    background: transparent;
+}
+.group .tarea {
+    margin-top: 10px;
+    height: 182px;
+    resize: none;
+}
+.group-right {
+    width: 383px;
+    float: right;
+}
+.group-right .groupbox {
+    width: 383px;
+}
+.group-right .group-img {
+    width: 316px;
+    height: 316px;
+    border: 1px solid #e6e6e6;
+    margin-bottom: 52px;
+    margin-top: 10px;
+    margin-left: 67px;
+    position: relative;
+    background: url(../images/common/d320x320-1.png) no-repeat center center;
+    background-size: 100% 100%;
+}
+.group-img img {
+    width: 316px;
+    height: 316px;
+}
+.group-img .hid_img {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+}
+.group-img .carmo {
+    width: 41px;
+    height: 41px;
+    position: absolute;
+    right: -17px;
+    bottom: -17px;
+    background: url(../images/customize/carmo.png) no-repeat right bottom;
+}
+.group-img .fileInput {
+    height: 320px;
+    overflow: hidden;
+    font-size: 300px;
+    position: absolute;
+    cursor: pointer;
+    right: 0;
+    top: 0;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+.group-right .group input {
+    width: 228px;
+    text-indent: 1em;
+}
+.group-right .group select {
+    width: 234px;
+}
+.groupbox-top {
+    margin-top: -10px;
+}
+.group-right .groupbtn {
+    width: 100%;
+    float: right;
+    text-align: right;
+    padding-top: 220px;
+}
+.groupbtn input {
+    width: 224px;
+}
+/* 定制专区提交层 */
+
+.apply-submit {
+    width: 430px;
+    height: 256px;
+    background: #fff;
+    border-radius: 15px;
+    font-size: 16px;
+    margin: 0 auto;
+    text-align: center;
+    display: none;
+}
+.apply-submit .apply-desc {
+    width: 244px;
+    line-height: 28px;
+    padding-top: 55px;
+    padding-bottom: 32px;
+    margin: 0 auto;
+}
+.apply-desc span {
+    color: #7cb234;
+}
+.apply-submit .apply-back {
+    width: 159px;
+    margin: 0 auto;
+    padding: 24px 101px 64px 104px;
+    border-top: 1px solid #c5c5c5;
+}
+.apply-back button {
+    width: 160px;
+    height: 36px;
+    border-radius: 6px;
+    background: #7cb234;
+    color: #fff;
+    border: none;
+}
+/* 错误提示样式 */
+
+.msg-box {
+    position: absolute;
+    width: 390px;
+    height: 0px;
+    top: 30px;
+    left: 150px;
+    color: red;
+    font-weight: bold;
+}
+/* 遮罩层 */
+
+.mask {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    _position: absolute;
+    top: 0;
+    z-index: 1000;
+}
+.opacity {
+    opacity: 0.3;
+    filter: alpha(opacity=30);
+    background-color: #000;
+}
+/*定制申请表*/
+.apply-2 .group input {
+    width: 290px;
+}
+.apply-right {
+    width: 483px;
+}
+.applybox {
+    width: 445px;
+}
+.group-right .apply input {
+    width: 290px;
+}
+.apply-2 {
+    padding: 36px 32px 82px 32px;
+}
+.apply .tarea {
+	width: 785px;
+}
+.applybtn {
+	float:right;padding-right:40px;
+}
+.applybtn .button {
+	padding:11px 15px;width:242px;
+}
+.apply .msg-box {
+    top: 190px;
+}
+.panel .panel-buttons .btn-cancel {
+    color: #fff;
+    border-color: #fc9208;
+    background-color: #fc9208;
+}
+.panel .panel-buttons .btn-cancel:hover {
+    border-color: #D57D09;
+    background-color: #D57D09; 
+}
+.panel .panel-close{
+    display: block;
+}

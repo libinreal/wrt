@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>人工服务-帮助中心-中交物融平台IPAD</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+    <link rel="stylesheet" href="../content/css/global-ipad.css" />
+    <link rel="stylesheet" href="../content/css/help-ipad.css" />
+</head>
+
+<body>
+	<div class="header">&nbsp;</div>
+    <div class="section manual">
+    	<div class="manual-item">
+    		<a class="manual-icon manual-icon1" href="online.html">&nbsp;</a>
+    		<div class="manual-content">
+    			<h3>在线客服</h3>
+    			<p>9：00-17：00在线及时解答您的问题</p>
+    		</div>
+    	</div>
+    	<div class="manual-item">
+    		<a class="manual-icon manual-icon2 open-dialog" href="#phoneDialog">&nbsp;</a>
+    		<div class="manual-content">
+    			<h3>电话客服</h3>
+    			<p>24小时人工电话解答您的问题</p>
+    		</div>
+    	</div>
+    	<div class="manual-item">
+    		<a class="manual-icon manual-icon3" href="mailto:service@zhongjiao.cc">&nbsp;</a>
+    		<div class="manual-content">
+    			<h3>邮件客服<span>[mailto:service@zhongjiao.cc]</span></h3>
+    			<p>第一时间通过邮件解答您的问题</p>
+    		</div>
+    	</div>
+    	<div class="manual-item">
+    		<a class="manual-icon manual-icon4 open-dialog" href="#suggestDialog">&nbsp;</a>
+    		<div class="manual-content">
+    			<h3>投诉建议</h3>
+    			<p>第一时间通过邮件解答您的问题</p>
+    		</div>
+    	</div>
+    </div>
+    <!--//section-->
+
+    <!-- 投诉建议 -->
+    <div id="suggestDialog" class="dialog">
+        <div class="dialog-head">
+            <span class="dialog-back"></span>
+            <span class="dialog-title">投诉建议</span>
+            <span class="dialog-close">X</span>
+        </div>
+        <div class="dialog-content suggest-form clearfix">
+            <form class="form s-form" id="omplaint-form">
+                <div class="input-group clearfix">
+                    <label><span>*</span>投诉内容：</label>
+                    <div class="input-radio">
+                        <label><input type="radio" name="type2" value="1" />建议与改进</label>
+                        <label><input type="radio" name="type2" value="2" />商品质量</label>
+                        <label><input type="radio" name="type2" value="3" />服务态度</label>
+                        <label><input type="radio" name="type2" value="4" />物流配送</label>
+                    </div>
+                    <input type="hidden" name="type" />
+                </div>
+                <div class="input-group clearfix">
+                    <label><span>*</span>具体内容：</label>
+                    <textarea class="suggest-content" name="content" placeholder="至少输入5个字符，最多输入..."></textarea>
+                </div>
+                <div class="input-group clearfix input-v">
+                    <label><span>*</span>相关订单号：</label>
+                    <input class="order" type="text" placeholder="请输入相关订单号" name="orderNo" maxlength="50" />
+                </div>
+                <div class="form-btn top-line">
+                    <input type="submit" class="green-btn" value="提交" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 电话预约 -->
+    <div id="phoneDialog" class="dialog">
+        <div class="dialog-head">
+            <span class="dialog-back"></span>
+            <span class="dialog-title">电话预约</span>
+            <span class="dialog-close">X</span>
+        </div>
+        <div><img src="../content/images/help-ipad/img1.png" width="100%" /></div>
+        <div class="dialog-content">
+            <form class="form p-form" id="appointment-form" action="#">
+                <div class="input-group clearfix input-xl">
+                    <label><span>*</span>预约：</label>
+                    <div class="input-radio l-b-m">
+                        <label><input type="radio" name="type1" value="1" />订单相关</label>
+                        <label><input type="radio" name="type1" value="2" />售后相关</label>
+                        <label><input type="radio" name="type1" value="3" />投诉与建议</label>
+                    </div>
+                    <input type="hidden" name="type"/>
+                </div>
+                <div class="input-group clearfix input-xl">
+                    <label><span>*</span>填写手机号码：</label>
+                    <input class="input-phone" type="number" placeholder="" name="telephone" maxlength="11" />
+                </div>
+                <div class="input-group clearfix input-xl">
+                    <label><span>*</span>选择回电时间：</label>
+                    <select id="day" class="lg-select">
+                        <option>今天</option>
+                        <option value="2014-09-13">2014-09-13</option>
+                        <option value="2014-09-14">2014-09-14</option>
+                        <option value="2014-09-15">2014-09-15</option>
+                    </select>
+                    <select id="hour">
+                        <option value="0">00</option>
+                        <option value="1">01</option>
+                        <option value="2">02</option>
+                        <option value="3">03</option>
+                        <option value="4">04</option>
+                        <option value="5">05</option>
+                        <option value="6">06</option>
+                        <option value="7">07</option>
+                        <option value="8">08</option>
+                        <option value="9">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                    </select>
+                    <span>时</span>
+                    <select id="minute">
+                        <option value="0">00</option>
+                        <option value="5">05</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="30">30</option>
+                        <option value="35">35</option>
+                        <option value="40">40</option>
+                        <option value="45">45</option>
+                        <option value="50">50</option>
+                        <option value="55">55</option>
+                    </select>
+                    <span>分</span>
+                    <input type="hidden" name="time" />
+                </div>
+                <div class="form-btn top-line top-line-h">
+                    <input type="submit" class="green-btn" value="提交预约">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../content/js/base-ipad/jquery-2.0.0.js"></script>
+    <script type="text/javascript" src="../content/js/base-ipad/template.js"></script>
+    <script type="text/javascript" src="../content/js/base-ipad/jquery.validator.js"></script>
+    <script type="text/javascript" src="../content/js/base-ipad/local/zh_CN.js"></script>
+    <script type="text/javascript" src="../content/js/base-ipad/global.js"></script>
+    <script type="text/javascript" src="../content/js/help-ipad/manual.js"></script>
+    
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!-- $Id: category_info.htm gxyang 2014-09-11 -->
+{include file="pageheader.htm"}
+<!-- start add new category form -->
+<div class="main-div">
+    <form action="" method="post" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+        <table width="100%" id="general-table">
+            <tr>
+                <td class="label">{$lang.label_area}{$lang.require_field}</td>
+                <td>
+                    <select name="region" id="region">
+                        <option value="">{$lang.brand_select_region}</option>
+                        <option value="1" {if $brands.area_id==1}selected{/if}>{$lang.china}</option>
+                        {foreach from=$region item=area}
+                        <option value="{$area.region_id}" {if $brands.area_id==$area.region_id }selected{/if}>{$area.region_name}</option>
+                        {/foreach}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_cat_name}{$lang.require_field}</td>
+                <td>
+                    <select name="category" id="category" onchange="get_category();">
+                        <option value="" level="">{$lang.brand_select_category}</option>
+                        {$category}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_brand}{$lang.require_field}</td>
+                <td>
+                    <select name="brand_id" id="brand">
+                        <option value="">{$lang.brand_select}</option>
+                        {foreach from=$brand_list item=brand}
+                        <option value="{$brand.brand_id}"{if $brands.brand_id==$brand.brand_id }selected{/if}>{$brand.brand_name}</option>
+                        {/foreach}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_sort_order}</td>
+                <td><input type="text" name="sort_order" id="" value="{$brands.sort_order}" /></td>
+            </tr>
+        </table>
+        <div class="button-div">
+            <input type="submit" value="{$lang.button_submit}" />
+            <input type="reset" value="{$lang.button_reset}" />
+        </div>
+        <input type="hidden" name="act" value="{$form_action}" />
+        <input type="hidden" name="brand_rid" value="{$brands.brand_rid}" />
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script type="text/javascript" language="JavaScript">
+    <!--
+function validate()
+{
+    if($("#region").val() == '') {
+        alert('请选择区域')
+        return false;
+    }
+    if($("#category").val() == '') {
+        alert('请选择物料类别');
+        return false;
+    }
+    if($("#brand").val() == '') {
+        alert('请选择品牌');
+        return false;
+    }
+    return true;
+}
+function get_category() {
+    var obj = document.getElementById('category');
+    var index=obj.selectedIndex;
+    var level=obj.options[index].getAttribute("level");
+    if(level>=3) {
+        return true;
+    }else {
+        obj.options[0].selected='selected';
+        alert('只有三级或者四级分类可以添加推荐品牌');
+        return false;
+    }
+}
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+
+
+    //-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

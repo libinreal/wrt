@@ -1,0 +1,127 @@
+/*reset common start*/
+.clear{
+    clear: both;
+    line-height: 0;
+    font-size: 0;
+}
+/*reset common end*/
+
+/*project start*/
+.c-red{
+    color: #ed1c24;
+}
+.bidding-map{
+    position: relative;
+    top: 0px;
+    right: 0px;
+}
+.bidding-tooltip{
+    position: absolute;
+    top: 100px;
+    left: 100px;
+    width: 91px;
+    height: 67px;
+    padding: 9px;
+    background-color: #fff;
+    border-radius: 5px;
+    color: #404040;
+    box-shadow: 1px 0 15px rgba(25,25,25,0.1);
+}
+.bidding-tooltip h3{
+    height: 21px;
+    padding: 0 3px 5px;
+    border-bottom: 1px solid #d3d3d3;
+    overflow: hidden;
+}
+.bidding-tooltip h3 .area{
+    float: left;
+    width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.bidding-tooltip h3 .count{
+    float: right;
+    width: 50%;
+    text-align: right;
+}
+.bidding-tooltip h3 em{
+    color: #00a0e9;
+}
+.bidding-tooltip p{
+    font-size: 12px;
+    line-height: 21px;
+}
+.bidding-tooltip i{
+    position: absolute;
+    z-index: 2;
+    right: 0px;
+    bottom: -12px;
+    display: block;
+    border-width: 10px;
+    border-style: solid;
+    border-right-color: #fff;
+    border-top-color: #fff;
+    border-bottom-color:  rgba(0,0,0,0);
+    border-left-color: rgba(0,0,0,0);
+}
+.bidding-tooltip:after{
+    content: '';
+    position: absolute;
+    z-index: 1;
+    display: block;
+    right: -7px;
+    bottom: -16px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #7cb234;
+}
+
+.bidding-friend{
+    height: 152px;
+    background-color: #fff;
+}
+.bidding-friend-more{
+    float: left;
+    display: table;
+    width: 124px;
+    height: 152px;
+    color: #fff;
+    border-right: 1px solid #d3d3d3;
+    background-color: #7cb234;
+}
+.bidding-friend-more span{
+    display: table-cell;
+    color: #fff;
+    text-align: center;
+    vertical-align: middle;
+}
+.bidding-friend-content{
+    float: left;
+    width: 797px;
+    padding: 24px 50px 0;
+}
+.bidding-friend-title{
+    float: left;
+    width: 80px;
+    line-height: 40px;
+}
+.bidding-friend-links{
+    float: left;
+    width: 717px;
+}
+.bidding-friend-links li{
+    float: left;
+    width: 20%;
+    height: 40px;
+    margin-bottom: 24px;
+    text-align: center;
+}
+.bidding-friend-links img{
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    max-height: 40px;
+}
+/*project end*/

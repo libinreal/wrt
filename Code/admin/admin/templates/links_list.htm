@@ -1,0 +1,63 @@
+<!-- $Id: links_list.htm 14216 2014-09-10 xy $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+
+<form method="post" action="" name="listForm">
+<!-- start ads list -->
+<div class="list-div" id="listDiv">
+{/if}
+
+<table cellpadding="3" cellspacing="1">
+  <tr>
+    <th><a href="javascript:listTable.sort('title'); ">{$lang.link_name}</a>{$sort_title}</th>
+    <th><a href="javascript:listTable.sort('type'); ">{$lang.link_type}</a>{$sort_type}</th>
+    <th><a href="javascript:listTable.sort('url'); ">{$lang.link_url}</a>{$sort_url}</th>
+    <th><a href="javascript:listTable.sort('icon'); ">{$lang.link_logo}</a>{$sort_icon}</th>
+    <th><a href="javascript:listTable.sort('createAt'); ">{$lang.addtime}</a>{$sort_createAt}</th>
+    <!--<th><a href="javascript:listTable.sort('show_order'); ">{$lang.show_order}</a>{$sort_show_order}</th>-->
+    <th>{$lang.handler}</th>
+  </tr>
+  <tr>
+  {foreach from=$links_list item=link}
+  <tr>
+    <td class="first-cell"><span onclick="listTable.edit(this, 'edit_link_name', {$link.id})">{$link.title|escape:html}</span></td>
+    <td align="left"><span>{if $link.type eq sq}{$lang.shangqing}{else}{$lang.zhaobiao}{/if}</span></td>
+    <td align="left"><span><a href="{$link.url}" target="_blank">{$link.url|escape:html}</a></span></td>
+    <td align="center"><span>{$link.icon}</span></td>
+    <!--<td align="right"><span onclick="listTable.edit(this, 'edit_show_order', {$link.link_id})">{$link.show_order}</span></td>-->
+    <td align="center"><span>{$link.createAt}</span></td>
+    <td align="center"><span>
+    <a href="links.php?act=edit&id={$link.id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>&nbsp;
+    <a href="javascript:;" onclick="listTable.remove({$link.id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a></span></td>
+  </tr>
+  {foreachelse}
+    <tr><td class="no-records" colspan="10">{$lang.no_links}</td></tr>
+  {/foreach}
+  <tr>
+    <td align="right" nowrap="true" colspan="10">{include file="page.htm"}</td>
+  </tr>
+</table>
+
+{if $full_page}
+</div>
+<!-- end ad_position list -->
+</form>
+
+<script type="text/javascript" language="JavaScript">
+  listTable.recordCount = {$record_count};
+  listTable.pageCount = {$page_count};
+
+  {foreach from=$filter item=item key=key}
+  listTable.filter.{$key} = '{$item}';
+  {/foreach}
+  {literal}
+  onload = function()
+  {
+    // 开始检查订单
+    startCheckOrder();
+  }
+  {/literal}
+</script>
+{include file="pagefooter.htm"}
+{/if}

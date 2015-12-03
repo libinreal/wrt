@@ -1,0 +1,120 @@
+<!-- $Id: customize_list.htm 2014-09-02 xy $ -->
+
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js"}
+<!-- 商品搜索 -->
+{include file="customize_goods_search.htm"}
+
+<form method="POST" action="" name="listForm">
+    <!-- start cat list -->
+    <div class="list-div" id="listDiv">
+        {/if}
+
+        <table cellspacing='1' cellpadding='3' id='list-table'>
+            <tr>
+                <th><a href="javascript:listTable.sort('id'); ">{$lang.apply_id}</a>{$sort_id}</th>
+                <th>{$lang.goods_name}</th>
+                <th>{$lang.goods_cat}</th>
+                <th>{$lang.goods_price}</th>
+                <th>{$lang.countNo}</th>
+                <th>{$lang.goods_spec}</th>
+                <th>{$lang.goods_model}</th>
+                <th>{$lang.goods_unit}</th>
+                <th>{$lang.area}</th>
+                <th><a href="javascript:listTable.sort('createAt'); ">{$lang.createAt}</a>{$sort_createAt}</th>
+                <th><a href="javascript:listTable.sort('expirationAt'); ">{$lang.expirationAt}</a>{$sort_expirationAt}</th>
+                <!--
+                <th>{$lang.apply_handler}</a></th>
+                -->
+                <th>{$lang.handler}</th>
+            </tr>
+            {foreach from=$customize_list item=list}
+            <tr>
+                <td align="center"><span>{$list.id}</span></td>
+                <td style="text-align: left;padding-left: 5px;" class="goodsname">
+                    <span listid="{$list.id}">{$list.goodsName|escape:html}</span>
+                    <div id="goodsimg_{$list.id}" class="goodsimg" style="display:none;">
+                        <img src="{$list.thumb}" />
+                    </div>
+                </td>
+                <td align="left"><span>{$list.cat_name|escape:html}</span></td>
+                <td style="text-align: right;padding-right: 5px;"><span>{$list.goodsPrice}</span></td>
+                <td style="text-align: center;padding-right: 5px;">{$list.cusCount}</td>
+                <td align="left"><span>{$list.goodsSpec}</span></td>
+                <td align="left"><span>{$list.goodsModel}</span></td>
+                <td align="center"><span>{$list.goodsUnit}</span></td>
+                <td align="left"><span>{$list.region_name}</span></td>
+                <td align="center"><span>{$list.createAt}</span></td>
+                <td align="center"><span>{$list.expirationAt}</span></td>
+                <!--
+                <td align="center" id="state_{$list.id}">
+                    <span>
+                        {if $list.state == 0}
+                            <a href="javascript:void(0);" class="state_a" listid="{$list.id}">{$lang.accept_apply}</a>
+                        {elseif $list.state == 1}
+                            <a href="javascript:void(0);" class="state_a" listid="{$list.id}">{$lang.success_apply}</a>
+                        {elseif $list.state == 2}
+                            {$lang.apply_successed}
+                        {/if}
+                    </span>
+                </td>
+                -->
+                <td align="center" nowrap="true">
+                    <span>
+                        <a href="customize_info.php?act=info&applyId={$list.id}" title="{$lang.view}">{$lang.applyinfo}</a>&nbsp;
+                    </span>
+                </td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="12">{$lang.no_customize}</td></tr>
+            {/foreach}
+            <tr>
+                <td align="right" nowrap="true" colspan="12">{include file="page.htm"}</td>
+            </tr>
+        </table>
+
+        {if $full_page}
+    </div>
+</form>
+<!-- end cat list -->
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+
+    {foreach from=$filter item=item key=key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+
+$(function(){
+    $('.state_a').click(function(){
+        var listid = $(this).attr('listid');
+        update_state(listid);
+    });
+    function update_state(applyid){
+        $.ajax({
+            'type':'get',
+            'dataType':'text',
+            'url':'customize.php?act=state&applyid='+applyid,
+            'success':function(msg){
+                if(msg == 1){
+                    $('#state_'+applyid+' a').text('{$lang.success_apply}');
+                }else{
+                    $('#state_'+applyid).text('{$lang.apply_successed}');
+                }
+            }
+        });
+    }
+
+    $('#list-table tr td').hover(function(){
+        $(this).css('cursor','pointer');
+        $(this).find('.goodsimg').show();
+    },function(){
+        $(this).find('.goodsimg').hide();
+    });
+});
+
+
+</script>
+{include file="pagefooter.htm"}
+{/if}

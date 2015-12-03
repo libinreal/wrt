@@ -1,0 +1,85 @@
+<!-- $Id: sale_list.htm 15848 2009-04-24 07:07:13Z liubo $ -->
+{if $full_page}
+{include file="pageheader.htm"}
+<script type="text/javascript" src="../js/calendar.php?lang={$cfg_lang}"></script>
+<link href="../js/calendar/calendar.css" rel="stylesheet" type="text/css" />
+{insert_scripts files="../js/utils.js,listtable.js"}
+<div class="form-div">
+    <form name="TimeInterval"  action="javascript:getList()" style="margin:0px">
+        {$lang.start_date}&nbsp;
+        <input name="start_date" type="text" id="start_date" size="15" value='{$start_date}' readonly="readonly" /><input name="selbtn1" type="button" id="selbtn1" onclick="return showCalendar('start_date', '%Y-%m-%d', false, false, 'selbtn1');" value="{$lang.btn_select}" class="button"/>&nbsp;&nbsp;
+        {$lang.end_date}&nbsp;
+        <input name="end_date" type="text" id="end_date" size="15" value='{$end_date}' readonly="readonly" /><input name="selbtn2" type="button" id="selbtn2" onclick="return showCalendar('end_date', '%Y-%m-%d', false, false, 'selbtn2');" value="{$lang.btn_select}" class="button"/>&nbsp;&nbsp;
+        <select name="credit_type" id="">
+            <option value="" selected>{$lang.credit_type}</option>
+            <option value="0">{$lang.credit}</option>
+            <option value="1">{$lang.purchase}</option>
+        </select>
+        <input type="submit" name="submit" value="{$lang.query}" class="button" />
+    </form>
+</div>
+<form method="POST" action="" name="listForm">
+    <div class="list-div" id="listDiv">
+        {/if}
+        <table width="100%" cellspacing="1" cellpadding="3">
+            <tr>
+                <th>{$lang.customNo}</th>
+                <th>{$lang.name}</th>
+                <th>{$lang.type}</th>
+                <th>{$lang.curamt}</th>
+                <th>{$lang.amount}</th>
+                <th>{$lang.createAt}</th>
+            </tr>
+            {foreach from=$credit_analysis item=list}
+            <tr>
+                <td style="text-align: center;">{$list.customNo}</td>
+                <td style="text-align: center;">{$list.name}</td>
+                <td style="text-align: center;">{if $list.type eq 0}{$lang.credit}{else}{$lang.purchase}{/if}</td>
+                <td style="text-align: left;padding-left: 10px;">{$list.curamt}</td>
+                <td align="left"><span class="active-span">{$list.amount}</span></td>
+                <td style="text-align: center;">{$list.createAt}</td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+            {/foreach}
+        </table>
+        <table id="page-table" cellspacing="0">
+            <tr>
+                <td>&nbsp;</td>
+                <td align="right" nowrap="true">
+                    {include file="page.htm"}
+                </td>
+            </tr>
+        </table>
+        {if $full_page}
+    </div>
+</form>
+
+<script type="Text/Javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+    {foreach from=$filter item=item key=key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+    {literal}
+    <!--
+            onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+
+    function getList()
+    {
+        var frm =  document.forms['TimeInterval'];
+        listTable.filter['start_date'] = frm.elements['start_date'].value;
+        listTable.filter['end_date'] = frm.elements['end_date'].value;
+        listTable.filter['credit_type'] = frm.elements['credit_type'].value;
+        listTable.filter['page'] = 1;
+        listTable.loadList();
+    }
+    //-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}
+{/if}

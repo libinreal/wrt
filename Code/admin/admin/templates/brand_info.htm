@@ -1,0 +1,146 @@
+<!-- $Id: brand_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+<div class="main-div">
+    <form method="post" action="brand.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">{$lang.label_brand_name}{$lang.require_field}</td>
+                <td><input type="text" id="brand_name" name="brand_name" maxlength="60" value="{$brand.brand_name}" /></td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_brand_pinyin}<span class="require-field">&nbsp;</span></td>
+                <td><input type="text" id="brand_pinyin" name="brand_pinyin" value="{$brand.brand_pinyin}" readonly="readonly" /></td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_site_url}<span class="require-field">&nbsp;</span></td>
+                <td><input type="text" name="site_url" maxlength="60" size="40" value="{$brand.site_url}" /></td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <a href="javascript:showNotice('warn_brandlogo');" title="{$lang.form_notice}">
+                    <img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.label_brand_logo}{$lang.require_field}</td>
+                <td>
+                    <input type="file" name="brand_logo" id="logo" size="45">
+                    {if $brand.brand_logo neq ""}
+                    <input type="button" value="{$lang.drop_brand_logo}" onclick="if (confirm('{$lang.confirm_drop_logo}'))location.href='brand.php?act=drop_logo&id={$brand.brand_id}'">{/if}
+                    <br /><span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="warn_brandlogo">
+                    {if $brand.brand_logo eq ''}
+                    {$lang.up_brandlogo}
+                    {else}
+                    {$lang.warn_brandlogo}
+                    {/if}
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_brand_code}{$lang.require_field}</td>
+                <td><input type="text" name="brand_code" value="{$brand.brand_code}" id="brand_code" /></td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_brand_desc}<span class="require-field"></span></td>
+                <td><textarea  name="brand_desc" cols="60" rows="4"  >{$brand.brand_desc}</textarea></td>
+            </tr>
+            <!--
+            <tr>
+                <td class="label">{$lang.sort_order}</td>
+                <td><input type="text" name="sort_order" maxlength="40" size="15" value="{$brand.sort_order}" /></td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.is_show}</td>
+                <td><input type="radio" name="is_show" value="1" {if $brand.is_show eq 1}checked="checked"{/if} /> {$lang.yes}
+                    <input type="radio" name="is_show" value="0" {if $brand.is_show eq 0}checked="checked"{/if} /> {$lang.no}
+                    ({$lang.visibility_notes})
+                </td>
+            </tr>
+            -->
+            <tr>
+                <td colspan="2" align="center"><br />
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$form_action}" />
+                    <input type="hidden" name="old_brandname" value="{$brand.brand_name}" />
+                    <input type="hidden" name="id" value="{$brand.brand_id}" />
+                    <input type="hidden" name="old_brandlogo" value="{$brand.brand_logo}">
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js,pinyin.js"}
+{literal}
+<script language="JavaScript">
+    <!--
+    document.forms['theForm'].elements['brand_name'].focus();
+
+    $("#brand_name").blur(function(){
+        var str = document.getElementById("brand_name").value.trim();
+        if(str == "") return false;
+        var arrRslt = makePy(str);
+        if(arrRslt.length>1) {
+            arrRslt = arrRslt[0];
+        }
+        var div = document.getElementById("brand_pinyin");
+        div.value = "" + arrRslt +"";
+    });
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+    /**
+     * 检查表单输入的数据
+     */
+    function validate()
+    {
+        var brandName = document.getElementById('brand_name').value;
+        if(brandName=='') {
+            alert(no_brandname);
+            return false;
+        }
+        {/literal}
+        {if $form_action eq 'insert'}
+        {literal}
+        var brandImg = document.getElementById('logo').value;
+        if(brandImg=='') {
+            alert('Logo必须上传');
+            return false
+
+        }else {
+            if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(brandImg)) {
+                alert("图片类型必须是.gif,jpeg,jpg,png中的一种");
+                brandImg = "";
+                return false;
+            }
+        }
+        {/literal}
+        {/if}
+        {if $form_action eq 'updata'}
+            {if $brand.brand_logo eq ''}
+            {literal}
+            var brandImg = document.getElementById('logo').value;
+            if(brandImg=='') {
+                alert('Logo必须上传');
+                return false
+
+            }else {
+
+                if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(brandImg)) {
+                    alert("图片类型必须是.gif,jpeg,jpg,png中的一种");
+                    brandImg = "";
+                    return false;
+                }
+            }
+            {/literal}
+            {/if}
+        {/if}
+        var brandCode = document.getElementById('brand_code').value;
+        if(brandCode=='') {
+            alert(no_brand_code)
+            return false;
+        }
+        return true;
+    }
+    //-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}

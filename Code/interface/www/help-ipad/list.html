@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>帮助中心-中交物融平台IPAD</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+	<link rel="stylesheet" href="../content/css/global-ipad.css" />
+	<link rel="stylesheet" href="../content/css/help-ipad.css" />
+</head>
+<body>
+
+<div class="header">&nbsp;</div><!--//header-->
+
+<div class="section content">
+	<div class="content-left" id="menu"></div>
+	<div class="content-right">
+		<div class="content-right-detail" id="news-detail"></div>
+	</div>
+</div><!--//section-->
+
+<script id="navs-tmpl" type="text/html">
+<!--[for(i=0;i<list.length;i++){]-->
+	<a href="#<!--[= i]-->" data-id="<!--[=list[i].id]-->"><span><!--[=list[i].title]--></span></a>
+<!--[}]-->
+	<a href="../news-ipad/index.html" style="display: none;" id="link-to-news">物融新闻</a>
+</script>
+
+<script type="text/javascript" src="../content/js/base-ipad/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/template.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/global.js"></script>
+<script type="text/javascript" src="../content/js/help-ipad/list.js"></script>
+</body>
+</html>

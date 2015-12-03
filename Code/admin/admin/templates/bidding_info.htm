@@ -1,0 +1,128 @@
+<!-- $Id: bidding_info.htm 16752 2014-09-11 xy $ -->
+{include file="pageheader.htm"}
+<div class="main-div">
+<form action="bidding.php" method="post" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+<table width="100%" id="general-table">
+  <tr>
+    <td class="label">{$lang.name}{$lang.require_field}</td>
+    <td>
+      <input type="text" id="bidding_name" name="name" onblur="fnStringlen();" value="{$bidding.name|escape:html}" size="30" maxlength="40"/>
+    </td>
+  </tr>
+  <tr>
+      <td class="label">{$lang.type}{$lang.require_field}</td>
+      <td>
+          <select name="type_id" style="width: 216px">
+              <!--<option value="0">{$lang.all_type}</option>-->
+              {foreach from=$type_list item=list}
+              <option value="{$list}"{if $bidding.type eq $list} selected{/if}>{$lang.$list}</option>
+              {/foreach}
+          </select>
+      </td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.area}{$lang.require_field}</td>
+    <td>
+        <select name="area_id" style="width: 216px">
+            <!--<option value="0">{$lang.all_area}</option>-->
+            {foreach from=$area_list item=list}
+            <option value="{$list.region_id}"{if $bidding.area_id eq $list.region_id} selected{/if}>{$list.region_name}</option>
+            {/foreach}
+        </select>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">{$lang.biddingAt}{$lang.require_field}</td>
+    <td>
+        <input type="text" value="{$bidding.biddingAt}" maxlength="100" name="biddingAt" size="30"  onclick="SelectDate(this,'yyyy-MM-dd',0,-150)" readonly="true" style="cursor:pointer" /><br />
+    </td>
+  </tr>
+    <tr>
+        <td class="label">{$lang.amount}{$lang.require_field}</td>
+        <td>
+            <input type='text' name='amount'  value="{$bidding.amount}" size="30"  />
+        </td>
+    </tr>
+    <tr>
+        <td class="label">{$lang.biddingman}{$lang.require_field}</td>
+        <td>
+            <input type='text' name='biddingman'  value="{$bidding.biddingman}" size="30"  />
+        </td>
+    </tr>
+    <tr>
+        <td class="label">{$lang.prjaddress}{$lang.require_field}</td>
+        <td>
+            <input type='text' name='prjaddress'  value="{$bidding.prjaddress}" size="30"  />
+        </td>
+    </tr>
+    <tr>
+        <td class="label">{$lang.prjdesc}{$lang.require_field}</td>
+        <td><textarea name="prjdesc" id="prjdesc" style="width: 400px;height: 150px;" cols="28" rows="3">{$bidding.prjdesc|escape}</textarea></td>
+    </tr>
+    <tr>
+        <td class="label">{$lang.content}{$lang.require_field}</td>
+        <td><textarea name="content" id="Content" style="width: 400px;height: 150px;" cols="28" rows="3">{$bidding.content|escape}</textarea></td>
+    </tr>
+    <tr>
+        <td class="label">{$lang.conditions}{$lang.require_field}</td>
+        <td><textarea name="conditions" id="conditions" style="width: 400px;height: 150px;" cols="28" rows="3">{$bidding.conditions|escape}</textarea></td>
+    </tr>
+  <tr>
+    <td class="label">&nbsp;</td>
+    <td>
+      <input type="submit" value="{$lang.button_submit}" class="button" />
+      <input type="reset" value="{$lang.button_reset}" class="button" />
+      <input type="hidden" name="act" value="{$form_action}" />
+      <input type="hidden" name="id" value="{$bidding.id}" />
+    </td>
+  </tr>
+</table>
+</form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+<script src="../js/WebCalendar.js" type="text/javascript"></script>
+<script language="JavaScript">
+<!--
+
+{literal}
+/**
+ * 检查表单输入的数据
+ */
+function fnStringlen() {
+    var doc = document.getElementById('bidding_name').value;
+    var len = doc.length;
+    if(len>20) {
+        alert('项目名称太长');
+        document.getElementById('bidding_name').value = doc.substr(0,20);
+    }
+}
+function validate()
+{
+    validator = new Validator("theForm");
+    validator.required("name",      name_empty);
+    {/literal}
+    {if $bidding.type != 0}
+        validator.isNullOption('type',no_type);
+        validator.isNullOption('area_id',no_area);
+    {/if}
+    {literal}
+    validator.required("biddingAt",      biddingAt_empty);
+    validator.required("amount",      amount_empty);
+    validator.isNumber("amount",     amount_type);
+    validator.required("biddingman",      biddingman_empty);
+    validator.required("prjaddress",      prjaddress_empty);
+    validator.required("prjdesc",      prjdesc_empty);
+    validator.required("content",      content_empty);
+    validator.required("conditions",      conditions_empty);
+        return validator.passed();
+}
+
+onload = function()
+{
+    // 开始检查订单
+    startCheckOrder();
+}
+{/literal}
+//-->
+</script>
+{include file="pagefooter.htm"}

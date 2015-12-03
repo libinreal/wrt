@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+	<title>工程招标-工程资讯</title>
+	<link rel="stylesheet" href="../content/css/global-ipad.css" />
+	<link rel="stylesheet" href="../content/css/project-ipad.css" />
+</head>
+<body>
+
+<div class="section content-left-bg bidding">
+	<div class="page-vertical clearfix">
+   		<div class="content-right bidding-map">
+   			<div class="bidding-map-content" id="worldMap">
+   				<img src="../content/images/project-ipad/map-2.jpg" alt="" />
+   				<div id="zj-list"></div>
+   			</div>
+   		</div>
+	</div>
+</div><!--//section-->
+
+<script type="text/html" id="zj-list-tmpl">
+	<!--[for(i=0;i<list.length;i++){]-->
+	<a class="bidding-tooltip" href="#" data-id="<!--[= list[i].areaId]-->" title="<!--[= list[i].area]-->" data-id="<!--[= list[i].areaId]-->">
+		<i></i>
+		<h3 class="clearfix">
+			<span class="area"><!--[= list[i].area]--></span>
+			<span class="count"><em><!--[= list[i].number]--></em>处</span>
+		</h3>
+		<p>总标的额：</p>
+		<p><span class="c-red"><!--[= list[i].amount]--></span>万元</p>
+	</a>
+	<!--[}]-->
+</script>
+
+<script type="text/javascript" src="../content/js/base-ipad/jquery-2.0.0.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/template.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/spryMap.js"></script>
+<script type="text/javascript" src="../content/js/base-ipad/global.js"></script>
+<script type="text/javascript" src="../content/js/project-ipad/bidding.js"></script>
+
+</body>
+</html>

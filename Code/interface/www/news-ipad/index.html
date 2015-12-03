@@ -1,0 +1,95 @@
+﻿<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>物融新闻-中交物融平台IPAD</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<meta name="format-detection" content="telephone=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-touch-fullscreen" content="yes" />
+    <link rel="stylesheet" href="../content/css/global-ipad.css" />
+    <link rel="stylesheet" href="../content/css/news-ipad.css" />
+</head>
+
+<body>
+	<div class="header">&nbsp;</div>
+    <div class="section content-wu">
+        <div class="content-top clearfix">
+            <div class="slider slider-home" style="overflow: hidden;">
+                <div class="scroller" id="zj-ad"></div>
+                <div class="subscript"></div>
+            </div>
+            <div class="notice">
+	            <div class="notice-title">
+	            	<h3>公告栏</h3>
+	                <a href="../notice-ipad/list.html" class="leftspan">更多 ></a>
+	            </div>
+                <ul class="notice-content" id="zj-notice"></ul>
+            </div>
+        </div>
+        <div class="list clearfix">
+            <div class="list-ti" style="margin-left:0;">
+	            <div class="list-title">
+	            	<h3>媒体声音</h3>
+	                <a href="list.html?type=1001">更多 ></a>
+	            </div>
+                <div class="list-content" id="media-news"></div>
+            </div>
+            <div class="list-ti">
+	            <div class="list-title">
+	            	<h3>品牌新闻</h3>
+	                <a href="list.html?type=1002">更多 ></a>
+	            </div>
+                <div class="list-content" id="brand-news"></div>
+            </div>
+            <div class="list-ti">
+	            <div class="list-title">
+	            	<h3>市场活动</h3>
+	                <a href="list.html?type=1003">更多 ></a>
+	            </div>
+                <div class="list-content" id="market-news"></div>
+            </div>
+        </div>
+    </div>
+    <!--//section-->
+
+    <script id="zj-ad-tmpl" type="text/html">
+        <!--[for(i = 0; i < list.length; i ++) {]-->
+        <div class="item" data-link="<!--[= list[i].adlink]-->">
+            <img id="img-<!--[= i]-->" src="../content/images/common/d300x300.png" data-src="<!--[= $absImg(list[i].adimg)]-->" alt="" />
+        </div>
+        <!--[}]-->
+    </script>
+    <script id="zj-notice-tmpl" type="text/html">
+        <!--[for(i = 0; i < list.length; i ++) {]-->
+        <li><a href="../notice-ipad/detail.html?type=<!--[= list[i].catType]-->&id=<!--[= list[i].id]-->">
+            <div class="notice-text">[<!--[= $noticeType(list[i].catType)]-->] <!--[= list[i].title]--></div>
+            <div class="notice-time"><!--[= $formatDate(list[i].createAt,'MM/dd')]--></div>
+        </a></li>
+        <!--[}]-->
+    </script>
+    <script id="zj-news-tmpl" type="text/html">
+        <!--[for(i = 0; i < list.length; i ++) {]-->
+    	<!--[if (i == 0){]-->
+        <a class="list-rec clearfix" href="detail.html?type=<!--[= type]-->&id=<!--[= list[i].id]-->">
+        	<img src="<!--[= $absImg(list[i].imgurl)]-->" alt="" />
+        	<h3><!--[= list[i].title]--></h3>
+        	<p><!--[= list[i].brief]--></p>
+        </a>
+    	<!--[}else{]-->
+        <a class="list-item" href="detail.html?type=<!--[= type]-->&id=<!--[= list[i].id]-->">
+        	<div class="list-text"><!--[= list[i].title]--></div>
+        	<div class="list-time"><!--[= $formatDate(list[i].createAt)]--></div>
+        </a>
+		<!--[}]-->
+        <!--[}]-->
+    </script>
+
+    <script type="text/javascript" src="../content/js/base-ipad/jquery-2.0.0.js"></script>
+    <script type="text/javascript" src="../content/js/base-ipad/template.js"></script>
+    <script type="text/javascript" src="../content/js/base-ipad/iscroll4.js"></script>
+    <script type="text/javascript" src="../content/js/base-ipad/global.js"></script>
+    <script type="text/javascript" src="../content/js/news-ipad/index.js"></script>
+</body>
+</html>

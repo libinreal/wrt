@@ -1,0 +1,36 @@
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js,../js/WebCalendar.js"}
+
+<form method="POST" action="" name="listForm">
+    <!-- start cat list -->
+    <div class="list-div" id="listDiv">
+        {/if}
+        <table cellspacing='1' cellpadding='3' id='list-table'>
+            <tr>
+                <th>编号</th>
+                <th>联系人</th>
+                <th>用户名</th>
+                <th>合同编号</th>
+                <th>合同名称</th>
+                <th>合同金额</th>
+            </tr>
+            {foreach from=$orderInfo item=list}
+            <tr>
+                <td style="text-align: center">{$list.id}</td>
+                <td align="center"><span>{$list.contacts}</span></td>
+                <td align="center"><span>{$list.user_name}</span></td>
+                <td align="left"><span>{$list.conChildFnum}</span></td>
+                <td align="left"><span>{$list.prjName}</span></td>
+                <td align="right"><span>{$list.conCount}</span></td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="11">{$lang.no_recommend_order_info}</td></tr>
+            {/foreach}
+        </table>
+
+        {if $full_page}
+    </div>
+</form>
+{include file="pagefooter.htm"}
+{/if}

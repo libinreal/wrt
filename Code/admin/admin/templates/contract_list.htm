@@ -1,0 +1,100 @@
+<!-- $Id: contract_list.htm 2014-09-13 xy $ -->
+
+{if $full_page}
+{include file="pageheader.htm"}
+{insert_scripts files="../js/utils.js,listtable.js,../js/WebCalendar.js"}
+
+<!-- 商品搜索 -->
+<div class="form-div">
+    <form action="javascript:searchContract()" name="searchForm" >
+        <img src="images/icon_search.gif" width="26" height="22" border="0" alt="SEARCH" />
+        <select name="conState" >
+            <option value="0">{$lang.all_state}</option>
+            <option value="1">{$lang.state_1}</option>
+            <option value="2">{$lang.state_2}</option>
+            <option value="3">{$lang.state_3}</option>
+        </select>
+        {$lang.cusName}：<input type="text" name="keyword" id="keyword" />&nbsp;
+        {$lang.cusFnum}：<input type="text" name="cusFnum" id="cusFnum" />
+        <input type="submit" value="{$lang.button_search}" class="button" />
+    </form>
+</div>
+
+<form method="POST" action="" name="listForm">
+    <!-- start cat list -->
+    <div class="list-div" id="listDiv">
+        {/if}
+        <table cellspacing='1' cellpadding='3' id='list-table'>
+            <tr>
+                <th><a href="javascript:listTable.sort('id'); ">{$lang.id}</a>{$sort_id}</th>
+                <th>{$lang.cusName}</th>
+                <th>{$lang.cusFnum}</th>
+                <th>{$lang.conFnum}</th>
+                <th>{$lang.conName}</th>
+                <th>{$lang.conAmt}</th>
+                <th>{$lang.conState}</th>
+                <th>{$lang.conNo}</th>
+                <th>{$lang.Remark}</th>
+                <th>{$lang.bankName}</th>
+                <th>{$lang.matGroupName}</th>
+                <th><a href="javascript:listTable.sort('strDate'); ">{$lang.strDate}</a>{$sort_strDate}</th>
+                <th><a href="javascript:listTable.sort('endDate'); ">{$lang.endDate}</a>{$sort_endDate}</th>
+            </tr>
+            {foreach from=$contract_list item=list}
+            <tr>
+                <td style="text-align: center;">{$list.id}</td>
+                <td style="text-align: left;">{$list.user_name}</td>
+                <td style="text-align: left;">{$list.cusFnum}</td>
+                <td style="text-align: left;"><span>{$list.conFnum}</span></td>
+                <td style="text-align: left;"><span>{$list.conName}</span></td>
+                <td style="text-align: right;"><span>{$list.conAmt}</span></td>
+                <td align="center"><span>{$list.conState}</span></td>
+                <td style="text-align: left;"><span>{$list.conNo}</span></td>
+                <td style="text-align: left;"><span>{$list.Remark}</span></td>
+                <td style="text-align: left;">
+                    {foreach from=$list.Banks item=Banks name=no}
+                    <span>{$Banks.bankName} {if $smarty.foreach.no.last!="1"} ,{/if}</span>
+                    {/foreach}
+                </td>
+                <td style="text-align: left;">
+                    {foreach from=$list.Mats item=Mats name=no}
+                    <span>{$Mats.matGroupName}{if $smarty.foreach.no.last!="1"} ,{/if}</span>
+                    {/foreach}
+                </td>
+                <td align="center"><span>{$list.strDate}</span></td>
+                <td align="center"><span>{$list.endDate}</span></td>
+            </tr>
+            {foreachelse}
+            <tr><td class="no-records" colspan="13">{$lang.no_contract}</td></tr>
+            {/foreach}
+            <tr>
+                <td align="right" nowrap="true" colspan="13">{include file="page.htm"}</td>
+            </tr>
+        </table>
+
+        {if $full_page}
+    </div>
+</form>
+
+<!-- end cat list -->
+<script type="text/javascript" language="JavaScript">
+    listTable.recordCount = {$record_count};
+    listTable.pageCount = {$page_count};
+
+    {foreach from=$filter item=item key=key}
+    listTable.filter.{$key} = '{$item}';
+    {/foreach}
+
+
+function searchContract()
+{
+    listTable.filter.keyword = Utils.trim(document.forms['searchForm'].elements['keyword'].value);
+    listTable.filter.cusFnum = Utils.trim(document.forms['searchForm'].elements['cusFnum'].value);
+    listTable.filter.conState = parseInt(document.forms['searchForm'].elements['conState'].value);
+    listTable.filter.page = 1;
+    listTable.loadList();
+}
+
+</script>
+{include file="pagefooter.htm"}
+{/if}

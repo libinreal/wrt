@@ -1,0 +1,64 @@
+{if $full_page}
+{include file="pageheader.htm"}
+
+<div class="list-div" style="margin-bottom: 5px">
+    <table width="100%" cellpadding="3" cellspacing="1">
+        <tr>
+            <th colspan="2">{$lang.base_info}</th>
+        </tr>
+        <tr>
+            <th style="width: 120px;">{$lang.proName}</th>
+            <td>{$list.proName}</td>
+        </tr>
+        <tr>
+            <th>{$lang.proTime}</th>
+            <td>{$list.proTime}</td>
+        </tr>
+        <tr>
+            <th>{$lang.proMoney}</th>
+            <td>{$list.proMoney}</td>
+        </tr>
+        <tr>
+            <th>{$lang.proAddress}</th>
+            <td>{$list.proAddress}</td>
+        </tr>
+        <tr>
+            <th>{$lang.areaId}</th>
+            <td>{$list.region_name}</td>
+        </tr>
+        <tr>
+            <th>{$lang.contacts}</th>
+            <td>{$list.contacts}</td>
+        </tr>
+        <tr>
+            <th>{$lang.position}</th>
+            <td>{$list.position}</td>
+        </tr>
+        <tr>
+            <th>{$lang.telephone}</th>
+            <td>{$list.telephone}</td>
+        </tr>
+        <tr>
+            <th>{$lang.company}</th>
+            <td>{$list.company}</td>
+        </tr>
+        <tr>
+            <th>{$lang.companyAddress}</th>
+            <td>{$list.companyAddress}</td>
+        </tr>
+        <tr>
+            <th>{$lang.cusStatus}</th>
+            <td>{$lang.cus[$list.cusStatus]}</td>
+        </tr>
+        <tr>
+            <th>{$lang.createAt}</th>
+            <td>{$list.createAt}</td>
+        </tr>
+        <tr>
+            <th>{$lang.proRemark}</th>
+            <td>{$list.proRemark}</td>
+        </tr>
+    </table>
+</div>
+{include file="pagefooter.htm"}
+{/if}

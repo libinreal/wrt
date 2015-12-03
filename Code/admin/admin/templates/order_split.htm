@@ -1,0 +1,97 @@
+{include file="pageheader.htm"}
+{insert_scripts files="topbar.js,../js/utils.js,listtable.js,selectzone.js,../js/common.js"}
+<form action="order.php?act=operate" method="post" name="theForm">
+<div class="list-div" style="margin-bottom: 5px">
+    <table width="100%" cellpadding="3" cellspacing="1">
+        <!-- 订单基本信息 -->
+        <tr>
+            <th colspan="4">{$lang.base_info}</th>
+        </tr>
+        <tr>
+            <td width="18%"><div align="right"><strong>{$lang.label_order_sn}</strong></div></td>
+            <td width="34%">{$order.order_sn}{if $order.extension_code eq "group_buy"}<a href="group_buy.php?act=edit&id={$order.extension_id}">{$lang.group_buy}</a>{elseif $order.extension_code eq "exchange_goods"}<a href="exchange_goods.php?act=edit&id={$order.extension_id}">{$lang.exchange_goods}</a>{/if}</td>
+            <td width="15%"><div align="right"><strong>{$lang.label_order_status}</strong></div></td>
+            <td>{$order.status}</td>
+        </tr>
+        <tr>
+            <td><div align="right"><strong>{$lang.label_user_name}</strong></div></td>
+            <td>{$order.user_name|default:$lang.anonymous}</td>
+            <td><div align="right"><strong>{$lang.label_order_time}</strong></div></td>
+            <td>{$order.formated_add_time}</td>
+        </tr>
+        <!-- 收货人信息-->
+        <tr>
+            <th colspan="4">{$lang.consignee_info}</th>
+        </tr>
+        <tr>
+            <td><div align="right"><strong>{$lang.label_consignee}</strong></div></td>
+            <td>{$order.consignee|escape}</td>
+            <td><div align="right"><strong>{$lang.label_address}</strong></div></td>
+            <td>{$order.address|escape}</td>
+        </tr>
+        <tr>
+            <td><div align="right"><strong>{$lang.label_mobile}</strong></div></td>
+            <td>{$order.mobile|escape}</td>
+            <td><div align="right"><strong>{$lang.label_sign_building}</strong></div></td>
+            <td>{$order.sign_building|escape}</td>
+        </tr>
+    </table>
+</div>
+
+<div class="list-div" style="margin-bottom: 5px">
+    <table width="100%" cellpadding="3" cellspacing="1">
+        <tr>
+            <th colspan="9" scope="col">{$lang.goods_info}</th>
+        </tr>
+        <tr>
+            <td scope="col"><div align="center"><strong>{$lang.goods_name_brand}</strong></div></td>
+            <td scope="col"><div align="center"><strong>{$lang.goods_wcode}</strong></div></td>
+            <td scope="col"><div style="text-align: center">{$lang.goods_suppliers}</div> </td>
+            <td scope="col"><div align="center"><strong>{$lang.goods_price}</strong></div></td>
+            <td scope="col"><div align="center"><strong>{$lang.goods_number}</strong></div></td>
+            <td scope="col"><div align="center"><strong>{$lang.goods_delivery}</strong></div></td>
+            <td scope="col"><div align="center"><strong>{$lang.goods_measure_unit}</strong></div></td>
+            <td scope="col"><div align="center"><strong>{$lang.storage}</strong></div></td>
+            <td scope="col"><div style="text-align: center"><strong>{$lang.handler}</strong></div></td>
+
+            <!--<td scope="col"><div align="center"><strong>{$lang.subtotal}</strong></div></td>-->
+        </tr>
+        {foreach from=$goods_list item=goods}
+        <tr>
+            <td>{$goods.goods_name} {if $goods.brand_name}[ {$goods.brand_name} ]{/if}</td>
+            <td class="goods-info">{$goods.wcode}</td>
+            <td class="goods-info">{$goods.suppliers_name}</td>
+            <td class="goods-info">{$goods.formated_goods_price}</td>
+            <td class="goods-info">{$goods.goods_number}</td>
+            <td class="goods-info">{$goods.send_number}</td>
+            <td class="goods-info">{$goods.measure_unit}</td>
+            <td class="goods-info">{$goods.storage}</td>
+            <td class="goods-info" style="text-align:center;">
+                {if $goods.no_split eq 0}
+                {$lang.no_split}
+                {else}
+                <a style="display: block;width: 60px;text-align: center;line-height: 25px;height: 25px;background: #BBCADE;" href="order.php?act=goods_split&order_id={$order.order_id}&goods_id={$goods.goods_id}">{$lang.split_orders}</a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+</div>
+</form>
+{literal}
+<style type="text/css">
+    .goods-info {text-align: center;}
+</style>
+<script language="JavaScript">
+    {/literal}
+    var oldAgencyId = {$order.agency_id|default:0};
+    {literal}
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+
+</script>
+{/literal}
+{include file="pagefooter.htm"}

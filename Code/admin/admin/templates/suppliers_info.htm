@@ -1,0 +1,82 @@
+<!-- $Id: agency_info.htm 14216 2008-03-10 02:27:21Z testyang $ -->
+{include file="pageheader.htm"}
+{insert_scripts files="validator.js,../js/transport.js,../js/region.js"}
+<div class="main-div">
+    <form method="post" action="suppliers.php" name="theForm" enctype="multipart/form-data" onsubmit="return validate()">
+        <table cellspacing="1" cellpadding="3" width="100%">
+            <tr>
+                <td class="label">{$lang.label_suppliers_name}{$lang.require_field}</td>
+                <td><input type="text" name="suppliers_name" maxlength="60" value="{$suppliers.suppliers_name}" /></td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_area_name}<span class="require-field"> *</span></td>
+                <td>
+                    <select name="area_name" id="area_name">
+                        <option value="0">{$lang.suppliers_area_name}</option>
+                        {foreach from=$arealist item=regions}
+                        <option value="{$regions.region_name}" {if $regions.region_name==$suppliers.area_name}selected {/if} >{$regions.region_name}</option>
+                        {/foreach}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_suppliers_code}{$lang.require_field}</td>
+                <td><input type="text" name="suppliers_code" maxlength="60" value="{$suppliers.suppliers_code}" /></td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_suppliers_desc}<span class="require-field"> &nbsp;</span></td>
+                <td><textarea  name="suppliers_desc" cols="60" rows="4"  >{$suppliers.suppliers_desc}</textarea></td>
+            </tr>
+            <tr>
+                <td class="label">
+                    <a href="javascript:showNotice('noticeAdmins');" title="{$lang.form_notice}"><img src="images/notice.gif" width="16" height="16" border="0" alt="{$lang.form_notice}"></a>{$lang.label_admins}{$lang.require_field}
+                </td>
+                <td>
+                    {foreach from=$suppliers.admin_list item=admin}
+                    {if $admin.type neq "other"}
+                    <input type="radio" name="admins" value="{$admin.user_id}" {if $admin.type eq "this"}checked="checked"{/if} />
+                    {$admin.user_name}&nbsp;&nbsp;
+                    {/if}
+                    {/foreach}<br />
+                    <span class="notice-span" {if $help_open}style="display:block" {else} style="display:none" {/if} id="noticeAdmins">{$lang.notice_admins}</span></td>
+            </tr>
+        </table>
+
+        <table align="center">
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" class="button" value="{$lang.button_submit}" />
+                    <input type="reset" class="button" value="{$lang.button_reset}" />
+                    <input type="hidden" name="act" value="{$form_action}" />
+                    <input type="hidden" name="id" value="{$suppliers.suppliers_id}" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+{literal}
+<script language="JavaScript">
+    <!--
+    document.forms['theForm'].elements['suppliers_name'].focus();
+
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+    /**
+     * 检查表单输入的数据
+     */
+    function validate()
+    {
+        validator = new Validator("theForm");
+        validator.required("suppliers_name",  no_suppliers_name);
+        validator.required('suppliers_code',no_suppliers_code);
+        validator.required('area_name',no_area_name);
+        return validator.passed();
+    }
+    //-->
+</script>
+{/literal}
+{include file="pagefooter.htm"}
