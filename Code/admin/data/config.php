@@ -1,6 +1,6 @@
 <?php
 // database host
-$db_host   = "10.4.2.17:3306";
+$db_host   = "192.168.2.204:3306";
 
 // database name
 $db_name   = "zjwr";
@@ -9,7 +9,7 @@ $db_name   = "zjwr";
 $db_user   = "root";
 
 // database password
-$db_pass   = 'zjwr!A@S#D$F%G';
+$db_pass   = '!Q@W#E$R%T';
 
 // table prefix
 $prefix    = "";

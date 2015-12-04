@@ -3,9 +3,9 @@ return new \Phalcon\Config(array(
 		//数据库配置
 		'database' => array(
 			'adapter'     => 'Mysql',
-			'host'        => '10.4.2.17:3306', //数据库地址
-			'username'    => 'zjwr', //数据库用户名
-	        'password'    => 'zjwr!A@S#D$F%G', //数据库密码
+			'host'        => '192.168.2.204:3306', //数据库地址
+			'username'    => 'root', //数据库用户名
+	        'password'    => '!Q@W#E$R%T', //数据库密码
 	        'dbname'      => 'zjwr', //数据库名
 			'options'	  => array(
 					PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES UTF8"
