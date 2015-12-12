@@ -1020,4 +1020,33 @@ function suppliers_list_name()
 
     return $suppliers_name;
 }
+
+ function jsonAction()
+{
+	$command = array('find','page','create','update','delete');
+	$content = file_get_contents('php://input');
+
+	if (!strlen($content)) {
+		die ('empty request content');
+	}
+
+	$json = json_decode($content, true);
+
+	if (json_last_error()) {
+		die('request content is not json: ' . json_last_error_msg()) ;
+	}
+
+	if (!isset($json['entity']) || !strlen($json['entity'])) {
+		die('entity not present in request') ;
+	}
+
+	if (!isset($json['command']) || !strlen($json['command'])) {
+		die('command not present in request') ;
+	}
+
+	if (!in_array($json['command'], $command)) {
+		die('unknown command'.$json['command']);
+	}
+	return $json;
+}
 ?>
