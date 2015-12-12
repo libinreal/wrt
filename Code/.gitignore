@@ -1,4 +1,7 @@
-
 admin/data
 admin/temp
+admin/includes/lib_base.php
+admin/includes/cls_image.php
+admin/includes/cls_template.php
+admin/admin/includes/lib_template.php
 interface/app/config/config.php
