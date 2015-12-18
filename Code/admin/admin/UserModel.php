@@ -107,7 +107,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$exc = new exchange($GLOBALS['ecs']->table("users"), $db, 'user_id', 'user_name');
 			$sql = "SELECT * FROM users WHERE user_id  =135 ";
 			$user = $GLOBALS['db']->getRow($sql);
-			make_json_result($user);
+			make_json_response($user,'0','success');
 		}
 		
 		/**
@@ -153,7 +153,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			$sql = "SELECT * FROM users WHERE user_id in (136,135,133,132) limit ".$params['limit'].",".$params['offset'];
 			$user = $GLOBALS['db']->getAll($sql);
-			make_json_result($user);
+			make_json_response($user,'0','success');
 		}
 		
 		/**
@@ -182,7 +182,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			$sql = "INSERT INTO users (user_name, password, sex) VALUES ('kxq','123456',1)";
 			$result = $GLOBALS['db']->query($sql);
-			make_json_result($result);
+			make_json_response($result,'0','success');
 		}
 		
 		/**
@@ -214,7 +214,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			$sql = "UPDATE users SET user_name = '".$params['username']."' ,email = '".$params['email']. "' WHERE user_id = 135";
 			$result = $GLOBALS['db']->query($sql);
-			make_json_result($result);
+			make_json_response($result,'0','success');
 		}
 		
 		/**
@@ -242,7 +242,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			$sql = "DELETE FROM users WHERE user_id = ".$user_id;
 			$result = $GLOBALS['db']->query($sql);
-			make_json_result($result);
+			make_json_response($result,'0','success');
 		}
 		
 	}
