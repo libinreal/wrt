@@ -88,7 +88,5 @@ $modules['12_stats']['sale_list']                   = 'sale_list.php?act=list';
 $modules['12_stats']['credit_analysis']             = 'credit_analysis.php?act=list';// 信用
 $modules['12_stats']['sales_analysis']              = 'sales_analysis.php?act=list';
 
-// 合同管理
-$modules['13_contract']['01_contract_list']       = 'goods.php?act=list';         // 合同管理
-$modules['13_contract']['02_contract_add']        = 'goods.php?act=add';          // 合同添加
+
 ?>
