@@ -138,6 +138,7 @@ $_LANG['09_service'] = '客服中心';
 $_LANG['10_members'] = '会员管理';
 $_LANG['11_priv_admin'] = '权限管理';
 $_LANG['12_stats'] = '报表统计';
+$_LANG['13_contract'] = '合同管理';
 
 
 // 积分商品管理
@@ -388,4 +389,9 @@ $_LANG['brand_name_exist'] = '已存在相同的品牌名称!';
 
 $_LANG['alipay_login'] = '<a href="https://www.alipay.com/user/login.htm?goto=https%3A%2F%2Fwww.alipay.com%2Fhimalayas%2Fpracticality_profile_edit.htm%3Fmarket_type%3Dfrom_agent_contract%26customer_external_id%3D%2BC4335319945672464113" target="_blank">立即免费申请支付接口权限</a>';
 $_LANG['alipay_look'] = '<a href=\"https://www.alipay.com/himalayas/practicality.htm\" target=\"_blank\">请申请成功后登录支付宝账户查看</a>';
+
+/* 合同管理 */
+$_LANG['01_contract_list'] = '合同列表';
+$_LANG['02_contract_add'] = '合同添加';
+
 ?>
