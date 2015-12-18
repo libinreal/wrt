@@ -138,6 +138,13 @@ $_LANG['09_service'] = '客服中心';
 $_LANG['10_members'] = '会员管理';
 $_LANG['11_priv_admin'] = '权限管理';
 $_LANG['12_stats'] = '报表统计';
+$_LANG['13_contract'] = '合同管理';
+
+//合同管理
+$_LANG['01_contract_add'] = '新增合同';
+$_LANG['02_contract_list'] = '合同列表';
+$_LANG['05_contract_supplier_add'] = '关联供应商、合同';
+$_LANG['06_contract_supplier_list'] = '供应商、合同列表';
 
 
 // 积分商品管理

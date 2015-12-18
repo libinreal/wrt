@@ -88,5 +88,10 @@ $modules['12_stats']['sale_list']                   = 'sale_list.php?act=list';
 $modules['12_stats']['credit_analysis']             = 'credit_analysis.php?act=list';// 信用
 $modules['12_stats']['sales_analysis']              = 'sales_analysis.php?act=list';
 
+//合同管理
+$modules['13_contract']['01_contract_add']          = 'contract_manage.php?act=add';
+$modules['13_contract']['02_contract_list']         = 'contract_manage.php?act=list';
+$modules['13_contract']['05_contract_supplier_add']     = 'contract_manage.php?act=csa';
+$modules['13_contract']['06_contract_supplier_list']    = 'contract_manage.php?act=csl';
 
 ?>
