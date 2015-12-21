@@ -14,29 +14,29 @@
 }
 #u0 {
   position:absolute;
-  left:80px;
-  top:86px;
-  width:53px;
+  left:67px;
+  top:87px;
+  width:66px;
   height:16px;
 }
 #u0_img {
   position:absolute;
   left:0px;
   top:0px;
-  width:53px;
+  width:66px;
   height:16px;
 }
 #u1 {
   position:absolute;
   left:0px;
   top:0px;
-  width:53px;
+  width:66px;
   white-space:nowrap;
 }
 #u2 {
   position:absolute;
-  left:260px;
-  top:90px;
+  left:237px;
+  top:91px;
   width:66px;
   height:16px;
 }
@@ -56,33 +56,12 @@
 }
 #u4 {
   position:absolute;
-  left:430px;
-  top:94px;
-  width:66px;
-  height:16px;
-}
-#u4_img {
-  position:absolute;
-  left:0px;
-  top:0px;
-  width:66px;
-  height:16px;
-}
-#u5 {
-  position:absolute;
-  left:0px;
-  top:0px;
-  width:66px;
-  white-space:nowrap;
-}
-#u6 {
-  position:absolute;
-  left:510px;
-  top:91px;
+  left:317px;
+  top:88px;
   width:100px;
   height:22px;
 }
-#u6_input {
+#u4_input {
   position:absolute;
   left:0px;
   top:0px;
@@ -95,38 +74,38 @@
   text-decoration:none;
   color:#000000;
 }
-#u6_input:disabled {
+#u4_input:disabled {
   color:grayText;
 }
-#u7 {
+#u5 {
   position:absolute;
   left:67px;
   top:142px;
   width:66px;
   height:16px;
 }
-#u7_img {
+#u5_img {
   position:absolute;
   left:0px;
   top:0px;
   width:66px;
   height:16px;
 }
-#u8 {
+#u6 {
   position:absolute;
   left:0px;
   top:0px;
   width:66px;
   white-space:nowrap;
 }
-#u9 {
+#u7 {
   position:absolute;
   left:143px;
   top:137px;
   width:77px;
   height:25px;
 }
-#u9_input {
+#u7_input {
   position:absolute;
   left:0px;
   top:0px;
@@ -140,40 +119,40 @@
   color:#000000;
   text-align:left;
 }
-#u10 {
+#u8 {
   position:absolute;
-  left:260px;
-  top:141px;
+  left:67px;
+  top:181px;
   width:40px;
   height:16px;
 }
-#u10_img {
+#u8_img {
   position:absolute;
   left:0px;
   top:0px;
   width:40px;
   height:16px;
 }
-#u11 {
+#u9 {
   position:absolute;
   left:0px;
   top:0px;
   width:40px;
   white-space:nowrap;
 }
-#u12 {
+#u10 {
   position:absolute;
-  left:323px;
-  top:137px;
-  width:77px;
-  height:25px;
+  left:130px;
+  top:177px;
+  width:400px;
+  height:100px;
 }
-#u12_input {
+#u10_input {
   position:absolute;
   left:0px;
   top:0px;
-  width:77px;
-  height:25px;
+  width:400px;
+  height:100px;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -182,35 +161,14 @@
   color:#000000;
   text-align:left;
 }
-#u13 {
-  position:absolute;
-  left:90px;
-  top:192px;
-  width:520px;
-  height:150px;
-}
-#u13_img {
-  position:absolute;
-  left:0px;
-  top:0px;
-  width:520px;
-  height:150px;
-}
-#u14 {
-  position:absolute;
-  left:2px;
-  top:67px;
-  width:516px;
-  word-wrap:break-word;
-}
-#u15 {
+#u11 {
   position:absolute;
   left:240px;
-  top:377px;
+  top:304px;
   width:100px;
   height:25px;
 }
-#u15_input {
+#u11_input {
   position:absolute;
   left:0px;
   top:0px;
@@ -224,7 +182,7 @@
   color:#0000FF;
   text-align:center;
 }
-#u16 {
+#u12 {
   position:absolute;
   left:80px;
   top:14px;
@@ -233,71 +191,50 @@
   font-size:14px;
   color:#000000;
 }
-#u16_img {
+#u12_img {
   position:absolute;
   left:0px;
   top:0px;
   width:170px;
   height:16px;
 }
-#u17 {
+#u13 {
   position:absolute;
   left:0px;
   top:0px;
   width:170px;
   word-wrap:break-word;
 }
-#u18 {
+#u14 {
   position:absolute;
   left:85px;
-  top:412px;
+  top:339px;
   width:625px;
   height:108px;
   color:#000000;
 }
-#u18_img {
+#u14_img {
   position:absolute;
   left:0px;
   top:0px;
   width:625px;
   height:108px;
 }
-#u19 {
+#u15 {
   position:absolute;
   left:0px;
   top:0px;
   width:625px;
   word-wrap:break-word;
 }
-#u20 {
+#u16 {
   position:absolute;
-  left:336px;
-  top:90px;
-  width:36px;
-  height:16px;
-}
-#u20_img {
-  position:absolute;
-  left:0px;
-  top:0px;
-  width:36px;
-  height:16px;
-}
-#u21 {
-  position:absolute;
-  left:0px;
-  top:0px;
-  width:36px;
-  white-space:nowrap;
-}
-#u22 {
-  position:absolute;
-  left:143px;
-  top:90px;
+  left:130px;
+  top:87px;
   width:97px;
   height:22px;
 }
-#u22_input {
+#u16_input {
   position:absolute;
   left:0px;
   top:0px;
@@ -310,6 +247,6 @@
   text-decoration:none;
   color:#000000;
 }
-#u22_input:disabled {
+#u16_input:disabled {
   color:grayText;
 }
