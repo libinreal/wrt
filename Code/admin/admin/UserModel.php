@@ -244,7 +244,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$result = $GLOBALS['db']->query($sql);
 			make_json_response($result,'0','success');
 		}
-		
 	}
 	$content = jsonAction();
 	$userModel = new UserModel($content);
