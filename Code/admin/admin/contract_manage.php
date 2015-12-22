@@ -26,7 +26,8 @@ else {
         'singleCont' => 1, 
         'contList' => 1, 
         'contIn' => 1, 
-        'contUp' => 1
+        'contUp' => 1, 
+        'suppliers' => 1,
     );
     
     //验证参数
@@ -241,10 +242,11 @@ class Contract
                 'c.start_time', 
                 'c.end_time', 
                 'c.registration', 
-                'u.companyName'
+                'u.companyName', 
+                's.suppliers_name'
             ), 
             'as'     => 'c',
-            'join'   => 'LEFT JOIN users AS u on c.customer_id=u.user_id', 
+            'join'   => 'LEFT JOIN users AS u on c.customer_id=u.user_id LEFT JOIN suppliers as s on c.customer_id=s.suppliers_id', 
             'where'  => $where, 
             'extend' => ' ORDER BY start_time ASC '.$limit
         ));
@@ -254,8 +256,9 @@ class Contract
                 $res[$k]['contract_type'] = '销售合同';
             } elseif ($v['contract_type'] == 2) {
                 $res[$k]['contract_type'] = '采购合同';
+                $res[$k]['companyName'] = $v['suppliers_name'];
             }
-            
+            unset($res[$k]['suppliers_name']);
             if ($v['end_time'] < time()) {
                 $res[$k]['contract_status'] = '过期';
             } else {
@@ -412,10 +415,26 @@ class Contract
     
     /**
      * 供应商列表
+     * {
+     *      "command" : "suppliers", 
+     *      "entity"  : "admin_user", 
+     *      "parameters" : {}
+     * }
      */
     public function suppliers($entity, $parameters) 
     {
-        self::init($entity, '');
+        self::init($entity, 'admin_user');
+        self::selectSql(array(
+            'as'     => 'a', 
+            'fields' => array(
+                's.suppliers_id', 
+                's.suppliers_name'
+            ), 
+            'join'   => 'LEFT JOIN suppliers AS s on a.suppliers_id=s.suppliers_id', 
+            'where'  => 'a.role_id=2 and s.is_check=1'
+        ));
+        $res = $this->db->getAll($this->sql);
+        make_json_result($res);
     }
     
     
