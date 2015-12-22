@@ -25,7 +25,8 @@ else {
         'userList' => 1, 
         'singleCont' => 1, 
         'contList' => 1, 
-        'contIn' => 1
+        'contIn' => 1, 
+        'contUp' => 1
     );
     
     //验证参数
@@ -207,7 +208,7 @@ class Contract
             $where .= $search_type.' LIKE "%'.$search_value.'%"';
         }
         //合同状态
-        if ( $params_where['contract_status'] >= 0 ) {
+        if ( $params_where['contract_status'] != '' ) {
             if (!empty(trim($where))) $where .= ' and ';
             $where .= 'c.contract_status='.$params_where['contract_status'];
         }
@@ -222,9 +223,9 @@ class Contract
         }
         
         //page
-        if ( !$params['offset'] ) {
+        if ( $params['offset'] != '' ) {
             $limit = ' limit '.$params['limit'];
-        } elseif ( $params['limit'] ) {
+        } elseif ( $params['limit'] != '' ) {
             $page = ($params['limit'] - 1) * $params['offset'];
             $limit = ' limit '.$page.','.$params['offset'];
         }
@@ -245,7 +246,7 @@ class Contract
             'as'     => 'c',
             'join'   => 'LEFT JOIN users AS u on c.customer_id=u.user_id', 
             'where'  => $where, 
-            'extend' => ' ORDER BY create_time DESC '.$limit
+            'extend' => ' ORDER BY start_time ASC '.$limit
         ));
         $res = $this->db->getAll($this->sql);
         foreach ($res as $k=>$v) {
@@ -254,6 +255,7 @@ class Contract
             } elseif ($v['contract_type'] == 2) {
                 $res[$k]['contract_type'] = '采购合同';
             }
+            
             if ($v['end_time'] < time()) {
                 $res[$k]['contract_status'] = '过期';
             } else {
@@ -277,16 +279,143 @@ class Contract
      *      "command" : "contIn", 
      *      "entity"  : "contract", 
      *      "parameters" : {
-     *          "user_id" : "(int)", 
-     *          "params" : {}
+     *          "user_id" : "(int)", //创建者id 
+     *          "contract_id" : "(int)", //修改合同信息时才会有此值 
+     *          "params" : {
+     *              "contract_num" : "(string)", 
+     *              "contract_name" : "(string)", 
+     *              "contract_amount" : "(float)", 
+     *              "contract_status" : "(int)", 
+     *              "contract_type" : "(int)", 
+     *              "contract_sign_type" : "(int)", 
+     *              "customer_id" : "(int)", 
+     *              "start_time" : "2015-10-26(string)", 
+     *              "end_time" : "2015-10-26(string)", 
+     *              "is_control" : "(int)", 
+     *              "rate" : "(string)", 
+     *              "bank_id" : "(int)", 
+     *              "attachment" : "(string)", 
+     *              "remark" : "(string)", 
+     *              "goods_type" : "1,2,23(string)", 
+     *          }
      *      }
      * }
      */
-    public function contIn($entity, $parameters) {
+    public function contIn($entity, $parameters) 
+    {
         self::init($entity, 'contract');
         
+        $arr = self::validateCont(1, $parameters);
         
-        make_json_result($res);
+        //合同 insert sql
+        $params = $arr['params'];
+        $fields = implode(',', array_keys($params));
+        $values = '("'.implode('","', $params).'")';
+        
+        if (strpos($values, ',,') !== false ) {
+            failed_json('可能是传递的参数不全或者传递null或者空字符串');
+        }
+        
+        //添加合同
+        $sql = 'INSERT INTO '.$this->table.'('.$fields.')values'.$values;
+        $res = $this->db->query($sql);
+        $insert_id = $this->db->insert_id();
+        if ($res && $insert_id) {
+            
+            //添加合同物料类型
+            $goods_type = explode(',', $arr['goods_type']);
+            foreach ($goods_type as $k=>$v) {
+                $goods_type_values .= '('.$insert_id.','.$v.'),';
+            }
+            $goods_type_values = substr($goods_type_values, 0, -1);
+            $sql = 'INSERT INTO contract_category (contract_id,category_id)values'.$goods_type_values;
+            $res = $this->db->query($sql);
+            
+            if ( $res ) {
+                make_json_result($res);
+            } else {
+                failed_json('添加合同失败');
+            }
+            
+        } else {
+            failed_json('添加合同失败');
+        }
+    }
+    
+    
+    /**
+     * 修改合同信息
+     * 参数信息同 contIn
+     */
+    public function contUp($entity, $parameters)
+    {
+        self::init($entity, 'contract');
+        
+        $arr = self::validateCont(2, $parameters);
+        
+        $insert_id = $parameters['contract_id'];
+        //合同 update sql
+        $params = $arr['params'];
+        foreach ($params as $k=>$v) {
+            $update_set .= $k.'="'.$v.'",';
+        }
+        $update_set = substr($update_set, 0, -1);
+        
+        //修改合同
+        $sql = 'UPDATE '.$this->table.' SET '.$update_set.' WHERE contract_id='.$insert_id;
+        $res = $this->db->query($sql);
+        if ($res && $insert_id) {
+        
+            //已经存在的物料类型
+            $this->table = 'contract_category';
+            self::selectSql(array(
+                'fields' => 'category_id', 
+                'where'  => 'contract_id="'.$insert_id.'"'
+            ));
+            $res = $this->db->getAll($this->sql);
+            $have_goods_type = array();
+            foreach ($res as $k=>$v) {
+                $have_goods_type[] = $v['category_id'];
+            }
+            
+            //现有物料类型
+            $goods_type = explode(',', $arr['goods_type']);
+            
+            $remove_goods_type = implode(',', array_diff($have_goods_type, $goods_type));
+            $sql = 'DELETE FROM '.$this->table.' WHERE category_id in('.$remove_goods_type.')';
+            $res = $this->db->query($sql);
+            if ( $res ) {
+                //需要添加的物料类型
+                $insert_goods_type = array_diff($goods_type, $have_goods_type);
+                foreach ($insert_goods_type as $k=>$v) {
+                    $goods_type_values .= '('.$insert_id.','.$v.'),';
+                }
+                $goods_type_values = substr($goods_type_values, 0, -1);
+                $sql = 'INSERT INTO contract_category (contract_id,category_id)values'.$goods_type_values;
+                $res = $this->db->query($sql);
+                
+                if ( $res ) {
+                    make_json_result($res);
+                } else {
+                    failed_json('添加合同失败');
+                }
+                
+            } else {
+                failed_json('修改物料类型失败！');
+            }
+            
+        } else {
+            failed_json('修改合同失败');
+        }
+    }
+    
+    
+    /**
+     * 供应商列表
+     */
+    public function suppliers($entity, $parameters) 
+    {
+        self::init($entity, '');
     }
     
     
@@ -294,19 +423,30 @@ class Contract
      * 验证提交的合同数据
      * @param int $type 1添加操作 2修改操作
      * @param array $params
+     * @return array $arr
      */
-    private function validationCont($type, $parameters) 
+    private function validateCont($type, $parameters) 
     {
-        $params = $parameters['params'];
-        
-        //修改时
-        if ($type == 2 && $parameters['contract_id']) {
-            $where = ' and contract_id<>'.$parameters['contract_id'];
-        } elseif ($type == 2) {
+        //修改信息时需要传参`contract_id`
+        if ( $type == 2 && !$parameters['contract_id']) {
             failed_json('没有传参`contract_id`');
         }
         
-        $params = self::filterContValue($params);
+        //当前登录id
+        $user_id = $parameters['user_id'];
+        if (!$user_id) $user_id = $_SESSION['admin_id'];
+        
+        //params是否传参
+        $params = $parameters['params'];
+        if (!$params) {
+            failed_json('没有传递参数');
+        }
+        
+        if ($type == 2 && $parameters['contract_id']) {
+            $where = ' and contract_id<>'.$parameters['contract_id'];
+        }
+        
+        $params = self::validContValue($params);
         
         //合同编号，合同名称不能重复
         self::selectSql(array(
@@ -326,21 +466,62 @@ class Contract
             failed_json('该合同名称已经存在！');
         }
         
-        $fields = 'contract_num,contract_name,contract_amount,contract_status,';
-        $sql = 'INSERT INTO '.$this->table.'()';
+        //登记机构名称
+        $params['registration'] = $this->db->getOne('SELECT bank_name FROM bank WHERE bank_id='.$params['bank_id']);
         
+        //创建人
+        $params['create_by'] = $this->db->getOne("SELECT user_name FROM admin_user WHERE user_id=".$user_id);
+        
+        $arr = array(
+            'contract_num'       => $params['contract_num'], 
+            'contract_name'      => $params['contract_name'], 
+            'contract_amount'    => $params['contract_amount'], 
+            'contract_status'    => $params['contract_status'], 
+            'contract_type'      => $params['contract_type'], 
+            'contract_sign_type' => $params['contract_sign_type'], 
+            'customer_id'        => $params['customer_id'], 
+            'start_time'         => strtotime($params['start_time']), 
+            'end_time'           => strtotime($params['end_time']), 
+            'is_control'         => $params['is_control'], 
+            'rate'               => $params['rate'], 
+            'registration'       => $params['registration'], 
+            'bank_id'            => $params['bank_id'], 
+            'attachment'         => $params['attachment'], 
+            'remark'             => $params['remark'], 
+            'create_by'          => $params['create_by'], 
+            'create_time'        => time()
+        );
+        return array( 'params'=>$arr, 'goods_type'=>$params['goods_type'] );
     }
     
     
     /**
-     * 验证合同信息值的合法性
+     * 合同信息值的合法化
      * @param array $params
+     * @return array
      */
-    private function filterContValue($params) 
+    private function validContValue($params) 
     {
         foreach ($params as $k=>$v) {
             $params[$k] = htmlspecialchars(trim($v));
         }
+        /* $params = array(
+            'contract_num'       => '156894321',
+            'contract_name'      => 'hetong0001',
+            'contract_amount'    => '500000',
+            'contract_status'    => '1',
+            'contract_type'      => '1',
+            'contract_sign_type' => '1',
+            'customer_id'        => '2',
+            'start_time'         => '2015-12-22',
+            'end_time'           => '2015-12+30',
+            'is_control'         => '1',
+            'rate'               => '0.11%',
+            'bank_id'            => '1',
+            'attachment'         => 'pdf',
+            'remark'             => '',
+            'goods_type'         => '1,2,3,4,5'
+        ); */
         return $params;
     }
     
@@ -381,7 +562,26 @@ class Contract
     
 }
 
-function failed_json($msg)
-{
+function failed_json($msg){
     make_json_response('', -1, $msg);
 }
+
+/* 
+ * 合同测试信息
+ * echo json_encode(array('contract_id'=>1, 'params'=> array(
+ 'contract_num'       => '156894321',
+ 'contract_name'      => 'hetong0001',
+ 'contract_amount'    => '1000000',
+ 'contract_status'    => '1',
+ 'contract_type'      => '1',
+ 'contract_sign_type' => '1',
+ 'customer_id'        => '2',
+ 'start_time'         => strtotime('2015-12-22'),
+ 'end_time'           => strtotime('2015-12-30'),
+ 'is_control'         => '1',
+ 'rate'               => '0.2%',
+ 'bank_id'            => '1',
+ 'attachment'         => 'pdf',
+ 'remark'             => 'benfen',
+ 'goods_type'         => '1,2,8,9'
+))); */
