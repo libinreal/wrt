@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 票据列表</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1">- 票据列表</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div class="inline_form">
+			<labe>客户：</labe>
+			<input type="text" value="4012015112701045">
+		</div>
+		<div class="inline_form">
+			<labe>生成日期：</labe>
+			<input type="text" value="2015-10-10">
+			&nbsp;至&nbsp;
+			<input type="text" value="2016-10-10">
+			&nbsp;
+			<input type="button" class="button" value="搜索" />
+		</div>
+		<div class="list-div" id="listDiv">
+			<table cellpadding="3" cellspacing="1">
+				<tr>
+					<th>生产单ID</th>
+					<th>审核状态</th>
+					<th>创建人</th>
+					<th>创建日期</th>
+					<th>修改人</th>
+					<th>修改日期</th>
+					<th>审核日期</th>
+					<th>审核人</th>
+					<th>客户</th>
+					<th>金额</th>
+					<th>类型</th>
+					<th>单据日期</th>
+					<th>操作</th>
+				</tr>
+				<tr>
+					<td>KG20141105</td>
+					<td>未审核</td>
+					<td>zj</td>
+					<td>2015/11/2</td>
+					<td>zj</td>
+					<td>2015/12/12</td>
+					<td>2015/12/30/</td>
+					<td>刘德华</td>
+					<td>中铁四局</td>
+					<td>2,000,000</td>
+					<td>商票</td>
+					<td>2015/12/31</td>
+					<td>
+						<a href="demo_template.php?section=bill_manage&act=generate_note">详情</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- 分页 -->
+		<table id="page-table" cellspacing="0">
+			<tr>
+				<td align="right" nowrap="true">
+					{include file="page.htm"}
+				</td>
+			</tr>
+		</table>
+		<div>
+			<p>数据状态：系统审核状态</p>
+		</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+	</body>
+</html>

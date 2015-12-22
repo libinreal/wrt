@@ -140,6 +140,7 @@ h1 .action-span1 {
     max-width: 260px;
     min-width: 60px;
     word-break: break-all;
+    text-align: center;
 }
 
 .list-div td.first-cell{
@@ -997,4 +998,84 @@ em, cite, th {
 }
 .ArrList a:hover {
     border: 1px solid #ff6600;background: #7BB233;color: #fff;
+}
+
+/* 弹出层 */
+.messagepop {
+  background-color:#FFFFFF;
+  border:1px solid #999999;
+  cursor:default;
+  display:none;
+  position:absolute;
+  text-align:left;
+  width:600px;
+  z-index:50;
+  top: 20%;
+  left: 20%;
+}
+.messagepop p, .messagepop.div {
+  border-bottom: 1px solid #EFEFEF;
+  margin: 8px 0;
+  padding-bottom: 8px;
+}
+.messagepop_header{
+    overflow: hidden;
+    line-height: 25px;
+    padding: 0 10px;
+}
+.messagepop_header h4{
+    margin:0;
+    padding: 0;
+    float: left;
+}
+.messagepop_header .close{
+    float: right;
+}
+.messagepop .checkbox{
+    line-height: 25px;
+}
+.messagepop .checkbox label{
+    line-height: 25px;
+}
+
+/* 行表单 */
+.inline_form{
+    margin: 10px 0;
+}
+
+/** 表格详情 **/
+.table_info{
+
+}
+.table_info table{
+    margin: 0 auto;
+}
+.table_info table td{
+    line-height: 30px;
+    padding: 0 10px;
+    border: 1px solid #ccc;
+}
+
+/**  **/
+.list-note{
+
+}
+.list-note table{
+    width: 80%;
+    margin: 0 auto;
+    background-color: #fff;
+}
+.list-note table .head{
+    padding: 0 10px;
+    line-height: 30px;
+    font-weight: bold;
+}
+.list-note table td{
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+/** center **/
+.button-center{
+    text-align: center;
 }
