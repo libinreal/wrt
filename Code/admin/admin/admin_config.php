@@ -3,15 +3,16 @@
  * 后台表单类型相关配置，数组形式
  * 调用对应方法以获取配置
  */
-
+//票据币种
+$bill_currency = array( 0 => "人民币", 1 => "美元" );
 //票据类型
-$bill_type = array("商业承兑汇票", "银行承兑汇票");
+$bill_type = array( 0 => "商业承兑汇票", 1 => "银行承兑汇票");
 //额度生成类型
-$bill_amount_type = array("商票", "现金", "承兑");
+$bill_amount_type = array(0 => "商票", 1 => "现金", 2 => "承兑");
 
 /**
- * [bill_types 票据类型]
- * @return [array] [键对应类型ID, 值对应类型名字]
+ * bill_types 票据类型
+ * @return array 键对应类型ID, 值对应类型名字
  */
 function bill_types()
 {
@@ -20,13 +21,23 @@ function bill_types()
 }
 
 /**
- * [bill_amount_types 额度生成类型]
- * @return [array] [键对应类型ID, 值对应类型名字]
+ * bill_amount_types 额度生成类型
+ * @return array 键对应类型ID, 值对应类型名字
  */
 function bill_amount_types()
 {
 	global $bill_amount_type;
 	return $bill_amount_type;
+}
+
+/**
+ * bill_currencys 票据币种
+ * @return array 键对应类型ID, 值对应类型名字
+ */
+function bill_currencys()
+{
+	global $bill_currency;
+	return $bill_currency;
 }
 
 ?>
