@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 合同编辑</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1"> - 合同编辑</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div class="table_info">
+			<table>
+				<tbody>
+					<tr>
+						<td>合同编号：</td><td><input type="text" name="contract_id"></td>
+						<td>合同名称：</td><td><input type="text" name="contract_name"></td>
+						<td>合同金额：</td><td><input type="text" name="contract_amount"></td>
+						<td>合同状态：</td>
+						<td><select name="contract_status">
+							<option>生效</option>
+							<option>过期</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td>公司：</td><td><span id="">物融通xxxx</span></td>
+						<td>客户：</td>
+						<td><select name="customer_name">
+							<option value="中国建筑第一公司">中国建筑第一公司</option>
+							<option value="中国建筑第二公司">中国建筑第二公司</option>
+						</select></td>
+						<td>合同类型：</td>
+						<td><select name="contract_type">
+							<option value="销售合同">销售合同</option>
+							<option value="采购合同">采购合同</option>
+						</select></td>
+						<td>签署类型：</td>
+						<td><select name="contract_sign_type">
+							<option value="平台->银行">平台-&gt;银行</option>
+							<option value="银行->平台">银行-&gt;平台</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td>合同开始日期：</td><td><input type="text" name="start_time"></td>
+						<td>合同结束日期：</td><td><input type="text" name="end_time"></td>
+						<td>是否控制类型：</td>
+						<td>是<input type="radio" name="is_control" checked="checked">&nbsp;&nbsp;
+						否<input type="radio" name="is_control"></td>
+						<td>物料类型：</td><td><a href="javascript:void(0);" id="show_material">查看物料类型</a></td>
+					</tr>
+					<tr>
+						<td>金融费率：</td><td><input type="text" name="rate"></td>
+						<td>登记机构：</td>
+						<td><select name="contract_sign_type">
+							<option value="浙商银行">浙商银行</option>
+							<option value="工商银行">工商银行</option>
+						</select></td>
+						<td colspan="4">附件：<input type="file" /> <input type="button" value="点击上传" /></td>
+					</tr>
+					<tr>
+						<td>备注</td>
+						<td colspan="7"><textarea></textarea></td>
+					</tr>
+				</tbody>
+			</table>
+			<div align="center"><input name="query" type="submit" class="button" value=" 提交 "></div>
+		</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+<!-- pop message -->
+<div class="messagepop pop">
+<div class="messagepop_header"><h4>物料类型</h4><a href="javascript:void(0)" class="close">关闭</a></div>
+<div class="clear"></div>
+<hr>
+<form>
+<div class="checkbox"><input type="checkbox" /><label>钢筋</label></div>
+<div class="checkbox"><input type="checkbox" /><label>水泥</label></div>
+<hr>
+<div class=""><input type="checkbox" /> 全选/全不选</div>
+<div align="center"><input type="button" class="button" value=" 保存 " /></div>
+</form>
+</div>
+
+<script type="text/javascript">
+function deselect(e) {
+  $('.pop').slideFadeToggle(function() {
+    e.removeClass('selected');
+  });    
+}
+
+$(function() {
+  $('#show_material').on('click', function() {
+      $('.pop').slideFadeToggle();
+  });
+
+  $('.close').on('click', function() {
+    deselect($('#contact'));
+    return false;
+  });
+});
+
+$.fn.slideFadeToggle = function(easing, callback) {
+  return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
+};
+</script>
+	</body>
+</html>

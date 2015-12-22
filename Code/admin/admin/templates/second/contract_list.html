@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 合同列表</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1">- 合同列表</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div class="list-div" id="listDiv">
+			<table cellpadding="3" cellspacing="1">
+				<tr>
+					<th>合同编号</th>
+					<th>合同名称</th>
+					<th>合同类型</th>
+					<th>签署对方</th>
+					<th>合同开始日期</th>
+					<th>合同终止日期</th>
+					<th>登记机构</th>
+					<th>合同状态</th>
+					<th><span style="color:red;">总采购额度</span></th>
+					<th><span style="color:red;">可用采购额度</span></th>
+					<th><span style="color:red;">票据采购额度</span></th>
+					<th><span style="color:red;">现金采购额度</span></th>
+					<th>操作</th>
+				</tr>
+				<tr>
+					<td>4012015112701045</td>
+					<td>这个是第一个合同标题</td>
+					<td>销售合同</td>
+					<td>中国建筑第一公司</td>
+					<td>2015/01/01</td>
+					<td>2015/12/31</td>
+					<td>浙商银行</td>
+					<td>生效</td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td><a href="demo_template.php?section=contract_manage&act=info">编辑</a>&nbsp;&nbsp;<a href="demo_template.php?section=contract_manage&act=bind">绑定供应商</a></td>
+				</tr>
+			</table>
+		</div>
+		<!-- 分页 -->
+		<table id="page-table" cellspacing="0">
+			<tr>
+				<td align="right" nowrap="true">
+					{include file="page.htm"}
+				</td>
+			</tr>
+		</table>
+		<div>
+			<p>额度金额：单位为元，精确到小数点后两位</p>
+			<p>授信状态：0：新增；1：正常；2：冻结；3：解冻</p>
+		</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+	</body>
+</html>
