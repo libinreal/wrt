@@ -28,6 +28,7 @@ else {
         'contIn' => 1, 
         'contUp' => 1, 
         'suppliers' => 1,
+        'contIn' => 1
     );
     
     //验证参数
@@ -175,7 +176,7 @@ class Contract
      *          "params" : {
      *              "where" : {
      *                  "like" : {
-     *                      "search_type" : "(int)", 
+     *                      "search_type" : "(string)", 
      *                      "search_value" : "(string)"
      *                  }, 
      *                  "contract_status" : "(int)", 
@@ -208,6 +209,7 @@ class Contract
             }
             $where .= $search_type.' LIKE "%'.$search_value.'%"';
         }
+        
         //合同状态
         if ( $params_where['contract_status'] != '' ) {
             if (!empty(trim($where))) $where .= ' and ';
@@ -384,6 +386,7 @@ class Contract
             //现有物料类型
             $goods_type = explode(',', $arr['goods_type']);
             
+            //需要删除的物料
             $remove_goods_type = implode(',', array_diff($have_goods_type, $goods_type));
             $sql = 'DELETE FROM '.$this->table.' WHERE category_id in('.$remove_goods_type.')';
             $res = $this->db->query($sql);
@@ -438,34 +441,26 @@ class Contract
     }
     
     
+    
+    
+    
     /**
      * 验证提交的合同数据
      * @param int $type 1添加操作 2修改操作
      * @param array $params
-     * @return array $arr
      */
     private function validateCont($type, $parameters) 
     {
-        //修改信息时需要传参`contract_id`
-        if ( $type == 2 && !$parameters['contract_id']) {
+        $params = $parameters['params'];
+        
+        //修改时
+        if ($type == 2 && $parameters['contract_id']) {
+            $where = ' and contract_id<>'.$parameters['contract_id'];
+        } elseif ($type == 2) {
             failed_json('没有传参`contract_id`');
         }
         
-        //当前登录id
-        $user_id = $parameters['user_id'];
-        if (!$user_id) $user_id = $_SESSION['admin_id'];
-        
-        //params是否传参
-        $params = $parameters['params'];
-        if (!$params) {
-            failed_json('没有传递参数');
-        }
-        
-        if ($type == 2 && $parameters['contract_id']) {
-            $where = ' and contract_id<>'.$parameters['contract_id'];
-        }
-        
-        $params = self::validContValue($params);
+        $params = self::filterContValue($params);
         
         //合同编号，合同名称不能重复
         self::selectSql(array(
