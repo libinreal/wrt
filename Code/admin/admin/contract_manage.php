@@ -419,7 +419,7 @@ class Contract
             
             //需要删除的物料
             $remove_goods_type = implode(',', array_diff($have_goods_type, $goods_type));
-            $sql = 'DELETE FROM '.$this->table.' WHERE category_id in('.$remove_goods_type.')';
+            $sql = 'DELETE FROM '.$this->table.' WHERE category_id in('.$remove_goods_type.') and contract_id='.$insert_id;
             $res = $this->db->query($sql);
             if ( $res ) {
                 //需要添加的物料类型
@@ -784,23 +784,6 @@ class Contract
         foreach ($params as $k=>$v) {
             $params[$k] = htmlspecialchars(trim($v));
         }
-        /* $params = array(
-            'contract_num'       => '156894321',
-            'contract_name'      => 'hetong0001',
-            'contract_amount'    => '500000',
-            'contract_status'    => '1',
-            'contract_type'      => '1',
-            'contract_sign_type' => '1',
-            'customer_id'        => '2',
-            'start_time'         => '2015-12-22',
-            'end_time'           => '2015-12+30',
-            'is_control'         => '1',
-            'rate'               => '0.11%',
-            'bank_id'            => '1',
-            'attachment'         => 'pdf',
-            'remark'             => '',
-            'goods_type'         => '1,2,3,4,5'
-        ); */
         return $params;
     }
     
