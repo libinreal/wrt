@@ -81,7 +81,7 @@ class cls_image
                 $img_name = $dir . $img_name; // 将图片定位到正确地址
             }
         }
-
+        
         /* 如果目标目录不存在，则创建它 */
         if (!file_exists($dir))
         {
@@ -100,7 +100,7 @@ class cls_image
             $img_name = $this->unique_name($dir);
             $img_name = $dir . $img_name . $this->get_filetype($upload['name']);
         }
-
+        
         if (!$this->check_img_type($upload['type']))
         {
             $this->error_msg = $GLOBALS['_LANG']['invalid_upload_image_type'];
@@ -109,7 +109,7 @@ class cls_image
         }
 
         /* 允许上传的文件类型 */
-        $allow_file_types = '|GIF|JPG|JEPG|PNG|BMP|SWF|';
+        $allow_file_types = '|GIF|JPG|JEPG|PNG|BMP|SWF|PDF|';
         if (!check_file_type($upload['tmp_name'], $img_name, $allow_file_types))
         {
             $this->error_msg = $GLOBALS['_LANG']['invalid_upload_image_type'];
@@ -514,7 +514,8 @@ class cls_image
                $img_type == 'image/x-png' ||
                $img_type == 'image/png'   ||
                $img_type == 'image/gif'   ||
-               $img_type == 'image/jpeg';
+               $img_type == 'image/jpeg'  ||
+               $img_type == 'application/octet-stream';//pdf
     }
 
     /**

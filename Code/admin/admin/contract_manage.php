@@ -21,10 +21,11 @@ else {
     $command = $_POST['command'];
     $entity = $_POST['entity'];
     $parameters = $_POST['parameters'];
-    /* $parameters = json_decode(stripslashes($_POST['parameters']), true);
-    if (!is_array($parameters)) {
-        $parameters = $_POST['parameters'];
-    } */
+    
+    //插件测试接口时
+    if (!is_array($parameters) && $parameters != '') {
+        $parameters = json_decode(stripslashes($_POST['parameters']), true);
+    }
     
     
     //API 接口列表
@@ -37,13 +38,25 @@ else {
         'contIn' => 1, 
         'contUp' => 1, 
         'suppliers' => 1, 
-        'buyCont' => 1, 
         'regionList' => 1, 
+        'buyCont' => 1, 
+        'contSupsList' => 1, 
+        'contInSups' => 1, 
+        'uploadify' => 2, 
     );
     
     //验证参数
-    if ( empty($arr[$command]) ) failed_json('未知操作');
-    if ( empty($entity) ) failed_json('非法访问');
+    switch ( $arr[$command] ) {
+        case 1:
+            if ( empty($entity) ) failed_json('非法访问');
+            break;
+        case 2:
+            if ( empty($entity) ) failed_json('未定义上传表单名称');
+            break;
+        default:
+            failed_json('未知操作');
+            break;
+    }
     
     //access
     $cont = Contract::get_instance();
@@ -86,7 +99,7 @@ class Contract
      *      "parameters" : {}
      * }
      */
-    public function catList($entity, $parameters)
+    public function catList($entity, $parameters) 
     {
         self::init($entity, 'goods_type');
         self::selectSql(array(
@@ -108,7 +121,7 @@ class Contract
      *      "parameters" : {}
      * }
      */
-    public function orgList($entity, $parameters)
+    public function orgList($entity, $parameters) 
     {
         self::init($entity, 'bank');
         self::selectSql(array(
@@ -131,7 +144,7 @@ class Contract
      *      "parameters" : {}
      * }
      */
-    public function userList($entity, $parameters)
+    public function userList($entity, $parameters) 
     {
         self::init($entity, 'users');
         self::selectSql(array(
@@ -154,7 +167,7 @@ class Contract
      *      }
      * }
      */
-    public function singleCont($entity, $parameters)
+    public function singleCont($entity, $parameters) 
     {
         self::init($entity, 'contract');
         
@@ -199,7 +212,7 @@ class Contract
      *      }
      * }
      */
-    public function contList($entity, $parameters)
+    public function contList($entity, $parameters) 
     {
         self::init($entity, 'contract');
         
@@ -236,11 +249,13 @@ class Contract
         }
         
         //page
-        if ( $params['offset'] != '' ) {
+        if ($params['limit'] != '' && $params['offset'] == '') {
             $limit = ' limit '.$params['limit'];
-        } elseif ( $params['limit'] != '' ) {
+        } elseif ($params['limit'] == '' && $params['offset'] != '') {
+            $limit = ' limit '.$params['offset'];
+        } elseif ($params['limit'] != '' && $params['offset'] != '') {
             $page = ($params['limit'] - 1) * $params['offset'];
-            $limit = ' limit '.$page.','.$params['offset'];
+            $limit = 'limit '.$page.','.$params['offset'];
         }
         
         self::selectSql(array(
@@ -368,7 +383,7 @@ class Contract
      * 修改合同信息
      * 参数信息同 contIn
      */
-    public function contUp($entity, $parameters)
+    public function contUp($entity, $parameters) 
     {
         self::init($entity, 'contract');
         
@@ -448,7 +463,7 @@ class Contract
         
         //根据地区搜索供应商，只精确到省份
         $region_id = $parameters['region_id'];
-        if ($region_id) {
+        if ($region_id > 0) {
             $where = ' and s.region_id='.$region_id;
         }
         
@@ -521,14 +536,55 @@ class Contract
     /**
      * 合同关联供应商设置
      * {
-     *      "command" : "contOnSups", 
+     *      "command" : "contInSups", 
      *      "entity"  : "contract_suppliers", 
-     *      "parameters" : {}
+     *      "parameters" : {
+     *          "contract_id" : "(int)", 
+     *          "params" : {
+     *              "suppliers_id" : "1,2,3(array)"
+     *          }
+     *      }
      * }
      */
-    public function contInSups($entity, $parameters)
+    public function contInSups($entity, $parameters) 
     {
+        self::init($entity, 'contract_suppliers');
         
+        $contractId = intval($parameters['contract_id']);
+        $suppliersId = $parameters['params']['suppliers_id'];
+        
+        if ($contractId <= 0) failed_json('没有传参`contract_id`或传参错误');
+        if ($suppliersId <= 0) failed_json('没有传参`suppliers_id`或传参错误');
+        
+        //查看原有的合同绑定哪些供应商
+        self::selectSql(array(
+            'fields' => 'suppliers_id', 
+            'where'  => 'contract_id='.$contractId
+        ));
+        $res = $this->db->getAll($this->sql);
+        $haveSupId = array();
+        foreach ($res as $v) {
+            if ( in_array($v['suppliers_id'], $suppliersId) ) {
+                $haveSupId[] = $v['suppliers_id'];
+            }
+        }
+        
+        //过滤掉已经存在与数据表的供应商
+        $suppliersId = array_diff($suppliersId, $haveSupId);
+        if (empty($suppliersId)) make_json_result(true);
+            
+        $arr = array();
+        foreach ($suppliersId as $k=>$v) {
+            $arr[] = '('.$contractId.','.$v.')';
+        }
+        $values = implode(',', $arr);
+        $sql = 'INSERT INTO '.$this->table.' values'.$values;
+        $res = $this->db->query($sql);
+        if ($res) {
+            make_json_result($res);
+        } else {
+            failed_json('合同关联供应商失败！');
+        }
     }
     
     
@@ -538,32 +594,114 @@ class Contract
      *      "command" : "ContSupsList", 
      *      "entity"  : "contract_suppliers", 
      *      "parameters" : {
-     *      
+     *          "params" : {
+     *              "where" : {
+     *                  "customer_id" : "(int)", 
+     *                  "contract_id" : "(int)", 
+     *                  "region_id"   : "(int)"
+     *              }, 
+     *              "limit" : "(int)", 
+     *              "offset": "(int)"
+     *          }
      *      }
      * }
      */
-    public function ContSupsList($entity, $parameters) 
+    public function contSupsList($entity, $parameters) 
     {
         self::init($entity, 'contract_suppliers');
+        
+        $params = $parameters['params'];
+        $where = '';
+        
+        $customerId = intval($params['where']['customer_id']);
+        $contractId = intval($params['where']['contract_id']);
+        $regionId   = intval($params['where']['region_id']);
+        
+        //where
+        if ($customerId > 0) {
+            $where .= 'c.customer_id='.$customerId;
+        }
+        if ($contractId > 0) {
+            if (!empty(trim($where))) $where .= ' and ';
+            $where .= 'c.contract_id='.$contractId;
+        }
+        if ($regionId > 0) {
+            if (!empty(trim($where))) $where .= ' and ';
+            $where .= 's.region_id='.$regionId;
+        }
+        
+        //page
+        if ($params['limit'] != '' && $params['offset'] == '') {
+            $limit = ' limit '.$params['limit'];
+        } elseif ($params['limit'] == '' && $params['offset'] != '') {
+            $limit = ' limit '.$params['offset'];
+        } elseif ($params['limit'] != '' && $params['offset'] != '') {
+            $page = ($params['limit'] - 1) * $params['offset'];
+            $limit = 'limit '.$page.','.$params['offset'];
+        }
+        
         self::selectSql(array(
             'fields' => array(
                 'u.companyName', 
                 'c.contract_num', 
                 'c.contract_name', 
-                ''
+                's.suppliers_name', 
+                'r.region_name'
             ), 
-            'as' => 'cs', 
-            'join' => 'LEFT JOIN contract AS c on cs.contract_id=c.contract_id '
-                    .'LEFT JOIN users AS u on c.customer_id=u.user_id'
-                    .'LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
-                    .'LEFT JOIN region AS r on s.region_id=r.region_id', 
+            'as'   => 'cs', 
+            'join' => 'LEFT JOIN contract AS c on cs.contract_id=c.contract_id'
+                    .' LEFT JOIN users AS u on c.customer_id=u.user_id'
+                    .' LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
+                    .' LEFT JOIN region AS r on s.region_id=r.region_id', 
+            'where' => $where, 
+            'extend'=> $limit
         ));
+        $res = $this->db->getAll($this->sql);
+        
+        self::selectSql(array(
+            'fields' => 'COUNT(cs.contract_id) AS num', 
+            'as'   => 'cs',
+            'join' => 'LEFT JOIN contract AS c on cs.contract_id=c.contract_id '
+                    .' LEFT JOIN users AS u on c.customer_id=u.user_id'
+                    .' LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
+                    .' LEFT JOIN region AS r on s.region_id=r.region_id',
+            'where' => $where            
+        ));
+        $total = $this->db->getOne($this->sql);
+        make_json_result(array('total'=>$total, 'data'=>$res));
     }
     
     
+    /**
+     * 上传合同附件（只允许pdf）
+     * {
+     *      "command" : "uploadify", 
+     *      "entity"  : "(input name)", 
+     *      "parameters" : {} 
+     * }
+     */
+    public function uploadify($entity, $parameters) 
+    {
+        require('../includes/cls_image.php');
+        if (empty($_FILES)) failed_json('上传的图片是空的资源');
+        $file = pathinfo($_FILES[$entity]['name']);
+        if ($file['extension'] != 'pdf') {
+            failed_json('只允许上传pdf格式的文件！');
+        }
+        //upload
+        $upload = new cls_image();
+        $fileName = date('YmdHis').'.pdf';
+        $res = $upload->upload_image($_FILES[$entity], 'contract', $fileName);
+        if ($res === false) {
+            failed_json('文件上传失败，可能因为服务器不允许上传太大的pdf文件！');
+        } else {
+            make_json_result($fileName);
+        }
+    }
+    
     
     /**
-     * 验证提交的合同数据
+     * 验证提交的合同数据（合同添加，编辑时）
      * @param int $type 1添加操作 2修改操作
      * @param array $params
      */
@@ -628,9 +766,9 @@ class Contract
     
     
     /**
-     * 合同信息值的合法化
+     * 合同信息值的合法化（合同添加，编辑时）
      * @param array $params
-     * @return array
+     * @return array $params
      */
     private function validContValue($params) 
     {
@@ -661,7 +799,7 @@ class Contract
     /**
      * @param array $params
      */
-    private function selectSql($params)
+    private function selectSql($params) 
     {
         if ( is_array($params['fields']) ) {
             $params['fields'] = implode(',', $params['fields']);
@@ -682,7 +820,7 @@ class Contract
      * @param string $entity
      * @param string $tableName
      */
-    private function init($entity, $tableName)
+    private function init($entity, $tableName) 
     {
         if ( $entity != $tableName ) {
             failed_json('数据表`'.$entity.'`不存在');
@@ -694,7 +832,7 @@ class Contract
     
 }
 
-function failed_json($msg){
+function failed_json($msg) {
     make_json_response('', -1, $msg);
 }
 
