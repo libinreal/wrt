@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 票据添加、编辑</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1"> - 票据添加、编辑</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div class="table_info">
+			<table>
+				<tbody>
+					<tr>
+						<td>票据编号：</td><td><input type="text" name="bill_id" value="0001（录入的）"></td>
+						<td>票据类型：</td><td><select name="bill_type">
+							<option>商业承兑汇票</option>
+							<option>银行承兑汇票</option>
+						</select></td>
+						<td>币别：</td><td><select name="currency">
+							<option>人民币</option>
+						</select></td>
+						<td>票面金额：</td>
+						<td><input type="text" name="bill_amount" value="100,000.00"></td>
+					</tr>
+					<tr>
+						<td>客户号：</td><td><input type="text" name="customer_num" value="User_123456"></td>
+						<td>合同编号：</td>
+						<td><input type="text" name="contract_id" value="B1234"></td>
+						<td>付款利率(%)：</td>
+						<td><input type="text" name="payment_rate" value="0.8%"></td>
+						<td>到期金额：</td>
+						<td><input type="text" name="expire_amount" value="800.00"></td>
+					</tr>
+					<tr>
+						<td>签发日：</td><td><input type="text" name="issuing_date"></td>
+						<td>到期日：</td><td><input type="text" name="due_date"></td>
+						<td>付款期限：</td><td><input type="text" name="prompt_day"></td>
+						<td>出票人：</td><td><input type="text" name="drawer"></td>
+					</tr>
+					<tr>
+						<td>承兑人：</td><td><input type="text" name="acceptor"></td>
+						<td>承兑协议编号：</td><td><input type="text" name="accept_num"></td>
+						<td>承兑日期：</td><td><input type="text" name="accept_date"></td>
+						<td>备注：</td><td><input type="text" name="remark"></td>
+					</tr>
+					<tr>
+						<td>往来单位：</td><td><select name="customer_id">
+							<option>中建十一局</option>
+							<option>中建十局</option>
+						</select></td>
+						<td>收票日：</td><td><input type="text" name="receive_date"></td>
+						<td>交易金额：</td><td><input type="text" name="trans_amount"></td>
+						<td>销售人员：</td><td><input type="text" name="saler"></td>
+					</tr>
+					<tr>
+						<td>收款组织：</td><td><input type="text" name="receiver"></td>
+						<td>结算组织：</td><td><input type="text" name="balance"></td>
+						<td>票据折算比例：</td><td><input type="text" name="discount_rate"></td>
+					</tr>
+					<tr>
+						<td>ID：</td><td></td>
+						<td>票据状态：</td><td><select name="status">
+							<option>以扣减</option>
+							<option>以恢复</option>
+						</select></td>
+						<td>折后额度：</td><td><input type="text" name="discount_amount"></td>
+						<td>带追索权：</td><td>
+						<label>是</label><input type="radio" name="is_recourse" value="1" checked="checked">
+						<label>否</label><input type="radio" name="is_recourse" value="0">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<table width="80%">
+				<tbody>
+					<tr>
+						<td>付款人：</td>
+						<td>
+						<select name="pay_user_id">
+						<option>aaaaa</option>
+						<option>bbbbb</option>
+						<option>ccccc</option>
+						</select>
+						</td>
+						<td>收款人：</td><td>
+						<select name="receive_user_id">
+						<option>aaaaa</option>
+						<option>bbbbb</option>
+						<option>ccccc</option>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td>付款银行：</td><td>
+						<select name="pay_bank_id">
+						<option>aaaaa</option>
+						<option>bbbbb</option>
+						<option>ccccc</option>
+						</select>
+						</td>
+						<td>收款银行：</td><td>
+						<select name="receive_bank_id">
+						<option>aaaaa</option>
+						<option>bbbbb</option>
+						<option>ccccc</option>
+						</select>
+						</td>
+					</tr>
+					<tr>
+						<td>付款账号：</td><td>
+						<select name="pay_account">
+						<option>aaaaa</option>
+						<option>bbbbb</option>
+						<option>ccccc</option>
+						</select>
+						</td>
+						<td>收款账号：</td><td>
+						<select name="receive_account">
+						<option>aaaaa</option>
+						<option>bbbbb</option>
+						<option>ccccc</option>
+						</select>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<div align="center"><input name="query" type="submit" class="button" value=" 提交 "></div>
+		</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+<!-- pop message -->
+<div class="messagepop pop">
+<div class="messagepop_header"><h4>物料类型</h4><a href="javascript:void(0)" class="close">关闭</a></div>
+<div class="clear"></div>
+<hr>
+<form>
+<div class="checkbox"><input type="checkbox" /><label>钢筋</label></div>
+<div class="checkbox"><input type="checkbox" /><label>水泥</label></div>
+<hr>
+<div class=""><input type="checkbox" /> 全选/全不选</div>
+<div align="center"><input type="button" class="button" value=" 保存 " /></div>
+</form>
+</div>
+
+<script type="text/javascript">
+function deselect(e) {
+  $('.pop').slideFadeToggle(function() {
+    e.removeClass('selected');
+  });    
+}
+
+$(function() {
+  $('#show_material').on('click', function() {
+      $('.pop').slideFadeToggle();
+  });
+
+  $('.close').on('click', function() {
+    deselect($('#contact'));
+    return false;
+  });
+});
+
+$.fn.slideFadeToggle = function(easing, callback) {
+  return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
+};
+</script>
+	</body>
+</html>

@@ -28,7 +28,6 @@ else {
         'contIn' => 1, 
         'contUp' => 1, 
         'suppliers' => 1,
-        'contIn' => 1
     );
     
     //验证参数

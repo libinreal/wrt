@@ -1,0 +1,93 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 票据列表</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1">- 票据列表</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div class="inline_form">
+			<labe>搜索类型：</labe>
+			<select>
+				<option>票据编号</option>
+				<option>出票人</option>
+				<option>承兑人</option>
+			</select>
+			&nbsp;
+			<input type="text" value="4012015112701045">
+			&nbsp;
+			<labe>票据状态：</labe>
+			<select>
+				<option>未还</option>
+				<option>已还</option>
+			</select>
+		</div>
+		<div class="inline_form">
+			<labe>日期：</labe>
+			<input type="text" value="2015-10-10">
+			&nbsp;至&nbsp;
+			<input type="text" value="2016-10-10">
+			&nbsp;
+			<input type="button" class="button" value="搜索" />
+		</div>
+		<div class="list-div" id="listDiv">
+			<table cellpadding="3" cellspacing="1">
+				<tr>
+					<th>ID</th>
+					<th>票据类型</th>
+					<th>票据号</th>
+					<th>到期日</th>
+					<th>票面金额</th>
+					<th>往来单位</th>
+					<th>出票人</th>
+					<th>承兑人</th>
+					<th>审核状态</th>
+					<th>还票状态</th>
+					<th>操作</th>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>商业承兑汇票</td>
+					<td>111-1</td>
+					<td>2014/11/29</td>
+					<td>100,000</td>
+					<td>浙商银行</td>
+					<td>中铁十三局</td>
+					<td>刘德华</td>
+					<td>已审核</td>
+					<td>已还</td>
+					<td>
+						<a href="demo_template.php?section=bill_manage&act=info">编辑</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="demo_template.php?section=bill_manage&act=generate">生成票据采购额</a>
+						&nbsp;&nbsp;&nbsp;&nbsp;
+						<a href="demo_template.php?section=bill_manage&act=repay">还票</a>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!-- 分页 -->
+		<table id="page-table" cellspacing="0">
+			<tr>
+				<td align="right" nowrap="true">
+					{include file="page.htm"}
+				</td>
+			</tr>
+		</table>
+		<div>
+			<p>数据状态：系统审核状态</p>
+		</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+	</body>
+</html>

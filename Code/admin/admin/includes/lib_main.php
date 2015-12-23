@@ -1021,10 +1021,19 @@ function suppliers_list_name()
     return $suppliers_name;
 }
 
- function jsonAction()
+ function jsonAction( $module_command = array() )
 {
 	$command = array('find','page','create','update','delete');
 	$content = file_get_contents('php://input');
+
+    if( !empty( $module_command ) )
+    {
+        foreach($module_command as $mc)
+        {
+            $command[] = $mc;
+        }
+        $command = array_unique( $command );
+    }
 
 	if (!strlen($content)) {
 		die ('empty request content');
