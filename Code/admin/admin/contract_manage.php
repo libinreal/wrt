@@ -11,12 +11,20 @@ if ( $_REQUEST['act'] == 'list' )
     $smarty->display('cont_list.htm');
     exit;
 }
+elseif ( $_REQUEST['act'] == 'insert' )
+{
+    $smarty->display('');
+}
 
 //API
 else {
     $command = $_POST['command'];
     $entity = $_POST['entity'];
-    $parameters = $_POST['parameters'];
+    $parameters = json_decode(stripslashes($_POST['parameters']), true);
+    if (!is_array($parameters)) {
+        $parameters = $_POST['parameters'];
+    }
+    
     
     //API 接口列表
     $arr = array(
@@ -27,7 +35,9 @@ else {
         'contList' => 1, 
         'contIn' => 1, 
         'contUp' => 1, 
-        'suppliers' => 1,
+        'suppliers' => 1, 
+        'buyCont' => 1, 
+        'regionList' => 1, 
     );
     
     //验证参数
@@ -273,7 +283,13 @@ class Contract
             $res[$k]['start_time'] = date('Y-m-d H:i:s', $v['start_time']);
             $res[$k]['end_time'] = date('Y-m-d H:i:s', $v['end_time']);
         }
-        make_json_result($res);
+        
+        self::selectSql(array(
+            'fields' => 'COUNT(*) AS num', 
+            'where' => $where
+        ));
+        $total = $this->db->getone($this->sql);
+        make_json_result(array('total'=>$total, 'data'=>$res));
     }
     
     
@@ -420,12 +436,21 @@ class Contract
      * {
      *      "command" : "suppliers", 
      *      "entity"  : "admin_user", 
-     *      "parameters" : {}
+     *      "parameters" : {
+     *          "region_id" : "(int)"
+     *      }
      * }
      */
     public function suppliers($entity, $parameters) 
     {
         self::init($entity, 'admin_user');
+        
+        //根据地区搜索供应商，只精确到省份
+        $region_id = $parameters['region_id'];
+        if ($region_id) {
+            $where = ' and s.region_id='.$region_id;
+        }
+        
         self::selectSql(array(
             'as'     => 'a', 
             'fields' => array(
@@ -433,13 +458,103 @@ class Contract
                 's.suppliers_name'
             ), 
             'join'   => 'LEFT JOIN suppliers AS s on a.suppliers_id=s.suppliers_id', 
-            'where'  => 'a.role_id=2 and s.is_check=1'
+            'where'  => 'a.role_id=2 and s.is_check=1'.$where
         ));
         $res = $this->db->getAll($this->sql);
         make_json_result($res);
     }
     
     
+    /**
+     * 地区（只精确到省份）
+     * {
+     *      "command" : "regionList", 
+     *      "entity"  : "region", 
+     *      "parameters" : {}
+     * }
+     */
+    public function regionList($entity, $parameters) 
+    {
+        self::init($entity, 'region');
+        self::selectSql(array(
+            'fields' => array(
+                'region_id', 
+                'region_name'
+            ), 
+            'where' => 'region_type in(0,1)'
+        ));
+        $res = $this->db->getAll($this->sql);
+        make_json_result($res);
+    }
+    
+    
+    /**
+     * 下游客户的采购合同列表
+     * {
+     *      "command" : "buyCont", 
+     *      "entity"  : "contract", 
+     *      "parameters" : {
+     *          "customer_id" : "(int)"
+     *      }
+     * }
+     */
+    public function buyCont($entity, $parameters) 
+    {
+        self::init($entity, 'contract');
+        
+        $cutomerId = intval($parameters['customer_id']);
+        if ( !$cutomerId ) failed_json('没有传参`customer_id`');
+        
+        self::selectSql(array(
+            'fields' => array(
+                'contract_id', 
+                'contract_name'
+            ), 
+            'where' => 'contract_type=2 and customer_id='.$cutomerId, 
+        ));
+        $res = $this->db->getAll($this->sql);
+        make_json_result($res);
+    }
+    
+    
+    /**
+     * 合同关联供应商设置
+     * {
+     *      "command" : "contOnSups", 
+     *      "entity"  : "contract_suppliers", 
+     *      "parameters" : {}
+     * }
+     */
+    public function contInSups($entity, $parameters)
+    {
+        
+    }
+    
+    
+    /**
+     * 合同关联供应商列表
+     * {
+     *      "command" : "ContSupsList", 
+     *      "entity"  : "contract_suppliers", 
+     *      "parameters" : {
+     *      
+     *      }
+     * }
+     */
+    public function ContSupsList($entity, $parameters) 
+    {
+        self::init($entity, 'contract_suppliers');
+        self::selectSql(array(
+            'fields' => array(
+                ''
+            ), 
+            'as' => 'cs', 
+            'join' => 'LEFT JOIN contract AS c on cs.contract_id=c.contract_id '
+                    .'LEFT JOIN users AS u on c.customer_id=u.user_id'
+                    .'LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
+                    .'LEFT JOIN region AS r on s.region_id=r.region_id', 
+        ));
+    }
     
     
     
