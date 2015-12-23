@@ -625,7 +625,7 @@ function InitContainerPanel() //初始化容器
     }   
     var div = document.createElement("div");   
     div.innerHTML = str;   
-    div.id = "ContainerPanel";   
+    div.id = "ContainerPanel";
     div.style.display ="none";   
     document.body.appendChild(div);   
 }//调用calendar.show(dateControl, popControl);   

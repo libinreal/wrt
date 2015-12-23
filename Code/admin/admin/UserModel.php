@@ -248,8 +248,3 @@ require(dirname(__FILE__) . '/includes/init.php');
 	$content = jsonAction();
 	$userModel = new UserModel($content);
 	$userModel->run();
-
-
-	
-	
-	
