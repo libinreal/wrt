@@ -20,10 +20,11 @@ elseif ( $_REQUEST['act'] == 'insert' )
 else {
     $command = $_POST['command'];
     $entity = $_POST['entity'];
-    $parameters = json_decode(stripslashes($_POST['parameters']), true);
+    $parameters = $_POST['parameters'];
+    /* $parameters = json_decode(stripslashes($_POST['parameters']), true);
     if (!is_array($parameters)) {
         $parameters = $_POST['parameters'];
-    }
+    } */
     
     
     //API 接口列表
@@ -546,6 +547,9 @@ class Contract
         self::init($entity, 'contract_suppliers');
         self::selectSql(array(
             'fields' => array(
+                'u.companyName', 
+                'c.contract_num', 
+                'c.contract_name', 
                 ''
             ), 
             'as' => 'cs', 
