@@ -133,27 +133,27 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$where['due_date2'] = strtotime( $where['due_date2'] );
 
 				if( $where_str )
-					$where_str .= " AND `due_date` >= '" . $where['due_date1'] . "' AND `due_date` <= '" . $where['due_date2'] . "'";
+					$where_str .= " AND `create_time` >= '" . $where['due_date1'] . "' AND `create_time` <= '" . $where['due_date2'] . "'";
 				else
-					$where_str .= " WHERE `due_date` >= '" . $where['due_date1'] . "' AND `due_date` <= '" . $where['due_date2'] . "'";
+					$where_str .= " WHERE `create_time` >= '" . $where['due_date1'] . "' AND `create_time` <= '" . $where['due_date2'] . "'";
 			}
 			else if( isset( $where["due_date1"] ) )
 			{
 				$where['due_date1'] = strtotime( $where['due_date1'] );
 
 				if( $where_str )
-					$where_str .= " AND `due_date` >= '" . $where['due_date1'] . "'";
+					$where_str .= " AND `create_time` >= '" . $where['due_date1'] . "'";
 				else
-					$where_str .= " WHERE `due_date` >= '" . $where['due_date1'] . "'";
+					$where_str .= " WHERE `create_time` >= '" . $where['due_date1'] . "'";
 			}
 			else if( isset( $where["due_date2"] ) )
 			{
 				$where['due_date2'] = strtotime( $where['due_date2'] );
 
 				if( $where_str )
-					$where_str .= " AND `due_date` <= '" . $where['due_date2'] . "'";
+					$where_str .= " AND `create_time` <= '" . $where['due_date2'] . "'";
 				else
-					$where_str .= " WHERE `due_date` <= '" . $where['due_date2'] . "'";
+					$where_str .= " WHERE `create_time` <= '" . $where['due_date2'] . "'";
 			}
 
 			$sql = $sql . $where_str . " LIMIT " . $params['limit'].",".$params['offset'];
@@ -202,7 +202,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			/* 获得当前管理员数据信息 */
 		    $sql = "SELECT user_id, user_name ".
 		           "FROM " .$GLOBALS['ecs']->table('admin_user'). " WHERE user_id = '".$_SESSION['admin_id']."'";
-		    $create_by = $db->getRow($sql);
+		    $create_by = $GLOBALS['db']->getRow($sql);
 
 			$content = $this->content;
 			$params = $content['parameters'];
@@ -496,6 +496,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 		
 	}
-	$content = jsonAction( array( "editInit", "addInit", "listInit" ) );
-	$billModel = new BillModel($content);
-	$billModel->run();
+	$content = jsonAction( array( "editInit", "addInit" ) );
+	$billAmountModel = new BillAmountModel($content);
+	$billAmountModel->run();
