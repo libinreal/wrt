@@ -707,6 +707,10 @@ class Contract
      */
     private function validateCont($type, $parameters) 
     {
+        $user_id = $parameters['user_id'];
+        if (empty($user_id)) {
+            $user_id = $_SESSION['admin_id'];
+        }
         $params = $parameters['params'];
         
         //修改时
@@ -716,7 +720,7 @@ class Contract
             failed_json('没有传参`contract_id`');
         }
         
-        $params = self::filterContValue($params);
+        $params = self::validContValue($params);
         
         //合同编号，合同名称不能重复
         self::selectSql(array(
@@ -739,8 +743,10 @@ class Contract
         //登记机构名称
         $params['registration'] = $this->db->getOne('SELECT bank_name FROM bank WHERE bank_id='.$params['bank_id']);
         
-        //创建人
-        $params['create_by'] = $this->db->getOne("SELECT user_name FROM admin_user WHERE user_id=".$user_id);
+        if ($type == 1) {
+            //创建人
+            $params['create_by'] = $this->db->getOne("SELECT user_name FROM admin_user WHERE user_id=".$user_id);
+        }
         
         $arr = array(
             'contract_num'       => $params['contract_num'], 
@@ -757,10 +763,13 @@ class Contract
             'registration'       => $params['registration'], 
             'bank_id'            => $params['bank_id'], 
             'attachment'         => $params['attachment'], 
-            'remark'             => $params['remark'], 
-            'create_by'          => $params['create_by'], 
-            'create_time'        => time()
+            'remark'             => $params['remark']
         );
+        if ($type == 1) {
+            $arr['create_user'] = $user_id;
+            $arr['create_by'] = $params['create_by'];
+            $arr['create_time'] = time();
+        }
         return array( 'params'=>$arr, 'goods_type'=>$params['goods_type'] );
     }
     
