@@ -14,9 +14,11 @@ if ( $_REQUEST['act'] == 'list' )
 
 //API
 else {
+
     $command = $_POST['command'];
     $entity = $_POST['entity'];
-    $parameters = json_decode(stripslashes($_POST['parameters']), true);
+    
+    $parameters = $_POST['parameters'];
     
     //API 接口列表
     $arr = array(
