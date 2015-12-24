@@ -515,7 +515,8 @@ class cls_image
                $img_type == 'image/png'   ||
                $img_type == 'image/gif'   ||
                $img_type == 'image/jpeg'  ||
-               $img_type == 'application/octet-stream';//pdf
+               $img_type == 'application/octet-stream' || 
+               $img_type == 'application/pdf'; //pdf
     }
 
     /**
