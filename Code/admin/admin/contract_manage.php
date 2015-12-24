@@ -42,6 +42,7 @@ else {
         'buyCont' => 1, 
         'contSupsList' => 1, 
         'contInSups' => 1, 
+        'contToSup' => 1, 
         'uploadify' => 2, 
     );
     
@@ -80,11 +81,11 @@ class Contract
     private $db;
     private $sql;
     private static $_instance;
-    private function __construct(){}
-    private function __clone(){}
+    private function __construct() {}
+    private function __clone() {}
     
     
-    public static function get_instance()
+    public static function get_instance() 
     {
         if (!self::$_instance) self::$_instance = new self();
         return self::$_instance;
@@ -186,7 +187,21 @@ class Contract
         $res['start_time'] = date('Y-m-d H:i:d', $res['start_time']);
         $res['end_time'] = date('Y-m-d H:i:d', $res['end_time']);
         
-        make_json_result($res);
+        $this->table = 'contract_category';
+        self::selectSql(array(
+            'fields' => array(
+                'c.contract_id', 
+                'g.cat_id', 
+                'g.cat_name'
+            ), 
+            'as'     => 'cc', 
+            'join'   => 'LEFT JOIN contract AS c on cc.contract_id=c.contract_id'
+                        .' LEFT JOIN goods_type AS g on cc.category_id=g.cat_id', 
+            'where'  => 'cc.contract_id='.$contractId
+        ));
+        $cat = $this->db->getAll($this->sql);
+        
+        make_json_result(array('cat'=>$cat, 'data'=>$res));
     }
     
     
@@ -669,6 +684,51 @@ class Contract
         ));
         $total = $this->db->getOne($this->sql);
         make_json_result(array('total'=>$total, 'data'=>$res));
+    }
+    
+    
+    /**
+     * 合同对应供应商的信息
+     * {
+     *      "command" : "contToSup", 
+     *      "entity"  : "contract", 
+     *      "parameters" : {
+     *          "contract_id" : "(int)"
+     *      }
+     * }
+     */
+    public function contToSup($entity, $parameters) 
+    {
+        self::init($entity, 'contract');
+        
+        $contractId = $parameters['contract_id'];
+        if (!$contractId) failed_json('没有传参`contract_id`');
+        
+        //合同信息
+        self::selectSql(array(
+            'fields' => array(
+                'contract_id', 
+                'customer_id'
+            ), 
+            'where'  => 'contract_type=2 and contract_id='.$contractId
+        ));
+        $res = $this->db->getRow($this->sql);
+        if ($res === false) failed_json('没有此合同相关信息');
+        
+        //合同下的所有供应商
+        $this->table = 'contract_suppliers';
+        self::selectSql(array(
+            'fields' => array(
+                's.suppliers_id', 
+                's.suppliers_name', 
+                's.region_id'
+            ), 
+            'as'     => 'cs', 
+            'join'   => 'LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id', 
+            'where'  => 'cs.contract_id='.$contractId
+        ));
+        $res['suppliers'] = $this->db->getAll($this->sql);
+        make_json_result($res);
     }
     
     
