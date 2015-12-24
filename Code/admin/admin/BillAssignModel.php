@@ -1,9 +1,9 @@
 <?php
 /**
- * 票据偿还单生成、编辑、列表
+ * 额度分配单创建、编辑、列表
  * 
  * @author libin@3ti.us
- * date 2015-12-22
+ * date 2015-12-24
  */
 
 define('IN_ECS', true);
@@ -14,14 +14,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 	 * 主要作用是：仅仅只做模板输出。具体数据需要POST调用 class里面的方法。
 	 */
 	if ($_REQUEST['act'] == 'edit' || $_REQUEST['act'] == 'add' ) {
-		$smarty->display('admin_bill_repay.html');
+		$smarty->display('admin_bill_assign.html');
 		exit;
 	} elseif ( $_REQUEST['act'] == 'list' ) {
-		$smarty->display('admin_bill_repay_list.html');
+		$smarty->display('admin_bill_assign_list.html');
 		exit;
 	}
 
-	class BillAmountModel {
+	class BillAssignModel {
 		
 		//$_POST
 		protected $content = false;
@@ -71,19 +71,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 		/**
 		 * 分页显示
-		 * 接口地址：http://admin.zjgit.dev/admin/BillRepayModel.php
+		 * 接口地址：http://admin.zjgit.dev/admin/BillAssignModel.php
 		 * 请求方法：POST
-		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
 	     *  {
-	     *      "entity": 'bill_repay_log',
+	     *      "entity": 'bill_assign_log',
 	     *      "command": 'page',
 	     *      "parameters": {
 	     *          "params": {
-	     *              "where": {
-	     *              "like":{"user_name":"no11232"},//客户
-	     *                  "due_date1": "2015-01-01",//起始日期
-	     *                  "due_date2": "2015-01-01",//结束日期
-	     *              },
+	     *          	"where": { "customer_id":100,//客户id
+	     *          				"type":0// 0:票据 1:现金
+	     *          	  },
 	     *              "limit": 0,//起始行号
 	     *              "offset": 2//返回的行数
 	     *          }
@@ -92,18 +90,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     * 返回数据格式如下 :
 	     *  {
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
-		 *	    "message": "额度生成单列表查询成功",
-		 *	    "content":{ 
+		 *	    "message": "额度分配单列表查询成功",
+		 *	    "content":{
+		 *	    	"info":{
+		 *	    		"user_name":"xxxx", //客户名
+		 *	    		"amount_available":10000//可分配额度
+		 *	    	},
 		 *	    	"data":[
 		 *	        {
-		 *                  "bill_amount_log_id":2 ,//生成单ID
-		 *                  "amount_type": 0 ,//生成单类型
-		 *                  "amount":  100.00 ,//金额
-		 *                  "remark": "xxxx" ,//备注
-		 *                  "update_time": "2015-12-12",//修改日期
-		 *                  "customer_id": 4 ,//往来单位ID
-		 *                  "create_time": "2015-12-12",//创建日期
-		 *                  "create_by": "xxx" ,//创建人
+		 *                  "bill_amount_history":22 ,//已分配票据采购额度(type 为0)
+		 *                  "bill_amount_valid": 100 ,//现有票据采购额度(type 为0)
+		 *                  "cash_amount_history":  20,//已分配现金采购额度(type 为1)
+		 *                  "cash_amount_valid": 100 ,//现有现金采购额度(type 为1)
+		 *                  "contract_id": "2015-12-12"//合同id
 		 *           }
 		 *	         ],
 		 *	         "total":"3"
@@ -114,202 +113,151 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content = $this->content;
 			$params = $content['parameters']['params'];
 			
-			$bill_repay_table = $GLOBALS["ecs"]->table("bill_repay_log");
-			$sql = "SELECT * FROM $bill_repay_table";
-			$total_sql = "SELECT COUNT(*) as `total` FROM $bill_repay_table";
+			if( isset( $params["where"] ) && isset( $params["where"]['customer_id'] ) )
+				$customer_id = trim( $params["where"]['customer_id'] );
 
-			$where = array();	
-			if( isset($params['where']) )
-				$where = $params['where'];
+			if( empty( $customer_id ) )
+				make_json_response('', '-1', '客户id错误');
 
-			$where_str = '';
-			//搜索客户
-			if( isset( $where["like"] ) )
+			$contract_table = $GLOBALS['ecs']->table('contract');
+
+			if( $type == 0 )//现金
+				$contract_sql = 'SELECT `bill_amount_history`, `bill_amount_valid`, `contract_id` FROM ' . $contract_table .
+				 				' WHERE `customer_id` = ' . $customer_id . ' ORDER BY `contract_id` ASC';
+			else//票据
+				$contract_sql = 'SELECT `cash_amount_history`, `cash_amount_valid`, `contract_id` FROM ' . $contract_table .
+				 				' WHERE `customer_id` = ' . $customer_id . ' ORDER BY `contract_id` ASC';
+			$resultContract = $GLOBALS['db']->qeury($contract_sql);
+
+			if( empty( $resultContract ) )
+				make_json_response('', '-1', '客户分配单查询失败');
+
+			$contract_id_arr = array();
+			foreach($resultContract as $c)
 			{
-				$like = $where["like"];
-				if( isset( $like['user_name'] ) && strlen( $like['user_name'] ) > 0 )//条件包含客户名的(先查users表，再根据结果中的user_id查找)
-				{
-
-					$user_table = $GLOBALS['ecs']->table('users');
-					$users_sql = 'SELECT `user_id` FROM ' . $user_table . ' WHERE `companyName` like \'%' . $like["user_name"] . '%\'';
-					$resultUsers = $GLOBALS['db']->getAll($users_sql);
-					
-					if( empty( $resultUsers ) )
-					{
-						make_json_response('', '-1', '未找到符合条件的偿还记录');
-					}
-					else
-					{
-
-						$users = array();
-						foreach($resultUsers as $u)
-						{
-							$users[] = $u['user_id'];
-						}
-
-						$users_ids = implode(',', $users);
-						$where_str = ' WHERE `user_id` in(' . $users_ids . ')';
-					}
-				}
-
+				$contract_id_arr[] = $c['contract_id'];
 			}
-			//搜索日期
-			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
-			{
-				$where['due_date1'] = strtotime( $where['due_date1'] );
-				$where['due_date2'] = strtotime( $where['due_date2'] );
+			$contract_ids = implode(',', $contract_id_arr);
 
-				if( $where_str )
-					$where_str .= " AND `create_time` >= '" . $where['due_date1'] . "' AND `create_time` <= '" . $where['due_date2'] . "'";
-				else
-					$where_str .= " WHERE `create_time` >= '" . $where['due_date1'] . "' AND `create_time` <= '" . $where['due_date2'] . "'";
-			}
-			else if( isset( $where["due_date1"] ) )
-			{
-				$where['due_date1'] = strtotime( $where['due_date1'] );
+			$bill_assign_table = $GLOBALS["ecs"]->table("bill_assign_log");
+			$sql = 'SELECT * FROM ' . $bill_assign_table;
+			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $bill_assign_table;
 
-				if( $where_str )
-					$where_str .= " AND `create_time` >= '" . $where['due_date1'] . "'";
-				else
-					$where_str .= " WHERE `create_time` >= '" . $where['due_date1'] . "'";
-			}
-			else if( isset( $where["due_date2"] ) )
-			{
-				$where['due_date2'] = strtotime( $where['due_date2'] );
-
-				if( $where_str )
-					$where_str .= " AND `create_time` <= '" . $where['due_date2'] . "'";
-				else
-					$where_str .= " WHERE `create_time` <= '" . $where['due_date2'] . "'";
-			}
+			$where_str = ' WHERE `contract_id` in (' . $contract_ids . ')';
 
 			$sql = $sql . $where_str . " LIMIT " . $params['limit'].",".$params['offset'];
-			$bill_repays = $GLOBALS['db']->getAll($sql);
+			$bill_assigns = $GLOBALS['db']->getAll($sql);
 			
 			$total_sql = $total_sql . $where_str;
 			$resultTotal = $GLOBALS['db']->getRow($total_sql);
 
-			if( $bill_repays )
+			if( $bill_assigns )
 			{
-				foreach($bill_repays as &$b)
-				{
-					$b['create_time'] = date("Y-m-d", $b['create_time'] );// date("Y-m-d");
-				}
-
 				$content = array();
-				$content['data'] = $bill_repays;
+				$content['data'] = $bill_assigns;
 				$content['total'] = $resultTotal['total'];
 
-				make_json_response( $content, "0", "生成单列表查询成功");
+				make_json_response( $content, "0", "分配单查询成功");
 			}
 			else
 			{
-				make_json_response("", "-1", "生成列表查询失败");
+				make_json_response("", "-1", "分配单查询失败");
 			}
 		}
 		
 		/**
 		 * 创建
-		 * 接口地址：http://admin.zjgit.dev/admin/BillRepayModel.php
+		 * 接口地址：http://admin.zjgit.dev/admin/BillAssignModel.php
 		 * 传入的接口数据格式如下(字段以及对应的值 在parameters里)：* 
 		 * 请求方法：POST
 		 * {
 		 *	    "command": "create",
-		 *	    "entity": "bill_repay_log",
+		 *	    "entity": "bill_assign_log",
 		 *	    "parameters": {
-		 *                  "bill_id": 0 ,//额度生成类型
-		 *                  "user_id": 1 ,//客户id
-		 *                  "repay_amount": 100 ,//偿还金额
-		 *                  "remark": "虚拟数据" ,
+		 *                  "type":  0,//0: 票据 1:现金
+		 *                  "contract_id": 100 ,//合同id
+		 *                  "assign_amount": 4//分配金额
 		 *           }
 		 * 返回数据格式如下 
 		 * {
 		 *	    "error": "0",("0": 成功 ,"-1": 失败)
-		 *	    "message": "偿还记录添加成功",
+		 *	    "message": "额度分配单添加成功",
 		 *	    "content": ""
 		 *	}
 		 */
 		public	function createAction(){
-
-
 			/* 获得当前管理员数据信息 */
-
 		    $sql = "SELECT `user_id`, `user_name` ".
 		           "FROM " .$GLOBALS['ecs']->table('admin_user'). " WHERE `user_id` = '".$_SESSION['admin_id']."'";
-		    $create_by = $GLOBALS['db']->getRow($sql);
+		    $assign_admin_user = $GLOBALS['db']->getRow($sql);
 
 			$content = $this->content;
 			$params = $content['parameters'];
 
-			$data['repay_amount'] = round( ( double )( $params['repay_amount'] ), 2 );
-			$data['remark'] = trim( $params['remark'] );
-			$data['user_id'] = intval( $params['user_id'] );
-			$data['bill_id'] = intval( $params['bill_id'] );
-			$data['create_time'] = time();
-			$data['create_by'] = $create_by['user_name'];
+			$data['type'] = intval( $params['type'] );
+			$data['contract_id'] = intval( $params['contract_id'] );
+			$data['assign_time'] = date("Y-m-d H:i:s", time());
+			$data['assign_admin_user_id'] = $assign_admin_user['user_id'];
+			$data['assign_amount'] = round( ( double )( $params['assign_amount'] ), 2 );
 			
-			$bill_table = $GLOBALS['ecs']->table('bill');
-			$discount_sql = "SELECT `discount_amount`,`has_repay` FROM " . $bill_table . " WHERE `bill_id` = " . $data['bill_id'];
-			$resultDiscount = $GLOBALS['db']->getRow($discount_sql);//折后金额、累计偿还金额
+			$bill_assign_table = $GLOBALS['ecs']->table('bill_assign_log');
+			$sql = 'INSERT INTO ' . $bill_assign_table .' (';
 
 			$dataKey = array_keys( $data );
-			$bill_repay_table = $GLOBALS['ecs']->table('bill_repay_log');
-			$sql = "INSERT INTO $bill_repay_table (";
 			foreach($dataKey as $k)
 			{
 				$sql = $sql . " `" . $k . "`,";
 			}
 			$sql = substr($sql, 0, -1) . ") VALUES(";
 
-			foreach($data as $v)
+			foreach($data as $d)
 			{
-				if(is_string( $v ) )
-					$v = "'" . $v . "'";
-
-				$sql = $sql . $v . ",";
+				if( is_string( $d ) )
+					$d = '\'' . $d . '\'';
+				$sql = $sql . $d . ',';
 			}
 
-			$sql = substr($sql, 0, -1) . ")";
+			$sql = substr($sql, 0, -1) . ')';
 			$GLOBALS['db']->query("START TRANSACTION");//开启事务
-			$createRepay = $GLOBALS['db']->query($sql);
+			$createAssign = $GLOBALS['db']->query($sql);
 			
-			if( $createRepay )
+			if( $createAssign )
 			{
-				if( $resultDiscount['has_repay'] + $data['repay_amount'] >= $resultDiscount['discount_amount'] )
-					$bill_sql = 'UPDATE ' . $bill_table . ' SET `has_repay` = `has_repay` + ' . $data['repay_amount'] . ' ,`status` = 1' .
-							' WHERE `bill_id` = ' . $data['bill_id'] . ' AND `status` = 0';//未还状态的，更新为已还`status`=1
+				$contract_table = $GLOBALS['ecs']->table('contract');
+				if( $type == 0 )
+					$contract_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_history` = `bill_amount_history` + ' . $data['assign_amount'] .
+							' WHERE `contract_id` = ' . $data['contract_id'];
 				else
-					$bill_sql = 'UPDATE ' . $bill_table . ' SET `has_repay` = `has_repay` + ' . $data['repay_amount'] .
-							' WHERE `bill_id` = ' . $data['bill_id'] . ' AND `status` = 0';//未还状态的
-
-				$updateBill = $GLOBALS['db']->query($bill_sql);
-				if( $updateBill )
+					$contract_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_history` = `cash_amount_history` + ' . $data['assign_amount'] .
+							' WHERE `contract_id` = ' . $data['contract_id'];
+				$updateContract = $GLOBALS['db']->query($contract_sql);
+				if( $updateContract )
 				{
 					$GLOBALS['db']->query("COMMIT");//事务提交
-					make_json_response("", "0", "偿还单添加成功");//暂不返回自增id
+					make_json_response("", "0", "额度分配单添加成功");//暂不返回自增id
 				}
 				else
 				{
 					$GLOBALS['db']->query("ROLLBACK");//事务回滚
-					make_json_response("", "-1", "偿还单添加失败");//暂不返回自增id
+					make_json_response("", "-1", "额度分配单添加失败");//暂不返回自增id
 				}
 			}
 			else
 			{
-				make_json_response("", "-1", "偿还单添加失败");
+				make_json_response("", "-1", "额度分配单添加失败");
 			}
 		}
 		
 		/**
 		 * 更新
-		 * 接口地址：http://admin.zjgit.dev/admin/BillRepayModel.php
+		 * 接口地址：http://admin.zjgit.dev/admin/BillAssignModel.php
 		 * 请求方法：POST
-		 * 传入的接口数据格式如下(主键bill_repay_log_id以及更新的字段 在parameters里)：
+		 * 传入的接口数据格式如下(主键bill_assign_log_id以及更新的字段 在parameters里)：
 		 *      {
 		 *		    "command": "update",
-		 *		    "entity": "bill_repay_log",
+		 *		    "entity": "bill_assign_log",
 		 *		    "parameters": {
-		 *                  "bill_repay_log_id":1 ,
+		 *                  "bill_assign_log_id":1 ,
 		 *                  "repay_amount": 100 ,//偿还额度
 		 *                  "remark": "虚拟数据" ,
 		 *                  "user_id": 4 ,
@@ -327,7 +275,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content = $this->content;
 			$params = $content['parameters'];
 
-			if( !isset( $params['bill_repay_log_id'] ) )
+			if( !isset( $params['bill_assign_log_id'] ) )
 				make_json_response('', "-1", "偿还单ID错误");
 
 			$data['repay_amount'] = round( ( double )( $params['repay_amount'] ), 2 );
@@ -342,12 +290,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$pv = "'" . trim($pv) ."'";
 			}	
 
-			$sql = "UPDATE " . $GLOBALS['ecs']->table("bill_repay_log") . " SET";
+			$sql = "UPDATE " . $GLOBALS['ecs']->table("bill_assign_log") . " SET";
 
 			foreach ($data as $p => $pv) {
 				$sql = $sql . " `" . $p . "` = " . $pv . ",";
 			}
-			$sql = substr($sql, 0, -1) ." WHERE `bill_repay_log_id` = " . $params['bill_repay_log_id'];
+			$sql = substr($sql, 0, -1) ." WHERE `bill_assign_log_id` = " . $params['bill_assign_log_id'];
 			
 			$result = $GLOBALS['db']->query($sql);
 
@@ -359,14 +307,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 		/**
 		 * 删除
-		 * 接口地址：http://admin.zjgit.dev/admin/BillAmountModel.php
+		 * 接口地址：http://admin.zjgit.dev/admin/BillAssignModel.php
 		 * 请求方法：POST
-		 * 传入的接口数据格式如下(主键bill_repay_log_id)：
+		 * 传入的接口数据格式如下(主键bill_assign_log_id)：
 		 *      {
 		 *		    "command": "delete",
-		 *		    "entity": "bill_repay_log",
+		 *		    "entity": "bill_assign_log",
 		 *		    "parameters": {
-		 *                  "bill_repay_log_id":2
+		 *                  "bill_assign_log_id":2
 		 *                  }
 		 *      }
 		 *  返回的数据格式:
@@ -379,9 +327,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 */
 		public	function deleteAction(){
 			$content = $this->content;
-			$bill_repay_id = $content['parameters']['bill_repay_log_id'];
+			$bill_repay_id = $content['parameters']['bill_assign_log_id'];
 			
-			$sql = "DELETE FROM " . $GLOBALS['ecs']->table("bill_repay_log") . " WHERE `bill_repay_log_id` = " . $bill_amount_id;
+			$sql = "DELETE FROM " . $GLOBALS['ecs']->table("bill_assign_log") . " WHERE `bill_assign_log_id` = " . $bill_amount_id;
 			$result = $GLOBALS['db']->query($sql);
 			
 			// update `bill` set `has_repay` = `has_repay` - 10
@@ -395,12 +343,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 		/**
 		 * 创建初始化
-		 * 接口地址：http://admin.zjgit.dev/admin/BillRepayModel.php
+		 * 接口地址：http://admin.zjgit.dev/admin/BillAssignModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下:
 		 *      {
 		 *		    "command": "addInit",
-		 *		    "entity": "bill_repay_log",
+		 *		    "entity": "bill_assign_log",
 		 *		    "parameters": {
 		 *                  "bill_id":1,//票据ID
 		 *                  }
@@ -451,14 +399,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 		/**
 		 * 编辑初始化
-		 * 接口地址：http://admin.zjgit.dev/admin/BillRepayModel.php
+		 * 接口地址：http://admin.zjgit.dev/admin/BillAssignModel.php
 		 * 请求方法：POST
-		 * 传入的接口数据格式如下(主键bill_repay_log_id)：
+		 * 传入的接口数据格式如下(主键bill_assign_log_id)：
 		 *      {
 		 *		    "command": "editInit",
-		 *		    "entity": "bill_repay_log",
+		 *		    "entity": "bill_assign_log",
 		 *		    "parameters": {
-		 *                  "bill_repay_log_id":2//偿还单ID
+		 *                  "bill_assign_log_id":2//偿还单ID
 		 *                  }
 		 *      }
 		 *      
@@ -479,14 +427,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 		public function editInitAction()
 		{
 			$content = $this->content;
-			$repay_id = intval( $content['parameters']['bill_repay_log_id'] );
+			$repay_id = intval( $content['parameters']['bill_assign_log_id'] );
 
 			if( $repay_id )
 			{
-				$repay_table = $GLOBALS['ecs']->table('bill_repay_log');
+				$repay_table = $GLOBALS['ecs']->table('bill_assign_log');
 				$user_table = $GLOBALS['ecs']->table('users');				
 				$sql = 'SELECT a.`bill_id`, a.`user_id`, b.`companyName` as `user_name`, a.`repay_amount`, a.`remark` FROM ' . $repay_table .
-					 	' as a LEFT JOIN ' . $user_table . ' as b on a.`user_id` = b.`user_id` WHERE `bill_repay_log_id` = ' . 
+					 	' as a LEFT JOIN ' . $user_table . ' as b on a.`user_id` = b.`user_id` WHERE `bill_assign_log_id` = ' . 
 						$repay_id;
 
 				$repay = $GLOBALS['db']->getRow($sql);
@@ -511,5 +459,5 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 	}
 	$content = jsonAction( array( "editInit", "addInit" ) );
-	$billAmountModel = new BillAmountModel($content);
-	$billAmountModel->run();
+	$billAssignModel = new BillAssignModel($content);
+	$billAssignModel->run();

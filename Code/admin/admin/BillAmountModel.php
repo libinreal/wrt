@@ -191,7 +191,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			{
 				foreach($bills as &$b)
 				{
-					$b['create_time'] = date("Y-m-d");
+					$b['create_time'] = date("Y-m-d", $b['create_time'] );
 				}
 
 				$content = array();
