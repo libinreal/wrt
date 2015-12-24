@@ -14,105 +14,113 @@
 		<span id="search_id" class="action-span1"> - 合同编辑</span>
 		<div style="clear:both"></div>
 		</h1>
+		<div id="loading" align="center" style="display:none;">Loading ...</div>
 		<div class="table_info">
 			<table>
 				<tbody>
+					<form id="contract_content">
+						<tr>
+							<td>合同编号：</td><td><input type="text" name="contract_num"></td>
+							<td>合同名称：</td><td><input type="text" name="contract_name"></td>
+							<td>合同金额：</td><td><input type="text" name="contract_amount"></td>
+							<td>合同状态：</td>
+							<td><select name="contract_status">
+								<option>生效</option>
+								<option>过期</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td>公司：</td><td><span id="">物融通xxxx</span></td>
+							<td>客户：</td>
+							<td><select name="customer_name">
+								<option value="1">中国建筑第一公司</option>
+								<option value="2">中国建筑第二公司</option>
+							</select></td>
+							<td>合同类型：</td>
+							<td><select name="contract_type">
+								<option value="1">销售合同</option>
+								<option value="2">采购合同</option>
+							</select></td>
+							<td>签署类型：</td>
+							<td><select name="contract_sign_type">
+								<option value="1">平台-&gt;银行</option>
+								<option value="2">银行-&gt;平台</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td>合同开始日期：</td><td><input type="text" name="start_time"></td>
+							<td>合同结束日期：</td><td><input type="text" name="end_time"></td>
+							<td>是否控制类型：</td>
+							<td>是<input type="radio" name="is_control" value="1">&nbsp;&nbsp;
+							否<input type="radio" name="is_control" value="0"></td>
+							<td>物料类型：</td><td><a href="javascript:void(0);" id="show_material">查看物料类型</a></td>
+						</tr>
+						<tr>
+							<td>金融费率：</td><td><input type="text" name="rate"></td>
+							<td>登记机构：</td>
+							<td><select name="bank_id">
+								<option value="1">浙商银行</option>
+								<option value="2">工商银行</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td>备注</td>
+							<td colspan="7"><textarea name="remark"></textarea></td>
+						</tr>
+					</form>
 					<tr>
-						<td>合同编号：</td><td><input type="text" name="contract_num"></td>
-						<td>合同名称：</td><td><input type="text" name="contract_name"></td>
-						<td>合同金额：</td><td><input type="text" name="contract_amount"></td>
-						<td>合同状态：</td>
-						<td><select name="contract_status">
-							<option>生效</option>
-							<option>过期</option>
-						</select></td>
-					</tr>
-					<tr>
-						<td>公司：</td><td><span id="">物融通xxxx</span></td>
-						<td>客户：</td>
-						<td><select name="customer_name">
-							<option value="1">中国建筑第一公司</option>
-							<option value="2">中国建筑第二公司</option>
-						</select></td>
-						<td>合同类型：</td>
-						<td><select name="contract_type">
-							<option value="1">销售合同</option>
-							<option value="2">采购合同</option>
-						</select></td>
-						<td>签署类型：</td>
-						<td><select name="contract_sign_type">
-							<option value="1">平台-&gt;银行</option>
-							<option value="2">银行-&gt;平台</option>
-						</select></td>
-					</tr>
-					<tr>
-						<td>合同开始日期：</td><td><input type="text" name="start_time"></td>
-						<td>合同结束日期：</td><td><input type="text" name="end_time"></td>
-						<td>是否控制类型：</td>
-						<td>是<input type="radio" name="is_control" value="1">&nbsp;&nbsp;
-						否<input type="radio" name="is_control" value="0"></td>
-						<td>物料类型：</td><td><a href="javascript:void(0);" id="show_material">查看物料类型</a></td>
-					</tr>
-					<tr>
-						<td>金融费率：</td><td><input type="text" name="rate"></td>
-						<td>登记机构：</td>
-						<td><select name="contract_sign_type">
-							<option value="1">浙商银行</option>
-							<option value="2">工商银行</option>
-						</select></td>
-						<td colspan="4">附件：<input type="file" /> <input type="button" value="点击上传" /></td>
-					</tr>
-					<tr>
-						<td>备注</td>
-						<td colspan="7"><textarea name="remark"></textarea></td>
+						<td>附件：</td>
+						<td colspan="4">
+							<form id="contract_attachment_form">
+								<span id="filename" style="color:blue;display:none;">文件名：<span></span>&nbsp;</span>
+								<input type="file" id="contract_attachment_name" name="contract_attachment_name" />
+								<input type="button" onclick="Contract.getUploadFile()" value="点击上传" />
+								<span data-name="error"></span>
+							</form>
+						</td>
 					</tr>
 				</tbody>
 			</table>
-			<div align="center"><input name="query" type="submit" class="button" value=" 提交 "></div>
+			<div align="center" id="handle_button"></div>
 		</div>
 		<!-- 底部 -->
 		<div id="footer">
 			{$lang.copyright}
 		</div>
-<!-- pop message -->
-<div class="messagepop pop">
-<div class="messagepop_header"><h4>物料类型</h4><a href="javascript:void(0)" class="close">关闭</a></div>
-<div class="clear"></div>
-<hr>
-<form>
-<div class="checkbox"><input type="checkbox" /><label>钢筋</label></div>
-<div class="checkbox"><input type="checkbox" /><label>水泥</label></div>
-<hr>
-<div class=""><input type="checkbox" /> 全选/全不选</div>
-<div align="center"><input type="button" class="button" value=" 保存 " /></div>
-</form>
-</div>
-
-<script src="js/ajax.js" type="text/javascript" ></script>
-<script src="js/contract.js" type="text/javascript" ></script>
-<script type="text/javascript">
-function deselect(e) {
-  $('.pop').slideFadeToggle(function() {
-    e.removeClass('selected');
-  });    
-}
-
-$(function() {
-  $('#show_material').on('click', function() {
-      $('.pop').slideFadeToggle();
-  });
-
-  $('.close').on('click', function() {
-    deselect($('#contact'));
-    return false;
-  });
-});
-
-$.fn.slideFadeToggle = function(easing, callback) {
-  return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
-};
-
-Contract.getEdit();
-</script>
+		<!-- pop message -->
+		<div class="messagepop pop">
+			<div class="messagepop_header"><h4>物料类型</h4><a href="javascript:void(0)" class="close">关闭</a></div>
+			<div class="clear"></div>
+			<hr>
+			<form id="contract_material">
+				<div id="contract_material_list"></div>
+				<hr>
+				<div><input type="checkbox" /> <a>全选</a>/<a>全不选</a></div>
+				<div align="center"><input type="button" class="button" onclick="Contract.getUpdateMaterial()" value=" 保存 " /></div>
+			</form>
+		</div>
+		<script src="js/ajaxfileupload.js" type="text/javascript" ></script>
+		<script src="js/ajax.js" type="text/javascript" ></script>
+		<script src="js/contract.js" type="text/javascript" ></script>
+		<script type="text/javascript">
+		function deselect(e) {
+			$('.pop').slideFadeToggle(function() {
+				e.removeClass('selected');
+			});
+		}
+		$(function() {
+			$('#show_material').on('click', function() {
+				$('.pop').slideFadeToggle();
+			});
+			$('.close').on('click', function() {
+				deselect($('#contact'));
+				return false;
+			});
+		});
+		$.fn.slideFadeToggle = function(easing, callback) {
+			return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
+		};
+		Contract.getEdit();
+		</script>
 	</body>
 </html>

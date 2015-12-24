@@ -1079,3 +1079,14 @@ em, cite, th {
 .button-center{
     text-align: center;
 }
+
+/** error messages **/
+.error{
+    color:red;
+    line-height: 25px;
+}
+.warn{
+    color:#f57900;
+    line-height: 25px;
+    text-align: center;
+}
