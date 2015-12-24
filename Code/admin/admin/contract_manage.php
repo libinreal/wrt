@@ -569,7 +569,8 @@ class Contract
         $suppliersId = $parameters['params']['suppliers_id'];
         
         if ($contractId <= 0) failed_json('没有传参`contract_id`或传参错误');
-        if ($suppliersId <= 0) failed_json('没有传参`suppliers_id`或传参错误');
+        if (!is_array($suppliersId)) failed_json('没有传参`suppliers_id`或传参错误，格式是数组');
+        if (empty($suppliersId)) make_json_result(true);
         
         //查看原有的合同绑定哪些供应商
         self::selectSql(array(
@@ -579,12 +580,18 @@ class Contract
         $res = $this->db->getAll($this->sql);
         $haveSupId = array();
         foreach ($res as $v) {
-            if ( in_array($v['suppliers_id'], $suppliersId) ) {
-                $haveSupId[] = $v['suppliers_id'];
-            }
+            $haveSupId[] = $v['suppliers_id'];
         }
         
-        //过滤掉已经存在与数据表的供应商
+        //应该删除的供应商
+        $removeId = array_diff($haveSupId, $suppliersId);
+        if (!empty($removeId)) {
+            $sql = 'DELETE FROM '.$this->table.' WHERE suppliers_id in ('.implode(',', $removeId).')'.' and contract_id='.$contractId;
+            $res = $this->db->query($sql);
+            if (!$res) failed_json('合同关联供应商失败！');
+        }
+        
+        //需要添加的供应商
         $suppliersId = array_diff($suppliersId, $haveSupId);
         if (empty($suppliersId)) make_json_result(true);
             
