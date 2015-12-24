@@ -1,22 +1,46 @@
 <?php
 /**
- * 
+ * 合同管理页面
+ * API :
+ * class Contract
  * @author 
  */
 define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
-
-if ( $_REQUEST['act'] == 'list' )
+/**
+ * 合同列表
+ */
+if ( $_REQUEST['act'] == 'clist' )
 {
-    $smarty->display('cont_list.htm');
+    $smarty->display('second/cont_list.htm');
     exit;
 }
-elseif ( $_REQUEST['act'] == 'insert' )
+/**
+ * 合同添加，编辑
+ */
+elseif ( $_REQUEST['act'] == 'edit' )
 {
-    $smarty->display('');
+    $smarty->display('second/contract_edit.htm');
+    exit;
 }
-
-//API
+/**
+ * 合同关联供应商设置
+ */
+elseif ( $_REQUEST['act'] == 'set' ) 
+{
+    $smarty->display('second/contract_supplier_link_set.htm');
+    exit;
+}
+/**
+ * 合同关联供应商列表
+ */
+elseif ( $_REQUEST['act'] == 'slist' ) 
+{
+    $smarty->display('second/contract_supplier_link_list.htm');
+}
+/**
+ * API Access
+ */
 else {
     $command = $_POST['command'];
     $entity = $_POST['entity'];
@@ -26,7 +50,6 @@ else {
     if (!is_array($parameters) && $parameters != '') {
         $parameters = json_decode(stripslashes($_POST['parameters']), true);
     }
-    
     
     //API 接口列表
     $arr = array(
@@ -66,7 +89,7 @@ else {
 
 
 /***
- * 后台合同管理API类
+ * 合同管理API
  * @author luolu<luolu@3ti.us>
  * API接口访问地址：http://admin.zj.dev/admin/contract_manage.php
  * API接口方法的参数及返回值：
@@ -266,8 +289,6 @@ class Contract
         //page
         if ($params['limit'] != '' && $params['offset'] == '') {
             $limit = ' limit '.$params['limit'];
-        } elseif ($params['limit'] == '' && $params['offset'] != '') {
-            $limit = ' limit '.$params['offset'];
         } elseif ($params['limit'] != '' && $params['offset'] != '') {
             $page = ($params['limit'] - 1) * $params['offset'];
             $limit = 'limit '.$page.','.$params['offset'];
@@ -654,8 +675,6 @@ class Contract
         //page
         if ($params['limit'] != '' && $params['offset'] == '') {
             $limit = ' limit '.$params['limit'];
-        } elseif ($params['limit'] == '' && $params['offset'] != '') {
-            $limit = ' limit '.$params['offset'];
         } elseif ($params['limit'] != '' && $params['offset'] != '') {
             $page = ($params['limit'] - 1) * $params['offset'];
             $limit = 'limit '.$page.','.$params['offset'];
@@ -764,6 +783,9 @@ class Contract
             make_json_result($fileName);
         }
     }
+    
+    
+    
     
     
     /**
