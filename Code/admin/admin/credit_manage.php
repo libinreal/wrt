@@ -77,7 +77,7 @@ class Credit
     private function __clone() {}
     
     
-    public static function get_instance()
+    public static function get_instance() 
     {
         if (!self::$_instance) self::$_instance = new self();
         return self::$_instance;
@@ -94,7 +94,7 @@ class Credit
      *      }
      * }
      */
-    public function creditList($entity, $parameters)
+    public function creditList($entity, $parameters) 
     {
         self::init($entity, 'bank_credit');
     
@@ -148,7 +148,7 @@ class Credit
      *      }
      * }
      */
-    public function creditInfo($entity, $parameters)
+    public function creditInfo($entity, $parameters) 
     {
         self::init($entity, 'bank_credit');
     
@@ -193,7 +193,7 @@ class Credit
      *      }
      * }
      */
-    public function creditRemark($entity, $parameters)
+    public function creditRemark($entity, $parameters) 
     {
         self::init($entity, 'bank_credit');
     
@@ -213,7 +213,7 @@ class Credit
      * 银行授信配置
      * @return array $config
      */
-    private function creditConf()
+    private function creditConf() 
     {
         $config = require_once('bankCredit_config.php');
         return $config;
@@ -223,7 +223,7 @@ class Credit
     /**
      * @param array $params
      */
-    private function selectSql($params)
+    private function selectSql($params) 
     {
         if ( is_array($params['fields']) ) {
             $params['fields'] = implode(',', $params['fields']);
@@ -244,7 +244,7 @@ class Credit
      * @param string $entity
      * @param string $tableName
      */
-    private function init($entity, $tableName)
+    private function init($entity, $tableName) 
     {
         if ( $entity != $tableName ) {
             failed_json('数据表`'.$entity.'`不存在');

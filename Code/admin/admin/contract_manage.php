@@ -305,6 +305,10 @@ class Contract
                 'c.start_time', 
                 'c.end_time', 
                 'c.registration', 
+                'c.bill_amount_history', 
+                'c.bill_amount_valid', 
+                'c.cash_amount_history', 
+                'c.cash_amount_valid', 
                 'u.companyName', 
                 's.suppliers_name'
             ), 
