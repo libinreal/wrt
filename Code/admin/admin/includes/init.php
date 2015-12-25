@@ -53,7 +53,7 @@ else
     include('../includes/config.php');
 }
 
-require './admin_config.php';
+require_once './admin_config.php';
 
 /* 取得当前ecshop所在的根目录 */
 if(!defined('ADMIN_PATH'))

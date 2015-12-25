@@ -132,7 +132,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$user_table = $GLOBALS['ecs']->table('users');
 					$users_sql = 'SELECT `user_id` FROM ' . $user_table . ' WHERE `companyName` like \'%' . $like["user_name"] . '%\'';
 					$resultUsers = $GLOBALS['db']->getAll($users_sql);
-
+					
 					if( empty( $resultUsers ) )
 					{
 						make_json_response('', '-1', '未找到符合条件的偿还记录');
@@ -428,7 +428,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 
-				$cash_amount_type = array_merge( array( "" => "所有" ), cash_bill_amount_types() );
+				$cash_amount_type = array_merge( array( "" => "所有" ), C('cash_bill_amount_type') );
 				$init['amount_type'] = $cash_amount_type;
 
 				$result['init'] = $init;
@@ -507,7 +507,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 
-				$cash_amount_type = array_merge( array( "" => "所有" ), cash_bill_amount_types() );
+				$cash_amount_type = array_merge( array( "" => "所有" ), C('cash_bill_amount_type') );
 				$init['amount_type'] = $cash_amount_type;
 
 				$bill_amount_table = $GLOBALS['ecs']->table( 'bill_amount_log' );

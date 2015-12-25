@@ -520,8 +520,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 */
 		public function addInitAction()
 		{
-			$bill_type = array_merge( array(""=> "所有"), bill_types() );//
-			$currency = array_merge( array(""=> "所有" ), bill_currencys() );//
+			$bill_type = array_merge( array(""=> "所有"), C('bill_type') );//
+			$currency = array_merge( array(""=> "所有" ), C('bill_currency') );//
 			$status = array(""=> "所有", "0" => "已扣减", "1" => "已恢复" );//
 
 			$is_recourse = array( '0' =>"否", '1' => "是");//
@@ -629,8 +629,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( !$bill_id )
 				make_json_response('', '-1', '票据ID为空');
 
-			$bill_type = array_merge( array(""=> "所有"), bill_types() );//
-			$currency = array_merge( array(""=> "所有" ), bill_currencys() );//
+			$bill_type = array_merge( array(""=> "所有"), C('bill_type') );//
+			$currency = array_merge( array(""=> "所有" ), C('bill_currency') );//
 			$status = array(""=> "所有", "0" => "已扣减", "1" => "已恢复" );//
 
 			$is_recourse = array( "0" =>"否", "1" => "是");//
