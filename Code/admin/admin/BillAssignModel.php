@@ -13,10 +13,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	/**
 	 * 主要作用是：仅仅只做模板输出。具体数据需要POST调用 class里面的方法。
 	 */
-	if ($_REQUEST['act'] == 'edit' || $_REQUEST['act'] == 'add' ) {
-		$smarty->display('admin_bill_assign.html');
-		exit;
-	} elseif ( $_REQUEST['act'] == 'list' ) {
+	if ( $_REQUEST['act'] == 'list' ) {
 		$smarty->display('admin_bill_assign_list.html');
 		exit;
 	}
@@ -248,62 +245,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 		}
 		
-		/**
-		 * 更新
-		 * 接口地址：http://admin.zjgit.dev/admin/BillAssignModel.php
-		 * 请求方法：POST
-		 * 传入的接口数据格式如下(主键bill_assign_log_id以及更新的字段 在parameters里)：
-		 *      {
-		 *		    "command": "update",
-		 *		    "entity": "bill_assign_log",
-		 *		    "parameters": {
-		 *                  "bill_assign_log_id":1 ,
-		 *                  "repay_amount": 100 ,//偿还额度
-		 *                  "remark": "虚拟数据" ,
-		 *                  "user_id": 4 ,
-		 * 	                "bill_id": 0 ,//票据ID
-		 *           }
-		 *      }
-		 * 返回数据格式如下 
-		 * {
-		 *	    "error": "0",("0": 成功 ,"-1": 失败)
-		 *	    "message": "票据更新成功",
-		 *	    "content": ""
-		 * }
-		 */
-		public	function updateAction(){
-			$content = $this->content;
-			$params = $content['parameters'];
-
-			if( !isset( $params['bill_assign_log_id'] ) )
-				make_json_response('', "-1", "偿还单ID错误");
-
-			$data['repay_amount'] = round( ( double )( $params['repay_amount'] ), 2 );
-			$data['remark'] = trim( $params['remark'] );
-			$data['user_id'] = intval( $params['user_id'] );
-			$data['bill_id'] = intval( $params['bill_id'] );
-
-			foreach ($data as $p => &$pv) {
-				if( is_null( $pv ) )
-					$pv = 0;
-				elseif( is_string( $pv ) )
-					$pv = "'" . trim($pv) ."'";
-			}	
-
-			$sql = "UPDATE " . $GLOBALS['ecs']->table("bill_assign_log") . " SET";
-
-			foreach ($data as $p => $pv) {
-				$sql = $sql . " `" . $p . "` = " . $pv . ",";
-			}
-			$sql = substr($sql, 0, -1) ." WHERE `bill_assign_log_id` = " . $params['bill_assign_log_id'];
-			
-			$result = $GLOBALS['db']->query($sql);
-
-			if( $result )
-				make_json_response("", "0", "偿还单更新成功");
-			else
-				make_json_response("", "-1", "偿还单更新失败");
-		}
 		
 		/**
 		 * 删除
@@ -327,137 +268,22 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 */
 		public	function deleteAction(){
 			$content = $this->content;
-			$bill_repay_id = $content['parameters']['bill_assign_log_id'];
+			$bill_assign_id = $content['parameters']['bill_assign_log_id'];
 			
-			$sql = "DELETE FROM " . $GLOBALS['ecs']->table("bill_assign_log") . " WHERE `bill_assign_log_id` = " . $bill_amount_id;
+			$sql = "DELETE FROM " . $GLOBALS['ecs']->table("bill_assign_log") . " WHERE `bill_assign_log_id` = " . $bill_assign_id;
 			$result = $GLOBALS['db']->query($sql);
 			
 			// update `bill` set `has_repay` = `has_repay` - 10
 			#code....
 			
 			if( $result )
-				make_json_response("", "0", "偿还单删除成功");
+				make_json_response("", "0", "额度分配单删除成功");
 			else
-				make_json_response("", "-1", "偿还单删除失败");
-		}
-
-		/**
-		 * 创建初始化
-		 * 接口地址：http://admin.zjgit.dev/admin/BillAssignModel.php
-		 * 请求方法：POST
-		 * 传入的接口数据格式如下:
-		 *      {
-		 *		    "command": "addInit",
-		 *		    "entity": "bill_assign_log",
-		 *		    "parameters": {
-		 *                  "bill_id":1,//票据ID
-		 *                  }
-		 *      }
-		 *      
-		 *  返回的数据格式:
-		 * {
-		 *	    "error": 0,
-		 *	    "message": "",
-		 *	    "content":{ 
-		 *	    	"info":{
-		 *	    		"bill_num":"ax134",//票据编号
-		 *	    		"user_name":"库某",//往来单位名称
-		 *	    		"user_id":1,//客户id（往来单位id）
-		 *	    		"issuing_date":"2015-12-01",//签发日
-		 *	    		"due_date":"2015-12-01"//到期日
-		 *	    	}
-		 *	    }
-		 *	}
-		 */
-		public function addInitAction()
-		{
-			$content = $this->content;
-			$bill_id = $content['parameters']['bill_id'];
-
-			if( $bill_id )
-			{
-				$bill_table = $GLOBALS['ecs']->table( 'bill' );//票据表
-				$user_table = $GLOBALS['ecs']->table( 'users' );//用户表
-				$sql = 'SELECT a.`bill_num`, a.`customer_id` as `user_id`, b.`companyName` as `user_name`, a.`issuing_date`, a.`due_date`' .  
-						' FROM ' . $bill_table . ' as a LEFT JOIN ' . $user_table . ' as b on a.`customer_id` = b.`user_id` ' . 
-						' WHERE a.`bill_id` = ' . $bill_id;
-				$bill = $GLOBALS['db']->getRow( $sql );
-				if( empty( $bill ) )
-					make_json_response('', '-1', '票据未找到');
-
-				$content = array();
-				$content['info'] = $bill; 		
-
-				make_json_response( $content, '0', '偿还初始化成功');
-			}
-			else
-			{
-				make_json_response('', '-1', '票据ID错误');
-			}
-
-		}
-
-		/**
-		 * 编辑初始化
-		 * 接口地址：http://admin.zjgit.dev/admin/BillAssignModel.php
-		 * 请求方法：POST
-		 * 传入的接口数据格式如下(主键bill_assign_log_id)：
-		 *      {
-		 *		    "command": "editInit",
-		 *		    "entity": "bill_assign_log",
-		 *		    "parameters": {
-		 *                  "bill_assign_log_id":2//偿还单ID
-		 *                  }
-		 *      }
-		 *      
-		 *  返回的数据格式:
-		 * {
-		 *	    "error": 0,
-		 *	    "message": "",
-		 *	    "content":{ 
-		 *	       "info":{
-		 *                  "user_id": 1 ,//客户id(往来单位id)
-		 *                  "repay_amount": 100 ,//生成的额度
-		 *                  "remark": "虚拟数据" ,
-		 *                  "user_name": "钟某",//客户名称
-		 * 	                "bill_id": 0 ,//票据ID
-		 * 	        }
-		 *	}
-		 */
-		public function editInitAction()
-		{
-			$content = $this->content;
-			$repay_id = intval( $content['parameters']['bill_assign_log_id'] );
-
-			if( $repay_id )
-			{
-				$repay_table = $GLOBALS['ecs']->table('bill_assign_log');
-				$user_table = $GLOBALS['ecs']->table('users');				
-				$sql = 'SELECT a.`bill_id`, a.`user_id`, b.`companyName` as `user_name`, a.`repay_amount`, a.`remark` FROM ' . $repay_table .
-					 	' as a LEFT JOIN ' . $user_table . ' as b on a.`user_id` = b.`user_id` WHERE `bill_assign_log_id` = ' . 
-						$repay_id;
-
-				$repay = $GLOBALS['db']->getRow($sql);
-				if( !empty( $repay ) )
-				{
-					$content = array();
-					$content['info'] = $repay;
-					make_json_response( $content, '0', '偿还单编辑初始化成功');
-				}
-				else
-				{
-					make_json_response('', '-1', '偿还单编辑初始化失败');
-				}
-			}
-			else
-			{
-				make_json_response('', '-1', '偿还单id为空');
-			}
-
-			
+				make_json_response("", "-1", "额度分配单删除失败");
 		}
 		
+		
 	}
-	$content = jsonAction( array( "editInit", "addInit" ) );
+	$content = jsonAction();
 	$billAssignModel = new BillAssignModel($content);
 	$billAssignModel->run();

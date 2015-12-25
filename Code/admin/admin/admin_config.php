@@ -1,69 +1,67 @@
 <?php
 /**
- * 后台表单类型相关配置，数组形式
- * 调用对应方法以获取配置
+ * 后台配置，键值形式
+ * 在$admin_config添加对应的'key'=>'value'
+ * 使用时调用C('key') 即可获取对应配置
+ * 
+ * @author libin@3ti.us
+ * date 2015-12-25
  */
-//票据币种
-$bill_currency = array( 0 => "人民币", 1 => "美元" );
-//票据类型
-$bill_type = array( 0 => "商业承兑汇票", 1 => "银行承兑汇票");
-//额度生成类型
-$bill_amount_type = array(0 => "商票", 1 => "现金", 2 => "承兑");
-//额度生成类型（现金）
-$cash_bill_amount_type = array( 1 => "现金", 2 => "承兑", 3=> "国内信用证");
 
-//票据偿还类型
-$bill_repay_type = array(0 => "现金", 1 => "支票");
+//可手动添加配置
+$admin_config = array(
+	'bill_currency' => array( 0 => "人民币", 1 => "美元" ),//票据币种
+	'bill_type' => array( 0 => "商业承兑汇票", 1 => "银行承兑汇票"),//票据类型
+	
+    'bill_amount_type' => array(0 => "商票", 1 => "现金", 2 => "承兑"),//额度生成类型
+	'cash_bill_amount_type' => array( 1 => "现金", 2 => "承兑", 3=> "国内信用证"),//额度生成类型（现金）
+	
+    'bill_repay_type' => array(0 => "现金", 1 => "支票"),//票据偿还类型
+	
+    'bill_adjust_type' => array(0 => "采购额度账户", 1 => "现金账户")//账户调整类型
+);
 
-
-
-/**
- * bill_types 票据类型
- * @return array 键对应类型ID, 值对应类型名字
- */
-function bill_types()
-{
-	global $bill_type;
-	return $bill_type;
+//加载配置
+foreach ($admin_config as $n => $v) {
+	C($n, $v);
 }
 
-/**
- * bill_amount_types 额度生成类型
- * @return array 键对应类型ID, 值对应类型名字
- */
-function bill_amount_types()
-{
-	global $bill_amount_type;
-	return $bill_amount_type;
-}
 
 /**
- * bill_currencys 票据币种
- * @return array 键对应类型ID, 值对应类型名字
+ * 获取和设置配置参数 支持批量定义
+ * @param string|array $name 配置变量
+ * @param mixed $value 配置值
+ * @param mixed $default 默认值
+ * @return mixed
  */
-function bill_currencys()
-{
-	global $bill_currency;
-	return $bill_currency;
-}
-
-/**
- * bill_repay_types 偿还单类型
- * @return array 键对应类型ID, 值对应类型名字
- */
-function bill_repay_types()
-{
-	global $bill_repay_type;
-	return $bill_repay_type;
-}
-
-/**
- * cash_bill_amount_types 现金偿还
- * @return array 键对应类型ID, 值对应类型名字 
- */
-function cash_bill_amount_types()
-{
-	global $cash_bill_amount_type;
-	return $cash_bill_amount_type;
+function C($name=null, $value=null,$default=null) {
+    static $_config = array();
+    // 无参数时获取所有
+    if (empty($name)) {
+        return $_config;
+    }
+    // 优先执行设置获取或赋值
+    if (is_string($name)) {
+        if (!strpos($name, '.')) {
+            $name = strtoupper($name);
+            if (is_null($value))
+                return isset($_config[$name]) ? $_config[$name] : $default;
+            $_config[$name] = $value;
+            return null;
+        }
+        // 二维数组设置和获取支持
+        $name = explode('.', $name);
+        $name[0]   =  strtoupper($name[0]);
+        if (is_null($value))
+            return isset($_config[$name[0]][$name[1]]) ? $_config[$name[0]][$name[1]] : $default;
+        $_config[$name[0]][$name[1]] = $value;
+        return null;
+    }
+    // 批量设置
+    if (is_array($name)){
+        $_config = array_merge($_config, array_change_key_case($name,CASE_UPPER));
+        return null;
+    }
+    return null; // 避免非法参数
 }
 ?>
