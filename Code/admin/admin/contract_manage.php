@@ -52,7 +52,7 @@ else {
     }
     
     //API 接口列表
-    $arr = array(
+    $apiList = array(
         'catList'=>1, 
         'orgList'=>1, 
         'userList' => 1, 
@@ -66,23 +66,17 @@ else {
         'contSupsList' => 1, 
         'contInSups' => 1, 
         'contToSup' => 1, 
-        'uploadify' => 2, 
+        'uploadify' => 1, 
     );
     
-    //验证参数
-    switch ( $arr[$command] ) {
-        case 1:
-            if ( empty($entity) ) failed_json('非法访问');
-            break;
-        case 2:
-            if ( empty($entity) ) failed_json('未定义上传表单名称');
-            break;
-        default:
-            failed_json('未知操作');
-            break;
+    if ($apiList[$command] !== 1) {
+        failed_json('未知操作');
     }
     
-    //access
+    if (empty($entity)) {
+        failed_json('没有传参`entity`');
+    }
+    
     $cont = Contract::get_instance();
     $cont->$command($entity, $parameters);
 }
@@ -272,9 +266,12 @@ class Contract
         }
         
         //合同状态
-        if ( $params_where['contract_status'] != '' ) {
+        if ( $params_where['contract_status'] != '' &&  $params_where['contract_status'] != 2) {
             if (!empty(trim($where))) $where .= ' and ';
-            $where .= 'c.contract_status='.$params_where['contract_status'];
+            $where .= 'c.contract_status='.$params_where['contract_status'].' and FROM_UNIXTIME(c.end_time, "%Y-%m-%d")>="'.date('Y-m-d').'"';
+        } elseif ($params_where['contract_status'] == 2) {
+            if (!empty(trim($where))) $where .= ' and ';
+            $where .= 'FROM_UNIXTIME(c.end_time, "%Y-%m-%d")<="'.date('Y-m-d').'"';
         }
         //日期
         if ( $params_where['start_time'] ) {
@@ -343,7 +340,8 @@ class Contract
         self::selectSql(array(
             'fields' => 'COUNT(*) AS num', 
             'as'     => 'c', 
-            'where' => $where
+            'join'   => 'LEFT JOIN users AS u on c.customer_id=u.user_id', 
+            'where'  => $where
         ));
         $total = $this->db->getone($this->sql);
         make_json_result(array('total'=>$total, 'data'=>$res));
@@ -357,7 +355,7 @@ class Contract
      *      "entity"  : "contract", 
      *      "parameters" : {
      *          "user_id" : "(int)", //创建者id 
-     *          "contract_id" : "(int)", //修改合同信息时才会有此值 
+     *          "contract_id" : "(int)", //修改合同信息时才会有此值
      *          "params" : {
      *              "contract_num" : "(string)", 
      *              "contract_name" : "(string)", 
@@ -382,32 +380,31 @@ class Contract
     {
         self::init($entity, 'contract');
         
-        $arr = self::validateCont(1, $parameters);
+        $data = self::validateCont(1, $parameters);
+        $goodsTypeList = $data['goods_type'];
+        $data = $data['params'];
         
-        //合同 insert sql
-        $params = $arr['params'];
-        $fields = implode(',', array_keys($params));
-        $values = '("'.implode('","', $params).'")';
+        //constract data
+        $fields = implode(',', array_keys($data));
+        $values = '("'.implode('","', $data).'")';
+        if (strpos($values, ',,') !== false) failed_json('传参错误');
         
-        if (strpos($values, ',,') !== false ) {
-            failed_json('可能是传递的参数不全或者传递null或者空字符串');
-        }
-        
-        //添加合同
+        //insert
         $sql = 'INSERT INTO '.$this->table.'('.$fields.')values'.$values;
         $res = $this->db->query($sql);
-        $insert_id = $this->db->insert_id();
-        if ($res && $insert_id) {
+        $insertId = $this->db->insert_id();
+        if ($res && $insertId) {
             
-            //添加合同物料类型
-            $goods_type = $arr['goods_type'];
-            if (empty($goods_type)) make_json_result(true);
-            if (!is_array($goods_type)) failed_json('没有传参`goods_type`');
-            foreach ($goods_type as $k=>$v) {
-                $goods_type_values .= '('.$insert_id.','.$v.'),';
+            if (empty($goodsTypeList)) {
+                make_json_result(true);
             }
-            $goods_type_values = substr($goods_type_values, 0, -1);
-            $sql = 'INSERT INTO contract_category (contract_id,category_id)values'.$goods_type_values;
+            //添加合同物料类型
+            if (!is_array($goodsTypeList)) failed_json('没有传参`goods_type`');
+            foreach ($goodsTypeList as $k=>$v) {
+                $goodsTypeValues .= '('.$insertId.','.$v.'),';
+            }
+            $goodsTypeValues = substr($goodsTypeValues, 0, -1);
+            $sql = 'INSERT INTO contract_category (contract_id,category_id)values'.$goodsTypeValues;
             $res = $this->db->query($sql);
             
             if ( $res ) {
@@ -430,58 +427,58 @@ class Contract
     {
         self::init($entity, 'contract');
         
-        $arr = self::validateCont(2, $parameters);
+        $data = self::validateCont(2, $parameters);
+        $contractId = $data['contract_id'];
+        $goodsTypeList = $data['goods_type'];
+        $data = $data['params'];
         
-        $insert_id = $parameters['contract_id'];
-        
-        //合同 update sql
-        $params = $arr['params'];
-        foreach ($params as $k=>$v) {
-            $update_set .= $k.'="'.$v.'",';
+        //update contract data
+        foreach ($data as $k=>$v) {
+            $updateSet .= $k.'="'.$v.'",';
         }
-        $update_set = substr($update_set, 0, -1);
+        $updateSet = substr($updateSet, 0, -1);
         
-        //修改合同
-        $sql = 'UPDATE '.$this->table.' SET '.$update_set.' WHERE contract_id='.$insert_id;
+        //update
+        $sql = 'UPDATE '.$this->table.' SET '.$updateSet.' WHERE contract_id='.$contractId;
         $res = $this->db->query($sql);
         if (!$res) failed_json('修改合同失败！');
         
-        //需要添加的物料类型
-        $goods_type = $arr['goods_type'];
-        if (empty($goods_type)) make_json_result(true);
-        if (!is_array($goods_type)) failed_json('没有传参`goods_type`或者传参错误');
+        //goods_type
+        if (empty($goodsTypeList)) {
+            make_json_result(true);
+        }
+        if (!is_array($goodsTypeList)) {
+            failed_json('没有传参`goods_type`或者传参错误');
+        }
         
-        //已经存在的物料类型
+        //exist goods_type
         $this->table = 'contract_category';
         self::selectSql(array(
             'fields' => 'category_id',
-            'where'  => 'contract_id="'.$insert_id.'"'
+            'where'  => 'contract_id="'.$contractId.'"'
         ));
         $res = $this->db->getAll($this->sql);
-        $have_goods_type = array();
+        $existGoodsType = array();
         foreach ($res as $k=>$v) {
-            $have_goods_type[] = $v['category_id'];
+            $existGoodsType[] = $v['category_id'];
         }
         
-        //删除物料
-        $removeGoodsType = array_diff($have_goods_type, $goods_type);
+        //delete goods_type
+        $removeGoodsType = array_diff($existGoodsType, $goodsTypeList);
         if (!empty($removeGoodsType)) {
-            $sql = 'DELETE FROM '.$this->table.' WHERE category_id in('.implode(',', $removeGoodsType).') and contract_id='.$insert_id;
-            $res = $this->db->query($sql);
-        } else {
-            $res = true;
+            $sql = 'DELETE FROM '.$this->table.' WHERE category_id in('.implode(',', $removeGoodsType).') and contract_id='.$contractId;
+            $this->db->query($sql);
         }
         
-        //添加物料
-        $insert_goods_type = array_diff($goods_type, $have_goods_type);
-        if (!empty($insert_goods_type)) {
-            foreach ($insert_goods_type as $k=>$v) {
-                $goods_type_values .= '('.$insert_id.','.$v.'),';
+        //insert goods_type
+        $insertGoodsType = array_diff($goodsTypeList, $existGoodsType);
+        if (!empty($insertGoodsType)) {
+            foreach ($insertGoodsType as $k=>$v) {
+                $insertGoodsTypeValues .= '('.$contractId.','.$v.'),';
             }
-            $goods_type_values = substr($goods_type_values, 0, -1);
-            $sql = 'INSERT INTO contract_category (contract_id,category_id)values'.$goods_type_values;
-            $res = $this->db->query($sql);
-            if (!$res) failed_json('修改物料失败！');
+            $insertGoodsTypeValues = substr($insertGoodsTypeValues, 0, -1);
+            $sql = 'INSERT INTO contract_category (contract_id,category_id)values'.$insertGoodsTypeValues;
+            $this->db->query($sql);
         }
         make_json_result(true);
     }
@@ -537,7 +534,7 @@ class Contract
                 'region_id', 
                 'region_name'
             ), 
-            'where' => 'region_type in(0,1)'
+            'where' => 'region_type=1'
         ));
         $res = $this->db->getAll($this->sql);
         make_json_result($res);
@@ -558,15 +555,19 @@ class Contract
     {
         self::init($entity, 'contract');
         
-        $cutomerId = intval($parameters['customer_id']);
-        if ( !$cutomerId ) failed_json('没有传参`customer_id`');
+        $cutomerId = $parameters['customer_id'];
+        if ( !is_int($cutomerId) ) failed_json('没有传参`customer_id`');
+        if ($cutomerId < 0) make_json_result(array());
         
+        if ($cutomerId > 0) {
+            $where = ' and customer_id='.$cutomerId;
+        }
         self::selectSql(array(
             'fields' => array(
                 'contract_id', 
                 'contract_name'
             ), 
-            'where' => 'contract_type=2 and customer_id='.$cutomerId, 
+            'where' => 'contract_type=2 '.$where, 
         ));
         $res = $this->db->getAll($this->sql);
         make_json_result($res);
@@ -687,6 +688,7 @@ class Contract
         
         self::selectSql(array(
             'fields' => array(
+                'c.contract_id', 
                 'u.companyName', 
                 'c.contract_num', 
                 'c.contract_name', 
@@ -705,12 +707,12 @@ class Contract
         
         self::selectSql(array(
             'fields' => 'COUNT(cs.contract_id) AS num', 
-            'as'   => 'cs',
-            'join' => 'LEFT JOIN contract AS c on cs.contract_id=c.contract_id '
-                    .' LEFT JOIN users AS u on c.customer_id=u.user_id'
-                    .' LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
-                    .' LEFT JOIN region AS r on s.region_id=r.region_id',
-            'where' => $where            
+            'as'     => 'cs',
+            'join'   => 'LEFT JOIN contract AS c on cs.contract_id=c.contract_id '
+                      .' LEFT JOIN users AS u on c.customer_id=u.user_id'
+                      .' LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
+                      .' LEFT JOIN region AS r on s.region_id=r.region_id',
+            'where'  => $where            
         ));
         $total = $this->db->getOne($this->sql);
         make_json_result(array('total'=>$total, 'data'=>$res));
@@ -800,54 +802,36 @@ class Contract
      */
     private function validateCont($type, $parameters) 
     {
-        //user_id
-        $user_id = $parameters['user_id'];
-        if (empty($user_id)) {
-            $user_id = $_SESSION['admin_id'];
-        }
+        $user_id = empty($user_id) ? $_SESSION['admin_id'] : $parameters['user_id'];
         if (empty($user_id)) failed_json('没有传参`user_id`');
         
-        
-        $params = $parameters['params'];
-        
-        //修改时
-        if ($type == 2 && intval($parameters['contract_id'])) {
-            $where = ' and contract_id<>'.intval($parameters['contract_id']);
-        } elseif ($type == 2) {
-            failed_json('没有传参`contract_id`');
+        if ($type == 2) {
+            $contractId = intval($parameters['contract_id']);
+            if (empty($parameters['contract_id'])) failed_json('没有传参`contract_id`');
+            $where = ' and contract_id<>'.$contractId;
         }
         
-        $params = self::validContValue($params);
+        $params = self::validContValue($parameters['params']);
         
         //合同编号，合同名称不能重复
         self::selectSql(array(
             'fields' => 'contract_id',
             'where'  => 'contract_num="'.$params['contract_num'].'"'.$where
         ));
-        $res = $this->db->getRow($this->sql);
-        if ($res['contract_id'] != null ) {
-            failed_json('该合同编号已经存在！');
-        }
+        $exist = $this->db->getOne($this->sql);
+        if ($exist) failed_json('该合同编号已经存在！');
+       
         self::selectSql(array(
             'fields' => 'contract_id',
             'where'  => 'contract_name="'.$params['contract_name'].'"'.$where
         ));
-        $res = $this->db->getRow($this->sql);
-        if ($res['contract_id'] != null ) {
-            failed_json('该合同名称已经存在！');
-        }
+        $exist = $this->db->getOne($this->sql);
+        if ($exist) failed_json('该合同名称已经存在！');
         
-        //登记机构传参
-        $bank_id = intval($params['bank_id']);
-        if (!$bank_id) failed_json('没有传参`bank_id`');
-        $sql = 'SELECT bank_name FROM bank WHERE bank_id='.$bank_id;
+        //登记机构
+        if (!$params['bank_id']) failed_json('没有传参`bank_id`');
+        $sql = 'SELECT bank_name FROM bank WHERE bank_id='.$params['bank_id'];
         $params['registration'] = $this->db->getOne($sql);
-        
-        //创建人
-        if ($type == 1) {
-            $sql = "SELECT user_name FROM admin_user WHERE user_id=".$user_id;
-            $params['create_by'] = $this->db->getOne($sql);
-        }
         
         $arr = array(
             'contract_num'       => $params['contract_num'], 
@@ -867,11 +851,17 @@ class Contract
             'remark'             => $params['remark']
         );
         if ($type == 1) {
+            $sql = "SELECT user_name FROM admin_user WHERE user_id=".$user_id;
+            $arr['create_by'] = $this->db->getOne($sql);
+            
             $arr['create_user'] = $user_id;
-            $arr['create_by'] = $params['create_by'];
             $arr['create_time'] = time();
         }
-        return array( 'params'=>$arr, 'goods_type'=>$params['goods_type'] );
+        return array( 
+            'params'=>$arr, 
+            'goods_type'=>$params['goods_type'], 
+            'contract_id'=>$contractId 
+        );
     }
     
     

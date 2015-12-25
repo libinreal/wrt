@@ -36,23 +36,20 @@ else {
         $parameters = json_decode(stripslashes($_POST['parameters']), true);
     }
     
-    $arr = array(
+    $apiList = array(
         'creditList'   => 1, 
         'creditInfo'   => 1, 
         'creditRemark' => 1
     );
     
-    //验证参数
-    switch ( $arr[$command] ) {
-        case 1:
-            if ( empty($entity) ) failed_json('非法访问');
-            break;
-        default:
-            failed_json('未知操作');
-            break;
+    if ($apiList[$command] !== 1) {
+        failed_json('未知操作');
     }
     
-    //access
+    if (empty($entity)) {
+        failed_json('没有传参`entity`');
+    }
+    
     $credit = Credit::get_instance();
     $credit->$command($entity, $parameters);
 }
@@ -129,7 +126,7 @@ class Credit
             $res[$k]['credit_status'] = $config['creditStatus'][$v['credit_status']];
             $res[$k]['create_type']   = $config['creditType'][$v['create_type']];
         }
-    
+        
         self::selectSql(array(
             'fields' => 'COUNT(*) AS num',
         ));
