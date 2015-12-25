@@ -490,7 +490,8 @@ class Contract
      *      "command" : "suppliers", 
      *      "entity"  : "admin_user", 
      *      "parameters" : {
-     *          "region_id" : "(int)"
+     *          "region_id" : "(int)", 
+     *          "contract_id" : "(int)"
      *      }
      * }
      */
@@ -498,12 +499,30 @@ class Contract
     {
         self::init($entity, 'admin_user');
         
+        $where = '';
+        
+        $contractId = $parameters['contract_id'];
+        if (is_int($contractId) && $contractId > 0) {
+            $this->table = 'contract_suppliers';
+            self::selectSql(array(
+                'fields' => 'suppliers_id', 
+                'where'  => 'contract_id='.$contractId
+            ));
+            $res = $this->db->getAll($this->sql);
+            $exist = array();
+            foreach ($res as $v){
+                $exist[] = $v['suppliers_id'];
+            }
+            $where .= ' and s.suppliers_id not in('.implode(',', $exist).')';
+        }
+        
         //根据地区搜索供应商，只精确到省份
         $region_id = $parameters['region_id'];
         if ($region_id > 0) {
-            $where = ' and s.region_id='.$region_id;
+            $where .= ' and s.region_id='.$region_id;
         }
         
+        $this->table = 'admin_user';
         self::selectSql(array(
             'as'     => 'a', 
             'fields' => array(
