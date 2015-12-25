@@ -342,6 +342,7 @@ class Contract
         
         self::selectSql(array(
             'fields' => 'COUNT(*) AS num', 
+            'as'     => 'c', 
             'where' => $where
         ));
         $total = $this->db->getone($this->sql);
