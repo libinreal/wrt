@@ -136,7 +136,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 					
 					if( empty( $resultUsers ) )
 					{
-						make_json_response('', '-1', '未找到符合条件的偿还记录');
+						$content = array();
+						$content['data'] = array();
+						$content['total'] = 0;
+						make_json_response($content, '0', '未找到符合条件的偿还记录');
 					}
 					else
 					{
@@ -189,13 +192,16 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$total_sql = $total_sql . $where_str;
 			$resultTotal = $GLOBALS['db']->getRow($total_sql);
 
-			if( $bill_repays )
+			if( $resultTotal )
 			{
-				foreach($bill_repays as &$b)
-				{
-					$b['create_time'] = date("Y-m-d", $b['create_time'] );// date("Y-m-d");
+				if ( $bill_repays ) {
+					foreach($bill_repays as &$b)
+					{
+						$b['create_time'] = date("Y-m-d", $b['create_time'] );// date("Y-m-d");
+					}
+				} else {
+					$bill_repays = array();
 				}
-
 				$content = array();
 				$content['data'] = $bill_repays;
 				$content['total'] = $resultTotal['total'];

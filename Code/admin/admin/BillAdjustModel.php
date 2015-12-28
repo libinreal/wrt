@@ -130,18 +130,28 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			if( $createAdjust )
 			{
-				$assign_table = $GLOBALS['ecs']->table('bill_assign_log');
+				$contract_table = $GLOBALS['ecs']->table('contract');
 				
-				$assign_from_sql = 'UPDATE ' . $assign_table . ' SET `assign_amount` = `assign_amount` - ' . $data['adjust_amount'] .
+				if( $data['type'] == 0){//调整的额度类型(0:采购额度，1:现金额度)
+					$contract_from_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_valid` = `bill_amount_valid` - ' . $data['adjust_amount'] .
 							' WHERE `contract_id` = ' . $data['from_contract_id'];
-				$updateFrom = $GLOBALS['db']->query($assign_from_sql);
+				}else{//现金
+					$contract_from_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` - ' . $data['adjust_amount'] .
+							' WHERE `contract_id` = ' . $data['from_contract_id'];
+				}
+				$updateFrom = $GLOBALS['db']->query($contract_from_sql);
 
 
 				if( $updateFrom )
 				{
-					$assign_to_sql = 'UPDATE ' . $assign_table . ' SET `assign_amount` = `assign_amount` + ' . $data['adjust_amount'] .
-							' WHERE `contract_id` = ' . $data['to_contract_id'];
-					$updateTo = $GLOBALS['db']->query($assign_to_sql);
+					if( $data['type'] == 0){//调整的额度类型(0:采购额度，1:现金额度)
+						$contract_to_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_valid` = `bill_amount_valid` + ' . $data['adjust_amount'] .
+								' WHERE `contract_id` = ' . $data['to_contract_id'];
+					}else{//现金
+						$contract_to_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $data['adjust_amount'] .
+								' WHERE `contract_id` = ' . $data['to_contract_id'];
+					}
+					$updateTo = $GLOBALS['db']->query($contract_to_sql);
 
 					if( $updateTo )
 					{
@@ -230,7 +240,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    }
 		 *	}
 		 */
-		public function addInit()
+		public function addInitAction()
 		{
 			$content = $this->content;
 			$params = $content['parameters'];

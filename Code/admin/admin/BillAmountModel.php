@@ -135,7 +135,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 					
 					if( empty( $resultUsers ) )
 					{
-						make_json_response('', '-1', '未找到符合条件的偿还记录');
+						$content = array();
+						$content['data'] = array();
+						$content['total'] = 0;
+						make_json_response( $content , '0', '未找到符合条件的偿还记录');
 					}
 					else
 					{
@@ -187,11 +190,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$total_sql = $total_sql . $where_str;
 			$resultTotal = $GLOBALS['db']->getRow($total_sql);
 
-			if( $bills )
+			if( $resultTotal )
 			{
-				foreach($bills as &$b)
-				{
-					$b['create_time'] = date("Y-m-d", $b['create_time'] );
+				if ( $bills ) {
+					foreach($bills as &$b)
+					{
+						$b['create_time'] = date("Y-m-d", $b['create_time'] );
+					}
+				} else {
+					$bills = array();
 				}
 
 				$content = array();
@@ -247,6 +254,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$data['create_time'] = time();
 			$data['create_by'] = $create_by['user_name'];
 			
+			if( empty( $data['user_id'] ) )
+				make_json_response('', '-100', '客户id错误');
+
 			$dataKey = array_keys( $data );
 			$bill_amount_table = $GLOBALS['ecs']->table('bill_amount_log');
 			$sql = "INSERT INTO $bill_amount_table (";
@@ -263,16 +273,34 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$sql = $sql . $v . ",";
 			}
-			$sql = substr($sql, 0, -1) . ")";
 
+			$sql = substr($sql, 0, -1) . ")";
+			$GLOBALS['db']->query("START TRANSACTION");//开启事务
 			$createBill = $GLOBALS['db']->query($sql);
 			
 			if( $createBill )
 			{
-				make_json_response("", "0", "额度生成单添加成功");//暂不返回自增id
+				$users_table = $GLOBALS['ecs']->table('users');
+				if( $data['amount_type'] == 0 )//额度生成类型(0:商票,1:现金,2:承兑)
+					$users_sql = 'UPDATE ' . $users_table . ' SET `bill_amount_history` = `bill_amount_history` + ' . $data['amount'] .
+							',`bill_amount_valid` = `bill_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'];
+				else
+					$users_sql = 'UPDATE ' . $users_table . ' SET `cash_amount_history` = `cash_amount_history` + ' . $data['amount'] .
+							',`cash_amount_valid` = `cash_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'];
+				
+				$updateUsers = $GLOBALS['db']->query($users_sql);
+
+				if( $updateUsers ) {
+					$GLOBALS['db']->query("COMMIT");//事务提交
+					make_json_response("", "0", "额度生成单添加成功");//暂不返回自增id
+				}else{
+					$GLOBALS['db']->query("ROLLBACK");//事务回滚
+					make_json_response("", "-1", "额度生成单添加失败");//暂不返回自增id
+				}
 			}
 			else
 			{
+				$GLOBALS['db']->query("ROLLBACK");//事务回滚
 				make_json_response("", "-1", "额度生成单添加失败");
 			}
 		}
@@ -316,6 +344,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$data['remark'] = trim( $params['remark'] );
 			$data['user_id'] = intval( $params['user_id'] );
 			$data['bill_id'] = intval( $params['bill_id'] );
+
+			if( empty( $data['user_id'] ) )
+				make_json_response('', '-100', '客户id错误');
 
 			foreach ($data as $p => &$pv) {
 				if( is_null( $pv ) )

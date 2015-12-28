@@ -174,10 +174,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$total_sql = $total_sql . $where_str;
 			$resultTotal = $GLOBALS['db']->getRow($total_sql);
 
-			if( $bills )
+			if( $resultTotal )
 			{
 				$content = array();
-				$content['data'] = $bills;
+				$content['data'] = $bills ? $bills : array();
 				$content['total'] = $resultTotal['total'];
 				make_json_response( $content, "0", "票据查询成功");
 			}

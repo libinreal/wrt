@@ -35,7 +35,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * 获取配置或数据
 		 * {
 		 *	    "command": "bill_type",
-		 *	    
+		 *	    "parameters": {}
+		 *	    		
 		 *	    //"command":"admin_user_banks"
 		 *	    "parameters": {"user_id":4}
 		 *	    
@@ -45,10 +46,16 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    //"command":"user_banks"
 		 *	    "parameters": {"user_id":4}
 		 *	    
-		 *	    //"command":user_bank_accounts"
+		 *	    //"command":"user_bank_accounts"
 		 *	    "parameters": {"user_id":4, "bank_id":1}
 		 *
-		 *	    "entity": ""
+		 *		//"command":"users"
+		 *  	"parameters": {}
+		 *   	
+		 *		//"command":"admin_users"
+		 *  	"parameters": {}
+		 *  	
+		 *	    "entity": "type"
 		 *	    
 		 *	}
 		 *

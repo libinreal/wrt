@@ -126,8 +126,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 				 				' WHERE `customer_id` = ' . $customer_id . ' ORDER BY `contract_id` ASC';
 			$resultContract = $GLOBALS['db']->qeury($contract_sql);
 
-			if( empty( $resultContract ) )
-				make_json_response('', '-1', '客户分配单查询失败');
+			if( empty( $resultContract ) ){
+				$content = array();
+				$content['data'] = array();
+				$content['total'] = 0;
+				make_json_response($content, '0', '客户分配单查询失败');
+			}
 
 			$contract_id_arr = array();
 			foreach($resultContract as $c)
@@ -148,10 +152,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$total_sql = $total_sql . $where_str;
 			$resultTotal = $GLOBALS['db']->getRow($total_sql);
 
-			if( $bill_assigns )
+			if( $resultTotal )
 			{
 				$content = array();
-				$content['data'] = $bill_assigns;
+				$content['data'] = $bill_assigns ? $bill_assigns : array();
 				$content['total'] = $resultTotal['total'];
 
 				make_json_response( $content, "0", "分配单查询成功");
@@ -197,6 +201,33 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$data['assign_admin_user_id'] = $assign_admin_user['user_id'];
 			$data['assign_amount'] = round( ( double )( $params['assign_amount'] ), 2 );
 			
+			//客户当前可用额度
+			$contract_user_sql = 'SELECT `customer_id` AS `user_id` FROM ' . $GLOBALS['ecs']->table('contract') . ' WHERE `contract_id` = ' .
+								$data['contract_id'];
+			$contract_user = $GLOBALS['db']->getRow( $contract_user_sql );
+			if( empty( $contract_user ) ){
+				make_json_response('', '-100', '合同id关联的客户有误');
+			}
+			$user_id = $contract_user['user_id'];
+
+			$users_table = $GLOBALS['ecs']->table('users');			
+			if( $data['type'] == 0 ) {//分配额度类型(0:票据额度，1:现金额度)
+				
+				$user_amount_sql = 'SELECT `bill_amount_valid` FROM ' . $users_table . ' WHERE `user_id` = ' . $user_id;
+				$user_amount = $GLOBALS['db']->getRow( $user_amount_sql );
+				if( $user_amount['bill_amount_valid'] < $data['assign_amount'] )
+					make_json_response('', '-600', '分配额度超过当前可用额度');
+
+			} else {
+				
+				$user_amount_sql = 'SELECT `cash_amount_valid` FROM ' . $users_table . ' WHERE `user_id` = ' . $user_id;
+				$user_amount = $GLOBALS['db']->getRow( $user_amount_sql );
+				if( $user_amount['cash_amount_valid'] < $data['assign_amount'] )
+					make_json_response('', '-600', '分配额度超过当前可用额度');
+
+			}
+
+
 			$bill_assign_table = $GLOBALS['ecs']->table('bill_assign_log');
 			$sql = 'INSERT INTO ' . $bill_assign_table .' (';
 
@@ -221,17 +252,31 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( $createAssign )
 			{
 				$contract_table = $GLOBALS['ecs']->table('contract');
-				if( $type == 0 )
+				if( $data['type'] == 0 )//分配额度类型(0:票据额度，1:现金额度)
 					$contract_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_history` = `bill_amount_history` + ' . $data['assign_amount'] .
-							' WHERE `contract_id` = ' . $data['contract_id'];
+							',`bill_amount_valid` = `bill_amount_valid` + ' . $data['assign_amount'] . ' WHERE `contract_id` = ' . $data['contract_id'];
 				else
 					$contract_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_history` = `cash_amount_history` + ' . $data['assign_amount'] .
-							' WHERE `contract_id` = ' . $data['contract_id'];
+							',`cash_amount_valid` = `cash_amount_valid` + ' . $data['assign_amount'] . ' WHERE `contract_id` = ' . $data['contract_id'];
 				$updateContract = $GLOBALS['db']->query($contract_sql);
 				if( $updateContract )
 				{
-					$GLOBALS['db']->query("COMMIT");//事务提交
-					make_json_response("", "0", "额度分配单添加成功");//暂不返回自增id
+					$users_table = $GLOBALS['ecs']->table('users');
+					if( $data['type'] == 0 )//分配额度类型(0:票据额度，1:现金额度)
+						$users_sql = 'UPDATE ' . $users_table . ' SET `bill_amount_valid` = `bill_amount_valid` - ' . $data['assign_amount'] . ' WHERE `user_id` = ' . $user_id;
+					else
+						$users_sql = 'UPDATE ' . $users_table . ' SET `cash_amount_valid` = `cash_amount_valid` - ' . $data['assign_amount'] . ' WHERE `user_id` = ' . $user_id;
+					
+					$updateUsers = $GLOBALS['db']->query($users_sql);
+
+					if( $updateUsers ) {
+
+						$GLOBALS['db']->query("COMMIT");//事务提交
+						make_json_response("", "0", "额度分配单添加成功");//暂不返回自增id
+					}else{
+						$GLOBALS['db']->query("ROLLBACK");//事务回滚
+						make_json_response("", "-1", "额度生成单添加失败");//暂不返回自增id
+					}
 				}
 				else
 				{
@@ -241,6 +286,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			else
 			{
+				$GLOBALS['db']->query("ROLLBACK");//事务回滚
 				make_json_response("", "-1", "额度分配单添加失败");
 			}
 		}
