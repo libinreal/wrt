@@ -26,33 +26,15 @@ elseif ($_REQUEST['act'] == 'detail')
 /**
  * API Access
  */
-else {
-    $command = $_POST['command'];
-    $entity = $_POST['entity'];
-    $parameters = $_POST['parameters'];
-    
-    //插件测试接口时
-    if (!is_array($parameters) && $parameters != '') {
-        $parameters = json_decode(stripslashes($_POST['parameters']), true);
-    }
-    
-    $apiList = array(
-        'creditList'   => 1, 
-        'creditInfo'   => 1, 
-        'creditRemark' => 1
-    );
-    
-    if ($apiList[$command] !== 1) {
-        failed_json('未知操作');
-    }
-    
-    if (empty($entity)) {
-        failed_json('没有传参`entity`');
-    }
-    
-    $credit = Credit::get_instance();
-    $credit->$command($entity, $parameters);
-}
+//Api 接口列表
+$ApiList = array(
+    'creditList', 
+    'creditInfo', 
+    'creditRemark'
+);
+$json = jsonAction($ApiList);
+$credit = Credit::get_instance();
+$credit->run($json);
 
 /**
  * 授信管理API
@@ -80,6 +62,14 @@ class Credit
         return self::$_instance;
     }
     
+    public function run($json) 
+    {
+        $command = $json['command'];
+        $entity = $json['entity'];
+        $parameters = $json['parameters'];
+        self::$command($entity, $parameters);
+    }
+    
     /**
      * 银行授信列表
      * {
@@ -98,11 +88,10 @@ class Credit
         $config = $this->creditConf();
     
         //page
-        if ($parameters['limit'] && !$parameters['offset']) {
-            $limit = 'limit '.$parameters['limit'];
-        } elseif ($parameters['limit'] && $parameters['offset']) {
-            $page = ($parameters['limit'] - 1) * $parameters['offset'];
-            $limit = 'limit '.$parameters['limit'].','.$parameters['offset'];
+        if (is_numeric($parameters['limit']) && is_numeric($parameters['offset'])) {
+            $page = intval($parameters['limit']);
+            $offset = intval($parameters['offset']);
+            $limit = 'limit '.$page.','.$offset;
         }
     
         self::selectSql(array(

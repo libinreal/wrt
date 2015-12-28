@@ -10,76 +10,58 @@ require(dirname(__FILE__) . '/includes/init.php');
 /**
  * 合同列表
  */
-if ( $_REQUEST['act'] == 'clist' )
+if ( $_REQUEST['act'] == 'contractList' )
 {
-    $smarty->display('second/cont_list.htm');
+    $smarty->display('second/contract_list.html');
     exit;
 }
 /**
  * 合同添加，编辑
  */
-elseif ( $_REQUEST['act'] == 'edit' )
+elseif ( $_REQUEST['act'] == 'contractEdit' )
 {
-    $smarty->display('second/contract_edit.htm');
+    $smarty->display('second/contract_edit.html');
     exit;
 }
 /**
  * 合同关联供应商设置
  */
-elseif ( $_REQUEST['act'] == 'set' ) 
+elseif ( $_REQUEST['act'] == 'supplierSet' ) 
 {
-    $smarty->display('second/contract_supplier_link_set.htm');
+    $smarty->display('second/contract_supplier_link_set.html');
     exit;
 }
 /**
  * 合同关联供应商列表
  */
-elseif ( $_REQUEST['act'] == 'slist' ) 
+elseif ( $_REQUEST['act'] == 'supplierList' ) 
 {
-    $smarty->display('second/contract_supplier_link_list.htm');
+    $smarty->display('second/contract_supplier_link_list.html');
+    exit;
 }
 /**
  * API Access
  */
-else {
-    $command = $_POST['command'];
-    $entity = $_POST['entity'];
-    $parameters = $_POST['parameters'];
-    
-    //插件测试接口时
-    if (!is_array($parameters) && $parameters != '') {
-        $parameters = json_decode(stripslashes($_POST['parameters']), true);
-    }
-    
-    //API 接口列表
-    $apiList = array(
-        'catList'=>1, 
-        'orgList'=>1, 
-        'userList' => 1, 
-        'singleCont' => 1, 
-        'contList' => 1, 
-        'contIn' => 1, 
-        'contUp' => 1, 
-        'suppliers' => 1, 
-        'regionList' => 1, 
-        'buyCont' => 1, 
-        'contSupsList' => 1, 
-        'contInSups' => 1, 
-        'contToSup' => 1, 
-        'uploadify' => 1, 
-    );
-    
-    if ($apiList[$command] !== 1) {
-        failed_json('未知操作');
-    }
-    
-    if (empty($entity)) {
-        failed_json('没有传参`entity`');
-    }
-    
-    $cont = Contract::get_instance();
-    $cont->$command($entity, $parameters);
-}
+//Api 接口列表
+$ApiList = array(
+    'catList',
+    'orgList',
+    'userList',
+    'singleCont',
+    'contList',
+    'contIn',
+    'contUp',
+    'suppliers',
+    'regionList',
+    'buyCont',
+    'contSupsList',
+    'contInSups',
+    'contToSup',
+    'uploadify'
+);
+$json = jsonAction($ApiList);
+$cont = Contract::get_instance();
+$cont->run($json);
 
 
 /***
@@ -106,6 +88,15 @@ class Contract
     {
         if (!self::$_instance) self::$_instance = new self();
         return self::$_instance;
+    }
+    
+    
+    public function run($json) 
+    {
+        $command = $json['command'];
+        $entity = $json['entity'];
+        $parameters = $json['parameters'];
+        self::$command($entity, $parameters);
     }
     
     
@@ -284,11 +275,10 @@ class Contract
         }
         
         //page
-        if ($params['limit'] != '' && $params['offset'] == '') {
-            $limit = ' limit '.$params['limit'];
-        } elseif ($params['limit'] != '' && $params['offset'] != '') {
-            $page = ($params['limit'] - 1) * $params['offset'];
-            $limit = 'limit '.$page.','.$params['offset'];
+        if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
+            $page = intval($params['limit']);
+            $offset = intval($params['offset']);
+            $limit = 'limit '.$page.','.$offset;
         }
         
         self::selectSql(array(
@@ -312,7 +302,7 @@ class Contract
             'as'     => 'c',
             'join'   => 'LEFT JOIN users AS u on c.customer_id=u.user_id LEFT JOIN suppliers as s on c.customer_id=s.suppliers_id', 
             'where'  => $where, 
-            'extend' => ' ORDER BY start_time ASC '.$limit
+            'extend' => ' ORDER BY contract_id ASC '.$limit
         ));
         $res = $this->db->getAll($this->sql);
         foreach ($res as $k=>$v) {
@@ -513,7 +503,9 @@ class Contract
             foreach ($res as $v){
                 $exist[] = $v['suppliers_id'];
             }
-            $where .= ' and s.suppliers_id not in('.implode(',', $exist).')';
+            if (!empty($exist)) {
+                $where .= ' and s.suppliers_id not in('.implode(',', $exist).')';
+            }
         }
         
         //根据地区搜索供应商，只精确到省份
@@ -575,7 +567,7 @@ class Contract
         self::init($entity, 'contract');
         
         $cutomerId = $parameters['customer_id'];
-        if ( !is_int($cutomerId) ) failed_json('没有传参`customer_id`');
+        if ( !$cutomerId ) failed_json('没有传参`customer_id`');
         if ($cutomerId < 0) make_json_result(array());
         
         if ($cutomerId > 0) {
@@ -698,11 +690,10 @@ class Contract
         }
         
         //page
-        if ($params['limit'] != '' && $params['offset'] == '') {
-            $limit = ' limit '.$params['limit'];
-        } elseif ($params['limit'] != '' && $params['offset'] != '') {
-            $page = ($params['limit'] - 1) * $params['offset'];
-            $limit = 'limit '.$page.','.$params['offset'];
+        if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
+            $page = intval($params['limit']);
+            $offset = intval($params['offset']);
+            $limit = 'limit '.$page.','.$offset;
         }
         
         self::selectSql(array(
