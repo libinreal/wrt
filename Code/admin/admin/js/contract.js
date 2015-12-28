@@ -58,7 +58,7 @@ var Contract = {
 		that = this
 		$.post(this.url, strJson, function(obj){
 //			console.log(obj);
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
@@ -83,8 +83,8 @@ var Contract = {
 								}
 							});
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=contract_manage&act=info&id="+value.contract_id, "编辑");
-								edit += createLink("demo_template.php?section=contract_manage&act=bind&id="+value.contract_id, "绑定供应商");
+								var edit = createLink(that.url+"?act=contractEdit&id="+value.contract_id, "编辑");
+								edit += createLink(that.url+"?act=supplierSet&id="+value.contract_id, "绑定供应商");
 								row += createTd(edit);
 							}
 						}
@@ -106,7 +106,7 @@ var Contract = {
 		var strJson = createJson("singleCont", "contract", params);
 		var that = this;
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}
@@ -188,7 +188,7 @@ var Contract = {
 		var params = {"contract_id": id, "params":form_data};
 		var strJson = createJson("contUp", "contract", params);
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 			}else{
 				$('#message_area').html(createTip('保存成功'));
@@ -230,7 +230,7 @@ var Contract = {
 		var params = {"params":{}};
 		strJson = createJson("catList", "goods_type", params);
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
@@ -309,7 +309,7 @@ var Contract = {
 		strJson = createJson("contSupsList", "contract_suppliers", params);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
@@ -327,7 +327,7 @@ var Contract = {
 							$.each(value, function(k, v){
 								if(k == that.contract_supplier_order[i]){
 									if(k == "contract_name"){
-										row += createTd(v, "demo_template.php?section=contract_manage&act=info&id="+value.contract_id);
+										row += createTd(v, that.url+"?act=supplierSet&id="+value.contract_id);
 									}else{
 										row += createTd(v);
 									}
@@ -339,7 +339,7 @@ var Contract = {
 					});
 				}
 			}
-			$('#message_area').html('');			
+			$('#message_area').html('');
 		}, "json");
 	},
 
@@ -348,7 +348,7 @@ var Contract = {
 		strJson = createJson("userList", "users", params);
 		that = this;
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
@@ -377,7 +377,7 @@ var Contract = {
 		that = this;
 		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
@@ -398,7 +398,7 @@ var Contract = {
 		strJson = createJson("regionList", "region", params);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
@@ -424,11 +424,10 @@ var Contract = {
 				condition["region_id"] = region_id;
 			}
 		}
-		var params = {"params":condition};
-		strJson = createJson("suppliers", "admin_user", params);
+		strJson = createJson("suppliers", "admin_user", condition);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
@@ -443,13 +442,14 @@ var Contract = {
 	},
 
 	getContIdSupsList: function(contract_id, search){
-		if(typeof(contract_id) === "undefined"){
-			$('#message_area').html(createError('合同无效'));
-			return false;
-		}else{
-			var condition = {};
-			condition["contract_id"] = contract_id;
+		var contract_id = getQueryStringByName('id');
+		if(contract_id===""||!validateNumber(contract_id)){
+			if($('select[name=contract_id]').val() != ''){
+				contract_id = $('select[name=contract_id]').val();
+			}
 		}
+		var condition = {};
+		condition["contract_id"] = contract_id;
 		if(search === true){
 			var region_id = $("select[name=region_id]").val();
 			var customer_id = $("select[name=customer_id]").val();
@@ -464,29 +464,35 @@ var Contract = {
 				}
 			}
 		}
-		var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
-		strJson = createJson("contSupsList", "contract_suppliers", params);
+		condition["flag"] = 1;
+		strJson = createJson("suppliers", "admin_user", condition);
+		console.log(strJson);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
 				that.total_page = Math.ceil(obj.content.total/that.offset);
 				var row = '';
-				$.each(obj.content.data, function(k,v){
+				$.each(obj.content, function(k,v){
 					row += appendOption(v.suppliers_id, v.suppliers_name);
 				});
 				$("select#liOptionms2side__dx").html(row);
 			}
-			$('#message_area').html('');			
+			$('#message_area').html('');
 		}, "json");
 	},
 
 	setContInSups: function(contract_id){
-		if(typeof(contract_id) === "undefined"){
-			$('#message_area').html(createError('合同无效'));
-			return false;
+		var contract_id = getQueryStringByName('id');
+		if(contract_id===""||!validateNumber(contract_id)){
+			if($('select[name=contract_id]').val() != ''){
+				contract_id = $('select[name=contract_id]').val();
+			}else{
+				$('#message_area').html(createError('合同无效'));
+				return false;
+			}
 		}
 		var ContInSupsId = new Array();
 		$.each($('#liOptionms2side__dx option'), function(){
@@ -494,8 +500,9 @@ var Contract = {
 		});
 		var params = {"contract_id":contract_id, "params":{"suppliers_id":ContInSupsId}};
 		strJson = createJson("contInSups", "contract_suppliers", params);
+		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
@@ -508,7 +515,7 @@ var Contract = {
 		var params = {};
 		strJson = createJson("orgList", "bank", params);
 		$.post(this.url, strJson, function(obj){
-			if(obj.error){
+			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{

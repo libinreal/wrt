@@ -17,6 +17,7 @@ var Bill = {
 	total_page: 0,
 	url: "BillModel.php",
 	entity: "bill",
+	bill_type: {},
 
 	getList: function(search){
 		if(typeof(search) === "undefined"){
@@ -48,15 +49,13 @@ var Bill = {
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("page", this.entity, params);
+		console.log(getBillType()));
 		that = this
-		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-
 				that.total_page = Math.ceil(obj.content.total/that.offset);
 				if(obj.content.total == 0){
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
