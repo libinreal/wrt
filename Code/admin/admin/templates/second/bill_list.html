@@ -14,33 +14,39 @@
 		<span id="search_id" class="action-span1">- 票据列表</span>
 		<div style="clear:both"></div>
 		</h1>
-		<div class="inline_form">
+		<div id="message_area"></div>
+		<form id="search_form">
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
 			<labe>搜索类型：</labe>
-			<select>
-				<option>票据编号</option>
-				<option>出票人</option>
-				<option>承兑人</option>
+			<select name="search_type">
+				<option value="bill_num">票据编号</option>
+				<option value="drawer">出票人</option>
+				<option value="acceptor">承兑人</option>
 			</select>
 			&nbsp;
-			<input type="text" value="4012015112701045">
+			<input type="text" name="search_value">
 			&nbsp;
 			<labe>票据状态：</labe>
-			<select>
-				<option>未还</option>
-				<option>已还</option>
+			<select name="status">
+				<option value="">全部</option>
+				<option value="0">未还</option>
+				<option value="1">已还</option>
 			</select>
 		</div>
-		<div class="inline_form">
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
 			<labe>日期：</labe>
-			<input type="text" value="2015-10-10">
+			<input type="text" name="due_date1" id="due_date1" readonly>
 			&nbsp;至&nbsp;
-			<input type="text" value="2016-10-10">
+			<input type="text" name="due_date2" id="due_date2" readonly>
 			&nbsp;
-			<input type="button" class="button" value="搜索" />
+			<input type="button" class="button" value="搜索" onclick="Bill.getList(true)" />
 		</div>
+		</form>
 		<div class="list-div" id="listDiv">
-			<table cellpadding="3" cellspacing="1">
-				<tr>
+			<table cellpadding="3" cellspacing="1" id="bill_list">
+				<thead><tr>
 					<th>ID</th>
 					<th>票据类型</th>
 					<th>票据号</th>
@@ -52,42 +58,47 @@
 					<th>审核状态</th>
 					<th>还票状态</th>
 					<th>操作</th>
-				</tr>
-				<tr>
-					<td>1</td>
-					<td>商业承兑汇票</td>
-					<td>111-1</td>
-					<td>2014/11/29</td>
-					<td>100,000</td>
-					<td>浙商银行</td>
-					<td>中铁十三局</td>
-					<td>刘德华</td>
-					<td>已审核</td>
-					<td>已还</td>
-					<td>
-						<a href="demo_template.php?section=bill_manage&act=info">编辑</a>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="demo_template.php?section=bill_manage&act=generate">生成票据采购额</a>
-						&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="demo_template.php?section=bill_manage&act=repay">还票</a>
-					</td>
-				</tr>
+				</tr></thead>
+				<tbody></tbody>
 			</table>
 		</div>
 		<!-- 分页 -->
-		<table id="page-table" cellspacing="0">
-			<tr>
-				<td align="right" nowrap="true">
-					{include file="page.htm"}
-				</td>
-			</tr>
-		</table>
-		<div>
-			<p>数据状态：系统审核状态</p>
-		</div>
+		<div id="paginate"></div>
+
 		<!-- 底部 -->
 		<div id="footer">
 			{$lang.copyright}
 		</div>
+
+<script src="http://www.jq22.com/demo/laydate-master-141126210932/laydate.dev.js"></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/Bill.js" type="text/javascript" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	laydate({
+        elem: '#due_date1'
+    });
+	laydate({
+        elem: '#due_date2'
+    });
+});
+Bill.getList();
+function first(){
+	Bill.limit = 1;
+	Bill.getList();
+}
+function next(){
+	Bill.limit = Bill.limit + 1;
+	Bill.getList();	
+}
+function prev(){
+	Bill.limit = Bill.limit - 1;
+	Bill.getList();
+}
+function last(){
+	Bill.limit = Bill.total_page;
+	Bill.getList();	
+}
+</script>
 	</body>
 </html>

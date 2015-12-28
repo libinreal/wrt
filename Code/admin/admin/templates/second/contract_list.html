@@ -14,30 +14,64 @@
 		<span id="search_id" class="action-span1">- 合同列表</span>
 		<div style="clear:both"></div>
 		</h1>
-		<div id="loading" align="center" style="display:none;">Loading ...</div>
+		<div id="message_area"></div>
+		<form id="contract_search_form">
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>搜索类型：</labe>
+			<select name="search_type">
+				<option value="contract_num">合同编号</option>
+				<option value="contract_name">合同名称</option>
+				<option value="companyName">签署对方</option>
+			</select>
+			&nbsp;
+			<input type="text" name="search_value" value="">
+			
+			&nbsp;
+			<labe>合同状态：</labe>
+			<select name="contract_status">
+				<option value="">全部</option>
+				<option value="0">作废</option>
+				<option value="1">生效</option>
+				<option value="2">过期</option>
+			</select>
+		</div>
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>日期：</labe>
+			<input type="text" name="start_time" id="start_time" placeholder="开始日期" readonly>
+			&nbsp;
+			至
+			&nbsp;
+			<input type="text" name="end_time" id="end_time" placeholder="结束日期" readonly>
+			&nbsp;
+			&nbsp;
+			<input type="button" class="button" value="搜索" onclick="Contract.getList(true)">
+		</div>
+		</form>
 		<div class="list-div" id="listDiv">
 			<table cellpadding="3" cellspacing="1" id="contract_list">
-				<thead>
-					<tr>
-						<th>合同编号</th>
-						<th>合同名称</th>
-						<th>合同类型</th>
-						<th>签署对方</th>
-						<th>合同开始日期</th>
-						<th>合同终止日期</th>
-						<th>登记机构</th>
-						<th>合同状态</th>
-						<th><span style="color:red;">总采购额度
-						</span></th>
-						<th><span style="color:red;">可用采购额度
-						</span></th>
-						<th><span style="color:red;">票据采购额度
-						</span></th>
-						<th><span style="color:red;">现金采购额度
-						</span></th>
-						<th>操作</th>
-					</tr>
-				</thead>
+			<thead>
+				<tr>
+					<th>合同编号</th>
+					<th>合同名称</th>
+					<th>合同类型</th>
+					<th>签署对方</th>
+					<th>合同开始日期</th>
+					<th>合同终止日期</th>
+					<th>登记机构</th>
+					<th>合同状态</th>
+					<th><span style="color:red;">总采购额度
+					</span></th>
+					<th><span style="color:red;">可用采购额度
+					</span></th>
+					<th><span style="color:red;">票据采购额度
+					</span></th>
+					<th><span style="color:red;">现金采购额度
+					</span></th>
+					<th>操作</th>
+				</tr>
+			</thead>
 			<tbody></tbody>
 		</table>
 	</div>
@@ -52,16 +86,34 @@
 	<div id="footer">
 	{$lang.copyright}
 	</div>
+<script src="http://www.jq22.com/demo/laydate-master-141126210932/laydate.dev.js"></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
 <script src="js/contract.js" type="text/javascript" ></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	Contract.limit = 1;
-	Contract.offset = 4;
 	Contract.getList();
+	laydate({
+        elem: '#start_time'
+    });
+	laydate({
+        elem: '#end_time'
+    });
 });
 function first(){
-	
+	Contract.limit = 1;
+	Contract.getList();
+}
+function next(){
+	Contract.limit = Contract.limit + 1;
+	Contract.getList();	
+}
+function prev(){
+	Contract.limit = Contract.limit - 1;
+	Contract.getList();
+}
+function last(){
+	Contract.limit = Contract.total_page;
+	Contract.getList();	
 }
 </script>
 </body>

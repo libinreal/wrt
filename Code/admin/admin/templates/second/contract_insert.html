@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 合同新增</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1"> - 合同新增</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div id="message_area"></div>
+		<div class="table_info">
+			<form id="contract_content">
+			<table>
+				<tbody>
+						<tr>
+							<td class="title">合同编号：</td><td><input type="text" name="contract_num" data-rule-required="true"></td>
+							<td class="title">合同名称：</td><td><input type="text" name="contract_name" data-rule-required="true"></td>
+							<td class="title">合同金额：</td><td><input type="text" name="contract_amount" data-rule-required="true" data-rule-number="true"></td>
+							<td class="title">合同状态：</td>
+							<td><select name="contract_status">
+								<option value="1">生效</option>
+								<option value="0">过期</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td class="title">公司：</td><td><span style="color:red">不明条目</span></td>
+							<td class="title">客户：</td>
+							<td><select name="customer_id" style="width:80px;">
+							</select></td>
+							<td class="title">合同类型：</td>
+							<td><select name="contract_type">
+								<option value="1">销售合同</option>
+								<option value="2">采购合同</option>
+							</select></td>
+							<td class="title">签署类型：</td>
+							<td><select name="contract_sign_type">
+								<option value="1">平台-&gt;银行</option>
+								<option value="2">银行-&gt;平台</option>
+							</select></td>
+						</tr>
+						<tr>
+							<td class="title">合同开始日期：</td><td><input type="text" id="start_time" name="start_time" readonly  data-rule-required="true"></td>
+							<td class="title">合同结束日期：</td><td><input type="text" id="end_time" name="end_time" readonly  data-rule-required="true"></td>
+							<td class="title">是否控制类型：</td>
+							<td>是<input type="radio" name="is_control" value="1" checked="checked" >&nbsp;&nbsp;
+							否<input type="radio" name="is_control" value="0" /></td>
+							<td>物料类型：</td><td id="is_goods_type_visible">
+							<a onclick="popupLayer()" href="javascript:void(0);">查看物料类型</a></td>
+						</tr>
+						<tr>
+							<td class="title">金融费率：</td>
+							<td><div id="is_rate_visible"><input type="text" name="rate" data-rule-number="true"></div></td>
+							<td class="title">登记机构：</td>
+							<td><select name="bank_id">
+							</select></td>
+						</tr>
+						<tr>
+							<td class="title">备注</td>
+							<td colspan="7"><textarea name="remark"></textarea></td>
+						</tr>
+				</tbody>
+			</table>
+			</form>
+			<div class="table_info">
+				<table>
+					<tr>
+						<td class="title">附件：</td>
+						<td colspan="4">
+							<form id="attachment_form">
+								<span style="color:blue;display:none;">文件名：<span id="attachment_name"></span>&nbsp;</span>
+								<input type="file" id="attachment_file" name="attachment_file" data-rule-required="true" data-rule-accept="application/pdf" data-msg-required="请选择文件" data-msg-accept="只能上传pdf" />
+								<input type="button" onclick="Contract.getUploadFile()" value="点击上传" />
+								<span data-name="error"></span>
+							</form>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div align="center" id="handle_button">
+				<input type="button" class="button" value="新增" onclick="Contract.putInsert()">
+			</div>
+		</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+		<!-- pop message -->
+		<div id="popupLayer" class="messagepop pop">
+			<div class="messagepop_header"><h4>物料类型</h4></div>
+			<div class="clear"></div>
+			<hr>
+			<form id="goods_type_form">
+				<div id="goods_type_list" class="goods_type_list"></div>
+				<hr>
+				<div align="center"><input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " /></div>
+			</form>
+		</div>
+		<script src="js/jquery.validate.js" type="text/javascript" ></script>
+		<script src="js/additional-methods.js" type="text/javascript"></script>
+		<script src="http://www.jq22.com/demo/laydate-master-141126210932/laydate.dev.js"></script>
+		<script src="js/ajaxfileupload.js" type="text/javascript" ></script>
+		<script src="js/ajax.js" type="text/javascript" ></script>
+		<script src="js/contract.js" type="text/javascript" ></script>
+		<script type="text/javascript">
+		$(document).ready(function(){
+			laydate({
+	            elem: '#start_time'
+	        });
+			laydate({
+	            elem: '#end_time'
+	        });
+			$('input[name=is_control]').click(function(){
+				if($(this).val() == 0){
+					$('#is_goods_type_visible').html(createWarn("物料类型不可用"));
+				}else{
+					$('#is_goods_type_visible').html(createLink("javascript:void(0);", "查看物料类型", "popupLayer()"));
+				}
+			});
+			$('select[name=contract_type]').click(function(){
+				if($(this).val() == 2){
+					$('#is_rate_visible>input').attr('disabled', true);
+				}else{
+					$('#is_rate_visible>input').attr('disabled', false);
+				}
+			});
+		});
+		Contract.getGoodsType(false);
+		Contract.getUserList();
+		Contract.getOrgList();
+		</script>
+	</body>
+</html>

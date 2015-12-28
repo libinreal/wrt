@@ -14,56 +14,71 @@
 		<span id="search_id" class="action-span1">- 合同关联供应商列表</span>
 		<div style="clear:both"></div>
 		</h1>
-		<div>
+		<div id="message_area"></div>
+		<div class="form-div">
+			<form id="search_form">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
 			<label>选择客户：</label>
-			<select>
-				<option>客户001</option>
-				<option>客户002</option>
+			<select name="customer_id" style="width:100px;" onchange="Contract.getBuyCont()">
+				<option value="">全部</option>
 			</select>
 			&nbsp;
 			<label>选择对应合同：</label>
-			<select>
-				<option>合同001</option>
-				<option>合同002</option>
+			<select name="contract_id">
+				<option value="">全部</option>
 			</select>
 			&nbsp;
 			<label>选择供应商地区：</label>
-			<select>
-				<option>全国</option>
-				<option>武汉</option>
+			<select name="region_id">
+			<option value="0">全国</option>
 			</select>
 			&nbsp;
-			<input type="button" class="button" value="查询" />
+			<input type="button" class="button" onclick="Contract.getContSupsList(true)" value="查询" />
+			</form>
 		</div>
 		<div class="list-div" id="listDiv">
-			<table cellpadding="3" cellspacing="1">
-				<tr>
-					<th>客户</th>
-					<th>合同名称</th>
-					<th>合同编号</th>
-					<th>供应商</th>
-					<th>供应商地区</th>
-				</tr>
-				<tr>
-					<td>0001</td>
-					<td>合同A</td>
-					<td>1000</td>
-					<td>中铁三局</td>
-					<td>武汉</td>
-				</tr>
+			<table cellpadding="3" cellspacing="1" id="list">
+				<thead>
+					<tr>
+						<th>客户</th>
+						<th>合同名称</th>
+						<th>合同编号</th>
+						<th>供应商</th>
+						<th>供应商地区</th>
+					</tr>		
+				</thead>
+				<tbody>
+				</tbody>
 			</table>
 		</div>
 		<!-- 分页 -->
-		<table id="page-table" cellspacing="0">
-			<tr>
-				<td align="right" nowrap="true">
-					{include file="page.htm"}
-				</td>
-			</tr>
-		</table>
+		<div id="paginate"></div>
 		<!-- 底部 -->
 		<div id="footer">
 			{$lang.copyright}
 		</div>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/contract.js" type="text/javascript" ></script>
+<script type="text/javascript">
+	Contract.getContSupsList();
+	Contract.getUserList();
+	Contract.getRegionList();
+	function first(){
+		Contract.limit = 1;
+		Contract.getContSupsList();
+	}
+	function next(){
+		Contract.limit = Contract.limit + 1;
+		Contract.getContSupsList();
+	}
+	function prev(){
+		Contract.limit = Contract.limit - 1;
+		Contract.getContSupsList();
+	}
+	function last(){
+		Contract.limit = Contract.total_page;
+		Contract.getContSupsList();
+	}
+</script>
 	</body>
 </html>

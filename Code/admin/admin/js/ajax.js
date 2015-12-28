@@ -1,10 +1,9 @@
 $(document).ajaxStart(function() {
-	$("#loading").fadeIn();
+	$('#message_area').html(createLoading());
 });
 $(document).ajaxSend(function(){
 });
 $(document).ajaxSuccess(function(){
-	$("#error").fadeOut();
 })
 $(document).ajaxError(function(event, jqxhr, settings, thrownError){
 	$("#error").html(settings.url +" error: "+ thrownError);
@@ -13,10 +12,8 @@ $(document).ajaxError(function(event, jqxhr, settings, thrownError){
 $(document).ajaxComplete(function(){
 })
 $(document).ajaxStop(function () {
-	$("#loading").fadeOut();
 });
-jQuery.fn.FormtoJson = function(options) {
-
+$.fn.FormtoJson = function(options) {
     options = jQuery.extend({}, options);
 
     var self = this,
@@ -80,6 +77,9 @@ jQuery.fn.FormtoJson = function(options) {
 
     return json;
 }
+$.fn.slideFadeToggle = function(easing, callback) {
+	return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
+};
 var getQueryStringByName = function(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -87,26 +87,35 @@ var getQueryStringByName = function(name) {
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 var createPaginate = function(url,total,limit,offset){
-	var total_page = Math.floor(total/offset);
+	var total_page = Math.ceil(total/offset);
+    var current_page = limit+1;
 	var str = '<table id="page-table" cellspacing="0"><tbody><tr><td align="right" nowrap="true">';
-	str += '<div id="turn-page">总计'+total+'个记录，';
-	str +=	'分为'+total_page+'页，';
-	str +=	'当前第'+limit+'页，';
-	str +=	'每页'+offset+'条'
+	str += '<div id="turn-page">总计'+total+'条记录，';
+	str +=	offset+'条/页，';
+    str +=  '共'+total_page+'页，';
+	str +=	'当前第'+current_page+'页';
 	str +=	'<span id="page-link">';
-	str +=	'<a href="javascript:void(0)" onclick="first()">第一页</a> ';
-	str +=	'<a href="javascript:void(0)" onclick="prev()">上一页</a> ';
-	str +=	'<a href="javascript:void(0)" onclick="next()">下一页</a> ';
-	str +=	'<a href="javascript:void(0)" onclick="last()">最末页</a> ';
+	if(total_page > 1 && limit > 1){
+		str +=	'&nbsp;<a href="javascript:void(0)" onclick="first()">第一页</a>&nbsp;|&nbsp;';
+		str +=	'&nbsp;<a href="javascript:void(0)" onclick="prev()">上一页</a>&nbsp;|&nbsp;';
+	}
+	if(total_page > 1 && limit < total_page){
+		str +=	'&nbsp;<a href="javascript:void(0)" onclick="next()">下一页</a>&nbsp;|&nbsp;';
+		str +=	'&nbsp;<a href="javascript:void(0)" onclick="last()">最末页</a>&nbsp;';
+	}
 	str +=	'</span></div></td></tr></tbody></table>';
 	return str;
 }
 var createJson = function(command, entity, parameters){
 	var json = {"command":command,"entity":entity,"parameters":parameters};
-	return json;
+	return  JSON.stringify(json);
 }
-var createTd = function(value){
-	var str = "<td>"+value+"</td>";
+var createTd = function(value, url){
+	if(typeof(url)=='undefined'){
+		var str = "<td>"+value+"</td>";
+	}else{
+		var str = "<td>"+createLink(url, value)+"</td>";
+	}
 	return str;
 }
 var createButton = function(func_name, value){
@@ -121,8 +130,8 @@ var createCheckbox = function(name, value, label, checked){
 	}
 	return str;
 }
-var createLink = function(url, text){
-	var str = '<a href="'+url+'">'+text+'</a> ';
+var createLink = function(url, text, action){
+	var str = '<a href="'+url+'" onclick="'+action+'">'+text+'</a> ';
 	return str;
 }
 var createError = function(text){
@@ -132,4 +141,60 @@ var createError = function(text){
 var createWarn = function(text){
 	var str = '<div class="warn">'+text+'</div>';
 	return str;
+}
+var createTip = function(text){
+	var str = '<div class="tips">'+text+'</div>';
+	return str;
+}
+var createLoading = function(){
+	var str = '<div id="loading" align="center">Loading ...</div>';
+	return str;
+}
+var redirectToUrl = function(url){
+	window.location.replace(url);
+}
+var popupLayer = function(){
+	$('#popupLayer').slideFadeToggle();
+}
+var appendOption = function(name, text, selected){
+    if(selected === 1){
+        var str = '<option value="'+name+'" selected="selected">'+text+'</option>';  
+    }else{
+        var str = '<option value="'+name+'">'+text+'</option>';
+    }
+	return str;
+}
+var subString = function(str, len, hasDot)
+{ 
+    var newLength = 0; 
+    var newStr = ""; 
+    var chineseRegex = /[^\x00-\xff]/g;
+    var singleChar = ""; 
+    var strLength = str.replace(chineseRegex,"**").length; 
+    for(var i = 0;i < strLength;i++) 
+    { 
+        singleChar = str.charAt(i).toString(); 
+        if(singleChar.match(chineseRegex) != null) 
+        { 
+            newLength += 2; 
+        }     
+        else 
+        { 
+            newLength++; 
+        } 
+        if(newLength > len) 
+        { 
+            break; 
+        } 
+        newStr += singleChar; 
+    } 
+     
+    if(hasDot && strLength > len) 
+    { 
+        newStr += "..."; 
+    } 
+    return newStr; 
+}
+var validateNumber = function(str){
+    return /^\d+$/.test(str);
 }

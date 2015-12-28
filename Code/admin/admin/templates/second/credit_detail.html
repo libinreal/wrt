@@ -14,36 +14,61 @@
 		<span id="search_id" class="action-span1">- 授信单详情</span>
 		<div style="clear:both"></div>
 		</h1>
+		<div id="message_area"></div>
+		<form id="remark_form" onsubmit="return false;">
 		<div class="table_info">
 			<table>
+				<thead>
+					<tr>
+						<th colspan="6"> 授信单详情 </th>
+					</tr>
+				</thead>
 				<tbody>
 					<tr>
-						<td>单据编号：<span id="">123456</span></td>
-						<td>单据日期：<span id="">2015/10/12</span></td>
-						<td>单据状态：<span id="">暂存</span></td>
+						<td class="title">单据编号：</td><td id="credit_num"></td>
+						<td class="title">单据日期：</td><td id="add_time"></td>
+						<td class="title">单据状态：</td><td id=""><span style="color:red">不明条目</span></td>
 					</tr>
 					<tr>
-						<td>公司：<span id="">中铁四局</span></td>
-						<td>客户：<span id="">中通快递</span></td>
-						<td>授信额度：<span id="">300，000</span></td>
+						<td class="title">公司：</td><td id=""><span style="color:red">不明条目</span></td>
+						<td class="title">客户：</td><td id="customer_name"></td>
+						<td class="title">授信额度：</td><td id="amount_all"></td>
 					</tr>
 					<tr>
-						<td>授信状态：<span id="">正常</span></td>
-						<td>授信银行：<span id="">浙商银行</span></td>
-						<td>授信结束日期：<span id="">2015/10/10</span></td>
+						<td class="title">授信状态：</td><td id="credit_status"></td>
+						<td class="title">授信银行：</td><td id="registration_name"></td>
+						<td class="title">授信结束日期：</td><td id="end_time"></td>
 					</tr>
 					<tr>
-						<td>授信银行号：<span>1234</span></td>
-						<td>客户银行账号：<span>123456</span></td>
-						<td>备注: <input type="text" ></td>
+						<td class="title">授信银行号：</td><td id="registration_num"></td>
+						<td class="title">客户银行账号：</td><td id="customer_bank_num"></td>
+						<td class="title">备注: </td><td id="remark"><input type="text" name="remark" data-rule-required="true" data-msg-required="请输入备注内容"></td>
 					</tr>
 				</tbody>
 			</table>
-			<div align="center"><input name="query" type="submit" class="button" value=" 保存 "></div>
+			<div align="center">
+				<input type="button" onclick="redirectToUrl(&quot;demo_template.php?section=credit_manage&amp;act=list&quot;)" value="返回列表" class="button">
+				<input type="submit" class="button" value=" 保存 ">
+			</div>
 		</div>
+		</form>
 		<!-- 底部 -->
 		<div id="footer">
 			{$lang.copyright}
 		</div>
+
+<script src="js/jquery.validate.js" type="text/javascript" ></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/credit.js" type="text/javascript" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	Credit.getCreditInfo();
+	$("#remark_form").validate({
+		submitHandler: function(form) {
+			Credit.getUpdateCreditRemark();
+		}
+	});
+});
+</script>
 	</body>
 </html>

@@ -36,6 +36,7 @@
 				originalName = originalName.substring(0, originalName.indexOf('['));
 
 			var	nameDx = originalName + "ms2side__dx[]";
+			var	nameDx_id = originalName + "ms2side__dx";
 			var	nameSx = originalName + "ms2side__sx";
 			var size = $(this).attr("size");
 			// SIZE MIN
@@ -78,7 +79,7 @@
 					"</div>" +
 					"<div class='ms2side__select'>" +
 						(o.labeldx ? ("<div class='ms2side__header'>" + o.labeldx + "</div>") : "") +
-						"<select title='" + o.labeldx + "' name='" + nameDx + "' id='" + nameDx + "' size='" + size + "' multiple='multiple' ></select>" +
+						"<select title='" + o.labeldx + "' name='" + nameDx + "' id='" + nameDx_id + "' size='" + size + "' multiple='multiple' ></select>" +
 					"</div>" +
 					((o.selectedPosition == 'right' && o.moveOptions) ? divUpDown : "") +
 				"</div>";

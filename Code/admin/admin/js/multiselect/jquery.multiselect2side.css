@@ -1,8 +1,7 @@
 .ms2side__div {
-	clear: left;
+	clear: both;
 	width: 100%;
 	padding: 1px;
-	float: left;
 	background : url('') repeat-x; /* HACK FOR CHROME*/
 }
 

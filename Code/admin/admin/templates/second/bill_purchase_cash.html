@@ -15,29 +15,32 @@
 		<div style="clear:both"></div>
 		</h1>
 		<div class="table_info">
+			<form>
 			<table>
+				<thead>
+					<tr>
+						<th colspan="6"> 采购额度生成单（现金） </th>
+					</tr>
+				</thead>
 				<tbody>
 					<tr>
-						<td>来往单位：<select name="">
-						<option>aaaaa</option>
-						<option>bbbbb</option>
-						<option>ccccc</option>
-						</select></td>
-						<td>单据类型：<select name="">
-						<option>aaaaa</option>
-						<option>bbbbb</option>
-						<option>ccccc</option>
-						</select></td></td>
+						<td class="title">来往单位：</td>
+						<td><select name=""></select></td>
+						<td class="title">单据类型：</td>
+						<td><select name=""></select></td>
 					</tr>
 					<tr>
-						<td colspan="2">录入金额：<input type="text" name="" value="5000"></td>
+						<td class="title">录入金额：</td>
+						<td colspan="3"><input type="text" name="" value="5000"></td>
 					</tr>
 					<tr>
-						<td colspan="2">备注: <textarea></textarea></td>
+						<td class="title">备注:</td>
+						<td colspan="3"><textarea></textarea></td>
 					</tr>
 				</tbody>
 			</table>
-			<div align="center"><input name="query" type="submit" class="button" value=" 添加 "></div>
+			</form>
+			<div align="center"><input type="button" class="button" value=" 添加 "></div>
 		</div>
 		<!-- 底部 -->
 		<div id="footer">
