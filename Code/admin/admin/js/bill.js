@@ -17,7 +17,7 @@ var Bill = {
 	total_page: 0,
 	url: "BillModel.php",
 	entity: "bill",
-	bill_type: {},
+	bill_type: "",
 
 	getList: function(search){
 		if(typeof(search) === "undefined"){
@@ -49,7 +49,6 @@ var Bill = {
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("page", this.entity, params);
-		console.log(getBillType()));
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -108,18 +107,18 @@ var Bill = {
 						$.each(value, function(k, v){
 							row += appendOption(v.user_id, v.user_name)
 						});
-						$("select[name=pay_user_id]").html(row);						
+						$("select[name=pay_user_id]").append(row);
 					}else if(key == "receivers"){
 						$.each(value, function(k, v){
 							row += appendOption(v.user_id, v.user_name)
 						});
-						$("select[name=receive_user_id]").html(row);						
+						$("select[name=receive_user_id]").append(row);						
 					}else{
 						if($("select[name="+key+"]").length){
 							$.each(value, function(k, v){
 								row += appendOption(k, v)
 							});
-							$("select[name="+key+"]").html(row);
+							$("select[name="+key+"]").append(row);
 						}
 					}
 				});
@@ -141,9 +140,13 @@ var Bill = {
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}
 				});
+				// 调用收付款列表
+				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id);
+				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
+				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id);
 			}
 			$('#message_area').html('');
-		},"json");		
+		},"json");
 	},
 
 	putUpdate: function(){

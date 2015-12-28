@@ -101,15 +101,15 @@
 					<tr>
 						<td class="title">付款人：</td>
 						<td>
-						<select name="pay_user_id" style="width:150px;"></select>
+						<select id="pay_user_id" name="pay_user_id" style="width:150px;"><option value="">选择付款人</option></select>
 						</td>
 						<td class="title">收款人：</td><td>
-						<select name="receive_user_id" style="width:150px;"></select>
+						<select id="receive_user_id" name="receive_user_id" style="width:150px;"></select>
 						</td>
 					</tr>
 					<tr>
 						<td class="title">付款银行：</td><td>
-						<select name="pay_bank_id"></select>
+						<select id="pay_bank_id" name="pay_bank_id" onchange="TypeMode.getUserBanksAccounts('pay_user_id');"></select>
 						</td>
 						<td class="title">收款银行：</td><td>
 						<select name="receive_bank_id"></select>
@@ -117,10 +117,10 @@
 					</tr>
 					<tr>
 						<td class="title">付款账号：</td><td>
-						<input type="text" name="pay_account"  data-rule-required="true" />
+						<select id="pay_account" name="pay_account"></select>
 						</td>
 						<td class="title">收款账号：</td><td>
-						<input type="text" name="receive_account"  data-rule-required="true" />
+						<select id="receive_account" name="receive_account"></select>
 						</td>
 					</tr>
 				</tbody>
@@ -136,6 +136,7 @@
 <script src="js/jquery.validate.js" type="text/javascript" ></script>
 <script src="http://www.jq22.com/demo/laydate-master-141126210932/laydate.dev.js"></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/type-mode.js" type="text/javascript" ></script>
 <script src="js/Bill.js" type="text/javascript" ></script>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -147,10 +148,22 @@ $(document).ready(function(){
     });	
 	laydate({
         elem: '#accept_date'
-    });	
+    });
 	laydate({
         elem: '#receive_date'
-    });	
+    });
+    $("#pay_user_id").change(function(){
+		TypeMode.getUserBanks("pay_bank_id", $(this).val());
+	});
+    $("#pay_bank_id").change(function(){
+		TypeMode.getUserBanksAccounts("pay_account", $("#pay_user_id").val(), $(this).val());
+	});
+    $("#receive_user_id").change(function(){
+		TypeMode.getAdminUserBanks("receive_bank_id", $(this).val());
+	});
+    $("#receive_bank_id").change(function(){
+		TypeMode.getAdminUserBanksAccounts("receive_account", $("#receive_user_id").val(), $(this).val());
+	});
 });
 Bill.getEdit();
 </script>
