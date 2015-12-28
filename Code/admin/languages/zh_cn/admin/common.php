@@ -142,7 +142,7 @@ $_LANG['13_contract'] = '合同管理';
 $_LANG['14_credit'] = '授信管理';
 
 //合同管理
-$_LANG['01_contract_add'] = '新增合同';
+$_LANG['01_contract_insert'] = '新增合同';
 $_LANG['02_contract_list'] = '合同列表';
 $_LANG['05_contract_supplier_add'] = '关联供应商、合同';
 $_LANG['06_contract_supplier_list'] = '供应商、合同列表';
