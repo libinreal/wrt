@@ -83,8 +83,8 @@ var Contract = {
 								}
 							});
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=contract_manage&act=info&id="+value.contract_id, "编辑");
-								edit += createLink("demo_template.php?section=contract_manage&act=bind&id="+value.contract_id, "绑定供应商");
+								var edit = createLink(that.url+"?act=contractEdit&id="+value.contract_id, "编辑");
+								edit += createLink(that.url+"?act=supplierSet&id="+value.contract_id, "绑定供应商");
 								row += createTd(edit);
 							}
 						}
