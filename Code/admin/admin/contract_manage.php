@@ -7,6 +7,7 @@
  */
 define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
+require_once('ManageModel.php');
 /**
  * 合同列表
  */
@@ -16,7 +17,15 @@ if ( $_REQUEST['act'] == 'contractList' )
     exit;
 }
 /**
- * 合同添加，编辑
+ * 合同添加
+ */
+elseif ( $_REQUEST['act'] == 'contractInsert' )
+{
+    $smarty->display('second/contract_insert.html');
+    exit;
+}
+/**
+ * 合同编辑
  */
 elseif ( $_REQUEST['act'] == 'contractEdit' )
 {
@@ -59,10 +68,6 @@ $ApiList = array(
     'contToSup',
     'uploadify'
 );
-$json = jsonAction($ApiList);
-$cont = Contract::get_instance();
-$cont->run($json);
-
 
 /***
  * 合同管理API
@@ -74,30 +79,13 @@ $cont->run($json);
  * @return json
  * ----------------------
  */
-class Contract
+class Contract extends ManageModel 
 {
-    private $table;
-    private $db;
-    private $sql;
-    private static $_instance;
-    private function __construct() {}
-    private function __clone() {}
+    protected static $_instance;
     
-    
-    public static function get_instance() 
-    {
-        if (!self::$_instance) self::$_instance = new self();
-        return self::$_instance;
-    }
-    
-    
-    public function run($json) 
-    {
-        $command = $json['command'];
-        $entity = $json['entity'];
-        $parameters = $json['parameters'];
-        self::$command($entity, $parameters);
-    }
+    protected $table;
+    protected $db;
+    protected $sql;
     
     
     /**
@@ -481,7 +469,8 @@ class Contract
      *      "entity"  : "admin_user", 
      *      "parameters" : {
      *          "region_id" : "(int)", 
-     *          "contract_id" : "(int)"
+     *          "contract_id" : "(int)", 
+     *          "flag" : "1"    //当获取合同下的供应商时需要传此职，不传则是对所有的供应商进行筛选
      *      }
      * }
      */
@@ -492,7 +481,7 @@ class Contract
         $where = '';
         
         $contractId = $parameters['contract_id'];
-        if (is_int($contractId) && $contractId > 0) {
+        if ( $contractId > 0) {
             $this->table = 'contract_suppliers';
             self::selectSql(array(
                 'fields' => 'suppliers_id', 
@@ -503,10 +492,27 @@ class Contract
             foreach ($res as $v){
                 $exist[] = $v['suppliers_id'];
             }
+            
+            if ($parameters['flag'] == 1) {
+                if (empty($exist)) make_json_result(array());
+                $this->table = 'suppliers';
+                self::selectSql(array(
+                    'fields' => array(
+                        'suppliers_id', 
+                        'suppliers_name'
+                    ), 
+                    'where'  => 'suppliers_id in('.implode(',', $exist).')'
+                ));
+                $res = $this->db->getAll($this->sql);
+                make_json_result($res);
+            }
+
             if (!empty($exist)) {
                 $where .= ' and s.suppliers_id not in('.implode(',', $exist).')';
             }
         }
+        
+        if (!$contractId && $parameters['flag'] == 1) make_json_result(array());
         
         //根据地区搜索供应商，只精确到省份
         $region_id = $parameters['region_id'];
@@ -522,7 +528,8 @@ class Contract
                 's.suppliers_name'
             ), 
             'join'   => 'LEFT JOIN suppliers AS s on a.suppliers_id=s.suppliers_id', 
-            'where'  => 'a.role_id=2 and s.is_check=1'.$where
+            'where'  => 'a.role_id=2 and s.is_check=1'.$where, 
+            'extend' => ' ORDER BY s.suppliers_id ASC'
         ));
         $res = $this->db->getAll($this->sql);
         make_json_result($res);
@@ -867,7 +874,7 @@ class Contract
             $arr['create_user'] = $user_id;
             $arr['create_time'] = time();
         }
-        return array( 
+        return array(
             'params'=>$arr, 
             'goods_type'=>$params['goods_type'], 
             'contract_id'=>$contractId 
@@ -889,64 +896,26 @@ class Contract
         }
         return $params;
     }
-    
-    
-    /**
-     * @param array $params
-     */
-    private function selectSql($params) 
-    {
-        if ( is_array($params['fields']) ) {
-            $params['fields'] = implode(',', $params['fields']);
-        }
-        if ( !empty(trim($params['as'])) ) {
-            $params['as'] = ' AS '.$params['as'];
-        }
-        if ( !empty(trim($params['where'])) ) {
-            $params['where'] = ' WHERE '.$params['where'];
-        }
-        $this->sql = 'SELECT '.$params['fields'].' FROM '.$this->table.' '.$params['as']
-                .' '.$params['join'].' '.$params['where'].' '.$params['extend'];
-        return ;
-    }
-    
-    
-    /**
-     * @param string $entity
-     * @param string $tableName
-     */
-    private function init($entity, $tableName) 
-    {
-        if ( $entity != $tableName ) {
-            failed_json('数据表`'.$entity.'`不存在');
-        }
-        $this->table = $GLOBALS['ecs']->table($entity);
-        $this->db = $GLOBALS['db'];
-        return ;
-    }
-    
 }
-
-function failed_json($msg) {
-    make_json_response('', -1, $msg);
-}
-
+$json = jsonAction($ApiList);
+$cont = Contract::getIns();
+$cont->run($json);
 /* 
  * 合同测试信息
- * echo json_encode(array('contract_id'=>1, 'params'=> array(
- 'contract_num'       => '156894321',
- 'contract_name'      => 'hetong0001',
- 'contract_amount'    => '1000000',
- 'contract_status'    => '1',
- 'contract_type'      => '1',
- 'contract_sign_type' => '1',
- 'customer_id'        => '2',
- 'start_time'         => strtotime('2015-12-22'),
- 'end_time'           => strtotime('2015-12-30'),
- 'is_control'         => '1',
- 'rate'               => '0.2%',
- 'bank_id'            => '1',
- 'attachment'         => 'pdf',
- 'remark'             => 'benfen',
- 'goods_type'         => '1,2,8,9'
-))); */
+ * $var = array('contract_id'=>1, 'params'=> array(
+    'contract_num'       => '0210000',
+    'contract_name'      => 'ht0000',
+    'contract_amount'    => '230000',
+    'contract_status'    => '1',
+    'contract_type'      => '2',
+    'contract_sign_type' => '0',
+    'customer_id'        => '2',
+    'start_time'         => '2015-10-22',
+    'end_time'           => '2015-12-31',
+    'is_control'         => '1',
+    'rate'               => '0.2%',
+    'bank_id'            => '1',
+    'attachment'         => '20151225153106.pdf',
+    'remark'             => '测试',
+    'goods_type'         => array(3,4,5)
+)); */
