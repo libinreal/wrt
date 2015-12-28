@@ -89,9 +89,13 @@ $modules['12_stats']['credit_analysis']             = 'credit_analysis.php?act=l
 $modules['12_stats']['sales_analysis']              = 'sales_analysis.php?act=list';
 
 //合同管理
-$modules['13_contract']['01_contract_add']          = 'contract_manage.php?act=add';
-$modules['13_contract']['02_contract_list']         = 'contract_manage.php?act=list';
-$modules['13_contract']['05_contract_supplier_add']     = 'contract_manage.php?act=csa';
-$modules['13_contract']['06_contract_supplier_list']    = 'contract_manage.php?act=csl';
+$modules['13_contract']['01_contract_add']          = 'contract_manage.php?act=contractEdit';
+$modules['13_contract']['02_contract_list']         = 'contract_manage.php?act=contractList';
+$modules['13_contract']['05_contract_supplier_add']     = 'contract_manage.php?act=supplierSet';
+$modules['13_contract']['06_contract_supplier_list']    = 'contract_manage.php?act=supplierList';
+
+//授信管理
+$modules['14_credit']['01_credit_list']    = 'credit_manage.php?act=list';
+$modules['14_credit']['02_credit_detail']    = 'credit_manage.php?act=detail';
 
 ?>
