@@ -16,12 +16,13 @@ var TypeMode = {
 				$.each(object.content, function(k, v){
 					row += appendOption(k, v);
 				})
-				$('#'+that.select_id).html(row);
+				$('#'+select_id).html(row);
 			}
+			$('#message_area').html('');
 		},"json");
 	},
 
-	getUsers: function(){
+	getUsers: function(select_id){
 		var strJson = createJson("users", "users", {});
 		that = this;
 		$.post(that.url, strJson, function(object){
@@ -31,10 +32,11 @@ var TypeMode = {
 			}else{
 				var row = "";
 				$.each(object.content, function(k, v){
-					row += appendOption(k, v);
+					row += appendOption(v.user_id, v.companyName);
 				})
-				$('#'+that.select_id).html(row);
+				$('#'+select_id).html(row);
 			}
+			$('#message_area').html('');
 		},"json");
 	},
 
@@ -93,15 +95,12 @@ var TypeMode = {
 	getAdminUserBanks: function(select_id, user_id){
 		var strJson = createJson("admin_user_banks", "admin_user_banks", {"user_id":user_id});
 		that = this;
-		console.log(strJson);
-		return false;
 		$.post(that.url, strJson, function(object){
-			console.log(object);
 			if(object.error == -1){
 				$('#message_area').html(createError(object.message));
 				return false;
 			}else{
-				var row = appendOption("", "全部");
+				var row = appendOption("", "选择银行");
 				$.each(object.content, function(k, v){
 					row += appendOption(k, v);
 				})
@@ -118,7 +117,7 @@ var TypeMode = {
 				$('#message_area').html(createError(object.message));
 				return false;
 			}else{
-				var row = appendOption("", "全部");
+				var row = appendOption("", "选择账户");
 				$.each(object.content, function(k, v){
 					row += appendOption(k, v);
 				})

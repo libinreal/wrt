@@ -67,7 +67,7 @@ var Bill = {
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=bill_manage&act=info&id="+value.bill_id, "编辑");
-								edit += createLink("demo_template.php?section=bill_manage&act=generate&id="+value.bill_id, "生成票据采购额");
+								edit += createLink("demo_template.php?section=bill_manage&act=generate_note&id="+value.bill_id, "生成票据采购额");
 								edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "还票");
 								row += createTd(edit);
 								continue;
@@ -144,6 +144,7 @@ var Bill = {
 				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id);
 				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
 				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id);
+				TypeMode.getAdminUserBanksAccounts("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.receive_bank_id);
 			}
 			$('#message_area').html('');
 		},"json");

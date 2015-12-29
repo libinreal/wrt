@@ -65,19 +65,19 @@
 	Contract.getRegionList();
 	function first(){
 		Contract.limit = 1;
-		Contract.getContSupsList();
+		Contract.getContSupsList(true);
 	}
 	function next(){
 		Contract.limit = Contract.limit + 1;
-		Contract.getContSupsList();
+		Contract.getContSupsList(true);
 	}
 	function prev(){
 		Contract.limit = Contract.limit - 1;
-		Contract.getContSupsList();
+		Contract.getContSupsList(true);
 	}
 	function last(){
 		Contract.limit = Contract.total_page;
-		Contract.getContSupsList();
+		Contract.getContSupsList(true);
 	}
 </script>
 	</body>

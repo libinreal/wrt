@@ -78,5 +78,52 @@ var BillAmount = {
 			}
 			$('#message_area').html('');
 		}, "json");
+	},
+
+	getCreateAction: function(){
+		if($("#bill_purchase_form").valid() === false){
+			return false;
+		}
+		var form_data = $("#bill_purchase_form").FormtoJson();
+		strJson = createJson("create", this.entity, form_data);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				redirectToUrl("demo_template.php?section=bill_manage&act=order_list");
+			}
+		}, "json");
+	},
+
+	// 采购额度生成单（商票）初始化
+	getAddInitAction: function(){
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		$("#bill_id").text(id);
+		var params = {"bill_id":id};
+		strJson = createJson("addInit", this.entity, params);
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$.each(obj.content.info, function(k, v){
+					if(k == "discount_rate"){
+						$("#"+k).val(v);
+					}else{
+						$("input[name="+k+"]").val(v);
+						$("#"+k).text(v);
+					}
+				});
+				var bill_amount = parseFloat(obj.content.info.bill_amount);
+				var discount_rate = parseFloat($("#discount_rate").val());
+				$("#amount").val(bill_amount*discount_rate);
+			}
+			$('#message_area').html('');
+		}, "json");
 	}
 }

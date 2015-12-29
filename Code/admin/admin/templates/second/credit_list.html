@@ -50,19 +50,19 @@
 Credit.getList();
 function first(){
 	Credit.limit = 0;
-	Credit.getList();
+	Credit.getList(true);
 }
 function next(){
 	Credit.limit = Credit.limit + 1;
-	Credit.getList();	
+	Credit.getList(true);	
 }
 function prev(){
 	Credit.limit = Credit.limit - 1;
-	Credit.getList();
+	Credit.getList(true);
 }
 function last(){
 	Credit.limit = Credit.total_page - 1;
-	Credit.getList();	
+	Credit.getList(true);	
 }
 </script>
 	</body>

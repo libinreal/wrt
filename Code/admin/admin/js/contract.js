@@ -55,6 +55,7 @@ var Contract = {
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("contList", "contract", params);
+		console.log(strJson);
 		that = this
 		$.post(this.url, strJson, function(obj){
 //			console.log(obj);
@@ -276,7 +277,12 @@ var Contract = {
 		var params = {"params":form_data};
 		var strJson = createJson("contIn", "contract", params);
 		$.post(this.url, strJson, function(obj){
-			redirectToUrl("demo_template.php?section=contract_manage&act=list");
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				redirectToUrl("demo_template.php?section=contract_manage&act=list");
+			}
 		}, "json");
 	},
 
