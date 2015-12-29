@@ -229,7 +229,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "user_id": 4 ,
 		 * 	                "bill_id": 0 ,//票据ID
 		 *           }
-		 * 返回数据格式如下 
+		 * 返回数据格式如下
 		 * {
 		 *	    "error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "生成单添加成功",

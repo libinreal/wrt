@@ -95,11 +95,11 @@ var createPaginate = function(url,total,limit,offset){
     str +=  '共'+total_page+'页，';
 	str +=	'当前第'+current_page+'页';
 	str +=	'<span id="page-link">';
-	if(total_page > 1 && limit > 1){
+	if(total_page > 1 && current_page > 1){
 		str +=	'&nbsp;<a href="javascript:void(0)" onclick="first()">第一页</a>&nbsp;|&nbsp;';
 		str +=	'&nbsp;<a href="javascript:void(0)" onclick="prev()">上一页</a>&nbsp;|&nbsp;';
 	}
-	if(total_page > 1 && limit < total_page){
+	if(total_page > 1 && current_page < total_page){
 		str +=	'&nbsp;<a href="javascript:void(0)" onclick="next()">下一页</a>&nbsp;|&nbsp;';
 		str +=	'&nbsp;<a href="javascript:void(0)" onclick="last()">最末页</a>&nbsp;';
 	}
@@ -197,4 +197,24 @@ var subString = function(str, len, hasDot)
 }
 var validateNumber = function(str){
     return /^\d+$/.test(str);
+}
+// value值改变监听
+$.event.special.valuechange = {
+  teardown: function (namespaces) {
+    $(this).unbind('.valuechange');
+  },
+  handler: function (e) {
+    $.event.special.valuechange.triggerChanged($(this));
+  },
+  add: function (obj) {
+    $(this).on('keyup.valuechange cut.valuechange paste.valuechange input.valuechange', obj.selector, $.event.special.valuechange.handler)
+  },
+  triggerChanged: function (element) {
+    var current = element[0].contentEditable === 'true' ? element.html() : element.val()
+      , previous = typeof element.data('previous') === 'undefined' ? element[0].defaultValue : element.data('previous')
+    if (current !== previous) {
+      element.trigger('valuechange', [element.data('previous')])
+      element.data('previous', current)
+    }
+  }
 }

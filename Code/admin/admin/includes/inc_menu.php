@@ -89,7 +89,7 @@ $modules['12_stats']['credit_analysis']             = 'credit_analysis.php?act=l
 $modules['12_stats']['sales_analysis']              = 'sales_analysis.php?act=list';
 
 //合同管理
-$modules['13_contract']['01_contract_add']          = 'contract_manage.php?act=contractEdit';
+$modules['13_contract']['01_contract_insert']          = 'contract_manage.php?act=contractInsert';
 $modules['13_contract']['02_contract_list']         = 'contract_manage.php?act=contractList';
 $modules['13_contract']['05_contract_supplier_add']     = 'contract_manage.php?act=supplierSet';
 $modules['13_contract']['06_contract_supplier_list']    = 'contract_manage.php?act=supplierList';

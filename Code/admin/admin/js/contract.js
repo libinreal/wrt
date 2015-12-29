@@ -22,13 +22,13 @@ var Contract = {
 		'region_name'
 	],
 	limit: 0,
-	offset: 8,
+	offset: 3,
 	total_page: 0,
 	url: "contract_manage.php",
 
 	getList: function(search){
 		if(typeof(search) === "undefined"){
-			serach = false;
+			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}else{
 			var condition = {};
 			var search_type = $('#contract_search_form select[name=search_type]').val();
@@ -48,11 +48,10 @@ var Contract = {
 			if(end_time != ''){
 				condition.end_time = end_time;
 			}
-		}
-		if(search != false){
+			if(search == "search"){
+				this.limit = 0;
+			}
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
-		}else{
-			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("contList", "contract", params);
 		that = this
@@ -276,7 +275,12 @@ var Contract = {
 		var params = {"params":form_data};
 		var strJson = createJson("contIn", "contract", params);
 		$.post(this.url, strJson, function(obj){
-			redirectToUrl("demo_template.php?section=contract_manage&act=list");
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				redirectToUrl("demo_template.php?section=contract_manage&act=list");
+			}
 		}, "json");
 	},
 
@@ -300,13 +304,13 @@ var Contract = {
 			if(region_id != ''){
 				condition["region_id"] = region_id;
 			}
-		}
-		if(search != false){
+			if(search == "search"){
+				this.limit = 0;
+			}
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
-		}else{
-			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("contSupsList", "contract_suppliers", params);
+		console.log(strJson);
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){

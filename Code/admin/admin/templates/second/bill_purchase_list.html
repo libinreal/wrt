@@ -69,7 +69,7 @@ $(document).ready(function(){
 });
 BillAmount.getList();
 function first(){
-	BillAmount.limit = 1;
+	BillAmount.limit = 0;
 	BillAmount.getList();
 }
 function next(){
@@ -81,7 +81,8 @@ function prev(){
 	BillAmount.getList();
 }
 function last(){
-	BillAmount.limit = BillAmount.total_page;
+	console.log(BillAmount.total_page);
+	BillAmount.limit = BillAmount.total_page - 1;
 	BillAmount.getList();
 }
 </script>

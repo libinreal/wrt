@@ -61,7 +61,7 @@ var BillRepay = {
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=bill_manage&act=generate_note&id="+value.bill_amount_log_id, "详情");
+								var edit = createLink("demo_template.php?section=bill_manage&act=generate_note&id="+value.bill_repay_log_id, "详情");
 								row += createTd(edit);
 								continue;
 							}

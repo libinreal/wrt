@@ -7,12 +7,13 @@
  */
 define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
+require_once('ManageModel.php');
 /**
  * 授信单列表
  */
 if ($_REQUEST['act'] == 'list') 
 {
-    $smarty->display('second/credit_list.htm');
+    $smarty->display('second/credit_list.html');
     exit;
 }
 /**
@@ -20,21 +21,19 @@ if ($_REQUEST['act'] == 'list')
  */
 elseif ($_REQUEST['act'] == 'detail') 
 {
-    $smarty->display('second/credit_detail.htm');
+    $smarty->display('second/credit_detail.html');
     exit;
 }
+
 /**
  * API Access
  */
 //Api 接口列表
 $ApiList = array(
-    'creditList', 
-    'creditInfo', 
+    'creditList',
+    'creditInfo',
     'creditRemark'
 );
-$json = jsonAction($ApiList);
-$credit = Credit::get_instance();
-$credit->run($json);
 
 /**
  * 授信管理API
@@ -46,29 +45,14 @@ $credit->run($json);
  * @return json
  * ----------------------
  */
-class Credit 
+class Credit extends ManageModel 
 {
-    private $table;
-    private $db;
-    private $sql;
-    private static $_instance;
-    private function __construct() {}
-    private function __clone() {}
+    protected static $_instance;
     
+    protected $table;
+    protected $db;
+    protected $sql;
     
-    public static function get_instance() 
-    {
-        if (!self::$_instance) self::$_instance = new self();
-        return self::$_instance;
-    }
-    
-    public function run($json) 
-    {
-        $command = $json['command'];
-        $entity = $json['entity'];
-        $parameters = $json['parameters'];
-        self::$command($entity, $parameters);
-    }
     
     /**
      * 银行授信列表
@@ -91,11 +75,12 @@ class Credit
         if (is_numeric($parameters['limit']) && is_numeric($parameters['offset'])) {
             $page = intval($parameters['limit']);
             $offset = intval($parameters['offset']);
-            $limit = 'limit '.$page.','.$offset;
+            $limit = 'limit '.($page * $offset).','.$offset;
         }
     
         self::selectSql(array(
             'fields' => array(
+                'credit_id', 
                 'credit_num',
                 'customer_num',
                 'customer_name',
@@ -204,42 +189,8 @@ class Credit
         $config = require_once('bankCredit_config.php');
         return $config;
     }
-    
-    
-    /**
-     * @param array $params
-     */
-    private function selectSql($params) 
-    {
-        if ( is_array($params['fields']) ) {
-            $params['fields'] = implode(',', $params['fields']);
-        }
-        if ( !empty(trim($params['as'])) ) {
-            $params['as'] = ' AS '.$params['as'];
-        }
-        if ( !empty(trim($params['where'])) ) {
-            $params['where'] = ' WHERE '.$params['where'];
-        }
-        $this->sql = 'SELECT '.$params['fields'].' FROM '.$this->table.' '.$params['as']
-        .' '.$params['join'].' '.$params['where'].' '.$params['extend'];
-        return ;
-    }
-    
-    
-    /**
-     * @param string $entity
-     * @param string $tableName
-     */
-    private function init($entity, $tableName) 
-    {
-        if ( $entity != $tableName ) {
-            failed_json('数据表`'.$entity.'`不存在');
-        }
-        $this->table = $GLOBALS['ecs']->table($entity);
-        $this->db = $GLOBALS['db'];
-        return ;
-    }
 }
-function failed_json($msg) {
-    make_json_response('', -1, $msg);
-}
+
+$json = jsonAction($ApiList);
+$credit = Credit::getIns();
+$credit->run($json);

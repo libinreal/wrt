@@ -17,7 +17,7 @@ var Bill = {
 	total_page: 0,
 	url: "BillModel.php",
 	entity: "bill",
-	bill_type: {},
+	bill_type: "",
 
 	getList: function(search){
 		if(typeof(search) === "undefined"){
@@ -49,7 +49,6 @@ var Bill = {
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("page", this.entity, params);
-		console.log(getBillType()));
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -59,7 +58,8 @@ var Bill = {
 				that.total_page = Math.ceil(obj.content.total/that.offset);
 				if(obj.content.total == 0){
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#contract_list>tbody").html(row);
+					$("#bill_list>tbody").html(row);
+					$("#paginate").html('');
 				}else{
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 					var row = "";
@@ -68,7 +68,7 @@ var Bill = {
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=bill_manage&act=info&id="+value.bill_id, "编辑");
-								edit += createLink("demo_template.php?section=bill_manage&act=generate&id="+value.bill_id, "生成票据采购额");
+								edit += createLink("demo_template.php?section=bill_manage&act=generate_note&bill_id="+value.bill_id, "生成票据采购额");
 								edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "还票");
 								row += createTd(edit);
 								continue;
@@ -108,18 +108,18 @@ var Bill = {
 						$.each(value, function(k, v){
 							row += appendOption(v.user_id, v.user_name)
 						});
-						$("select[name=pay_user_id]").html(row);						
+						$("select[name=pay_user_id]").append(row);
 					}else if(key == "receivers"){
 						$.each(value, function(k, v){
 							row += appendOption(v.user_id, v.user_name)
 						});
-						$("select[name=receive_user_id]").html(row);						
+						$("select[name=receive_user_id]").append(row);						
 					}else{
 						if($("select[name="+key+"]").length){
 							$.each(value, function(k, v){
 								row += appendOption(k, v)
 							});
-							$("select[name="+key+"]").html(row);
+							$("select[name="+key+"]").append(row);
 						}
 					}
 				});
@@ -141,9 +141,14 @@ var Bill = {
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}
 				});
+				// 调用收付款列表
+				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id);
+				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
+				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id);
+				TypeMode.getAdminUserBanksAccounts("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.receive_bank_id);
 			}
 			$('#message_area').html('');
-		},"json");		
+		},"json");
 	},
 
 	putUpdate: function(){

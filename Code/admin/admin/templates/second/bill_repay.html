@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>{$lang.cp_home} - 采购额度生成单（现金）</title>
+		<title>{$lang.cp_home} - 票据偿还单</title>
 		<meta name="robots" content="noindex, nofollow">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link href="styles/general.css" rel="stylesheet" type="text/css" />
@@ -11,31 +11,37 @@
 	<body>
 		<h1>
 		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
-		<span id="search_id" class="action-span1">- 采购额度生成单（现金）</span>
+		<span id="search_id" class="action-span1">- 票据偿还单</span>
 		<div style="clear:both"></div>
 		</h1>
 		<div class="table_info">
 			<table>
+				<thead>
+					<tr>
+						<th colspan="6"> 票据偿还单 </th>
+					</tr>
+				</thead>
 				<tbody>
 					<tr>
-						<td>票据ID：<span id="">001</span></td>
-						<td>票据编号：<span id="">22222222-333</span></td>
-						<td>客户：<span id="">22222222-333</span></td>
+						<td class="title">票据ID：</td><td id=""></td>
+						<td class="title">票据编号：</td><td id=""></td>
+						<td class="title">客户：</td><td id=""></td>
 					</tr>
 					<tr>
-						<td>签发日：<span id="">2015/10/20</span></td>
-						<td colspan="2">到期日：<span id="">2016/10/20</span></td>
+						<td class="title">签发日：</td><td id=""></td>
+						<td class="title">到期日：</td><td id="" colspan="3"></td>
 					</tr>
 					<tr>
-						<td>偿还类型：<select name="">
-						<option>aaaaa</option>
-						<option>bbbbb</option>
-						<option>ccccc</option>
-						</select></td>
-						<td colspan="2">偿还金额：<input type="text" value=""></td>
+						<td class="title">偿还类型：</td>
+						<td>
+							<select name=""></select>
+						</td>
+						<td class="title">偿还金额：</td>
+						<td colspan="3"><input type="text" value=""></td>
 					</tr>
 					<tr>
-						<td colspan="3">备注: <textarea></textarea></td>
+						<td class="title">备注: </td>
+						<td colspan="5"><textarea cols="40"></textarea></td>
 					</tr>
 				</tbody>
 			</table>
