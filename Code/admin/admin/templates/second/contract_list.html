@@ -100,7 +100,7 @@ $(document).ready(function(){
     });
 });
 function first(){
-	Contract.limit = 1;
+	Contract.limit = 0;
 	Contract.getList();
 }
 function next(){
@@ -112,7 +112,7 @@ function prev(){
 	Contract.getList();
 }
 function last(){
-	Contract.limit = Contract.total_page;
+	Contract.limit = Contract.total_page - 1;
 	Contract.getList();	
 }
 </script>

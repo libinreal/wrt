@@ -49,7 +49,7 @@
 <script type="text/javascript">
 Credit.getList();
 function first(){
-	Credit.limit = 1;
+	Credit.limit = 0;
 	Credit.getList();
 }
 function next(){
@@ -61,7 +61,7 @@ function prev(){
 	Credit.getList();
 }
 function last(){
-	Credit.limit = Credit.total_page;
+	Credit.limit = Credit.total_page - 1;
 	Credit.getList();	
 }
 </script>

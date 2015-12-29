@@ -95,11 +95,11 @@ var createPaginate = function(url,total,limit,offset){
     str +=  '共'+total_page+'页，';
 	str +=	'当前第'+current_page+'页';
 	str +=	'<span id="page-link">';
-	if(total_page > 1 && limit > 1){
+	if(total_page > 1 && current_page > 1){
 		str +=	'&nbsp;<a href="javascript:void(0)" onclick="first()">第一页</a>&nbsp;|&nbsp;';
 		str +=	'&nbsp;<a href="javascript:void(0)" onclick="prev()">上一页</a>&nbsp;|&nbsp;';
 	}
-	if(total_page > 1 && limit < total_page){
+	if(total_page > 1 && current_page < total_page){
 		str +=	'&nbsp;<a href="javascript:void(0)" onclick="next()">下一页</a>&nbsp;|&nbsp;';
 		str +=	'&nbsp;<a href="javascript:void(0)" onclick="last()">最末页</a>&nbsp;';
 	}
