@@ -84,9 +84,17 @@ var BillAmount = {
 		if($("#bill_purchase_form").valid() === false){
 			return false;
 		}
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}else{
+
+		}
 		var form_data = $("#bill_purchase_form").FormtoJson();
 		strJson = createJson("create", this.entity, form_data);
 		that = this
+		console.log(strJson);
+		return false;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -104,6 +112,7 @@ var BillAmount = {
 			return false;
 		}
 		$("#bill_id").text(id);
+		$("input[name=bill_id]").val(id);
 		var params = {"bill_id":id};
 		strJson = createJson("addInit", this.entity, params);
 		$.post(this.url, strJson, function(obj){

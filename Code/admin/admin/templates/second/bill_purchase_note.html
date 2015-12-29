@@ -46,14 +46,14 @@
 					</tr>
 				</tbody>
 			</table>
-			<input type="hidden" name="bill_id" value="getQueryStringByName('id')">
+			<input type="hidden" name="bill_id">
 			<input type="hidden" name="bill_num">
 			<input type="hidden" name="user_name">
 			<input type="hidden" name="bill_amount">
 			</form>
 			<div align="center">
 			<input type="button" class="button" value=" 返回 " onclick="history.back()"> 
-			<input type="button" class="button" value=" 保存 "></div>
+			<input type="button" class="button" value=" 保存 " onclick="BillAmount.getCreateAction()"></div>
 		</div>
 		<!-- 底部 -->
 		<div id="footer">
