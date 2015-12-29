@@ -125,8 +125,7 @@ class Contract extends ManageModel
             'fields' => array(
                 'bank_id',
                 'bank_name'
-            ), 
-            
+            )
         ));
         $res = $this->db->getAll($this->sql);
         make_json_result($res);
@@ -145,9 +144,11 @@ class Contract extends ManageModel
     {
         self::init($entity, 'users');
         self::selectSql(array(
-            'fields' => array( 'user_id', 'companyName' ), 
-            'where'  => ' alias=0 ', 
-            
+            'fields' => array(
+                'user_id', 
+                'companyName' 
+            ), 
+            'where'  => ' alias=0 '
         ));
         $res = $this->db->getAll($this->sql);
         make_json_result($res);
@@ -171,7 +172,7 @@ class Contract extends ManageModel
         $contractId = $parameters['contract_id'];
         if ( !$contractId ) failed_json('没有传参`contract_id`');
         
-        //获取数据
+        //合同信息
         self::selectSql(array(
             'fields' => 'c.*,u.companyName', 
             'as'     => 'c', 
@@ -180,9 +181,7 @@ class Contract extends ManageModel
         ));
         $res = $this->db->getRow($this->sql);
         
-        $res['start_time'] = date('Y-m-d H:i:d', $res['start_time']);
-        $res['end_time'] = date('Y-m-d H:i:d', $res['end_time']);
-        
+        //合同下的物料
         $this->table = 'contract_category';
         self::selectSql(array(
             'fields' => array(
@@ -197,6 +196,10 @@ class Contract extends ManageModel
         ));
         $cat = $this->db->getAll($this->sql);
         
+        //转化渲染数据格式
+        $res['start_time'] = date('Y-m-d H:i:d', $res['start_time']);
+        $res['end_time'] = date('Y-m-d H:i:d', $res['end_time']);
+        
         make_json_result(array('cat'=>$cat, 'data'=>$res));
     }
     
@@ -210,14 +213,14 @@ class Contract extends ManageModel
      *          "params" : {
      *              "where" : {
      *                  "like" : {
-     *                      "search_type" : "(string)", 
+     *                      "search_type"  : "(string)", 
      *                      "search_value" : "(string)"
      *                  }, 
      *                  "contract_status" : "(int)", 
-     *                  "start_time" : "2015-10-10(string)"
-     *                  "end_time" : "2015-12-12(string)"
+     *                  "start_time"      : "2015-10-10(string)"
+     *                  "end_time"        : "2015-12-12(string)"
      *              }, 
-     *              "limit" : "(int)", 
+     *              "limit"  : "(int)",  //第一页为0 
      *              "offset" : "(int)"
      *          }
      *      }
@@ -266,7 +269,7 @@ class Contract extends ManageModel
         if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
             $page = intval($params['limit']);
             $offset = intval($params['offset']);
-            $limit = 'limit '.$page.','.$offset;
+            $limit = 'limit '.($page * $offset).','.$offset;
         }
         
         self::selectSql(array(
@@ -292,6 +295,7 @@ class Contract extends ManageModel
             'where'  => $where, 
             'extend' => ' ORDER BY contract_id ASC '.$limit
         ));
+        
         $res = $this->db->getAll($this->sql);
         foreach ($res as $k=>$v) {
             if ($v['contract_type'] == 1) {
@@ -700,7 +704,7 @@ class Contract extends ManageModel
         if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
             $page = intval($params['limit']);
             $offset = intval($params['offset']);
-            $limit = 'limit '.$page.','.$offset;
+            $limit = 'limit '.($page * $offset).','.$offset;
         }
         
         self::selectSql(array(

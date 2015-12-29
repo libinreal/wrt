@@ -13,7 +13,7 @@ require_once('ManageModel.php');
  */
 if ($_REQUEST['act'] == 'list') 
 {
-    $smarty->display('second/credit_list.htm');
+    $smarty->display('second/credit_list.html');
     exit;
 }
 /**
@@ -21,7 +21,7 @@ if ($_REQUEST['act'] == 'list')
  */
 elseif ($_REQUEST['act'] == 'detail') 
 {
-    $smarty->display('second/credit_detail.htm');
+    $smarty->display('second/credit_detail.html');
     exit;
 }
 
@@ -75,11 +75,12 @@ class Credit extends ManageModel
         if (is_numeric($parameters['limit']) && is_numeric($parameters['offset'])) {
             $page = intval($parameters['limit']);
             $offset = intval($parameters['offset']);
-            $limit = 'limit '.$page.','.$offset;
+            $limit = 'limit '.($page * $offset).','.$offset;
         }
     
         self::selectSql(array(
             'fields' => array(
+                'credit_id', 
                 'credit_num',
                 'customer_num',
                 'customer_name',
