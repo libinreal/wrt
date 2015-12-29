@@ -18,7 +18,9 @@ $admin_config = array(
 	
     'bill_repay_type' => array(0 => "现金", 1 => "支票"),//票据偿还类型
 	
-    'bill_adjust_type' => array(0 => "采购额度账户", 1 => "现金账户")//账户调整类型
+    'bill_adjust_type' => array(0 => "采购额度账户", 1 => "现金账户"),//账户调整类型
+
+    'order_status' => array(0 => '新增', 1 => '处理中', 2 => '已完成', 3 => '已撤单' ),//订单状态
 );
 
 //加载配置

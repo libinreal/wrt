@@ -67,7 +67,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 		/**
 		 * 分页显示
-		 * 接口地址：http://admin.zjgit.dev/admin/BillModel.php
+		 * 接口地址：http://admin.zj.dev/admin/BillModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
 	     *  {
@@ -189,7 +189,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 		/**
 		 * 创建
-		 * 接口地址：http://admin.zjgit.dev/admin/BillModel.php
+		 * 接口地址：http://admin.zj.dev/admin/BillModel.php
 		 * 传入的接口数据格式如下(字段以及对应的值 在parameters里)：* 
 		 * 请求方法：POST
 		 * {
@@ -305,7 +305,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 		/**
 		 * 更新
-		 * 接口地址：http://admin.zjgit.dev/admin/BillModel.php
+		 * 接口地址：http://admin.zj.dev/admin/BillModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(主键bill_id以及更新的字段 在parameters里)：
 		 *      {
@@ -417,7 +417,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 		/**
 		 * 删除
-		 * 接口地址：http://admin.zjgit.dev/admin/BillModel.php
+		 * 接口地址：http://admin.zj.dev/admin/BillModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(主键bill_id)：
 		 *      {
@@ -450,7 +450,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 		/**
 		 * 编辑初始化
-		 * 接口地址：http://admin.zjgit.dev/admin/BillModel.php
+		 * 接口地址：http://admin.zj.dev/admin/BillModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(主键bill_id)：
 		 *      {
@@ -554,7 +554,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 		/**
 		 * 编辑初始化
-		 * 接口地址：http://admin.zjgit.dev/admin/BillModel.php
+		 * 接口地址：http://admin.zj.dev/admin/BillModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(主键bill_id)：
 		 *      {
