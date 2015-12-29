@@ -53,7 +53,8 @@ var BillAmount = {
 				that.total_page = Math.ceil(obj.content.total/that.offset);
 				if(obj.content.total == 0){
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#contract_list>tbody").html(row);
+					$("#bill_amount_list>tbody").html(row);
+					$("#paginate").html('');
 				}else{
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 					var row = "";
@@ -61,7 +62,13 @@ var BillAmount = {
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=bill_manage&act=generate_note&id="+value.bill_amount_log_id, "详情");
+								if(value.amount_type == 0){
+									var edit = createLink("demo_template.php?section=bill_manage&act=generate_note&log_id="+value.bill_amount_log_id+"&type="+value.amount_type, "详情");
+								}else if(value.amount_type == 1 || value.amount_type == 2){
+									var edit = createLink("demo_template.php?section=bill_manage&act=generate&log_id="+value.bill_amount_log_id+"&type="+value.amount_type, "详情");
+								}else{
+									var edit = createTd(createWarn('无数据'));
+								}
 								row += createTd(edit);
 								continue;
 							}
@@ -84,17 +91,9 @@ var BillAmount = {
 		if($("#bill_purchase_form").valid() === false){
 			return false;
 		}
-		var id = getQueryStringByName('id');
-		if(id===""||!validateNumber(id)){
-			return false;
-		}else{
-
-		}
 		var form_data = $("#bill_purchase_form").FormtoJson();
 		strJson = createJson("create", this.entity, form_data);
 		that = this
-		console.log(strJson);
-		return false;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -107,14 +106,23 @@ var BillAmount = {
 
 	// 采购额度生成单（商票）初始化
 	getAddInitAction: function(){
-		var id = getQueryStringByName('id');
-		if(id===""||!validateNumber(id)){
-			return false;
+		// 判断是否返回详细
+		var log_id = getQueryStringByName('log_id');
+		if(log_id===""||!validateNumber(log_id)){
+			var bill_id = getQueryStringByName('bill_id');
+			if(bill_id===""||!validateNumber(bill_id)){
+				return false;
+			}
+			$("#bill_id").text(bill_id);
+			$("input[name=bill_id]").val(bill_id);
+			var params = {"bill_id":bill_id};
+			strJson = createJson("addInit", this.entity, params);
+		}else{
+			type = $("#amount_type").val();
+			var params = {"bill_amount_log_id":log_id, "type":type};
+			strJson = createJson("editInit", this.entity, params);
 		}
-		$("#bill_id").text(id);
-		$("input[name=bill_id]").val(id);
-		var params = {"bill_id":id};
-		strJson = createJson("addInit", this.entity, params);
+		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -130,7 +138,7 @@ var BillAmount = {
 				});
 				var bill_amount = parseFloat(obj.content.info.bill_amount);
 				var discount_rate = parseFloat($("#discount_rate").val());
-				$("#amount").val(bill_amount*discount_rate);
+				$("#amount").val(bill_amount*discount_rate/100);
 			}
 			$('#message_area').html('');
 		}, "json");

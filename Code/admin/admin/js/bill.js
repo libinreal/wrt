@@ -58,7 +58,8 @@ var Bill = {
 				that.total_page = Math.ceil(obj.content.total/that.offset);
 				if(obj.content.total == 0){
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#contract_list>tbody").html(row);
+					$("#bill_list>tbody").html(row);
+					$("#paginate").html('');
 				}else{
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 					var row = "";
@@ -67,7 +68,7 @@ var Bill = {
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=bill_manage&act=info&id="+value.bill_id, "编辑");
-								edit += createLink("demo_template.php?section=bill_manage&act=generate_note&id="+value.bill_id, "生成票据采购额");
+								edit += createLink("demo_template.php?section=bill_manage&act=generate_note&bill_id="+value.bill_id, "生成票据采购额");
 								edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "还票");
 								row += createTd(edit);
 								continue;

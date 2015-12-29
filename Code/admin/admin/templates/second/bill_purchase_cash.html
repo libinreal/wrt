@@ -28,7 +28,10 @@
 						<td class="title">来往单位：</td>
 						<td><select name="user_id" id="user_id" style="width:150px;" data-rule-required="true"></select></td>
 						<td class="title">单据类型：</td>
-						<td><select name="amount_type" id="amount_type" data-rule-required="true"></select></td>
+						<td><select name="amount_type" id="amount_type" data-rule-required="true">
+							<option value="1">现金</option>
+							<option value="2">承兑</option>
+						</select></td>
 					</tr>
 					<tr>
 						<td class="title">录入金额：</td>
@@ -54,8 +57,14 @@
 <script src="js/type-mode.js" type="text/javascript" ></script>
 <script src="js/bill-amount.js" type="text/javascript" ></script>
 <script type="text/javascript">
-TypeMode.getUsers("user_id");
-TypeMode.getBillType("amount_type");
+$(document).ready(function(){
+	var log_id = getQueryStringByName('log_id');
+	if(log_id != "" && validateNumber(log_id)){
+		BillAmount.getAddInitAction();
+	}else{
+		TypeMode.getUsers("user_id");
+	}
+});
 </script>
 	</body>
 </html>
