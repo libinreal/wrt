@@ -178,16 +178,7 @@
             </dd>
             {/foreach}
 
-            <dt>{$menu.label}</dt>
-            <dd>
-                {if $menu.children}
-                <ul>
-                    {foreach from=$menu.children item=child}
-                    <li key="{$k}" name="menu"><a href="{$child.action}" target="main-frame">{$child.label}</a></li>
-                    {/foreach}
-                </ul>
-                {/if}
-            </dd>
+            
             <dt>应收票据管理</dt>
             <dd>
                 <ul>
