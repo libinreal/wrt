@@ -33,7 +33,7 @@
 			<option value="0">全国</option>
 			</select>
 			&nbsp;
-			<input type="button" class="button" onclick="Contract.getContSupsList(true)" value="查询" />
+			<input type="button" class="button" onclick="Contract.getContSupsList('search')" value="查询" />
 			</form>
 		</div>
 		<div class="list-div" id="listDiv">
@@ -64,20 +64,20 @@
 	Contract.getUserList();
 	Contract.getRegionList();
 	function first(){
-		Contract.limit = 1;
-		Contract.getContSupsList(true);
+		Contract.limit = 0;
+		Contract.getContSupsList("paginate");
 	}
 	function next(){
 		Contract.limit = Contract.limit + 1;
-		Contract.getContSupsList(true);
+		Contract.getContSupsList("paginate");
 	}
 	function prev(){
 		Contract.limit = Contract.limit - 1;
-		Contract.getContSupsList(true);
+		Contract.getContSupsList("paginate");
 	}
 	function last(){
 		Contract.limit = Contract.total_page;
-		Contract.getContSupsList(true);
+		Contract.getContSupsList("paginate");
 	}
 </script>
 	</body>

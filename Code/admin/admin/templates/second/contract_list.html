@@ -46,7 +46,7 @@
 			<input type="text" name="end_time" id="end_time" placeholder="结束日期" readonly>
 			&nbsp;
 			&nbsp;
-			<input type="button" class="button" value="搜索" onclick="Contract.getList(true)">
+			<input type="button" class="button" value="搜索" onclick="Contract.getList('search')">
 		</div>
 		</form>
 		<div class="list-div" id="listDiv">
@@ -101,19 +101,19 @@ $(document).ready(function(){
 });
 function first(){
 	Contract.limit = 0;
-	Contract.getList(true);
+	Contract.getList('paginate');
 }
 function next(){
 	Contract.limit = Contract.limit + 1;
-	Contract.getList(true);	
+	Contract.getList('paginate');	
 }
 function prev(){
 	Contract.limit = Contract.limit - 1;
-	Contract.getList(true);
+	Contract.getList('paginate');
 }
 function last(){
 	Contract.limit = Contract.total_page - 1;
-	Contract.getList(true);	
+	Contract.getList('paginate');	
 }
 </script>
 </body>
