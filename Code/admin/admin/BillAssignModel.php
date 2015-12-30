@@ -124,7 +124,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			else//票据
 				$contract_sql = 'SELECT `cash_amount_history`, `cash_amount_valid`, `contract_id` FROM ' . $contract_table .
 				 				' WHERE `customer_id` = ' . $customer_id . ' ORDER BY `contract_id` ASC';
-			$resultContract = $GLOBALS['db']->qeury($contract_sql);
+			$resultContract = $GLOBALS['db']->getAll($contract_sql);
 
 			if( empty( $resultContract ) ){
 				$content = array();
