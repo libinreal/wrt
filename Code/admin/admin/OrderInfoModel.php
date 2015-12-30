@@ -83,6 +83,27 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content = $this->content;
 			$params = $content['parameters']['params'];
 
+			if( !isset( $params['order_id'] ) ){
+				make_json_response('', '-1', '订单ID错误');
+			}
+			$order_id = intval( $params['order_id'] );
+
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$user_table = $GLOBALS['ecs']->table('users');
+			$contract_table = $GLOBALS['ecs']->table('contract');
+
+
+			//订单详情
+			$order_sql = 'SELECT odr.`order_status`, odr.`order_sn`, odr.`user_id`, usr.`user_name`, usr.`companyName`, odr.`add_time`, odr.`contract_sn`, crt.`contract_name` FROM ' .
+						 $order_info_table . ' AS odr LEFT JOIN ' . $user_table . '  AS usr ON odr.`user_id` = usr.`user_id` LEFT JOIN ' . $contract_table . ' AS crt ON odr.`contract_sn` = crt.`contract_num` ' . 
+						 ' WHERE odr.`order_id` = ' . $order_id;
+			$order_info = $GLOBALS['db']->getOne( $order_sql );
+
+			//物料详情
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$order_goods_sql = 'SELECT * FROM ' . $order_goods_table . ' WHERE `order_id` = ' . $order_id;
+			$order_goods_arr = $GLOBALS['db']->getAll($order_goods_sql);
+							
 
 		}
 		
