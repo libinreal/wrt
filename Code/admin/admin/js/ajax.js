@@ -80,6 +80,26 @@ $.fn.FormtoJson = function(options) {
 $.fn.slideFadeToggle = function(easing, callback) {
 	return this.animate({ opacity: 'toggle', height: 'toggle' }, 'fast', easing, callback);
 };
+// value值改变监听
+$.event.special.valuechange = {
+  teardown: function (namespaces) {
+    $(this).unbind('.valuechange');
+  },
+  handler: function (e) {
+    $.event.special.valuechange.triggerChanged($(this));
+  },
+  add: function (obj) {
+    $(this).on('keyup.valuechange cut.valuechange paste.valuechange input.valuechange', obj.selector, $.event.special.valuechange.handler)
+  },
+  triggerChanged: function (element) {
+    var current = element[0].contentEditable === 'true' ? element.html() : element.val()
+      , previous = typeof element.data('previous') === 'undefined' ? element[0].defaultValue : element.data('previous')
+    if (current !== previous) {
+      element.trigger('valuechange', [element.data('previous')])
+      element.data('previous', current)
+    }
+  }
+}
 var getQueryStringByName = function(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -197,24 +217,4 @@ var subString = function(str, len, hasDot)
 }
 var validateNumber = function(str){
     return /^\d+$/.test(str);
-}
-// value值改变监听
-$.event.special.valuechange = {
-  teardown: function (namespaces) {
-    $(this).unbind('.valuechange');
-  },
-  handler: function (e) {
-    $.event.special.valuechange.triggerChanged($(this));
-  },
-  add: function (obj) {
-    $(this).on('keyup.valuechange cut.valuechange paste.valuechange input.valuechange', obj.selector, $.event.special.valuechange.handler)
-  },
-  triggerChanged: function (element) {
-    var current = element[0].contentEditable === 'true' ? element.html() : element.val()
-      , previous = typeof element.data('previous') === 'undefined' ? element[0].defaultValue : element.data('previous')
-    if (current !== previous) {
-      element.trigger('valuechange', [element.data('previous')])
-      element.data('previous', current)
-    }
-  }
 }

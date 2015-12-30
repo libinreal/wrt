@@ -14,7 +14,9 @@
 		<span id="search_id" class="action-span1">- 票据偿还单</span>
 		<div style="clear:both"></div>
 		</h1>
+		<div id="message_area"></div>
 		<div class="table_info">
+			<form id="bill_repay_form">
 			<table>
 				<thead>
 					<tr>
@@ -23,13 +25,13 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td class="title">票据ID：</td><td id=""></td>
-						<td class="title">票据编号：</td><td id=""></td>
-						<td class="title">客户：</td><td id=""></td>
+						<td class="title">票据ID：</td><td id="bill_id"></td>
+						<td class="title">票据编号：</td><td id="bill_num"></td>
+						<td class="title">客户：</td><td id="user_name"></td>
 					</tr>
 					<tr>
-						<td class="title">签发日：</td><td id=""></td>
-						<td class="title">到期日：</td><td id="" colspan="3"></td>
+						<td class="title">签发日：</td><td id="issuing_date"></td>
+						<td class="title">到期日：</td><td id="due_date" colspan="3"></td>
 					</tr>
 					<tr>
 						<td class="title">偿还类型：</td>
@@ -37,19 +39,30 @@
 							<select name=""></select>
 						</td>
 						<td class="title">偿还金额：</td>
-						<td colspan="3"><input type="text" value=""></td>
+						<td colspan="3"><input type="text" name="repay_amount" data-rule-required="true" data-rule-number="true"></td>
 					</tr>
 					<tr>
 						<td class="title">备注: </td>
-						<td colspan="5"><textarea cols="40"></textarea></td>
+						<td colspan="5"><textarea cols="40" name="remark"></textarea></td>
 					</tr>
 				</tbody>
 			</table>
-			<div align="center"><input name="query" type="submit" class="button" value=" 确定 "> <input name="query" type="submit" class="button" value=" 取消 "></div>
+			<input type="hidden" name="bill_id" />
+			<input type="hidden" name="user_id" />
+			</form>
+			<div align="center"><input name="button" type="button" class="button" onclick="history.back()" value=" 返回 "> <input type="button" class="button" value=" 确定 " onclick="BillRepay.getCreateAction()"></div>
 		</div>
 		<!-- 底部 -->
 		<div id="footer">
 			{$lang.copyright}
 		</div>
+
+<script src="js/jquery.validate.js" type="text/javascript" ></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/type-mode.js" type="text/javascript" ></script>
+<script src="js/bill-repay.js" type="text/javascript" ></script>
+<script type="text/javascript">
+BillRepay.getAddInit();
+</script>
 	</body>
 </html>

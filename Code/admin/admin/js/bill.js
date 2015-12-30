@@ -88,6 +88,36 @@ var Bill = {
 		}, "json");
 	},
 
+	getInitCreate: function(){
+		// 票据类型
+		TypeMode.getBillType("bill_type");
+		TypeMode.getUsers("customer_id");
+		// 调用收付款列表
+		TypeMode.getUsers("pay_user_id");
+		TypeMode.getAdminUsers("receive_user_id");
+		TypeMode.getUserBanks("pay_bank_id", $("#pay_user_id").val());
+		TypeMode.getAdminUserBanks("receive_bank_id", $("#receive_user_id").val());
+		TypeMode.getUserBanksAccounts("pay_account", $("#pay_user_id").val(), $("#pay_bank_id").val());
+		TypeMode.getAdminUserBanksAccounts("receive_bank_id", $("#receive_user_id").val(), $("#receive_bank_id").val());
+	},
+
+	getCreate: function(){
+		if($("#bill_edit_form").valid() === false){
+			return false;
+		}
+		var form_data = $("#bill_edit_form").FormtoJson();
+		strJson = createJson("create", this.entity, form_data);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			console.log(obj);
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+			}else if(obj.error == 0){
+				$('#message_area').html(createTip(obj.message));
+			}
+		}, "json");		
+	},
+
 	getEdit: function(){
 		var id = getQueryStringByName('id');
 		if(id===""||!validateNumber(id)){
@@ -102,6 +132,7 @@ var Bill = {
 				return false;
 			}else{
 				// 初始化列表
+				TypeMode.getUsers("customer_id");
 				$.each(obj.content.init,function(key, value){
 					var row = "";
 					if(key == "payers"){
@@ -137,6 +168,7 @@ var Bill = {
 					if($("textarea[name="+key+"]").length){
 						$("textarea[name="+key+"]").text(value);
 					}
+
 					if($("select[name="+key+"]").length){
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}

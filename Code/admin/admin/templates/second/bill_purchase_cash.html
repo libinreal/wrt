@@ -45,7 +45,7 @@
 			</table>
 			<input type="hidden" name="bill_id" value="0">
 			</form>
-			<div align="center"><input type="button" class="button" value=" 添加 " onclick="BillAmount.getCreateAction()"></div>
+			<div align="center" id="operate_button"></div>
 		</div>
 		<!-- 底部 -->
 		<div id="footer">
@@ -63,6 +63,7 @@ $(document).ready(function(){
 		BillAmount.getAddInitAction();
 	}else{
 		TypeMode.getUsers("user_id");
+		$("#operate_button").html(createButton('BillAmount.getCreateAction()', '添加'));
 	}
 });
 </script>
