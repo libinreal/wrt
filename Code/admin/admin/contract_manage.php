@@ -125,8 +125,7 @@ class Contract extends ManageModel
             'fields' => array(
                 'bank_id',
                 'bank_name'
-            ), 
-            
+            )
         ));
         $res = $this->db->getAll($this->sql);
         make_json_result($res);
@@ -228,38 +227,41 @@ class Contract extends ManageModel
         self::init($entity, 'contract');
         
         $params = $parameters['params'];
+        $params_where = $params['where'];
+        
         //where
         $where = '';
-        $params_where = $params['where'];
         
         //搜索类型
         $search_type = $params_where['like']['search_type'];
         $search_value = $params_where['like']['search_value'];
         if ( $search_type && $search_value ) {
-            if ($search_type == 'companyName') {
-                $where .= 'u.';
-            } else {
-                $where .= 'c.';
-            }
+            $where .= ($search_type == 'companyName') ? 'u.' : 'c.';
             $where .= $search_type.' LIKE "%'.$search_value.'%"';
         }
         
         //合同状态
-        if ( $params_where['contract_status'] != '' &&  $params_where['contract_status'] != 2) {
-            if (!empty(trim($where))) $where .= ' and ';
-            $where .= 'c.contract_status='.$params_where['contract_status'].' and FROM_UNIXTIME(c.end_time, "%Y-%m-%d")>="'.date('Y-m-d').'"';
-        } elseif ($params_where['contract_status'] == 2) {
-            if (!empty(trim($where))) $where .= ' and ';
-            $where .= 'FROM_UNIXTIME(c.end_time, "%Y-%m-%d")<="'.date('Y-m-d').'"';
+        $contStauts = $params_where['contract_status'];
+        if (is_numeric($contStauts)) {
+            if ($contStauts == 0 || $contStauts == 1) {
+                if (!empty(trim($where))) $where .= ' and ';
+                $where .= 'c.contract_status='.$contStauts.' and FROM_UNIXTIME(c.end_time, "%Y-%m-%d")>"'.date('Y-m-d').'"';
+            } elseif ($contStauts == 2) {
+                if (!empty(trim($where))) $where .= ' and ';
+                $where .= 'FROM_UNIXTIME(c.end_time, "%Y-%m-%d")<="'.date('Y-m-d').'"';
+            }
         }
+        
         //日期
-        if ( $params_where['start_time'] ) {
+        $sTime = $params_where['start_time'];
+        if ( $sTime ) {
             if (!empty(trim($where))) $where .= ' and ';
-            $where .= 'FROM_UNIXTIME(c.start_time, "%Y-%m-%d")>="'.$params_where['start_time'].'"';
+            $where .= 'FROM_UNIXTIME(c.start_time, "%Y-%m-%d")>="'.$sTime.'"';
         }
-        if ( $params_where['end_time'] ) {
+        $eTime = $params_where['end_time'];
+        if ( $eTime ) {
             if (!empty(trim($where))) $where .= ' and ';
-            $where .= 'FROM_UNIXTIME(c.end_time, "%Y-%m-%d")<="'.$params_where['end_time'].'"';
+            $where .= 'FROM_UNIXTIME(c.end_time, "%Y-%m-%d")<="'.$eTime.'"';
         }
         
         //page
@@ -290,7 +292,7 @@ class Contract extends ManageModel
             'as'     => 'c',
             'join'   => 'LEFT JOIN users AS u on c.customer_id=u.user_id LEFT JOIN suppliers as s on c.customer_id=s.suppliers_id', 
             'where'  => $where, 
-            'extend' => ' ORDER BY contract_id ASC '.$limit
+            'extend' => 'ORDER BY contract_id ASC '.$limit
         ));
         
         $res = $this->db->getAll($this->sql);
@@ -302,7 +304,7 @@ class Contract extends ManageModel
                 $res[$k]['companyName'] = $v['suppliers_name'];
             }
             unset($res[$k]['suppliers_name']);
-            if ($v['end_time'] < time()) {
+            if ($v['end_time'] <= time()) {
                 $res[$k]['contract_status'] = '过期';
             } else {
                 if ($v['contract_status'] == 0) {
