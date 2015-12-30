@@ -162,7 +162,7 @@
 #u8 {
   position:absolute;
   left:744px;
-  top:41px;
+  top:38px;
   width:113px;
   height:19px;
   font-family:'Arial Normal', 'Arial';
@@ -187,7 +187,7 @@
 #u10 {
   position:absolute;
   left:50px;
-  top:41px;
+  top:38px;
   width:81px;
   height:19px;
   font-family:'Arial Normal', 'Arial';
@@ -211,16 +211,16 @@
 }
 #u12 {
   position:absolute;
-  left:147px;
-  top:40px;
-  width:73px;
+  left:131px;
+  top:36px;
+  width:109px;
   height:22px;
 }
 #u12_input {
   position:absolute;
   left:0px;
   top:0px;
-  width:73px;
+  width:109px;
   height:22px;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
@@ -254,8 +254,8 @@
 }
 #u14 {
   position:absolute;
-  left:368px;
-  top:40px;
+  left:450px;
+  top:38px;
   width:97px;
   height:19px;
   font-family:'Arial Normal', 'Arial';
@@ -279,8 +279,8 @@
 }
 #u16 {
   position:absolute;
-  left:458px;
-  top:40px;
+  left:548px;
+  top:36px;
   width:70px;
   height:22px;
 }
@@ -302,8 +302,8 @@
 }
 #u17 {
   position:absolute;
-  left:235px;
-  top:40px;
+  left:285px;
+  top:38px;
   width:49px;
   height:19px;
   font-family:'Arial Normal', 'Arial';
@@ -327,8 +327,8 @@
 }
 #u19 {
   position:absolute;
-  left:284px;
-  top:40px;
+  left:334px;
+  top:36px;
   width:70px;
   height:22px;
 }
