@@ -78,5 +78,54 @@ var BillRepay = {
 			}
 			$('#message_area').html('');
 		}, "json");
+	},
+
+	getAddInit: function(){
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		$("#bill_id").text(id);
+		$("input[name=bill_id]").val(id);
+		var params = {"bill_id":id};
+		strJson = createJson("addInit", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$.each(obj.content.info, function(k, v){
+					if($("input[name="+k+"]").length > 0){
+						$("input[name="+k+"]").val(v);
+					}else{
+						$("#"+k).text(v);
+					}
+				});
+			}
+			$('#message_area').html('');
+		}, "json");
+	},
+
+	getCreateAction: function(){
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		if($("#bill_repay_form").valid() === false){
+			return false;
+		}
+		var form_data = $("#bill_repay_form").FormtoJson();
+		strJson = createJson("create", this.entity, form_data);
+		that = this
+		console.log(strJson);
+		$.post(this.url, strJson, function(obj){
+			console.log(obj);
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}
+			$('#message_area').html(createTip(obj.message));
+		}, "json");		
 	}
 }
