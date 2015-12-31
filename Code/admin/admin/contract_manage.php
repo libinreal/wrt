@@ -900,9 +900,19 @@ class Contract extends ManageModel
         return $params;
     }
 }
-$json = jsonAction($ApiList);
-$cont = Contract::getIns();
-$cont->run($json);
+if ($_POST['command'] == 'uploadify') {
+    $cont = Contract::getIns();
+    $cont->run(array(
+        'command'=> $_POST['command'],
+        'entity' => $_POST['entity'],
+        'parameters' => $_POST['parameters']
+    ));
+} else {
+    $json = jsonAction($ApiList);
+    $cont = Contract::getIns();
+    $cont->run($json);
+}
+
 /* 
  * 合同测试信息
  * $var = array('contract_id'=>1, 'params'=> array(

@@ -43,7 +43,8 @@ class ManageModel
     
     /**
      * select sql
-     * @param array $params = array(
+     * @param array $params
+     * array(
      *      'fields' => array(), 
      *      'as'     => '', 
      *      'join'   => '', 
@@ -67,6 +68,8 @@ class ManageModel
                     .$params['where'].' '.$params['extend'];
         return ;
     }
+    
+    
 }
 
 function failed_json($msg) 

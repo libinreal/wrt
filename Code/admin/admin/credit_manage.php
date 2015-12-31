@@ -32,7 +32,8 @@ elseif ($_REQUEST['act'] == 'detail')
 $ApiList = array(
     'creditList',
     'creditInfo',
-    'creditRemark'
+    'creditRemark', 
+    'importCredit'
 );
 
 /**
@@ -52,6 +53,22 @@ class Credit extends ManageModel
     protected $table;
     protected $db;
     protected $sql;
+    
+    
+    /**
+     * 导入银行xml文件
+     * {
+     *      "command" : "importCredit", 
+     *      "entity"  : "bank_credit", 
+     *      "parameters" {}
+     * }
+     */
+    public function importCredit($entity, $parameters) 
+    {
+        if (empty($entity)) failed_json('没有传参`entity`');
+        
+    }
+    
     
     
     /**
@@ -190,7 +207,15 @@ class Credit extends ManageModel
         return $config;
     }
 }
-
-$json = jsonAction($ApiList);
-$credit = Credit::getIns();
-$credit->run($json);
+if ($_POST['command'] == 'importCredit') {
+    $credit = Credit::getIns();
+    $credit->run(array(
+        'command'=> $_POST['command'], 
+        'entity' => $_POST['entity'], 
+        'parameters' => $_POST['parameters']
+    ));
+} else {
+    $json = jsonAction($ApiList);
+    $credit = Credit::getIns();
+    $credit->run($json);
+}
