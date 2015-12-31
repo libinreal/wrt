@@ -40,8 +40,46 @@ var TypeMode = {
 		},"json");
 	},
 
+	getUserList: function(){
+		var order_arr = ["user_id","user_name","companyName","user_nickname","user_email","user_phone","operate"];
+		var strJson = createJson("users", "users", {});
+		that = this;
+		$.post(that.url, strJson, function(object){
+			if(object.error == -1){
+				$('#message_area').html(createError(object.message));
+				return false;
+			}else{
+				console.log(object);
+				$("#paginate").html(createPaginate(that.url, object.content.total, that.limit, that.offset));
+				var row = "";
+				$.each(object.content,function(key, value){
+					row += "<tr>";
+					for(var i=0;i<order_arr.length;i++){
+						if(order_arr[i] == "operate"){
+							var edit = createLink("demo_template.php?section=bill_manage&act=assign_note&id="+value.user_id, "分配商票采购额度");
+							edit += createLink("demo_template.php?section=bill_manage&act=assign_cash&id="+value.user_id, "分配现金采购额度");
+							edit += createLink("demo_template.php?section=bill_manage&act=adjust&id="+value.user_id, "额度调整");
+							row += createTd(edit);
+							continue;
+						}
+						if(value[order_arr[i]] != null){
+							row += createTd(subString(value[order_arr[i]],16,true));
+						}else{
+							row += createTd(createWarn('无数据'));
+						}
+					}
+					row += "</tr>";
+					$("#user_list>tbody").html(row);
+				});
+			}
+			$('#message_area').html('');
+		},"json");
+	},
+
 	getUserBanks: function(select_id, user_id){
 		var strJson = createJson("user_banks", "user_banks", {"user_id":user_id});
+		console.log(strJson);
+		that = this
 		$.post(that.url, strJson, function(object){
 			if(object.error == -1){
 				$('#message_area').html(createError(object.message));
@@ -79,16 +117,18 @@ var TypeMode = {
 		var strJson = createJson("admin_users", "admin_users", {});
 		that = this;
 		$.post(that.url, strJson, function(object){
+			console.log(object);
 			if(object.error == -1){
 				$('#message_area').html(createError(object.message));
 				return false;
 			}else{
 				var row = "";
 				$.each(object.content, function(k, v){
-					row += appendOption(k, v);
+					row += appendOption(v.user_id, v.user_name);
 				})
 				$('#'+select_id).html(row);
 			}
+			$('#message_area').html('');
 		},"json");
 	},
 
@@ -106,6 +146,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
+			$('#message_area').html('');
 		},"json");		
 	},
 
@@ -123,6 +164,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
+			$('#message_area').html('');
 		},"json");
 	}
 }
