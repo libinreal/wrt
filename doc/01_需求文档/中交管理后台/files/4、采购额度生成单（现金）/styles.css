@@ -3,7 +3,7 @@
   background-image:none;
   position:static;
   left:auto;
-  width:710px;
+  width:645px;
   margin-left:0;
   margin-right:0;
   text-align:left;
@@ -14,8 +14,8 @@
 }
 #u0 {
   position:absolute;
-  left:67px;
-  top:87px;
+  left:20px;
+  top:27px;
   width:66px;
   height:16px;
 }
@@ -35,8 +35,8 @@
 }
 #u2 {
   position:absolute;
-  left:237px;
-  top:91px;
+  left:233px;
+  top:27px;
   width:66px;
   height:16px;
 }
@@ -56,8 +56,8 @@
 }
 #u4 {
   position:absolute;
-  left:317px;
-  top:88px;
+  left:299px;
+  top:24px;
   width:100px;
   height:22px;
 }
@@ -79,8 +79,8 @@
 }
 #u5 {
   position:absolute;
-  left:67px;
-  top:142px;
+  left:454px;
+  top:27px;
   width:66px;
   height:16px;
 }
@@ -100,8 +100,8 @@
 }
 #u7 {
   position:absolute;
-  left:143px;
-  top:137px;
+  left:521px;
+  top:22px;
   width:77px;
   height:25px;
 }
@@ -121,8 +121,8 @@
 }
 #u8 {
   position:absolute;
-  left:67px;
-  top:181px;
+  left:46px;
+  top:64px;
   width:40px;
   height:16px;
 }
@@ -142,16 +142,16 @@
 }
 #u10 {
   position:absolute;
-  left:130px;
-  top:177px;
-  width:400px;
+  left:86px;
+  top:64px;
+  width:512px;
   height:100px;
 }
 #u10_input {
   position:absolute;
   left:0px;
   top:0px;
-  width:400px;
+  width:512px;
   height:100px;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
@@ -163,8 +163,8 @@
 }
 #u11 {
   position:absolute;
-  left:240px;
-  top:304px;
+  left:258px;
+  top:175px;
   width:100px;
   height:25px;
 }
@@ -184,57 +184,34 @@
 }
 #u12 {
   position:absolute;
-  left:80px;
-  top:14px;
-  width:170px;
-  height:16px;
-  font-size:14px;
+  left:20px;
+  top:240px;
+  width:625px;
+  height:108px;
   color:#000000;
 }
 #u12_img {
   position:absolute;
   left:0px;
   top:0px;
-  width:170px;
-  height:16px;
+  width:625px;
+  height:108px;
 }
 #u13 {
   position:absolute;
   left:0px;
   top:0px;
-  width:170px;
+  width:625px;
   word-wrap:break-word;
 }
 #u14 {
   position:absolute;
-  left:85px;
-  top:339px;
-  width:625px;
-  height:108px;
-  color:#000000;
-}
-#u14_img {
-  position:absolute;
-  left:0px;
-  top:0px;
-  width:625px;
-  height:108px;
-}
-#u15 {
-  position:absolute;
-  left:0px;
-  top:0px;
-  width:625px;
-  word-wrap:break-word;
-}
-#u16 {
-  position:absolute;
-  left:130px;
-  top:87px;
+  left:87px;
+  top:24px;
   width:97px;
   height:22px;
 }
-#u16_input {
+#u14_input {
   position:absolute;
   left:0px;
   top:0px;
@@ -247,6 +224,6 @@
   text-decoration:none;
   color:#000000;
 }
-#u16_input:disabled {
+#u14_input:disabled {
   color:grayText;
 }
