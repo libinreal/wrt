@@ -71,6 +71,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 		/**
 		 * 分页显示
+		 * 接口名称: 采购额度分配单
 		 * 接口地址：http://admin.zj.dev/admin/BillAssignModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(具体参数在parameters下的params， "limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
@@ -93,8 +94,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "message": "额度分配单列表查询成功",
 		 *	    "content":{
 		 *	    	"info":{
-		 *	    		"user_name":"xxxx", //客户名
-		 *	    		"amount_available":10000//可分配额度
+		 *	    		"customer_id":100, //客户号
+		 *	    		"user_name":"xxxx", //客户名称
+		 *	    		"amount_valid":10000,//可分配额度
+		 *	    		"amount_history":10000 //历史总采购额度
 		 *	    	},
 		 *	    	"data":[
 		 *	        {
@@ -119,53 +122,44 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( empty( $customer_id ) )
 				make_json_response('', '-1', '客户id错误');
 
+			if( isset( $params["where"] ) && isset( $params["where"]['type'] ) )
+				$type = intval( $params["where"]['type'] );
+
 			$contract_table = $GLOBALS['ecs']->table('contract');
 
-			if( $type == 0 )//现金
+			$where_str = ' WHERE `customer_id` = ' . $customer_id;
+			if( $type == 0 )//票据
 				$contract_sql = 'SELECT `bill_amount_history`, `bill_amount_valid`, `contract_id` FROM ' . $contract_table .
-				 				' WHERE `customer_id` = ' . $customer_id . ' ORDER BY `contract_id` ASC';
-			else//票据
+				 				$where_str . ' ORDER BY `contract_id` ASC ';
+			else//现金
 				$contract_sql = 'SELECT `cash_amount_history`, `cash_amount_valid`, `contract_id` FROM ' . $contract_table .
-				 				' WHERE `customer_id` = ' . $customer_id . ' ORDER BY `contract_id` ASC';
+				 				$where_str . ' ORDER BY `contract_id` ASC ';
+			$contract_sql .= ' LIMIT ' . $params['limit'] . ',' . $params['offset'];				 				
 			$resultContract = $GLOBALS['db']->getAll($contract_sql);
 
-			if( empty( $resultContract ) ){
-				$content = array();
-				$content['data'] = array();
-				$content['total'] = 0;
-				make_json_response($content, '0', '客户分配单查询失败');
-			}
-
-			$contract_id_arr = array();
-			foreach($resultContract as $c)
-			{
-				$contract_id_arr[] = $c['contract_id'];
-			}
-			$contract_ids = implode(',', $contract_id_arr);
-
-			$bill_assign_table = $GLOBALS["ecs"]->table("bill_assign_log");
-			$sql = 'SELECT * FROM ' . $bill_assign_table;
-			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $bill_assign_table;
-
-			$where_str = ' WHERE `contract_id` in (' . $contract_ids . ')';
-
-			$sql = $sql . $where_str . " LIMIT " . $params['limit'].",".$params['offset'];
-			$bill_assigns = $GLOBALS['db']->getAll($sql);
-			
-			$total_sql = $total_sql . $where_str;
+			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $contract_table . $where_str;
 			$resultTotal = $GLOBALS['db']->getRow($total_sql);
 
-			if( $resultTotal )
-			{
-				$content = array();
-				$content['data'] = $bill_assigns ? $bill_assigns : array();
-				$content['total'] = $resultTotal['total'];
+			//用户历史额度和可用额度
+			$users_table = $GLOBALS['ecs']->table('users');
+			if( $type == 0 )//票据
+				$info_sql = 'SELECT `user_id` AS `customer_id`, `companyName` AS `user_name`, `bill_amount_history` AS `amount_history`, `bill_amount_valid` AS `amount_valid` ' .
+							' FROM ' . $users_table . ' WHERE `user_id` = ' . $customer_id;
+			else//现金
+				$info_sql = 'SELECT `user_id` AS `customer_id`, `companyName` AS `user_name`, `cash_amount_history` AS `amount_history`, `cash_amount_valid` AS `amount_valid` ' .
+							' FROM ' . $users_table . ' WHERE `user_id` = ' . $customer_id;
+			$info = $GLOBALS['db']->getRow( $info_sql );
 
-				make_json_response( $content, "0", "分配单查询成功");
-			}
-			else
-			{
-				make_json_response("", "-1", "分配单查询失败");
+			if( $resultTotal ){
+				$content = array();
+
+				$content['info'] = $info;
+				$content['data'] = empty( $resultContract ) ? array() : $resultContract;
+				$content['total'] = $resultTotal['total'];
+				
+				make_json_response($content, '0', '客户额度分配单查询成功');
+			}else{
+				make_json_response('', '-1', '客户额度分配单查询异常');
 			}
 		}
 		
