@@ -204,7 +204,8 @@ var Contract = {
 			return false;
 		}
 		var params = {"contract_id": id, "params":{}};
-		var strJson = createJson("uploadify", "attachment_file", params);
+		var strJson = createJson("uploadify", "attachment_file", params, "object");
+		console.log(strJson);
         $.ajaxFileUpload({
             url:this.url,
             fileElementId:'attachment_file',//file标签的id

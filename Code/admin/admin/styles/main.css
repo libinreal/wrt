@@ -1106,7 +1106,20 @@ em, cite, th {
 }
 .list-note table td{
     border-bottom: 1px solid #ccc;
-    text-align: center;
+    text-align: right;
+    position: relative;
+}
+.list-note td.title{
+    text-align: right;
+    font-weight: bold;
+    color: #666;
+}
+.list-note td label.error{
+    position: absolute;
+    left: 0;
+    top: -10px;
+    background-color: #fff;
+    font-size: 10px;
 }
 
 /** center **/

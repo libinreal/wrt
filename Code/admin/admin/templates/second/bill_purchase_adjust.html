@@ -16,6 +16,7 @@
 		</h1>
 		<div id="message_area"></div>
 		<div class="table_info">
+			<form id="adjust_form">
 			<table>
 				<thead>
 					<tr>
@@ -25,39 +26,31 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td>合同编号：</td><td><select name="from_contract_id">
-							<option value="4012015112701045">4012015112701045</option>
-							<option value="4012015112813163">4012015112813163</option>
-						</select></td>
-						<td>合同编号：</td><td><select name="to_contract_id">
-							<option value="4012015112701045">4012015112701045</option>
-							<option value="4012015112813163">4012015112813163</option>
-						</select></td>
+						<td>合同编号：</td>
+						<td><select name="from_contract_id" onchange="BillAjust.getAddInitAction()"></select></td>
+						<td>合同编号：</td>
+						<td><select name="to_contract_id" onchange="BillAjust.getAddInitAction()"></select></td>
 					</tr>
 					<tr>
-						<td>账户类型：</td><td><select name="type">
-							<option selected="" value="采购额度账户">采购额度账户</option>
-							<option value="现金账户">现金账户</option>
-						</select></td>
-						<td>账户类型：</td><td><select name="type" disabled="disabled">
-							<option selected="" value="采购额度账户">采购额度账户</option>
-							<option value="现金账户">现金账户</option>
-						</select></td>
+						<td>账户类型：</td>
+						<td><select name="type" id="from_type" onchange="BillAjust.getAddInitAction()"></select></td>
+						<td>账户类型：</td>
+						<td><select id="to_type" disabled="disabled"></select></td>
 					</tr>
 					<tr>
-						<td>可用余额：</td><td>￥0.00 元</td>
-						<td>可用余额：</td><td>￥0.00 元</td>
+						<td>可用余额：</td><td id="from_amount_valid"></td>
+						<td>可用余额：</td><td id="to_amount_valid"></td>
 					</tr>
 					<tr>
-						<td>调整额度：</td><td><input type="text" />元</td>
-						<td>调整额度：</td><td>￥100,000.00 元</td>
+						<td>调整额度：</td><td><input type="text" name="from_ajust_amount" id="from_ajust_amount" data-rule-required="true" data-rule-number="true" value="0" />元</td>
+						<td>调整额度：</td><td><input type="text" id="to_ajust_amount" readonly="readonly" /></td>
 					</tr>
 					<tr>
-						<td colspan="4">大写（RMB）：壹拾万元整</td>
+						<td colspan="4">大写（RMB）：<span id="captial_currency"></span></td>
 					</tr>
 					<tr>
-						<td>剩余额度：</td><td>￥0.00 元</td>
-						<td>剩余额度：</td><td>￥0.00 元</td>
+						<td>剩余额度：</td><td id="from_remain_amount"></td>
+						<td>剩余额度：</td><td id="to_remain_amount"></td>
 					</tr>
 					<tr>
 						<td>操作时间：</td><td><input type="text" readonly="readonly" value="test" ></td>
@@ -69,8 +62,8 @@
 					</tr>
 				</tbody>
 			</table>
-
-			<div align="center"><input name="query" type="submit" class="button" value=" 确认 "></div>
+			</form>
+			<div align="center"><input type="button" class="button" value=" 确认 " onclick="BillAjust.getCreateAction()"></div>
 		</div>
 		<!-- 底部 -->
 		<div id="footer">
@@ -83,6 +76,27 @@
 <script src="js/bill-ajust.js" type="text/javascript" ></script>
 <script type="text/javascript">
 BillAjust.getAddInitAction();
+$("#adjust_form").validate();
+$('#from_ajust_amount').on('valuechange', function (e, previous) {
+	if($('select[name=from_contract_id]').val() == $('select[name=to_contract_id]').val()){
+		$('#message_area').html(createError('合同编号重复'));
+		return false;
+	}
+	var from_amount_valid = parseFloat($("#from_amount_valid").text());
+	var from_ajust_amount = parseFloat($("#from_ajust_amount").val());
+	var to_amount_valid = parseFloat($("#to_amount_valid").text());
+	console.log(to_amount_valid + from_ajust_amount);
+	if(from_ajust_amount > from_amount_valid){
+		$('#message_area').html(createError('可用额度不足'));
+		return false;
+	}else{
+		$('#message_area').html(createError(''));
+		$('#to_ajust_amount').val(from_ajust_amount);
+		$('#from_remain_amount').text(from_amount_valid - from_ajust_amount);
+		$('#to_remain_amount').text(to_amount_valid + from_ajust_amount);
+		piliskys('from_ajust_amount','captial_currency');
+	}
+});
 </script>
 	</body>
 </html>
