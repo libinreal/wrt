@@ -44,6 +44,7 @@
 				</tbody>
 			</table>
 			<input type="hidden" name="bill_id" value="0">
+			<input type="hidden" name="user_name">
 			</form>
 			<div align="center" id="operate_button"></div>
 		</div>
@@ -62,8 +63,7 @@ $(document).ready(function(){
 	if(log_id != "" && validateNumber(log_id)){
 		BillAmount.getAddInitAction();
 	}else{
-		TypeMode.getUsers("user_id");
-		$("#operate_button").html(createButton('BillAmount.getCreateAction()', '添加'));
+		BillAmount.getAddInitCashAction();
 	}
 });
 </script>

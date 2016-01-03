@@ -19,7 +19,6 @@ var BillAssign = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				console.log(obj);
 				//客户信息
 				$.each(obj.content.info, function(k, v){
 					$("#"+k).text(v);
@@ -37,9 +36,9 @@ var BillAssign = {
 						row += "<tr>";
 						row += "<td class='title'>合同号：</td><td>"+value.contract_id+"</td>";
 						row += "<td class='title'>已分配现金采购额度：</td><td>"+value.bill_amount_history+"</td>";
-						row += "<td class='title'>现有现金采购额度：</td><td>"+value.bill_amount_valid+"</td>";
-						row += "<td class='title'>本次分配现金额度：</td><td><input type='hidden' name='contract_id' value='"+value.contract_id+"' /><input type='text' data-rule-number='true' data-number-msg='' onchange='checktotal()' /></td>";
-						row += "<td class='title'>现有总采购额度：</td><td>"+value.bill_amount_valid+"</td>";
+						row += "<td class='title'>现有现金采购额度：</td><td id='bill_amount_valid"+value.contract_id+"'>"+value.bill_amount_valid+"</td>";
+						row += "<td class='title'>本次分配现金额度：</td><td><input type='hidden' name='contract_id[]' value='"+value.contract_id+"' /><input type='text'name='assign_amount"+value.contract_id+"' data-rule-number='true' data-number-msg='' onchange='checktotal()' /></td>";
+						row += "<td class='title'>现有总采购额度：</td><td id='total"+value.contract_id+"'>"+value.bill_amount_valid+"</td>";
 						row += "</tr>";
 					});
 					$("#bill_purchase_assign_list>tbody").html(row);
@@ -55,14 +54,34 @@ var BillAssign = {
 		}
 		var amount_valid = parseFloat($("#amount_valid").text());
 		var total = 0;
-		$("#bill_purchase_form input").each(function(index, element){
+		var contract_id = "";
+		var assign_amount = "";
+		$("#bill_purchase_form input[type=text]").each(function(index, element){
 			if($(element).val() != ""&&isNumeric($(element).val())){
 				total = total + parseFloat($(element).val());
+				assign_amount += $(element).val() + ",";
+				contract_id += $(element).next("input").val() + ",";
 			}
 		});
 		if(total > amount_valid){
 			$('#message_area').html(createError('客户可用总额不足分配'));
 			return false;
 		};
+		contract_id = contract_id.substring(0, contract_id.length-1);
+		assign_amount = assign_amount.substring(0, assign_amount.length-1);
+		
+		var params = {"type":type, "contract_id":contract_id, "assign_amount":assign_amount};
+		strJson = createJson("createMulti", this.entity, params);
+		that = this
+		console.log(strJson)
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+			}
+			$('#message_area').html('');
+		}, "json");
 	}
 }

@@ -14,14 +14,41 @@
 		<span id="search_id" class="action-span1">- 加价列表</span>
 		<div style="clear:both"></div>
 		</h1>
+		<div id="message_area"></div>
+		<form id="material_search_form">
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>物料类别：</labe>
+			<select name="attr_id"></select>
+			&nbsp;
+			<labe>厂家：</labe>
+			<select name="brand_id" style="width:100px;"></select>
+			&nbsp;
+			<labe>供应商：</labe>
+			<select name="suppliers_id" style="width:100px;"></select>
+			&nbsp;
+		</div>
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>规格：</labe>
+			<select name="attr_id"></select>
+			&nbsp;
+			<labe>牌号：</labe>
+			<select name=""></select>
+			&nbsp;
+			<input type="button" class="button" value="查询" onclick="Contract.getList('search')">
+			&nbsp;
+			<input type="button" class="button" value="导出" onclick="Contract.getList('search')">
+		</div>
+		</form>
 		<div class="list-div" id="listDiv">
-			<table cellpadding="3" cellspacing="1">
+			<table cellpadding="3" cellspacing="1" id="purchase_price_increase_list">
+				<thead>
 				<tr>
 					<th>物料编号</th>
 					<th>物料名称</th>
 					<th>物料类别</th>
-					<th>规格</th>
-					<th>型号</th>
+					<th>牌号/规格/型号</th>
 					<th>供货商报价</th>
 					<th>更新时间</th>
 					<th>商城修改价格</th>
@@ -30,47 +57,22 @@
 					<th>操作</th>
 					<th>审核状态</th>
 				</tr>
-				<tr>
-					<td>00001</td>
-					<td>螺纹钢HB</td>
-					<td>螺纹</td>
-					<td>45</td>
-					<td>hb300</td>
-					<td>3000</td>
-					<td>2015/9/1</td>
-					<td>3150</td>
-					<td>150</td>
-					<td>批量</td>
-					<td><a href="demo_template.php?section=purchase_price_manage&act=batch">修改价格</a></td>
-					<td>未审核</td>
-				</tr>
-				<tr>
-					<td>00002</td>
-					<td>螺纹钢2B</td>
-					<td>螺纹</td>
-					<td>45</td>
-					<td>hb300</td>
-					<td>3000</td>
-					<td>2015/9/1</td>
-					<td>3150</td>
-					<td>150</td>
-					<td>单个</td>
-					<td><a href="demo_template.php?purchase_price_manage&act=single">修改价格</a></td>
-					<td>未审核</td>
-				</tr>
+				</thead>
+				<tbody></tbody>
 			</table>
 		</div>
 		<!-- 分页 -->
-		<table id="page-table" cellspacing="0">
-			<tr>
-				<td align="right" nowrap="true">
-					{include file="page.htm"}
-				</td>
-			</tr>
-		</table>
+		<div id="paginate"></div>
+		
 		<!-- 底部 -->
 		<div id="footer">
 			{$lang.copyright}
 		</div>
+
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/price.js" type="text/javascript" ></script>
+<script type="text/javascript">
+Price.getBrandsList();
+</script>
 	</body>
 </html>

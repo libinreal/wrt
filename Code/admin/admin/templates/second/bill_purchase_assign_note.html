@@ -31,7 +31,7 @@
 				<tbody></tbody>
 			</table>
 			</form>
-			<div class="button-center"><input type="button" class="button" value=" 确定分配 " onclick="BillAssign.getCreateMulti()"></div>
+			<div class="button-center"><input type="button" class="button" value=" 确定分配 " onclick="BillAssign.getCreateMulti(0)"></div>
 		</div>
 
 		<!-- 分页 -->
@@ -43,7 +43,6 @@
 
 <script src="js/jquery.validate.js" type="text/javascript" ></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
-<script src="js/type-mode.js" type="text/javascript" ></script>
 <script src="js/bill-assign.js" type="text/javascript" ></script>
 <script type="text/javascript">
 BillAssign.getList(0);
@@ -53,16 +52,21 @@ $(document).ready(function(){
 function checktotal(){
 	var amount_valid = parseFloat($("#amount_valid").text());
 	var total = 0;
-	$("#bill_purchase_form input").each(function(index, element){
+	$("#bill_purchase_form input[type=text]").each(function(index, element){
 		if($(element).val() != ""&&isNumeric($(element).val())){
-			total = total + parseFloat($(element).val());
+			var ajust_amount = parseFloat($(element).val());
+			total = total + ajust_amount;
+			contract_id = $(element).next("input").val()
+			var bill_amount_valid = parseFloat($("#bill_amount_valid"+contract_id).text());
+
+			$("#total"+contract_id).text(ajust_amount + bill_amount_valid)
 		}
 	});
 	if(total > amount_valid){
 		$('#message_area').html(createError('客户可用总额不足分配'));
 		return false;
 	}else{
-		$('#message_area').html('');		
+		$('#message_area').html('');
 	}
 }
 </script>

@@ -83,7 +83,6 @@ var BillAjust = {
 		strJson = createJson("create", this.entity, form_data);
 		that = this
 		console.log(strJson);
-		return false;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));

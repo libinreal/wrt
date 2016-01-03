@@ -51,9 +51,11 @@ var BillRepay = {
 				return false;
 			}else{
 				that.total_page = Math.ceil(obj.content.total/that.offset);
+				console.log(obj)
 				if(obj.content.total == 0){
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#contract_list>tbody").html(row);
+					$("#bill_repay_list>tbody").html(row);
+					$("#paginate").html('');
 				}else{
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 					var row = "";
@@ -61,7 +63,7 @@ var BillRepay = {
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=bill_manage&act=generate_note&id="+value.bill_repay_log_id, "详情");
+								var edit = createLink("demo_template.php?section=bill_manage&act=repay_view&id="+value.bill_repay_log_id, "详情");
 								row += createTd(edit);
 								continue;
 							}
@@ -127,5 +129,29 @@ var BillRepay = {
 			}
 			$('#message_area').html(createTip(obj.message));
 		}, "json");		
+	},
+
+	getEditInit: function(){
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		var params = {"bill_repay_log_id":id};
+		strJson = createJson("editInit", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			console.log(obj)
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$.each(obj.content.info, function(k, v){
+					if($("td#"+k).length > 0){
+						$("td#"+k).text(v);
+					}
+				});
+			}
+			$('#message_area').html('');
+		}, "json");
 	}
 }

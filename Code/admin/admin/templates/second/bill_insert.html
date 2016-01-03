@@ -21,7 +21,7 @@
 				<tbody>
 					<tr>
 						<td class="title">票据编号：</td>
-						<td><input type="text" name="bill_num" data-rule-required="true" ></td>
+						<td><input type="text" class="number" name="bill_num" data-rule-required="true" ></td>
 						<td class="title">票据类型：</td>
 						<td><select name="bill_type" id="bill_type">
 						</select></td>
@@ -31,7 +31,7 @@
 						<option value="1">美元</option>
 						</select></td>
 						<td class="title">票面金额：</td>
-						<td><input type="text" name="bill_amount" data-rule-required="true" data-rule-number="true"></td>
+						<td><input type="text" class="number" name="bill_amount" data-rule-required="true" data-rule-number="true"></td>
 					</tr>
 					<tr>
 						<td class="title">客户号：</td>
@@ -39,9 +39,9 @@
 						<td class="title">合同编号：</td>
 						<td><input type="text" name="contract_id" data-rule-required="true"></td>
 						<td class="title">付款利率(%)：</td>
-						<td><input type="text" name="payment_rate" data-rule-required="true" data-rule-number="true"></td>
+						<td><input type="text" class="number" name="payment_rate" data-rule-required="true" data-rule-number="true"></td>
 						<td class="title">到期金额：</td>
-						<td><input type="text" name="expire_amount" data-rule-required="true" data-rule-number="true"></td>
+						<td><input type="text" class="number" name="expire_amount" data-rule-required="true" data-rule-number="true"></td>
 					</tr>
 					<tr>
 						<td class="title">签发日：</td>
@@ -49,9 +49,9 @@
 						<td class="title">到期日：</td>
 						<td><input type="text" name="due_date" id="due_date" readonly></td>
 						<td class="title">付款期限：</td>
-						<td><input type="text" name="prompt_day"></td>
+						<td><input type="text" class="number" name="prompt_day"></td>
 						<td class="title">出票人：</td>
-						<td><input type="text" name="drawer" data-rule-required="true"></td>
+						<td><input type="text" class="number" name="drawer" data-rule-required="true"></td>
 					</tr>
 					<tr>
 						<td class="title">承兑人：</td>
@@ -61,7 +61,7 @@
 						<td class="title">承兑日期：</td>
 						<td><input type="text" name="accept_date" id="accept_date" readonly></td>
 						<td class="title">备注：</td>
-						<td><textarea name="remark"></textarea></td>
+						<td><textarea name="remark" cols="10"></textarea></td>
 					</tr>
 					<tr>
 						<td class="title">往来单位：</td>
@@ -70,9 +70,9 @@
 						<td class="title">收票日：</td>
 						<td><input type="text" name="receive_date" id="receive_date" readonly></td>
 						<td class="title">交易金额：</td>
-						<td><input type="text" name="trans_amount" data-rule-required="true" data-rule-number="true"></td>
+						<td><input type="text" class="number" name="trans_amount" data-rule-required="true" data-rule-number="true"></td>
 						<td class="title">销售人员：</td>
-						<td><input type="text" name="saler"></td>
+						<td><input type="text" class="number" name="saler"></td>
 					</tr>
 					<tr>
 						<td class="title">收款组织：</td>
@@ -89,7 +89,7 @@
 						<td><select name="status">
 						</select></td>
 						<td class="title">折后额度：</td>
-						<td><input type="text" name="discount_amount" data-rule-required="true" data-rule-number="true"></td>
+						<td><input type="text" class="number" name="discount_amount" data-rule-required="true" data-rule-number="true"></td>
 						<td class="title">带追索权：</td>
 						<td>
 						<label>是</label><input type="radio" name="is_recourse" value="1">

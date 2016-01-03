@@ -1049,9 +1049,6 @@ em, cite, th {
 }
 
 /** 表格详情 **/
-.table_info{
-
-}
 .table_info table{
     margin: 0 auto;
     background: #fff;
@@ -1070,6 +1067,7 @@ em, cite, th {
     padding: 0 10px;
     border: 1px solid #ccc;
     position: relative;
+    min-width: 30px;
 }
 .table_info td.title{
     text-align: right;
@@ -1088,6 +1086,37 @@ em, cite, th {
     top: -10px;
     background-color: #fff;
     font-size: 10px;
+}
+.table_info input.number{
+    width: 80px;
+}
+/** table_info_2**/
+.table_info_2{
+    margin: 0 auto;
+    background: #fff;
+}
+.table_info_2 table{
+    width: 800px;
+}
+.table_info_2 table th{
+    font-weight: bold;
+    line-height: 30px;
+    color:#666;
+    border-bottom: 1px solid #ccc;
+}
+.table_info_2 table td{
+    text-align: center;
+    line-height: 30px;
+    border: none;
+}
+.table_info_2 td.title{
+    text-align: right;
+    font-weight: bold;
+    padding: 5px 1em;
+}
+.table_info_2 td{
+
+    border:1px solid #ccc;   
 }
 
 /**  **/
@@ -1121,6 +1150,30 @@ em, cite, th {
     background-color: #fff;
     font-size: 10px;
 }
+/**  **/
+.list-note-2{
+}
+.list-note-2 table{
+    width: 80%;
+    margin: 0 auto 10px auto;
+    background-color: #fff;
+}
+.list-note-2 table .head{
+    padding: 0 10px;
+    line-height: 25px;
+    font-weight: bold;
+    color: #9CACAF;
+}
+.list-note-2 table thead{
+    background: #efefef;
+}
+.list-note-2 table td.title{
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 25px;
+    border-bottom: 1px solid #ccc;
+}
+
 
 /** center **/
 .button-center{

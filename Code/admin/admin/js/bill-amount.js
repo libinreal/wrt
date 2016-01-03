@@ -91,6 +91,12 @@ var BillAmount = {
 		if($("#bill_purchase_form").valid() === false){
 			return false;
 		}
+		if($("select[name=user_id]").length>0){
+			$("input[name=user_name]").val($("#user_id option:selected").text());
+		}
+		if($("input[name=amount_rate]").length>0){
+			$("input[name=amount_rate]").val($("#discount_rate").val());
+		}
 		var form_data = $("#bill_purchase_form").FormtoJson();
 		strJson = createJson("create", this.entity, form_data);
 		that = this
@@ -113,9 +119,10 @@ var BillAmount = {
 		}
 		$("#bill_id").text(bill_id);
 		$("input[name=bill_id]").val(bill_id);
-		var params = {"bill_id":bill_id};
+		var params = {"bill_id":bill_id, "type": 0};
 		strJson = createJson("addInit", this.entity, params);
-		$.post(this.url, strJson, function(obj){ 
+		$.post(this.url, strJson, function(obj){
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -131,6 +138,32 @@ var BillAmount = {
 				var bill_amount = parseFloat(obj.content.info.bill_amount);
 				var discount_rate = parseFloat($("#discount_rate").val());
 				$("#amount").val(bill_amount*discount_rate/100);
+				$("#operate_button").html(createButton('BillAmount.getCreateAction()', '添加'));
+			}
+			$('#message_area').html('');
+		}, "json");
+	},
+
+	// 采购额度生成单（现金）初始化
+	getAddInitCashAction: function(){
+		var params = {"bill_id":0, "type": 1};
+		strJson = createJson("addInit", this.entity, params);
+		$.post(this.url, strJson, function(obj){
+			console.log(obj);
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				var row = "";
+				$.each(obj.content.init.amount_type, function(k, v){
+					row += appendOption(k, v);
+				});
+				$("#amount_type").html(row);
+				var row = "";
+				$.each(obj.content.init.customer, function(k, v){
+					row += appendOption(v.user_id, v.user_name);
+				});
+				$("#user_id").html(row);
 				$("#operate_button").html(createButton('BillAmount.getCreateAction()', '添加'));
 			}
 			$('#message_area').html('');

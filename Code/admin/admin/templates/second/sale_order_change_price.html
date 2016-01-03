@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>{$lang.cp_home} - 订单详情</title>
+		<title>{$lang.cp_home} - 订单改价</title>
 		<meta name="robots" content="noindex, nofollow">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link href="styles/general.css" rel="stylesheet" type="text/css" />
@@ -11,7 +11,7 @@
 	<body>
 		<h1>
 		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
-		<span id="search_id" class="action-span1">- 订单详情</span>
+		<span id="search_id" class="action-span1">- 订单改价</span>
 		<div style="clear:both"></div>
 		</h1>
 		<div id="message_area"></div>
@@ -60,28 +60,67 @@
 				</tbody>
 			</table>
 		</div>
+		<div class="table_info">
+			<form id="contract_content">
+			<table>
+			<thead>
+			<tr>
+				<th colspan="20">拆单详情</th>
+			</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="title">未拆单数量：</td><td>40</td>
+					<td class="title">物料单价：</td>
+					<td><input type="text" name="" data-rule-required="true"></td>
+					<td class="title">拆单数量：</td>
+					<td><input type="text" name="" data-rule-required="true" data-rule-number="true"></td>
+				</tr>
+				<tr>
+					<td class="title">实际供应商：</td>
+					<td><select name="customer_id" style="width:80px;">
+					</select></td>
+					<td class="title">金融费用比率：</td>
+					<td><input type="text" name="" data-rule-required="true" data-rule-number="true"></td>
+					<td class="title">物流费用：</td>
+					<td><input type="text" name="" data-rule-required="true" data-rule-number="true"></td>
+				</tr>
+				<tr>
+					<td class="title">金融费用：</td>
+					<td><input type="text" name="" data-rule-required="true" data-rule-number="true"></td>
+					<td class="title">发货总价：</td>
+					<td><input type="text" name="" data-rule-required="true" data-rule-number="true"></td>
+					<td class="title">支付方式：</td>
+					<td><select name=""></select></td>
+				</tr>
+			</tbody>
+			</table>
+			</form>
+		</div>
+		<div align="center">
+			<input type="button" class="button" value=" 确认 " onclick=""> 
+			<input type="button" class="button" value=" 取消 " onclick="">
+		</div>
+
 		<div class="list-div" id="listDiv">
-			<table cellpadding="3" cellspacing="1" id="purchase_price_increase_list">
+			<table cellpadding="3" cellspacing="1" id="credit_list">
 				<thead>
 				<tr>
 					<th>物料代码</th>
 					<th>物料名称</th>
 					<th>规格/型号/材质</th>
-					<th>下单数量</th>
-					<th>已拆单数量</th>
-					<th>未拆单数量</th>
+					<th>供应商</th>
 					<th>单价</th>
-					<th>小计</th>
-					<th>所选供应商</th>
-					<th>下单时间</th>
-					<th>操作</th>
+					<th>物流费用</th>
+					<th>金融费用</th>
+					<th>总金额</th>
+					<th>支付方式</th>
+					<th>报价日期</th>
 				</tr>
 				</thead>
 				<tbody></tbody>
 			</table>
 		</div>
-		<!-- 分页 -->
-		<div id="paginate"></div>
 		
 		<!-- 底部 -->
 		<div id="footer">

@@ -22,7 +22,7 @@ var Contract = {
 		'region_name'
 	],
 	limit: 0,
-	offset: 3,
+	offset: 8,
 	total_page: 0,
 	url: "contract_manage.php",
 
@@ -82,7 +82,8 @@ var Contract = {
 								}
 							});
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink(that.url+"?act=contractEdit&id="+value.contract_id, "编辑");
+								var edit = createLink("demo_template.php?section=contract_manage&act=view&id="+value.contract_id, "查看");
+								edit += createLink(that.url+"?act=contractEdit&id="+value.contract_id, "编辑");
 								edit += createLink(that.url+"?act=supplierSet&id="+value.contract_id, "绑定供应商");
 								row += createTd(edit);
 							}
@@ -96,7 +97,7 @@ var Contract = {
 		},"json");
 	},
 
-	getEdit: function(){
+	getView: function(){
 		var id = getQueryStringByName('id');
 		if(id===""||!validateNumber(id)){
 			return false;
@@ -105,6 +106,77 @@ var Contract = {
 		var strJson = createJson("singleCont", "contract", params);
 		var that = this;
 		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}
+			console.log(obj)
+			$.each(obj.content.data, function(key, value){
+				if(key == "bank_id"){
+					that.getOrgList(value);
+				}
+				if(key == "customer_id"){
+					that.getUserList(value);
+				}
+				if(key == "contract_type"){
+					if(value == 1){
+						$("td#rate").html(obj.content.data.rate)
+					}else if(value == 2){
+						$("#rate").html(createWarn("费率不可用"))
+					}
+				}
+				if($("td#"+key).length && key != "rate"){
+					$("td#"+key).text(value);
+				}
+				if($("select[name="+key+"]").length){
+					$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
+				}
+				if($("input[name="+key+"]").length){
+					var o = "input[name="+key+"]";
+					if($(o).attr("type") == "radio"){
+						$("input[name="+key+"][value="+value+"]").attr("checked","1");
+					}
+				}
+				if(key == "attachment"){
+					if(value != ""){
+						$("td#attachment_file").html(createLink("javascript:void(0);", "查看文件")+createLink("javascript:void(0);", "下载"))
+					}else{
+						$("td#attachment_file").html(createWarn("无附件"))
+					}
+				}
+				if(key == "is_control" && value == 1){
+					$('#is_goods_type_visible').html(createLink("javascript:void(0);", "查看物料类型", "popupLayer()"));
+				}else if(key == "is_control" && value == 0){
+					$('#is_goods_type_visible').html(createWarn("物料类型不可用"));
+				}
+			});
+			$('#handle_button').html(createButton('redirectToUrl("contract_manage.php?act=contractList")', '返回列表') + createButton('Contract.getUpdate()', '保存'));
+			var str = "";
+			if(obj.content.cat.length <= 0){
+				var goods_type = false;
+			}else{
+				var str = "<ul>";
+				for(var i=0; i<obj.content.cat.length; i++){
+					str += "<li>"+createCheckbox('goods_type', obj.content.cat[i].cat_id, obj.content.cat[i].cat_name, 1)+"</li>";
+				}
+				str += "</ul>";
+				$('#goods_type_list').html(str);
+			}
+			$('#message_area').html('');
+		}, "json");
+	},
+
+	getEdit: function(){
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		var params = {"contract_id": id, "params":{}};
+		var strJson = createJson("singleCont", "contract", params);
+		var that = this;
+		console.log(strJson);
+		$.post(this.url, strJson, function(obj){
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;

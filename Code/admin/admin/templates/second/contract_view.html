@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 应付单详情</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1">- 应付单详情</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div id="message_area"></div>
+		<div class="table_info">
+			<table>
+			<tbody>
+				<tr>
+					<td class="title">合同编号：</td>
+					<td id="contract_num"></td>
+					<td class="title">合同名称：</td>
+					<td id="contract_name"></td>
+					<td class="title">合同金额：</td>
+					<td id="contract_amount"></td>
+					<td class="title">合同状态：</td>
+					<td><select name="contract_status" disabled>
+						<option value="0">过期</option>
+						<option value="1">生效</option>
+						<option value="2">作废</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td class="title">公司：</td>
+					<td id=""></td>
+					<td class="title">客户：</td>
+					<td><select name="customer_id" style="width:140px;" disabled></select></td>
+					<td class="title">合同类型：</td>
+					<td><select name="contract_type" disabled>
+						<option value="1">销售合同</option>
+						<option value="2">采购合同</option>
+					</select></td>
+					<td class="title">签署类型：</td>
+					<td><select name="contract_sign_type" disabled>
+						<option value="1">平台-&gt;银行</option>
+						<option value="2">银行-&gt;平台</option>
+					</select></td>
+				</tr>
+				<tr>
+					<td class="title">合同开始日期：</td>
+					<td id="start_time"></td>
+					<td class="title">合同结束日期：</td>
+					<td id="end_time"></td>
+					<td class="title">是否控制类型：</td>
+					<td>是<input type="radio" name="is_control" value="1" disabled>&nbsp;&nbsp;
+					否<input type="radio" name="is_control" value="0" disabled></td>
+					<td class="title">物料类型：</td>
+					<td id="is_goods_type_visible"></td>
+				</tr>
+				<tr>
+					<td class="title">金融费率：</td>
+					<td id="rate"></td>
+					<td class="title">登记机构：</td>
+					<td><select name="bank_id" disabled>
+					</select></td>
+					<td class="title">附件：</td>
+					<td colspan="3" id="attachment_file"></td>
+				</tr>
+				<tr>
+					<td class="title">备注：</td>
+					<td id="remark" colspan="7"></td>
+				</tr>
+			</tbody>
+			</table>
+		</div>
+		<div align="center">
+			<input type="button" class="button" value=" 审核 " onclick=""> 
+			<input type="button" class="button" value=" 返回 " onclick="history.back()">
+		</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+		<!-- pop message -->
+		<div id="popupLayer" class="messagepop pop">
+			<div class="messagepop_header"><h4>物料类型</h4></div>
+			<div class="clear"></div>
+			<hr>
+			<form id="goods_type_form">
+				<div id="goods_type_list" class="goods_type_list"></div>
+				<hr>
+				<div align="center"><input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " /></div>
+			</form>
+		</div>
+
+<script src="js/laydate/laydate.dev.js"></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/contract.js" type="text/javascript" ></script>
+<script type="text/javascript">
+Contract.getView();
+</script>
+	</body>
+</html>

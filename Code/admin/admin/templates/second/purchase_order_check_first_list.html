@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>{$lang.cp_home} - 订单列表</title>
+		<title>{$lang.cp_home} - 采购订单下单列表</title>
 		<meta name="robots" content="noindex, nofollow">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link href="styles/general.css" rel="stylesheet" type="text/css" />
@@ -11,23 +11,32 @@
 	<body>
 		<h1>
 		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
-		<span id="search_id" class="action-span1">- 订单列表</span>
+		<span id="search_id" class="action-span1">- 采购订单下单列表</span>
 		<div style="clear:both"></div>
 		</h1>
 		<div id="message_area"></div>
 		<form id="material_search_form">
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>客户号：</labe>
+			<select name=""></select>
+			&nbsp;
+			<labe>合同号：</labe>
+			<select name=""></select>
+			&nbsp;
 			<labe>客户订单号：</labe>
 			<input type="text" name=""/>
 			&nbsp;
-			<labe>客户名称：</labe>
+		</div>
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>拆分订单号：</labe>
 			<input type="text" name=""/>
 			&nbsp;
-			<labe>合同名称：</labe>
-			<input type="text" name=""/>
+			<labe>验签状态（第一次）：</labe>
+			<select name=""></select>
 			&nbsp;
-			<labe>订单状态：</labe>
+			<labe>供货商名称：</labe>
 			<select name=""></select>
 			&nbsp;
 			<input type="button" class="button" value="查询" onclick="">
@@ -37,17 +46,43 @@
 			<table cellpadding="3" cellspacing="1" id="purchase_price_increase_list">
 				<thead>
 				<tr>
+					<th>采购订单号</th>
+					<th>订单时间</th>
+					<th>物料名称</th>
+					<th>物料类别</th>
+					<th>牌号/规格/型号</th>
+					<th>单价</th>
+					<th>数量</th>
+					<th>金额</th>
+					<th>供应商</th>
+					<th>验签状态</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+		</div>
+		<div class="list-div" id="listDiv">
+			<table cellpadding="3" cellspacing="1" id="purchase_price_increase_list">
+				<thead>
+				<tr>
+					<th>订单时间</th>
+					<th>客户号</th>
+					<th>客户名</th>
+					<th>合同号</th>
+					<th>合同名称</th>
+					<th>供货商名称</th>
+					<th>订单号</th>
+					<th>拆分订单号</th>
 					<th>物料编号</th>
 					<th>物料名称</th>
 					<th>物料类别</th>
 					<th>牌号/规格/型号</th>
-					<th>供货商报价</th>
-					<th>更新时间</th>
-					<th>商城修改价格</th>
-					<th>加价幅度</th>
-					<th>加价方式</th>
+					<th>发货价</th>
+					<th>供货数量</th>
+					<th>物流费用</th>
+					<th>验签状态</th>
 					<th>操作</th>
-					<th>审核状态</th>
 				</tr>
 				</thead>
 				<tbody></tbody>
@@ -61,9 +96,9 @@
 			{$lang.copyright}
 		</div>
 
-<script src="http://www.jq22.com/demo/laydate-master-141126210932/laydate.dev.js"></script>
+<script src="js/laydate/laydate.dev.js"></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
-<script src="js/sale-order.js" type="text/javascript" ></script>
+<script src="js/purchase-check.js" type="text/javascript" ></script>
 <script type="text/javascript">
 </script>
 	</body>

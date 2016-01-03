@@ -18,17 +18,26 @@
 		<form id="material_search_form">
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
-			<labe>客户订单号：</labe>
-			<input type="text" name=""/>
-			&nbsp;
 			<labe>客户名称：</labe>
 			<input type="text" name=""/>
 			&nbsp;
 			<labe>合同名称：</labe>
+			<select name=""></select>
+			&nbsp;
+			<labe>子订单号：</labe>
+			<input type="text" name=""/>
+		</div>
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>验签状态：</labe>
+			<select name=""></select>
+			&nbsp;
+			<labe>订单日期：</labe>
 			<input type="text" name=""/>
 			&nbsp;
-			<labe>订单状态：</labe>
-			<select name=""></select>
+			至
+			&nbsp;
+			<input type="text" name=""/>
 			&nbsp;
 			<input type="button" class="button" value="查询" onclick="">
 		</div>
@@ -37,17 +46,16 @@
 			<table cellpadding="3" cellspacing="1" id="purchase_price_increase_list">
 				<thead>
 				<tr>
-					<th>物料编号</th>
+					<th>拆单时间</th>
+					<th>对应合同号</th>
+					<th>拆分订单号</th>
 					<th>物料名称</th>
 					<th>物料类别</th>
-					<th>牌号/规格/型号</th>
-					<th>供货商报价</th>
-					<th>更新时间</th>
-					<th>商城修改价格</th>
-					<th>加价幅度</th>
-					<th>加价方式</th>
+					<th>规格/型号/牌号</th>
+					<th>单价</th>
+					<th>数量</th>
+					<th>验签状态</th>
 					<th>操作</th>
-					<th>审核状态</th>
 				</tr>
 				</thead>
 				<tbody></tbody>
