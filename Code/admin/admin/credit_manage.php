@@ -59,14 +59,72 @@ class Credit extends ManageModel
      * 导入银行xml文件
      * {
      *      "command" : "importCredit", 
-     *      "entity"  : "bank_credit", 
+     *      "entity"  : "(input name)", 
      *      "parameters" {}
      * }
      */
     public function importCredit($entity, $parameters) 
     {
-        if (empty($entity)) failed_json('没有传参`entity`');
+        self::init('bank_credit', 'bank_credit');
         
+        if (empty($entity) || empty($_FILES)) {
+            failed_json('没有传参`entity`，或者上传错误');
+        }
+        
+        //限制上传格式
+        $file = pathinfo($_FILES[$entity]['name']);
+        if ($file['extension'] != 'xml') {
+            failed_json('只允许上传xml格式的文件！');
+        }
+        //upload
+        require('../includes/cls_image.php');
+        $upload = new cls_image();
+        $fileName = date('YmdHis').'.xml';
+        $res = $upload->upload_image($_FILES[$entity], 'credit', $fileName);
+        if ($res === false) {
+            failed_json('文件上传失败');
+        }
+        
+        //load xml
+        $registrationNum = 'CZB111';
+        $path = '../data/credit/'.$fileName;
+        $xml = simplexml_load_file($path);
+        $data = array();
+        $i = 0;
+        foreach ($xml->CZB2SINOT->Record as $v){
+            $str = '';
+            foreach ($v->Property as $pv){
+                $str .= '"'.$pv->__toString().'",';
+                $data[$i] = "(".$str.'"'.$registrationNum.'","'.time().'"'.")";
+            }
+            $i++;
+        }
+        $fields = array(
+            'credit_num',
+            'customer_num',
+            'customer_name',
+            'papers_type',
+            'papers_num',
+            'amount_all',
+            'amount_remain',
+            'credit_status',
+            'start_time',
+            'end_time',
+            'registration_name',
+            'create_type',
+            'registration_num',
+            'add_time'
+        );
+        $fields = '('.implode(',', $fields).')';
+        $values = implode(',', $data);
+        $sql = 'INSERT '.$this->table.' '.$fields.'values'.$values;
+        $res = $this->db->query($sql);
+        if ($res === false) {
+            failed_json('导入失败');
+        } else {
+            @unlink($path);
+            make_json_result($res);
+        }
     }
     
     
@@ -77,8 +135,10 @@ class Credit extends ManageModel
      *      "command" : "creditList",
      *      "entity"  : "bank_credit",
      *      "parameters" : {
-     *          "limit" : "(int)",
-     *          "offset": "(int)"
+     *          "params" : {
+     *              "limit" : "(int)",
+     *              "offset": "(int)"
+     *          }
      *      }
      * }
      */
@@ -89,9 +149,10 @@ class Credit extends ManageModel
         $config = $this->creditConf();
     
         //page
-        if (is_numeric($parameters['limit']) && is_numeric($parameters['offset'])) {
-            $page = intval($parameters['limit']);
-            $offset = intval($parameters['offset']);
+        $params = $parameters['params'];
+        if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
+            $page = intval($params['limit']);
+            $offset = intval($params['offset']);
             $limit = 'limit '.($page * $offset).','.$offset;
         }
     

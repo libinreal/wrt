@@ -96,6 +96,5 @@ $modules['13_contract']['06_contract_supplier_list']    = 'contract_manage.php?a
 
 //授信管理
 $modules['14_credit']['01_credit_list']    = 'credit_manage.php?act=list';
-$modules['14_credit']['02_credit_detail']    = 'credit_manage.php?act=detail';
 
 ?>

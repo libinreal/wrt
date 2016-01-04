@@ -149,7 +149,6 @@ $_LANG['06_contract_supplier_list'] = '供应商、合同列表';
 
 //授信管理
 $_LANG['01_credit_list'] = '授信单列表';
-$_LANG['02_credit_detail'] = '授信单详情';
 
 // 积分商品管理
 $_LANG['01_exchange_category'] = "分类列表";

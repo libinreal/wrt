@@ -799,7 +799,7 @@ function check_file_type($filename, $realname = '', $limit_ext_types = '')
     {
         $extname = strtolower(substr($filename, strrpos($filename, '.') + 1));
     }
-
+    
     if ($limit_ext_types && stristr($limit_ext_types, '|' . $extname . '|') === false)
     {
         return '';
@@ -831,7 +831,7 @@ function check_file_type($filename, $realname = '', $limit_ext_types = '')
             return '';
         }
     }
-
+    
     if ($format == '' && strlen($str) >= 2 )
     {
         if (substr($str, 0, 4) == 'MThd' && $extname != 'txt')
@@ -912,6 +912,9 @@ function check_file_type($filename, $realname = '', $limit_ext_types = '')
         } elseif ($extname == 'txt')
         {
             $format = 'txt';
+        } elseif ($extname == 'xml') 
+        {
+            $format = 'xml';
         }
     }
 
