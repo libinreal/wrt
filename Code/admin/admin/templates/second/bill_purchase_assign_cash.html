@@ -16,17 +16,21 @@
 		</h1>
 		<div id="message_area"></div>
 		<div class="list-note">
+			<form id="bill_purchase_form">
 			<table cellpadding="3" cellspacing="1"  id="bill_purchase_assign_list">
 				<thead>
 				<tr>
 					<td colspan="20">
+					<span class="head">客户号：<span id="customer_id"></span></span>
 					<span class="head">客户名称：<span id="user_name"></span></span>
-					<span class="head">客户可分配总额度：<span id="amount_available"></span></span>
+					<span class="head">客户可分配总额度：<span id="amount_valid"></span></span>
+					<span class="head">历史总采购额度：<span id="amount_history"></span></span>
 					</td>
 				</tr>
 				</thead>
 				<tbody></tbody>
 			</table>
+			</form>
 			<div class="button-center"><input type="button" class="button" value=" 确定分配 " onclick="BillAssign.getCreateMulti(1)"></div>
 		</div>
 		<!-- 底部 -->
@@ -58,6 +62,22 @@ function checktotal(){
 	}else{
 		$('#message_area').html('');
 	}
+}
+function first(){
+	BillAssign.limit = 0;
+	BillAssign.getList(1);
+}
+function next(){
+	BillAssign.limit = BillAssign.limit + 1;
+	BillAssign.getList(1);	
+}
+function prev(){
+	BillAssign.limit = BillAssign.limit - 1;
+	BillAssign.getList(1);
+}
+function last(){
+	BillAssign.limit = BillAssign.total_page;
+	BillAssign.getList(1);	
 }
 </script>
 	</body>

@@ -154,8 +154,12 @@ var createCheckbox = function(name, value, label, checked){
 	}
 	return str;
 }
-var createLink = function(url, text, action){
-	var str = '<a href="'+url+'" onclick="'+action+'">'+text+'</a> ';
+var createLink = function(url, text, action, target){
+    if(typeof(target) === "undefined"){
+        var str = '<a href="'+url+'" onclick="'+action+'" target=_self>'+text+'</a> ';
+    }else if(target == "blank"){
+        var str = '<a href="'+url+'" onclick="'+action+'" target=_blank>'+text+'</a> ';
+    }
 	return str;
 }
 var createError = function(text){

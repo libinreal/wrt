@@ -1,5 +1,7 @@
 var SaleOrder = {
 	order_arr: [
+		"customer_name",
+		
 	],
 	limit: 0,
 	offset: 8,
@@ -12,18 +14,23 @@ var SaleOrder = {
 			serach = false;
 		}else{
 			var condition = {};
+			var like = [];
+			var order_sn = $('#search_form input[name=order_sn]').val();
 			var user_name = $('#search_form input[name=user_name]').val();
+			var contract_name = $('#search_form input[name=contract_name]').val();
 			var due_date1 = $('#search_form input[name=due_date1]').val();
 			var due_date2 = $('#search_form input[name=due_date2]').val();
-			if(user_name != ''){
-				condition.like = {"user_name":user_name};
-			}
-			if(due_date1 != ''){
-				condition.due_date1 = due_date1;
-			}
-			if(due_date2 != ''){
-				condition.due_date2 = due_date2;
-			}
+			$("#search_form input[name!='due_date1'][name!='due_date2']").each(function(index, elem){
+				if($(elem).val() != '' && $(elem).val() != '查询'){
+					like[$(elem).attr("name")] = $(elem).val();
+				}
+			});
+			condition.like = like;
+			$("#search_form input[name^='due']").each(function(index, elem){
+				if($(elem).val() != ''){
+					condition[$(elem).attr("name")] = $(elem).val();
+				}
+			});
 		}
 		if(search != false){
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
@@ -33,6 +40,7 @@ var SaleOrder = {
 		strJson = createJson("page", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;

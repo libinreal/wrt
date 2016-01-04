@@ -39,13 +39,18 @@ var BillAmount = {
 			}
 		}
 		if(search != false){
+			if(search == "search"){
+				this.limit = 0;
+			}
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		}else{
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("page", this.entity, params);
+		console.log(strJson);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -59,13 +64,14 @@ var BillAmount = {
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 					var row = "";
 					$.each(obj.content.data,function(key, value){
+						if(value.amount_type == 0){
+							return;
+						}
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								if(value.amount_type == 0){
-									var edit = createLink("demo_template.php?section=bill_manage&act=generate_note&log_id="+value.bill_amount_log_id, "详情");
-								}else if(value.amount_type == 1 || value.amount_type == 2){
-									var edit = createLink("demo_template.php?section=bill_manage&act=generate&log_id="+value.bill_amount_log_id, "详情");
+								if(value.amount_type == 1 || value.amount_type == 2){
+									var edit = createLink("demo_template.php?section=bill_manage&act=generate_edit&log_id="+value.bill_amount_log_id, "详情");
 								}else{
 									var edit = createTd(createWarn('无数据'));
 								}
@@ -106,7 +112,7 @@ var BillAmount = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				$('#message_area').html(createError(obj.message));
+				$('#message_area').html(createTip(obj.message));
 			}
 		}, "json");
 	},
@@ -183,8 +189,51 @@ var BillAmount = {
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 			}else{
-				$('#message_area').html(createError(obj.message));
+				$('#message_area').html(createTip(obj.message));
 			}
+		}, "json");
+	},
+
+	// 编辑初始化
+	getEditInitAction: function(type){
+		var log_id = getQueryStringByName('log_id');
+		if(log_id == "" || !validateNumber(log_id)){
+			return false;
+		}
+		var params = {"type":type, "bill_amount_log_id": log_id};
+		strJson = createJson("editInit", this.entity, params);
+		console.log(strJson);
+		$.post(this.url, strJson, function(obj){
+			console.log(obj);
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				// 初始化
+				var row = "";
+				$.each(obj.content.init.amount_type, function(k, v){
+					row += appendOption(k, v);
+				});
+				$("#amount_type").html(row);
+				var row = "";
+				$.each(obj.content.init.customer, function(k, v){
+					row += appendOption(v.user_id, v.user_name);
+				});
+				$("#user_id").html(row);
+				$.each(obj.content.info, function(k, v){
+					if($("select[name="+k+"]").length > 0){
+						$("select[name="+k+"]>option[value="+v+"]").attr("selected", "selected");
+					}
+					if($("input[name="+k+"]").length > 0){
+						$("input[name="+k+"]").val(v);
+					}
+					if($("textarea[name="+k+"]").length > 0){
+						$("textarea[name="+k+"]").text(v);
+					}
+				});
+				$("#operate_button").html(createButton('BillAmount.getUpdateAction()', '保存'));
+			}
+			$('#message_area').html('');
 		}, "json");
 	}
 }

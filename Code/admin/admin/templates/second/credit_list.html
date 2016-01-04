@@ -15,6 +15,13 @@
 		<div style="clear:both"></div>
 		</h1>
 		<div id="message_area"></div>
+		<form id="file_form">
+		<div class="form-div">
+			<labe>导入授信文件：</labe>
+			<input type="file" id="credit_file" name="credit_file" data-rule-required="true" data-msg-required="请选择文件">
+			<input type="button" class="button" value="上传文件" onclick="Credit.getUploadFile()" />
+		</div>
+		</form>		
 		<div class="list-div" id="listDiv">
 			<table cellpadding="3" cellspacing="1" id="credit_list">
 				<thead>
@@ -45,7 +52,10 @@
 		<div id="footer">
 			{$lang.copyright}
 		</div>
+
+<script src="js/jquery.validate.js" type="text/javascript" ></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/ajaxfileupload.js" type="text/javascript" ></script>
 <script src="js/credit.js" type="text/javascript" ></script>
 <script type="text/javascript">
 Credit.getList();

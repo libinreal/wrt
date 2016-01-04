@@ -15,22 +15,33 @@
 		<div style="clear:both"></div>
 		</h1>
 		<div id="message_area"></div>
-		<form id="material_search_form">
+		<form id="search_form">
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
 			<labe>客户订单号：</labe>
-			<input type="text" name=""/>
+			<input type="text" name="order_sn"/>
 			&nbsp;
 			<labe>客户名称：</labe>
-			<input type="text" name=""/>
+			<input type="text" name="user_name"/>
 			&nbsp;
 			<labe>合同名称：</labe>
-			<input type="text" name=""/>
+			<input type="text" name="contract_name"/>
 			&nbsp;
 			<labe>订单状态：</labe>
-			<select name=""></select>
+			<select name="status"></select>
 			&nbsp;
-			<input type="button" class="button" value="查询" onclick="">
+		</div>
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>日期：</labe>
+			<input type="text" name="due_date1" id="due_date1" placeholder="开始日期" readonly>
+			&nbsp;
+			至
+			&nbsp;
+			<input type="text" name="due_date2" id="due_date2" placeholder="结束日期" readonly>
+			&nbsp;
+			&nbsp;
+			<input type="button" class="button" value="查询" onclick="SaleOrder.getList('search')">
 		</div>
 		</form>
 		<div class="list-div" id="listDiv">
@@ -61,10 +72,19 @@
 			{$lang.copyright}
 		</div>
 
-<script src="http://www.jq22.com/demo/laydate-master-141126210932/laydate.dev.js"></script>
+<script src="js/laydate/laydate.dev.js"></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
 <script src="js/sale-order.js" type="text/javascript" ></script>
 <script type="text/javascript">
+$(document).ready(function(){
+	laydate({
+        elem: '#due_date1'
+    });
+	laydate({
+        elem: '#due_date2'
+    });
+});
+SaleOrder.getList();
 </script>
 	</body>
 </html>
