@@ -92,16 +92,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     * 返回数据格式如下 :
 	     *  {
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
-		 *	    "message": "额度生成单列表查询成功",
+		 *	    "message": "额度偿还单查询成功",
 		 *	    "content":{ 
 		 *	    	"data":[
 		 *	        {
-		 *                  "bill_amount_log_id":2 ,//生成单ID
-		 *                  "amount_type": 0 ,//生成单类型
-		 *                  "amount":  100.00 ,//金额
-		 *                  "remark": "xxxx" ,//备注
-		 *                  "update_time": "2015-12-12",//修改日期
-		 *                  "customer_id": 4 ,//往来单位ID
+		 *                  "bill_repay_log_id":2 ,//生成单ID
+		 *                  "bill_id":100,//票据ID
+		 *                  "repay_amount":  100.00 ,//金额
+		 *                  "customer_id": 4 ,//客户ID
+		 *                  "customer_name": 4 ,//客户名称
 		 *                  "create_time": "2015-12-12",//创建日期
 		 *                  "create_by": "xxx" ,//创建人
 		 *           }
@@ -114,8 +113,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content = $this->content;
 			$params = $content['parameters']['params'];
 			
+			$users_table = $GLOBALS['ecs']->table( 'users' );
 			$bill_repay_table = $GLOBALS["ecs"]->table("bill_repay_log");
-			$sql = "SELECT * FROM $bill_repay_table";
+			$sql = 'SELECT br.`bill_repay_log_id`, br.`bill_id`, br.`repay_amount`, br.`create_time`, br.`create_by`,' .
+			       'br.`user_id` as `customer_id`, u.`user_name` as `customer_name` FROM ' .
+				   $bill_repay_table . ' AS br LEFT JOIN ' . $users_table .
+				   ' AS u ON u.`user_id` = br.`user_id`';
 			$total_sql = "SELECT COUNT(*) as `total` FROM $bill_repay_table";
 
 			$where = array();	

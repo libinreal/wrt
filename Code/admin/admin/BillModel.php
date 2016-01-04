@@ -115,7 +115,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bill_table = $GLOBALS["ecs"]->table("bill");
 			$user_table = $GLOBALS["ecs"]->table("users");
 
-			$sql = "SELECT a.`bill_id`, a.`bill_type`, a.`due_date`, a.`bill_amount`, a.`customer_id`,b.`companyName` as `customer_name` FROM $bill_table as a " .
+			$sql = "SELECT a.`bill_id`, a.`bill_type`, a.`bill_num`, a.`due_date`, a.`bill_amount`, a.`drawer`, a.`acceptor`, a.`customer_id`,b.`companyName` as `customer_name`, a.`status` FROM $bill_table as a " .
 				" left join $user_table as b on a.`customer_id` = b.`user_id` ";
 
 			$total_sql = "SELECT COUNT(*) as `total` FROM $bill_table as a " .
