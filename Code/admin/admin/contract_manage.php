@@ -267,8 +267,10 @@ class Contract extends ManageModel
         //page
         if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
             $page = intval($params['limit']);
+            if ($page < 0) $page = 0;
             $offset = intval($params['offset']);
-            $limit = 'limit '.($page * $offset).','.$offset;
+            if ($offset < 0) $offset = 0;
+            $limit = 'limit '.$page.','.$offset;
         }
         
         self::selectSql(array(
@@ -702,8 +704,10 @@ class Contract extends ManageModel
         //page
         if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
             $page = intval($params['limit']);
+            if ($page < 0) $page = 0;
             $offset = intval($params['offset']);
-            $limit = 'limit '.($page * $offset).','.$offset;
+            if ($offset < 0) $offset = 0;
+            $limit = 'limit '.$page.','.$offset;
         }
         
         self::selectSql(array(

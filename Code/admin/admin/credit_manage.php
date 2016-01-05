@@ -34,7 +34,6 @@ $ApiList = array(
     'creditInfo',
     'creditRemark', 
     'importCredit', 
-    'test'
 );
 
 /**
@@ -56,12 +55,13 @@ class Credit extends ManageModel
     protected $sql;
     
     
+    
     /**
      * 导入银行xml文件
      * {
      *      "command" : "importCredit", 
      *      "entity"  : "(input name)", 
-     *      "parameters" {}
+     *      "parameters" : {}
      * }
      */
     public function importCredit($entity, $parameters) 
@@ -73,10 +73,11 @@ class Credit extends ManageModel
         }
         
         //限制上传格式
-        $file = pathinfo($_FILES[$entity]['name']);
-        if ($file['extension'] != 'xml') {
+        $extension = pathinfo($_FILES[$entity]['name'], PATHINFO_EXTENSION);
+        if ($extension != 'xml') {
             failed_json('只允许上传xml格式的文件！');
         }
+        
         //upload
         require('../includes/cls_image.php');
         $upload = new cls_image();
@@ -87,58 +88,152 @@ class Credit extends ManageModel
         }
         
         //load xml
-        $registrationNum = 'CZB111';
+        $registrationNum = '01234567890';
         $path = '../data/credit/'.$fileName;
         $xml = simplexml_load_file($path);
         
         
-    //所有的协议号
+        //xml所有协议号
         $protocols = array();
         foreach ($xml->CZB2SINOT->Record as $v){
             $protocols[] = $v->Property->__toString();
         }
         
-        //数据库已经存在的协议号
+        if (empty($protocols)) {
+            make_json_result(true);
+        }
+        
+        //数据库所有协议号
         self::selectSql(array(
             'fields' => 'credit_num', 
         ));
         $had = $this->db->getAll($this->sql);
-        $exist = array();
-        foreach ($had as $k=>$v) {
-            $exist[] = $v['credit_num'];
+        if (empty($had)) {
+            $diff = $protocols;
+        } else {
+            //获取一定格式的数组
+            $exist = array();
+            foreach ($had as $k=>$v) {
+                $exist[] = $v['credit_num'];
+            }
+            unset($had);
+            
+            $intersect = array_intersect($protocols, $exist);   //修改的交集数据
+            $diff = array_diff($protocols, $exist);     //添加的差集数据
+            
+            if (empty($intersect) && empty($diff)) {
+                make_json_result(true);
+            }
+            
         }
-        unset($had);
         
-        $intersect = array_intersect($protocols, $exist);   //交集
-        $diff = array_diff($protocols, $exist);     //差集
+        $update = array();  //需要修改的数据集合
+        $insert = array();  //需要添加的数据集合
         
-        $update = array();  //更新数组
-        $insert = array();  //添加数组
+        //区分数据操作
         $cl = '';$n = 0;$i = 0;
         foreach ($xml->CZB2SINOT->Record as $v) {
             $cl = $v->Property->__toString();
-            //修改的数据
-            if (in_array($cl, $intersect)) {
-                $str = '';
-                foreach ($v->Property as $pv) {
-                    $str .= '"'.$pv->__toString().'",';
-                    $update[$n][] = $pv->__toString();
+            //修改
+            if (!empty($intersect)) {
+                if (in_array($cl, $intersect)) {
+                    $str = '';
+                    foreach ($v->Property as $pv) {
+                        $str .= '"'.$pv->__toString().'",';
+                        $update[$n][] = $pv->__toString();
+                    }
+                    $n++;
                 }
-                $n++;
             }
-            //添加的数据
-            if (in_array($cl, $diff)) {
-                $str = '';
-                foreach ($v->Property as $pv) {
-                    $str .= '"'.$pv->__toString().'",';
-                    $insert[$i] = "(".$str.'"'.$registrationNum.'","'.time().'"'.")";
+        
+            //添加
+            if (!empty($diff)) {
+                if (in_array($cl, $diff)) {
+                    $str = '';
+                    foreach ($v->Property as $pv) {
+                        $str .= '"'.$pv->__toString().'",';
+                        $insert[$i] = "(".$str.'"'.$registrationNum.'","'.time().'"'.")";
+                    }
+                    $i++;
                 }
-                $i++;
             }
         }
+        
         //修改操作
+        if (!empty($update)) {
+            $this->updateBankCredit($update);
+        }
         
         //添加操作
+        if (!empty($insert)) {
+            $this->insertBankCredit($insert);
+        }
+        
+        @unlink($path);
+        make_json_result(true);
+    }
+    
+    
+    
+    
+    /**
+     * 导入xml时，更新已经存在的协议号信息
+     * @param array $update
+     */
+    private function updateBankCredit($update) 
+    {
+        $fields = array(
+            'customer_num'      => '', 
+            'customer_name'     => '', 
+            'papers_type'       => '', 
+            'papers_num'        => '', 
+            'amount_all'        => '', 
+            'amount_remain'     => '', 
+            'credit_status'     => '', 
+            'start_time'        => '', 
+            'end_time'          => '', 
+            'registration_name' => '', 
+            'create_type'       => ''
+        );
+        $creditNum = array();
+        foreach ($update as $k=>$v) {
+            $creditNum[] = '"'.$v[0].'"';
+            $fields['customer_num'][]      = 'WHEN "'.$v[0].'" THEN "'.$v[1].'"';
+            $fields['customer_name'][]     = 'WHEN "'.$v[0].'" THEN "'.$v[2].'"';
+            $fields['papers_type'][]       = 'WHEN "'.$v[0].'" THEN "'.$v[3].'"';
+            $fields['papers_num'][]        = 'WHEN "'.$v[0].'" THEN "'.$v[4].'"';
+            $fields['amount_all'][]        = 'WHEN "'.$v[0].'" THEN "'.$v[5].'"';
+            $fields['amount_remain'][]     = 'WHEN "'.$v[0].'" THEN "'.$v[6].'"';
+            $fields['credit_status'][]     = 'WHEN "'.$v[0].'" THEN "'.$v[7].'"';
+            $fields['start_time'][]        = 'WHEN "'.$v[0].'" THEN "'.$v[8].'"';
+            $fields['end_time'][]          = 'WHEN "'.$v[0].'" THEN "'.$v[9].'"';
+            $fields['registration_name'][] = 'WHEN "'.$v[0].'" THEN "'.$v[10].'"';
+            $fields['create_type'][]       = 'WHEN "'.$v[0].'" THEN "'.$v[11].'"';
+        }
+        $str = '';
+        foreach ($fields as $k=>$v) {
+            $str .= $k.'=CASE credit_num';
+            foreach ($v as $vk=>$vv) {
+                $str .= ' '.$vv.' ';
+            }
+            $str .= ' END, ';
+        }
+        $str = substr($str, 0, -2);
+        $sql = 'UPDATE '.$this->table.' SET '.$str.' WHERE credit_num in('.implode(',', $creditNum).')';
+        $res = $this->db->query($sql);
+        if ($res === false) {
+            failed_json('导入xml失败，更新已经存在的记录失败');
+        }
+    }
+    
+    
+    
+    /**
+     * 导入xml时，添加不存在的协议号信息
+     * @param array $insert
+     */
+    private function insertBankCredit($insert) 
+    {
         $fields = array(
             'credit_num',
             'customer_num',
@@ -161,64 +256,9 @@ class Credit extends ManageModel
         $res = $this->db->query($sql);
         if ($res === false) {
             failed_json('导入失败');
-        } else {
-            @unlink($path);
-            make_json_result($res);
         }
     }
     
-    public function test()
-    {
-        self::init('bank_credit', 'bank_credit');
-        $registrationNum = 'CZB1112';
-        $path = '../data/credit/20160104181402.xml';
-        $xml = simplexml_load_file($path);
-        
-        //所有的协议号
-        $protocols = array();
-        foreach ($xml->CZB2SINOT->Record as $v){
-            $protocols[] = $v->Property->__toString();
-        }
-        
-        //数据库已经存在的协议号
-        self::selectSql(array(
-            'fields' => 'credit_num', 
-        ));
-        $had = $this->db->getAll($this->sql);
-        $exist = array();
-        foreach ($had as $k=>$v) {
-            $exist[] = $v['credit_num'];
-        }
-        unset($had);
-        
-        $intersect = array_intersect($protocols, $exist);   //已经存在的
-        $diff = array_diff($protocols, $exist);     //需要添加的
-        
-        $update = array();  //更新数组
-        $insert = array();  //添加数组
-        $cl = '';$n = 0;$i = 0;
-        foreach ($xml->CZB2SINOT->Record as $v) {
-            $cl = $v->Property->__toString();
-            if (in_array($cl, $intersect)) {
-                $str = '';
-                foreach ($v->Property as $pv) {
-                    $str .= '"'.$pv->__toString().'",';
-                    $update[$n][] = $pv->__toString();
-                }
-                $n++;
-            }
-            if (in_array($cl, $diff)) {
-                $str = '';
-                foreach ($v->Property as $pv) {
-                    $str .= '"'.$pv->__toString().'",';
-                    $insert[$i] = "(".$str.'"'.$registrationNum.'","'.time().'"'.")";
-                }
-                $i++;
-            }
-        }
-        print_r($update);
-        
-    }
     
     
     /**
@@ -244,8 +284,10 @@ class Credit extends ManageModel
         $params = $parameters['params'];
         if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
             $page = intval($params['limit']);
+            if ($page < 0) $page = 0;
             $offset = intval($params['offset']);
-            $limit = 'limit '.($page * $offset).','.$offset;
+            if ($offset < 0) $offset = 0;
+            $limit = 'limit '.$page.','.$offset;
         }
     
         self::selectSql(array(
