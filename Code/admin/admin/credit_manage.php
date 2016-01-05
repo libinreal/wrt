@@ -394,7 +394,7 @@ class Credit extends ManageModel
         $remark = htmlspecialchars(trim($parameters['params']['remark']));
         if (!$remark) make_json_result(true);
     
-        $sql = 'UPDATE '.$this->table.' SET remark='.$remark.' WHERE credit_id='.$creditId;
+        $sql = 'UPDATE '.$this->table.' SET remark="'.$remark.'" WHERE credit_id='.$creditId;
         $res = $this->db->query($sql);
         if ($res === false) {
             failed_json('备注失败');
