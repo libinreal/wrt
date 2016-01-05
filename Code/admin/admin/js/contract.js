@@ -24,6 +24,7 @@ var Contract = {
 	limit: 0,
 	offset: 8,
 	total_page: 0,
+	current_page: 1,
 	url: "contract_manage.php",
 
 	getList: function(search){
@@ -63,11 +64,11 @@ var Contract = {
 			}else{
 				that.total_page = Math.ceil(obj.content.total/that.offset);
 				if(obj.content.total == 0){
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
 					$("#contract_list>tbody").html(row);
+					$("#paginate").html('');
 				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
 					var row = "";
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";

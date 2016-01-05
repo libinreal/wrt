@@ -45,20 +45,19 @@
 		</div>
 		</form>
 		<div class="list-div" id="listDiv">
-			<table cellpadding="3" cellspacing="1" id="purchase_price_increase_list">
+			<table cellpadding="3" cellspacing="1" id="sale_order_list">
 				<thead>
 				<tr>
-					<th>物料编号</th>
-					<th>物料名称</th>
-					<th>物料类别</th>
-					<th>牌号/规格/型号</th>
-					<th>供货商报价</th>
-					<th>更新时间</th>
-					<th>商城修改价格</th>
-					<th>加价幅度</th>
-					<th>加价方式</th>
+					<th>客户订单号</th>
+					<th>客户名称</th>
+					<th>客户号</th>
+					<th>销售合同号</th>
+					<th>销售合同名称</th>
+					<th>下单时间</th>
+					<th>希望到货时间</th>
+					<th>下单金额</th>
+					<th>订单状态</th>
 					<th>操作</th>
-					<th>审核状态</th>
 				</tr>
 				</thead>
 				<tbody></tbody>
@@ -85,6 +84,25 @@ $(document).ready(function(){
     });
 });
 SaleOrder.getList();
+function first(){
+	SaleOrder.limit = 0;
+	SaleOrder.getList(true);
+}
+function next(){
+	SaleOrder.current_page = SaleOrder.current_page + 1;
+	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
+	SaleOrder.getList(true);
+}
+function prev(){
+	SaleOrder.current_page = SaleOrder.current_page - 1;
+	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
+	SaleOrder.getList(true);
+}
+function last(){
+	SaleOrder.current_page = SaleOrder.total_page;
+	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
+	SaleOrder.getList(true);
+}
 </script>
 	</body>
 </html>

@@ -55,7 +55,7 @@
 			{$lang.copyright}
 		</div>
 
-<script src="http://www.jq22.com/demo/laydate-master-141126210932/laydate.dev.js"></script>
+<script src="js/laydate/laydate.dev.js"></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
 <script src="js/bill-repay.js" type="text/javascript" ></script>
 <script type="text/javascript">
@@ -69,19 +69,23 @@ $(document).ready(function(){
 });
 BillRepay.getList();
 function first(){
+	BillRepay.current_page = 1;
 	BillRepay.limit = 0;
 	BillRepay.getList(true);
 }
 function next(){
-	BillRepay.limit = BillRepay.limit + 1;
-	BillRepay.getList(true);	
+	BillRepay.current_page = BillRepay.current_page + 1;
+	BillRepay.limit = (BillRepay.current_page - 1)*BillRepay.offset;
+	BillRepay.getList(true);
 }
 function prev(){
-	BillRepay.limit = BillRepay.limit - 1;
+	BillRepay.current_page = BillRepay.current_page - 1;
+	BillRepay.limit = (BillRepay.current_page - 1)*BillRepay.offset;
 	BillRepay.getList(true);
 }
 function last(){
-	BillRepay.limit = BillRepay.total_page - 1;
+	BillRepay.current_page = BillRepay.total_page;
+	BillRepay.limit = (BillRepay.current_page - 1)*BillRepay.offset;
 	BillRepay.getList(true);
 }
 </script>

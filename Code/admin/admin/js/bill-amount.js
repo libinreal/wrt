@@ -17,6 +17,7 @@ var BillAmount = {
 	limit: 0,
 	offset: 8,
 	total_page: 0,
+	current_page: 1,
 	url: "BillAmountModel.php",
 	entity: "bill_amount_log",
 
@@ -61,7 +62,7 @@ var BillAmount = {
 					$("#bill_amount_list>tbody").html(row);
 					$("#paginate").html('');
 				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
 					var row = "";
 					$.each(obj.content.data,function(key, value){
 						if(value.amount_type == 0){

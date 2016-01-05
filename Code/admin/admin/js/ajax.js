@@ -106,9 +106,8 @@ var getQueryStringByName = function(name) {
         results = regex.exec(location.search);
     return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
-var createPaginate = function(url,total,limit,offset){
+var createPaginate = function(url,total,current_page,limit,offset){
 	var total_page = Math.ceil(total/offset);
-    var current_page = limit+1;
 	var str = '<table id="page-table" cellspacing="0"><tbody><tr><td align="right" nowrap="true">';
 	str += '<div id="turn-page">总计'+total+'条记录，';
 	str +=	offset+'条/页，';

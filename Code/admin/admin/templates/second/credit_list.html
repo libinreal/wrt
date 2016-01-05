@@ -64,16 +64,19 @@ function first(){
 	Credit.getList(true);
 }
 function next(){
-	Credit.limit = Credit.limit + 1;
-	Credit.getList(true);	
+	Credit.current_page = Credit.current_page + 1;
+	Credit.limit = (Credit.current_page - 1)*Credit.offset;
+	Credit.getList(true);
 }
 function prev(){
-	Credit.limit = Credit.limit - 1;
+	Credit.current_page = Credit.current_page - 1;
+	Credit.limit = (Credit.current_page - 1)*Credit.offset;
 	Credit.getList(true);
 }
 function last(){
-	Credit.limit = Credit.total_page - 1;
-	Credit.getList(true);	
+	Credit.current_page = Credit.total_page;
+	Credit.limit = (Credit.current_page - 1)*Credit.offset;
+	Credit.getList(true);
 }
 </script>
 	</body>

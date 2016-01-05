@@ -69,20 +69,23 @@ $(document).ready(function(){
 });
 BillAmount.getList();
 function first(){
+	BillAmount.current_page = 1;
 	BillAmount.limit = 0;
 	BillAmount.getList(true);
 }
 function next(){
-	BillAmount.limit = BillAmount.limit + 1;
-	BillAmount.getList(true);	
+	BillAmount.current_page = BillAmount.current_page + 1;
+	BillAmount.limit = (BillAmount.current_page - 1)*BillAmount.offset;
+	BillAmount.getList(true);
 }
 function prev(){
-	BillAmount.limit = BillAmount.limit - 1;
+	BillAmount.current_page = BillAmount.current_page - 1;
+	BillAmount.limit = (BillAmount.current_page - 1)*BillAmount.offset;
 	BillAmount.getList(true);
 }
 function last(){
-	console.log(BillAmount.total_page);
-	BillAmount.limit = BillAmount.total_page - 1;
+	BillAmount.current_page = BillAmount.total_page;
+	BillAmount.limit = (BillAmount.current_page - 1)*BillAmount.offset;
 	BillAmount.getList(true);
 }
 </script>
