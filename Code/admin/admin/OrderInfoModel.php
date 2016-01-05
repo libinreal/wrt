@@ -43,6 +43,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'splitInit'){
 				//
 				$this->splitInitAction();
+			}elseif ($this->command == 'split'){
+				//
+				$this->splitAction();
 			}
 		}
 		
@@ -210,7 +213,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *              "like":{"order_sn":"no11232","user_name":"郭某某","contract_name":"xxxxx需求合同"},//订单编号 客户名称 合同名称
 	     *                  "status": 0,//订单状态
 	     *                  "due_date1": 2015-01-01,//起始日期
-	     *                  "due_date2": 2015-01-01,//结束日期
+	     *                  "due_date2": 2015-01-01//结束日期
 	     *              },
 	     *              "limit": 0,//起始行号
 	     *              "offset": 2//返回的行数
@@ -252,7 +255,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				   ' FROM ' . $order_table .
 				   ' AS odr';
 
-			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table; 	
+			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr'; 	
 		
 			$where = array();	
 			if( isset($params['where']) )
@@ -278,31 +281,31 @@ require(dirname(__FILE__) . '/includes/init.php');
 						}
 						$order_ids = implode(',', $order_sn_id);
 
-						$where_str = ' WHERE `order_id` IN(' . $order_ids . ')';
+						$where_str = ' WHERE odr.`order_id` IN(' . $order_ids . ')';
 					}	
 				}
 				if( isset( $like["user_name"] ) ){
-					$user_name_sql = 'SELECT `user_id` FROM ' . $user_table . ' WHERE `user_name` like \'%' . $like['user_name'] . '%\' ORDER BY `user_id` ASC';
+					$user_name_sql = 'SELECT `user_id` FROM ' . $user_table . ' WHERE `companyName` like \'%' . $like['user_name'] . '%\' ORDER BY `user_id` ASC';
 					$user_name_arr = $GLOBALS['db']->getAll( $user_name_sql );
 
 					if( !empty( $user_name_arr ) ){
 						$user_id_arr = array();
-						foreach ($user_id_arr as $k => $v) {
+						foreach ($user_name_arr as $k => $v) {
 							$user_id_arr[] = $v['user_id'];
 						}
 						$user_ids = implode(',', $user_id_arr);
 
 						if( $where_str )
-							$where_str .= ' AND `user_id` IN(' . $user_ids . ')';
+							$where_str .= ' AND usr.`user_id` IN(' . $user_ids . ')';
 						else
-							$where_str .= ' WHERE `user_id` IN(' . $user_ids . ')';
+							$where_str .= ' WHERE usr.`user_id` IN(' . $user_ids . ')';
 					}
 
 				}
-				if( isset( $like["contract_name"] ) ){
+				if( isset( $like["contract_name"] ) && $like['contract_name'] ){
 					$contract_name_sql = 'SELECT `contract_id` FROM ' . $contract_table . ' WHERE `contract_name` like \'%' . $like['contract_name'] . '%\' ORDER BY `contract_id` ASC';
 					$contract_name_arr = $GLOBALS['db']->getAll( $contract_name_sql );
-
+					
 					if( !empty( $contract_name_arr ) ){
 						$contract_id = array();
 						foreach ($contract_name_arr as $k => $v) {
@@ -311,50 +314,58 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$contract_ids = implode(',', $contract_id);
 
 						if( $where_str )
-							$where_str .= ' AND `contract_id` IN(' . $contract_ids . ')';
+							$where_str .= ' AND crt.`contract_id` IN(' . $contract_ids . ')';
 						else
-							$where_str .= ' WHERE `contract_id` IN(' . $contract_ids . ')';
+							$where_str .= ' WHERE crt.`contract_id` IN(' . $contract_ids . ')';
 					}
 				}
 			}
 			
-			if( isset( $where["status"] ) && $where['status'] !== '' )
+			if( isset( $where["status"] ) )
 			{
 				if( $where_str )
-					$where_str .= " AND `status` = " . $where['status'];
+					$where_str .= " AND odr.`order_status` = " . $where['status'];
 				else
-					$where_str .= " WHERE `status` = " . $where['status'];
+					$where_str .= " WHERE odr.`order_status` = " . $where['status'];
 			}	
 
 			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
 			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				$where['due_date2'] = strtotime( $where['due_date2'] );
 				if( $where_str )
-					$where_str .= " AND `add_time` >= '" . $where['due_date1'] . "' AND `add_time` <= '" . $where['due_date2'] . "'";
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
 				else
-					$where_str .= " WHERE `add_time` >= '" . $where['due_date1'] . "' AND `add_time` <= '" . $where['due_date2'] . "'";
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
 			}
 			else if( isset( $where["due_date1"] ) )
 			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
 				if( $where_str )
-					$where_str .= " AND `add_time` >= '" . $where['due_date1'] . "'";
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "'";
 				else
-					$where_str .= " WHERE `add_time` >= '" . $where['due_date1'] . "'";
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "'";
 			}
 			else if( isset( $where["due_date2"] ) )
 			{
+				$where['due_date2'] = strtotime( $where['due_date2'] );
 				if( $where_str )
-					$where_str .= " AND `add_time` <= '" . $where['due_date2'] . "'";
+					$where_str .= " AND odr.`add_time` <= '" . $where['due_date2'] . "'";
 				else
-					$where_str .= " WHERE `add_time` <= '" . $where['due_date2'] . "'";
+					$where_str .= " WHERE odr.`add_time` <= '" . $where['due_date2'] . "'";
 			}
 
-			$sql = $sql . $where_str . 
+			$sql = $sql . 
 				   ' LEFT JOIN ' . $user_table . ' as usr ON odr.`user_id` = usr.`user_id` '.
 				   ' LEFT JOIN ' . $contract_table . ' as crt ON odr.`contract_sn` = crt.`contract_num` ' .
+				   $where_str .
 				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$orders = $GLOBALS['db']->getAll($sql);
 			
-			$total_sql = $total_sql . $where_str;
+			$total_sql = $total_sql . 
+						' LEFT JOIN ' . $user_table . ' as usr ON odr.`user_id` = usr.`user_id` '.
+				   		' LEFT JOIN ' . $contract_table . ' as crt ON odr.`contract_sn` = crt.`contract_num` ' .
+						$where_str;
 			$resultTotal = $GLOBALS['db']->getRow($total_sql);
 
 			if( $resultTotal )
@@ -370,7 +381,42 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 		}
 		
-	
+		/**
+		 * 接口名称：子订单列表
+		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "childerList",
+	     *      "parameters": {
+	     *      	"order_id":101,//主订单id
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",//("0": 成功 ,"-1": 失败)
+		 *	    "message": "订单物品拆分信息获取成功",
+		 *	    "content":
+		 *	    [
+		 *	    {
+		 *     		"add_time":"2015/01/01",//拆单时间
+		 *     		"contract_name":"ht222",//合同名称
+		 *     		"order_sn":"2014120330115-20",//订单号
+		 *     		"goods_name":"钢材24m",//物料名称
+		 *     		"cat_name":"锚具",//物料类别
+		 *     		"attr":"1/2/3",//规格/型号/牌号
+		 *     		"goods_price":100,//单价
+		 *     		"goods_number":20,//数量
+		 *     		""
+		 *	    }
+		 *	    ]
+		 *	}
+		 */
+		public function childerListAction($value='')
+		{
+			# code...
+		}
 		
 		public	function updateAction(){
 			$content = $this->content;
@@ -449,7 +495,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//商品详情
 			$good_sql = 'SELECT og.`goods_name`, og.`goods_price`, og.`goods_number`, og.`send_number`, og.`goods_sn`, s.`suppliers_name`, s.`suppliers_id`, ' .
-						' c.`rate` FROM ' . $order_goods_table . 
+						' IFNULL(c.rate,0.00) AS `rate` FROM ' . $order_goods_table . 
 						' AS og LEFT JOIN ' . $goods_table . ' AS g ON g.`goods_id` = og.`goods_id` LEFT JOIN ' . $suppliers_table .
 						' AS s ON s.`suppliers_id` = g.`suppliers_id` ' . ' LEFT JOIN ' . $order_info_table .' AS o ON o.`order_id` = og.`order_id` ' .
 						' LEFT JOIN ' . $contract_table . ' AS c ON c.`contract_num` = o.`contract_sn` ' .
@@ -479,9 +525,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//订单详情
 			//该商品的供应商列表
-			$suppliers_sql = 'SELECT g.`suppliers_id`, s.`suppliers_name` FROM ' . $goods_table . 
-							 ' AS g LEFT JOIN ' . $suppliers_table . ' AS s ON g.`suppliers_id` = s.`suppliers_id` ' .
-							 ' WHERE g.`goods_name` like \'' . $goods['goods_name'] . '\' ';
+			$suppliers_sql = 'SELECT `suppliers_id`, `suppliers_name` FROM ' . $suppliers_table;
 			$suppliers = $GLOBALS['db']->getAll( $suppliers_sql );
 			if( empty( $suppliers ) )
 				$suppliers = array();
@@ -509,15 +553,197 @@ require(dirname(__FILE__) . '/includes/init.php');
 			make_json_response( $content, '0', '商品拆分初始化成功' );
 		}
 
-		
-		public function editInitAction()
+		/**
+		 * 接口名称：子订单拆分
+		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "split",
+	     *      "parameters": {
+	     *      	"order_id":101,//主订单id
+	     *      	"goods_id":993,//商品id
+	     *      	"send_number":1,//拆单数量
+	     *      	"goods_price":20,//物料单价
+	     *      	"shipping_fee":120,//物流费用
+	     *      	"finance_fee":20,//金融费用
+	     *      	"pay_id":1//支付方式
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "订单物品拆分成功",
+		 *	    "content": {}
+		 */	        	
+		public function splitAction()
 		{
 			$content = $this->content;
-			$bill_id = $content['parameters']['bill_id'];
-		}
+			$order_id = $content['parameters']['order_id'];
+			$goods_id = $content['parameters']['goods_id'];
+			$send_number = ( double )( $content['parameters']['send_number'] );
+			$goods_price = ( double )( $content['parameters']['goods_price'] );
+			$shipping_fee = ( double )( $content['parameters']['shipping_fee'] );
+			$finance_fee = ( double )( $content['parameters']['finance_fee'] );
+			$pay_id = $content['parameters']['pay_id'];
+
+			if( empty( $order_id) )
+				make_json_response('', '-1', '订单id错误');
+
+			if( empty( $goods_id) )
+				make_json_response('', '-1', '商品id错误');
+
+			$goods_table = $GLOBALS['ecs']->table('goods');
+			$payment_table = $GLOBALS['ecs']->table('payment');
+			$contract_table = $GLOBALS['ecs']->table('contract');
+
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+			$suppliers_table = $GLOBALS['ecs']->table('suppliers');
+
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$sql = 'SELECT * FROM ' . $order_goods_table . ' WHERE `goods_id` = ' . $goods_id .' AND `order_id` = '. $order_id;
+			$order_good = $GLOBALS['db']->getRow( $sql );
 			
+			if( empty( $order_good ) ){
+				make_json_response('', '-1', '主订单id和商品id不正确');
+			}
+
+			//是否可以拆分
+			if( $order_good['goods_number'] - $order_good['send_number'] < $send_number) {
+				make_json_response('', '-1', '可拆分数量不足');
+			}
+
+			//主订单信息
+			$order_info_sql = 'SELECT * FROM ' . $order_info_table . ' WHERE `order_id` = ' . $order_id;
+			$parent_order = $GLOBALS['db']->getRow( $order_info_sql );
+			if( empty($parent_order) )
+				make_json_response('', '-1', '主订单id错误');
+
+			//创建子订单序列号
+			$childer_sn_sql = 'SELECT `order_sn` FROM ' . $order_info_table . ' WHERE `parent_order_sn` = \'' .
+					      $parent_order['order_sn'] . '\' ORDER BY `order_id` DESC';
+			$childer_sn = $GLOBALS['db']->getRow( $childer_sn_sql );
+
+			if( !empty( $childer_sn ) ){
+				$snArr = explode('-', $childer_sn['order_sn'] );
+				$childer_sn_new = $snArr[1] + 1;
+				$childer_sn_new = $parent_order['order_sn'] . '-' . $childer_sn_new;
+			}else{
+				$childer_sn_new = $parent_order['order_sn'] . '-1';
+			}
+			
+			//复制主订单信息
+			$childer_order = $parent_order;
+			$childer_order['order_sn'] = $childer_sn_new;
+			$childer_order['parent_order_id'] = $parent_order['order_id'];
+			$childer_order['parent_order_sn'] = $parent_order['order_sn'];
+
+			$childer_order['goods_amount'] = $send_number * $goods_price;
+			$childer_order['order_amount'] = $send_number * $goods_price;
+
+            $childer_order['add_time'] = gmtime();
+            $childer_order['order_status'] = 0;
+            $childer_order['pay_id'] = $pay_id;
+
+            $childer_order['shipping_status'] = 0;
+            $childer_order['shipping_time'] = 0;
+            $childer_order['money_paid'] = 0;
+
+            $childer_order['shipping_fee'] = 0;
+            $childer_order['invoice_no'] = '';
+            $childer_order['money_paid'] = 0;
+
+            $childer_order['order_amount'] = $send_number * $goods_price + $shipping_fee + $finance_fee;
+			unset( $childer_order['order_id'] );
+
+			$childer_order_sql = 'INSERT INTO ' . $order_info_table .'(';
+			$childer_order_keys = array_keys( $childer_order );
+			// print_r( $childer_order_keys );exit;
+			foreach ($childer_order_keys as $v) {
+				$childer_order_sql .= '`' . $v .'`,';
+			}
+			$childer_order_sql = substr($childer_order_sql, 0, -1) . ") VALUES(";
+
+			foreach ($childer_order as $v) {
+				if( is_null( $v ) )
+					$v = '';
+				if(is_string( $v ) )
+					$v = '\'' . $v . '\'';
+
+				$childer_order_sql = $childer_order_sql . $v . ',';
+			}
+			$childer_order_sql = substr($childer_order_sql, 0, -1) . ")";
+			
+			// $GLOBALS['db']->query("START TRANSACTION");//开启事务
+			$createOrder = $GLOBALS['db']->query($childer_order_sql);
+
+			if( $createOrder ){
+				//子订单商品
+				$insert_order_id = $GLOBALS['db'] -> insert_id(); // 获取新插入子订单的订单id
+
+				unset( $order_good['rec_id'] );
+				$order_good['order_id'] = $insert_order_id;
+				$order_good['goods_number'] = $send_number;
+				$order_good['goods_price'] = $goods_price;
+				$order_good['send_number'] = 0;
+				$order_good['contract_price'] = $goods_price;
+				$order_good['contract_number'] = $send_number;
+				$order_good['check_price'] = $goods_price;
+				$order_good['check_number'] = $send_number;
+
+				$order_good_keys = array_keys( $order_good );
+				$order_good_sql = 'INSERT INTO ' . $order_goods_table .'(';
+				
+				foreach ($order_good_keys as $v) {
+					$order_good_sql .= '`' . $v .'`,';
+				}
+				$order_good_sql = substr($order_good_sql, 0, -1) . ") VALUES(";
+
+				foreach ($order_good as $v) {
+					if( is_null( $v ) )
+						$v = '';
+					if(is_string( $v ) )
+						$v = '\'' . $v . '\'';
+
+					$order_good_sql = $order_good_sql . $v . ',';
+				}
+
+				$order_good_sql = substr($order_good_sql, 0, -1) . ")";
+				$createOrderGood = $GLOBALS['db']->query($order_good_sql);
+
+				if( $createOrderGood ){
+					// $GLOBALS['db']->query("COMMIT");//事务提交
+					$order_info_sql = 'UPDATE ' . $order_goods_table . ' SET `send_number` = `send_number` + ' . $send_number .
+										' WHERE `order_id` = ' . $order_id . ' AND `goods_id` = ' . $goods_id;
+					$order_info_update = $GLOBALS['db']->query( $order_info_sql );
+					
+					if( $order_info_update ){					
+						make_json_response('', '0', '订单拆分成功');
+					}else{
+						$GLOBALS['db']->query('DELETE FROM ' . $order_info_table . ' WHERE `order_sn` = ' . $childer_sn_new);
+						$order_good_id = $GLOBALS['db'] -> insert_id(); // 获取新插入订单商品id
+						$GLOBALS['db']->query('DELETE FROM ' . $order_goods_table . ' WHERE `rec_id` = ' . $order_good_id);
+
+						make_json_response('', '-1', '订单拆分失败');
+					}
+
+				}else{
+					// $GLOBALS['db']->query("ROLLBACK");//事务回滚
+					$GLOBALS['db']->query('DELETE FROM ' . $order_info_table . ' WHERE `order_sn` = ' . $childer_sn_new);
+					make_json_response('', '-1', '订单拆分失败');
+				}
+
+			}else{
+				// $GLOBALS['db']->query("ROLLBACK");//事务回滚
+				make_json_response('', '-1', '订单拆分失败');
+			}
+
+		}
+	
 		
 	}
-	$content = jsonAction( array( "splitInit", "editInit" ) );
+	$content = jsonAction( array( "splitInit", "split" ) );
 	$orderModel = new OrderInfoModel($content);
 	$orderModel->run();
