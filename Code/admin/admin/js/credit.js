@@ -48,7 +48,7 @@ var Credit = {
 								}
 							});
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=credit_manage&act=info&id="+value.credit_id, "详情");
+								var edit = createLink(that.url+"?act=detail&id="+value.credit_id, "详情");
 								row += createTd(edit);
 							}
 						}
@@ -106,5 +106,31 @@ var Credit = {
 				$('#message_area').html(createTip('保存成功'));
 			}
 		});
+	},
+
+	// 授信文件上传
+	getUploadFile: function(){
+		if($("#file_form").valid()===false){
+			return false;
+		}
+		var strJson = createJson("importCredit", "credit_file", {}, "object");
+		that = this
+        $.ajaxFileUpload({
+            url:this.url,
+            fileElementId:'credit_file',//file标签的id
+            dataType: 'json',//返回数据的类型  
+            data:strJson,//一同上传的数据
+            success: function (data, status) {
+				if(data.error){
+					$('#message_area').html(createError(data.message));
+				}else{
+					$('#message_area').html(createTip('上传成功'));
+					that.getList();
+				}
+            },
+            error: function (data, status, e) {
+                console.log(e);
+            }
+        });
 	}
 }

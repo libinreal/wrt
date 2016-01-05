@@ -51,6 +51,7 @@ var Bill = {
 		strJson = createJson("page", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -131,6 +132,7 @@ var Bill = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
+				console.log(obj);
 				// 初始化列表
 				TypeMode.getUsers("customer_id");
 				$.each(obj.content.init,function(key, value){
@@ -155,6 +157,7 @@ var Bill = {
 					}
 				});
 				// 绑定数据
+				// 调用收付款列表
 				$.each(obj.content.info, function(key, value){
 					if($("input[name="+key+"]").length){
 						var o = "input[name="+key+"]";
@@ -173,7 +176,6 @@ var Bill = {
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}
 				});
-				// 调用收付款列表
 				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id);
 				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
 				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id);

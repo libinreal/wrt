@@ -46,9 +46,6 @@
 <script src="js/bill-assign.js" type="text/javascript" ></script>
 <script type="text/javascript">
 BillAssign.getList(0);
-$(document).ready(function(){
-
-});
 function checktotal(){
 	var amount_valid = parseFloat($("#amount_valid").text());
 	var total = 0;
@@ -68,6 +65,22 @@ function checktotal(){
 	}else{
 		$('#message_area').html('');
 	}
+}
+function first(){
+	BillAssign.limit = 0;
+	BillAssign.getList(0);
+}
+function next(){
+	BillAssign.limit = BillAssign.limit + 1;
+	BillAssign.getList(0);	
+}
+function prev(){
+	BillAssign.limit = BillAssign.limit - 1;
+	BillAssign.getList(0);
+}
+function last(){
+	BillAssign.limit = BillAssign.total_page;
+	BillAssign.getList(0);	
 }
 </script>
 	</body>

@@ -25,7 +25,7 @@
 			&nbsp;至&nbsp;
 			<input type="text" id="due_date2" name="due_date2" readonly>
 			&nbsp;
-			<input type="button" class="button" value="搜索" onclick="BillAmount.getList(true)" />
+			<input type="button" class="button" value="搜索" onclick="BillAmount.getList('search')" />
 		</div>
 		</form>
 		<div class="list-div" id="listDiv">
@@ -70,20 +70,20 @@ $(document).ready(function(){
 BillAmount.getList();
 function first(){
 	BillAmount.limit = 0;
-	BillAmount.getList();
+	BillAmount.getList(true);
 }
 function next(){
 	BillAmount.limit = BillAmount.limit + 1;
-	BillAmount.getList();	
+	BillAmount.getList(true);	
 }
 function prev(){
 	BillAmount.limit = BillAmount.limit - 1;
-	BillAmount.getList();
+	BillAmount.getList(true);
 }
 function last(){
 	console.log(BillAmount.total_page);
 	BillAmount.limit = BillAmount.total_page - 1;
-	BillAmount.getList();
+	BillAmount.getList(true);
 }
 </script>
 	</body>

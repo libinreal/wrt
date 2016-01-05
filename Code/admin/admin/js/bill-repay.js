@@ -39,19 +39,22 @@ var BillRepay = {
 			}
 		}
 		if(search != false){
+			if(search == "search"){
+				this.limit = 0;
+			}
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		}else{
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("page", this.entity, params);
 		that = this
+		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
 				that.total_page = Math.ceil(obj.content.total/that.offset);
-				console.log(obj)
 				if(obj.content.total == 0){
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
 					$("#bill_repay_list>tbody").html(row);

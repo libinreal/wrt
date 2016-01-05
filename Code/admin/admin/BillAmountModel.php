@@ -99,8 +99,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "bill_amount_log_id":2 ,//生成单ID
 		 *                  "amount_type": 0 ,//生成单类型
 		 *                  "amount":  100.00 ,//金额
-		 *                  "remark": "xxxx" ,//备注
 		 *                  "customer_id": 4 ,//往来单位ID
+		 *                  "customer_name": "xxx",//客户
 		 *                  "create_time": "2015-12-12",//创建日期
 		 *                  "create_by": "xxx" ,//创建人
 		 *           }
@@ -114,7 +114,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$params = $content['parameters']['params'];
 			
 			$bill_amount_table = $GLOBALS["ecs"]->table("bill_amount_log");
-			$sql = "SELECT * FROM $bill_amount_table";
+			$users_table = $GLOBALS['ecs']->table( 'users' );
+			$sql = 'SELECT ba.`bill_amount_log_id`, ba.`amount_type`, ba.`amount`, ba.`user_id` as `customer_id`, u.`user_name` as `customer_name`, ba.`create_time`, ba.`create_by`' .
+			  	   ' FROM ' . $bill_amount_table . ' AS ba LEFT JOIN ' . $users_table .
+				   ' AS u ON u.`user_id` = ba.`user_id`';
 
 			$total_sql = "SELECT COUNT(*) as `total` FROM $bill_amount_table";
 
@@ -507,7 +510,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "user_id": 4 ,
 		 * 	                "bill_id": 0 ,//票据ID
 		 * 	        }
-		 
 		 *	}
 		 */
 		public function editInitAction()
@@ -517,11 +519,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			if( $type == 0 )//商票
 			{
+				$users_table = $GLOBALS['ecs']->table( 'users' );
 				$bill_amount_table = $GLOBALS['ecs']->table( 'bill_amount_log' );
 				$bill_amount_id = $content['parameters']['bill_amount_log_id'];
 
-				$sql = 'SELECT `amount_type`, `amount_rate`, `amount`, `remark`, `user_name`, `user_id`,`bill_id` FROM ' . $bill_amount_table
-					 . ' WHERE `bill_amount_log_id` = ' . $bill_amount_id;
+				$sql = 'SELECT ba.`amount_type`, ba.`amount_rate`, ba.`amount`, ba.`remark`, u.`user_name`, ba.`user_id`, ba.`bill_id` FROM ' . $bill_amount_table .
+					   ' AS ba LEFT JOIN ' . $users_table . ' AS u ON ba.`user_id` = u.`user_id`' .
+					   ' WHERE `bill_amount_log_id` = ' . $bill_amount_id;
 				$bill_amount_log = $GLOBALS['db']->getRow( $sql );//额度生成单内容
 
 				$bill_table = $GLOBALS['ecs']->table( 'bill' );
@@ -534,7 +538,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$result['info'] = array_merge( $bill_amount_log, $bill ); 		
 			} elseif ( $type == 1) {//现金
-				$sql = 'SELECT `user_id`, `user_name` FROM ' . $GLOBALS['ecs']->table('users');
+				$users_table = $GLOBALS['ecs']->table( 'users' );
+				$sql = 'SELECT `user_id`, `user_name` FROM ' . $users_table;
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 
@@ -544,8 +549,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$bill_amount_table = $GLOBALS['ecs']->table( 'bill_amount_log' );
 				$bill_amount_id = $content['parameters']['bill_amount_log_id'];
 
-				$sql = 'SELECT `amount_type`, `amount`, `remark`, `user_name`, `user_id` FROM ' . $bill_amount_table
-					 . ' WHERE `bill_amount_log_id` = ' . $bill_amount_id;
+				$sql = 'SELECT ba.`amount_type`, ba.`amount`, ba.`remark`, u.`user_name`, ba.`user_id` FROM ' . $bill_amount_table .
+				       ' AS ba LEFT JOIN ' . $users_table . ' AS u on u.`user_id` = ba.`user_id`' .
+					   ' WHERE `bill_amount_log_id` = ' . $bill_amount_id;
 				$bill_amount_log = $GLOBALS['db']->getRow( $sql );//额度生成单内容
 
 				$result['info'] = $bill_amount_log;

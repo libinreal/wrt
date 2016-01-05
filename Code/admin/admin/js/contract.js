@@ -139,9 +139,9 @@ var Contract = {
 				}
 				if(key == "attachment"){
 					if(value != ""){
-						$("td#attachment_file").html(createLink("javascript:void(0);", "查看文件")+createLink("javascript:void(0);", "下载"))
+						$("td#attachment_file").html(createLink("image.php?act=view&url="+value, "查看文件", "javascript:void(0)","blank")+createLink("image.php?act=download&url="+value, "下载", "javascript:void(0)","blank"));
 					}else{
-						$("td#attachment_file").html(createWarn("无附件"))
+						$("td#attachment_file").html(createWarn("无附件"));
 					}
 				}
 				if(key == "is_control" && value == 1){
@@ -271,11 +271,7 @@ var Contract = {
 		if($("#attachment_form").valid()===false){
 			return false;
 		}
-		var id = getQueryStringByName('id');
-		if(id===""||!validateNumber(id)){
-			return false;
-		}
-		var params = {"contract_id": id, "params":{}};
+		var params = {};
 		var strJson = createJson("uploadify", "attachment_file", params, "object");
 		console.log(strJson);
         $.ajaxFileUpload({

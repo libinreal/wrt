@@ -13,7 +13,6 @@ var BillAssign = {
 		params = {"params":{"where":{"customer_id":id,"type":type},"limit":this.limit,"offset":this.offset}};
 		strJson = createJson("page", this.entity, params);
 		that = this
-		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -35,22 +34,29 @@ var BillAssign = {
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";
 						row += "<td class='title'>合同号：</td><td>"+value.contract_id+"</td>";
-						row += "<td class='title'>已分配现金采购额度：</td><td>"+value.bill_amount_history+"</td>";
-						row += "<td class='title'>现有现金采购额度：</td><td id='bill_amount_valid"+value.contract_id+"'>"+value.bill_amount_valid+"</td>";
-						row += "<td class='title'>本次分配现金额度：</td><td><input type='hidden' name='contract_id[]' value='"+value.contract_id+"' /><input type='text'name='assign_amount"+value.contract_id+"' data-rule-number='true' data-number-msg='' onchange='checktotal()' /></td>";
-						row += "<td class='title'>现有总采购额度：</td><td id='total"+value.contract_id+"'>"+value.bill_amount_valid+"</td>";
+						if(type == 0){
+							row += "<td class='title'>已分配采购额度：</td><td>"+value.bill_amount_history+"</td>";
+							row += "<td class='title'>现有采购额度：</td><td id='bill_amount_valid"+value.contract_id+"'>"+value.bill_amount_valid+"</td>";
+							row += "<td class='title'>本次分配额度：</td><td><input type='text'name='assign_amount"+value.contract_id+"' data-rule-number='true' data-number-msg='' onchange='checktotal()' /><input type='hidden' name='contract_id[]' value='"+value.contract_id+"' /></td>";
+							row += "<td class='title'>现有总采购额度：</td><td id='total"+value.contract_id+"'>"+value.bill_amount_valid+"</td>";
+						}else if(type == 1){
+							row += "<td class='title'>已分配现金采购额度：</td><td>"+value.cash_amount_history+"</td>";
+							row += "<td class='title'>现有现金采购额度：</td><td id='bill_amount_valid"+value.contract_id+"'>"+value.cash_amount_valid+"</td>";
+							row += "<td class='title'>本次分配现金额度：</td><td><input type='text'name='assign_amount"+value.contract_id+"' data-rule-number='true' data-number-msg='' onchange='checktotal()' /><input type='hidden' name='contract_id[]' value='"+value.contract_id+"' /></td>";
+							row += "<td class='title'>现有总采购额度：</td><td id='total"+value.contract_id+"'>"+value.cash_amount_valid+"</td>";						
+						}
 						row += "</tr>";
 					});
 					$("#bill_purchase_assign_list>tbody").html(row);
 				}
 			}
-			$('#message_area').html('');
+			$('#message_area').html(createTip(obj.message));
 		}, "json");
 	},
 
 	getCreateMulti: function(type){
 		if($("#bill_purchase_form").valid() == false){
-			return false
+			return false;
 		}
 		var amount_valid = parseFloat($("#amount_valid").text());
 		var total = 0;
