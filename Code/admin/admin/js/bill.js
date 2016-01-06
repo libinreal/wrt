@@ -15,6 +15,7 @@ var Bill = {
 	limit: 0,
 	offset: 8,
 	total_page: 0,
+	current_page: 1,
 	url: "BillModel.php",
 	entity: "bill",
 	bill_type: "",
@@ -62,7 +63,7 @@ var Bill = {
 					$("#bill_list>tbody").html(row);
 					$("#paginate").html('');
 				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
 					var row = "";
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";

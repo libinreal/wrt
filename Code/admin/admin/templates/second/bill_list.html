@@ -86,19 +86,22 @@ $(document).ready(function(){
 Bill.getList();
 function first(){
 	Bill.limit = 0;
-	Bill.getList();
+	Bill.getList(true);
 }
 function next(){
-	Bill.limit = Bill.limit + 1;
-	Bill.getList();	
+	Bill.current_page = Bill.current_page + 1;
+	Bill.limit = (Bill.current_page - 1)*Bill.offset;
+	Bill.getList(true);
 }
 function prev(){
-	Bill.limit = Bill.limit - 1;
-	Bill.getList();
+	Bill.current_page = Bill.current_page - 1;
+	Bill.limit = (Bill.current_page - 1)*Bill.offset;
+	Bill.getList(true);
 }
 function last(){
-	Bill.limit = Bill.total_page;
-	Bill.getList();	
+	Bill.current_page = Bill.total_page;
+	Bill.limit = (Bill.current_page - 1)*Bill.offset;
+	Bill.getList(true);
 }
 </script>
 	</body>
