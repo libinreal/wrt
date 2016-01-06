@@ -170,6 +170,9 @@ var SaleOrder = {
 				$("#goods_id").text(goods_id);
 
 				$.each(obj.content.order, function(k, v){
+					if($("#"+k).length>0){
+						$("#"+k).text(v);
+					}
 					if($("input[name="+k+"]").length>0){
 						$("input[name="+k+"]").val(v);	
 					}
@@ -188,14 +191,20 @@ var SaleOrder = {
 						$("select[name="+k+"]").html(row);
 					}
 				});
+				if(obj.content.order.remain_number > 0){
+					$("#handle_button").append('<input type="button" class="button" value=" 确定 " onclick="">')
+				}
 			}
 			$('#message_area').html('');
 		}, "json");
 	},
 
 	setSplit: function(){
+		if($("split_form").valid() == false){
+			return false;
+		}
 		var params = {"params":{"limit":this.limit, "offset":this.offset}};
-		strJson = createJson("page", this.entity, params);
+		strJson = createJson("split", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
