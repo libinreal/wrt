@@ -96,20 +96,24 @@ $(document).ready(function(){
     });
 });
 function first(){
+	Contract.current_page = 1;
 	Contract.limit = 0;
-	Contract.getList('paginate');
+	Contract.getList(true);
 }
 function next(){
-	Contract.limit = Contract.limit + 1;
-	Contract.getList('paginate');	
+	Contract.current_page = Contract.current_page + 1;
+	Contract.limit = (Contract.current_page - 1)*Contract.offset;
+	Contract.getList(true);
 }
 function prev(){
-	Contract.limit = Contract.limit - 1;
-	Contract.getList('paginate');
+	Contract.current_page = Contract.current_page - 1;
+	Contract.limit = (Contract.current_page - 1)*Contract.offset;
+	Contract.getList(true);
 }
 function last(){
-	Contract.limit = Contract.total_page - 1;
-	Contract.getList('paginate');	
+	Contract.current_page = Contract.total_page;
+	Contract.limit = (Contract.current_page - 1)*Contract.offset;
+	Contract.getList(true);
 }
 </script>
 </body>

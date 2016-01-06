@@ -23,7 +23,7 @@ var Credit = {
 		var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		strJson = createJson("creditList", this.entity, params);
 		that = this
-//		console.log(strJson);
+		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
 			if(obj.error){
 				$('#message_area').html(createError(obj.message));
