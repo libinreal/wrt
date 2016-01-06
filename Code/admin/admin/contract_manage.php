@@ -533,7 +533,7 @@ class Contract extends ManageModel
                 's.suppliers_name'
             ), 
             'join'   => 'LEFT JOIN suppliers AS s on a.suppliers_id=s.suppliers_id', 
-            'where'  => 'a.role_id=2 and s.is_check=1'.$where, 
+            'where'  => 'a.role_id=2 and a.suppliers_id<>0 and s.is_check=1'.$where, 
             'extend' => ' ORDER BY s.suppliers_id ASC'
         ));
         $res = $this->db->getAll($this->sql);
