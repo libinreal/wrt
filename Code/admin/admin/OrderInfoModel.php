@@ -46,6 +46,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'split'){
 				//
 				$this->splitAction();
+			}elseif ($this->command == 'childerList'){
+				//
+				$this->childerListAction();
 			}
 		}
 		
@@ -390,7 +393,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *      "entity": "order_info",
 	     *      "command": "childerList",
 	     *      "parameters": {
-	     *      	"order_id":101,//主订单id
+	     *      	"order_id":101//主订单id
 	     *      }
 	     *  }
 	     * 返回数据格式如下 :
@@ -400,6 +403,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "content":
 		 *	    [
 		 *	    {
+		 *     		"order_id":49,//订单id
+		 *     		"goods_id":339,//商品id
 		 *     		"add_time":"2015/01/01",//拆单时间
 		 *     		"contract_name":"ht222",//合同名称
 		 *     		"order_sn":"2014120330115-20",//订单号
@@ -408,14 +413,94 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *     		"attr":"1/2/3",//规格/型号/牌号
 		 *     		"goods_price":100,//单价
 		 *     		"goods_number":20,//数量
-		 *     		""
+		 *     		"order_status":0//客户未验签
 		 *	    }
 		 *	    ]
 		 *	}
 		 */
-		public function childerListAction($value='')
+		public function childerListAction()
 		{
-			# code...
+			$content = $this->content;
+			$order_id = $content['parameters']['order_id'];
+
+			if( empty( $order_id ) ){
+				make_json_response('', '-1', '订单ID错误');
+			}
+
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$contract_table = $GLOBALS['ecs']->table('contract');//合同
+			$goods_table = $GLOBALS['ecs']->table('goods');//物料
+
+			$category_table = $GLOBALS['ecs']->table('category');//物料类别
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//物料属性
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
+
+			//所有子订单id
+			$all_order_sql = 'SELECT `order_id` FROM ' . $order_info_table . ' WHERE `parent_order_id` = ' . $order_id;
+			$all_order_id = $GLOBALS['db']->getAll( $all_order_sql );
+				
+			if( empty( $all_order_id ) ){
+
+				$content = array();
+				$content['data'] = array();
+				$content['total'] = 0;
+
+				make_json_response($content, '0', '查询子订单成功');
+			}	
+
+			$all_order_id_arr = array();
+
+			foreach ($all_order_id as $v) {
+				$all_order_id_arr[] = $v['order_id'];
+			}
+			$all_order_ids = implode(',', $all_order_id_arr);
+
+
+
+			$childer_order_sql = 'SELECT odr.`order_id`, odr.`order_sn`, odr.`add_time`, odr.`order_status`, IFNULL(crt.`contract_name`, \'\') AS `contract_name`, ogd.`goods_id`, ' .
+							     'ogd.`goods_name`, ogd.`goods_price`, ogd.`goods_number`, cat.`cat_name` FROM ' .
+							     $order_goods_table . ' AS ogd LEFT JOIN ' .
+							     $goods_table . ' AS g ON g.`goods_id` = ogd.`goods_id` LEFT JOIN ' .
+							     $category_table . ' AS cat ON cat.`cat_id` = g.`cat_id` LEFT JOIN '.
+							     $order_info_table . ' AS odr ON odr.`order_id` = ogd.`order_id` LEFT JOIN '.
+							     $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn`' .
+							     ' WHERE ogd.`order_id` IN(' . $all_order_ids . ')';
+
+			$childer_orders = $GLOBALS['db']->getAll( $childer_order_sql );
+
+			$childer_goods_id_arr = array();
+			foreach ($childer_orders as $v) {
+				$childer_goods_id_arr[] = $v['goods_id'];
+			}
+			$childer_goods_ids = implode(',', $childer_goods_id_arr);
+
+			$goods_attr_sql = 'SELECT `goods_id`, `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` IN(' . $childer_goods_ids . ')';
+			$goods_attr_arr = $GLOBALS['db']->getAll( $goods_attr_sql );
+
+			$goods_attr_val = array();
+			foreach ($goods_attr_arr as $v) {
+				if( isset( $goods_attr_val[ $v['goods_id'] ] ) )
+					array_push( $goods_attr_val[ $v['goods_id'] ], $v['attr_value'] );
+				else
+					$goods_attr_val[ $v['goods_id'] ] = array( $v['attr_value'] );
+			}
+			
+			foreach( $goods_attr_val as &$v ){
+				$v = implode('/', $v);
+			}	
+			unset($v);
+
+			foreach ($childer_orders as &$v) {
+				$v['attr'] = $goods_attr_val[ $v['goods_id'] ];
+				$v['add_time'] = date('Y-m-d', $v['add_time']);
+			}
+			unset( $v );
+
+			$content = array();
+			$content['data'] = $childer_orders;
+			$content['total'] = count( $all_order_id );
+			make_json_response($content, '0', '子订单查询成功');
+			
 		}
 		
 		public	function updateAction(){
@@ -495,7 +580,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//商品详情
 			$good_sql = 'SELECT og.`goods_name`, og.`goods_price`, og.`goods_number`, og.`send_number`, og.`goods_sn`, s.`suppliers_name`, s.`suppliers_id`, ' .
-						' IFNULL(c.rate,0.00) AS `rate` FROM ' . $order_goods_table . 
+						' IFNULL(c.rate,0.00) AS `rate`, g.`cat_id` FROM ' . $order_goods_table . 
 						' AS og LEFT JOIN ' . $goods_table . ' AS g ON g.`goods_id` = og.`goods_id` LEFT JOIN ' . $suppliers_table .
 						' AS s ON s.`suppliers_id` = g.`suppliers_id` ' . ' LEFT JOIN ' . $order_info_table .' AS o ON o.`order_id` = og.`order_id` ' .
 						' LEFT JOIN ' . $contract_table . ' AS c ON c.`contract_num` = o.`contract_sn` ' .
@@ -504,8 +589,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			if( empty( $goods ) )
 				make_json_response('', '-1', '商品不存在');
-
-			
 
 			//规格、型号、材质
 			$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $goods_id;
@@ -524,8 +607,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods['remain_number'] = $goods['goods_number'] - $goods['send_number'];//未拆单
 
 			//订单详情
-			//该商品的供应商列表
-			$suppliers_sql = 'SELECT `suppliers_id`, `suppliers_name` FROM ' . $suppliers_table;
+			//该类商品的供应商列表
+			$suppliers_sql = 'SELECT s.`suppliers_id`, s.`suppliers_name` FROM ' . $goods_table .
+							 ' AS g LEFT JOIN ' . $suppliers_table . ' AS s ON g.`suppliers_id` = s.`suppliers_id`' .
+							 ' WHERE g.`cat_id` = ' . $goods['cat_id'] . ' GROUP BY s.`suppliers_id`';
 			$suppliers = $GLOBALS['db']->getAll( $suppliers_sql );
 			if( empty( $suppliers ) )
 				$suppliers = array();
@@ -744,6 +829,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 	
 		
 	}
-	$content = jsonAction( array( "splitInit", "split" ) );
+	$content = jsonAction( array( "splitInit", "split", "childerList" ) );
 	$orderModel = new OrderInfoModel($content);
 	$orderModel->run();
