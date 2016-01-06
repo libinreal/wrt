@@ -50,14 +50,16 @@ var Contract = {
 				condition.end_time = end_time;
 			}
 			if(search == "search"){
+				this.current_page = 1;
 				this.limit = 0;
 			}
+			console.log(this.limit);
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("contList", "contract", params);
 		that = this
 		$.post(this.url, strJson, function(obj){
-//			console.log(obj);
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;

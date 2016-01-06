@@ -154,9 +154,7 @@ var SaleOrder = {
 		var params = {"order_id":order_id, "goods_id":goods_id};
 		strJson = createJson("splitInit", this.entity, params);
 		that = this
-		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -174,15 +172,17 @@ var SaleOrder = {
 						$("#"+k).text(v);
 					}
 					if($("input[name="+k+"]").length>0){
-						$("input[name="+k+"]").val(v);	
+						$("input[name="+k+"]").val(v);
+					}
+					if(k == "payment"){
+						var row = "";
+						$.each(v, function(k1, v1){
+							row += appendOption(v1.pay_id, v1.pay_name);
+						});
+						$("select[name=pay_id]").html(row);
 					}
 					if($("select[name="+k+"]").length>0){
 						var row = "";
-						if(k == "payment"){
-							$.each(v, function(k1, v1){
-								row += appendOption(v1.pay_id, v1.pay_name);
-							});
-						}
 						if(k == "suppliers"){
 							$.each(v, function(k1, v1){
 								row += appendOption(v1.suppliers_id, v1.suppliers_name);
@@ -192,7 +192,7 @@ var SaleOrder = {
 					}
 				});
 				if(obj.content.order.remain_number > 0){
-					$("#handle_button").append('<input type="button" class="button" value=" 确定 " onclick="">')
+					$("#handle_button").append('<input type="button" class="button" value=" 确定 " onclick="SaleOrder.setSplit()">')
 				}
 			}
 			$('#message_area').html('');
@@ -200,28 +200,36 @@ var SaleOrder = {
 	},
 
 	setSplit: function(){
-		if($("split_form").valid() == false){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
 			return false;
 		}
-		var params = {"params":{"limit":this.limit, "offset":this.offset}};
-		strJson = createJson("split", this.entity, params);
+		var goods_id = getQueryStringByName('goods_id');
+		if(goods_id===""||!validateNumber(goods_id)){
+			return false;
+		}
+		if($("#split_form").valid() == false){
+			return false;
+		}
+		var remain_number = parseFloat($("#remain_number").text());
+		var send_number = parseFloat($("#send_number").val());
+		if(send_number>remain_number){
+			$('#message_area').html(createError('拆分余数不足'));
+			return false;
+		}
+		var form_data = $("#split_form").FormtoJson();
+		form_data.order_id = order_id;
+		form_data.goods_id = goods_id;
+		strJson = createJson("split", this.entity, form_data);
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#bill_amount_list>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
-					var row = "";
-				}
+				$('#message_area').html(createTip(obj.message));
+				return false;
 			}
-			$('#message_area').html('');
 		}, "json");
 	},
 
