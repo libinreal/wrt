@@ -25,12 +25,12 @@
 				</thead>
 				<tbody>
 					<tr>
-						<td class="title">单据编号：</td><td id="credit_num"></td>
+						<td class="title">单据编号：</td><td id="credit_id"></td>
 						<td class="title">单据日期：</td><td id="add_time"></td>
-						<td class="title">单据状态：</td><td id=""><span style="color:red">不明条目</span></td>
+						<td class="title"></td><td></td>
 					</tr>
 					<tr>
-						<td class="title">公司：</td><td id=""><span style="color:red">不明条目</span></td>
+						<td class="title">公司：</td><td id="">中交物融</td>
 						<td class="title">客户：</td><td id="customer_name"></td>
 						<td class="title">授信额度：</td><td id="amount_all"></td>
 					</tr>
@@ -47,7 +47,7 @@
 				</tbody>
 			</table>
 			<div align="center">
-				<input type="button" onclick="redirectToUrl(&quot;demo_template.php?section=credit_manage&amp;act=list&quot;)" value="返回列表" class="button">
+				<input type="button" onclick="redirectToUrl(&quot;credit_manage.php?act=list&quot;)" value="返回列表" class="button">
 				<input type="submit" class="button" value=" 保存 ">
 			</div>
 		</div>
@@ -63,6 +63,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	Credit.getCreditInfo();
+	$("#credit_id").text(getQueryStringByName(id));
 	$("#remark_form").validate({
 		submitHandler: function(form) {
 			Credit.getUpdateCreditRemark();
