@@ -35,7 +35,9 @@ $ApiList = array(
     'batchPrice', 
     'deletePrice', 
     'getExistBatch', 
-    'priceList'
+    'priceList', 
+    'singlePrice', 
+    'setPrice'
 );
 /**
  * 加价管理API
@@ -146,7 +148,7 @@ class Price extends ManageModel
      *      "command" : "getExistBatch", 
      *      "entity"  : "price_adjust", 
      *      "parameters" : {
-     *              "cat_id"       : "(int)", //不能为空
+     *              "cat_id"       : "(int)", //都为空则返回所有记录
      *              "brand_id"     : "(int)", 
      *              "suppliers_id" : "(int)"
      *      }
@@ -159,23 +161,17 @@ class Price extends ManageModel
         $catId = $parameters['cat_id'];
         $brandId = $parameters['brand_id'];
         $suppliersId = $parameters['suppliers_id'];
-        if ($catId <= 0) {
-            failed_json('没有传参`cat_id`');
+        
+        
+        $where = '';
+        //类型名称
+        if ($catId) {
+           
+            $where = 'cat_id='.$catId;
         }
         
-        //类型名称
-        $this->table = 'goods_type';
-        self::selectSql(array(
-            'fields' => 'cat_name',
-            'where'  => 'cat_id='.$catId
-        ));
-        $catName = $this->db->getOne($this->sql);
-        if (!$catName) {
-            failed_json('`cat_id`传参错误');
-        }
         
         //where
-        $where = 'cat_id='.$catId;
         if ($brandId) {
             $where .= ' and brand_id='.$brandId;
         }
@@ -195,9 +191,13 @@ class Price extends ManageModel
         }
         
         //查询所有厂家、供应商
+        $catId = array();
         $brandId = array();
         $suppliersId = array();
         foreach ($res as $k=>$v) {
+            if ($v['cat_id'] != 0 && !in_array($v['cat_id'], $catId)) {
+                array_push($catId, $v['cat_id']);
+            }
             if ($v['brand_id'] != 0 && !in_array($v['brand_id'], $brandId)) {
                 array_push($brandId, $v['brand_id']);
             }
@@ -205,6 +205,17 @@ class Price extends ManageModel
                 array_push($suppliersId, $v['suppliers_id']);
             }
         }
+        
+        //所有物料类型
+        if ($catId) {
+            $this->table = 'goods_type';
+            self::selectSql(array(
+                'fields' => 'cat_id,cat_name',
+                'where'  => 'cat_id in('.implode(',', $catId).')'
+            ));
+            $catName = $this->db->getAll($this->sql);
+        }
+        
         
         //所有厂家名称
         if ($brandId) {
@@ -230,8 +241,18 @@ class Price extends ManageModel
         foreach ($res as $k=>$v) {
             $res[$k]['cat_name'] = $catName;
             if (!$brandName && !$suppliersName) {
+                $res[$k]['cat_name'] = '';
                 $res[$k]['brand_name'] = '';
                 $res[$k]['suppliers_name'] = '';
+            }
+            if ($catName) {
+                foreach ($catName as $cv) {
+                    if ($v['cat_id'] == $cv['cat_id']) {
+                        $res[$k]['cat_name'] = $cv['cat_name'];
+                    } elseif ($v['cat_id'] == 0) {
+                        $res[$k]['cat_name'] = '';
+                    }
+                }
             }
             if ($brandName) {
                 foreach ($brandName as $bv) {
@@ -305,7 +326,6 @@ class Price extends ManageModel
             }
         }
         
-        
         //获取批量加价的商品
         $this->table = 'goods';
         self::selectSql(array(
@@ -329,14 +349,17 @@ class Price extends ManageModel
             if ($goods) {
                 $this->batchGoods($upData, $goods);
             }
+            
         }
         
         //添加新信息
         if ($inData) {
-            $this->batchInsert($inData, $userId);
-            if ($goods) {
-                $this->batchGoods($inData, $goods);
+            $data = $this->batchInsert($inData, $userId);
+                
+            if ($goods && is_array($data)) {
+                $this->batchGoods($data, $goods);
             }
+            
         }
         
         make_json_result(true);
@@ -348,32 +371,36 @@ class Price extends ManageModel
      * 删除批量加价中的某一条数据
      * {
      *      "command" : "deletePrice", 
-     *      "entity"  : "price_adjust", 
+     *      "entity"  : "goods", 
      *      "parameters" : {
      *          "price_adjust_id" : "(int)", //不能为空
-     *          "cat_id"          : "(int)", //不能为空
-     *          "brand_id"        : "(int)", //为空时值为0
-     *          "suppliers_id"    : "(int)"  //为空时值为0
      *      }
      * }
      */
     public function deletePrice($entity, $parameters) 
     {
-        self::init($entity, 'price_adjust');
+        self::init($entity, 'goods');
         
         $id = $parameters['price_adjust_id'];
-        $catId = $parameters['cat_id'];
-        $brandId = $parameters['brand_id'];
-        $suppliersId = $parameters['suppliers_id'];
-        if (!$id || !$catId) failed_json('没有传参`price_adjust_id`或`cat_id`，或者传参错误');
+        if (!$id) {
+            failed_json('没有传参`price_adjust_id`');
+        }
+        //删除加价规则对应的商品加价幅度、加价比例、加价规则id
+        $sql = 'UPDATE '.$this->table.' SET price_num="0",price_rate="0",price_rule="0" WHERE price_rule="'.$id.'"';
+        $res = $this->db->query($sql);
+        if ($res === false) {
+            failed_json('删除商品加价规则失败');
+        }
         
         //删除加价规则
+        $this->table = 'price_adjust';
         $sql = 'DELETE FROM '.$this->table.' WHERE price_adjust_id='.$id;
         $res = $this->db->query($sql);
         if ($res === false) {
-            failed_json('删除失败');
+            failed_json('删除加价规则失败');
+        } else {
+            make_json_result(true);
         }
-        
     }
     
     
@@ -382,7 +409,7 @@ class Price extends ManageModel
      * 加价列表
      * {
      *      "command" : "priceList", 
-     *      "entity"  : "price_adjust", 
+     *      "entity"  : "goods", 
      *      "parameters" : {
      *          "params" : {
      *              "where" : {
@@ -404,10 +431,29 @@ class Price extends ManageModel
      */
     public function priceList($entity, $parameters) 
     {
-        self::init($entity, 'price_adjust');
+        self::init($entity, 'goods');
+        
+        $params = $parameters['params'];
+        $psWhere = $params['where'];
+        
+        //where
+        $catId = $psWhere['cat_id'];
+        $brandId = $psWhere['brand_id'];
+        $suppliersId = $psWhere['suppliers_id'];
+        $attributes = $psWhere['attributes'];
+        $where = '';
+        if ($catId) {
+            $where .= ' and cat_id='.$catId;
+        }
+        if ($brandId) {
+            $where .= ' and brand_id='.$brandId;
+        }
+        if ($suppliersId) {
+            $where .= ' and suppliers_id='.$suppliersId;
+        }
+        
         
         //page
-        $params = $parameters['params'];
         if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
             $page = intval($params['limit']);
             if ($page < 0) $page = 0;
@@ -415,14 +461,235 @@ class Price extends ManageModel
             if ($offset < 0) $offset = 0;
             $limit = 'limit '.$page.','.$offset;
         }
+        if ($catId && $attributes) {
+            $limit = '';
+        }
         
+        //获取商品所有加价记录
         self::selectSql(array(
-            'fields' => '*', 
-            'where'  => '', 
-            'extend' => 'ORDER BY price_adjust_id ASC '.$limit
+            'fields' => array(
+                'goods_id', 
+                'cat_id', 
+                'brand_id', 
+                'suppliers_id', 
+                'goods_name', 
+                'price_num', 
+                'price_rate', 
+                'price_type', 
+                'shop_price'
+            ),  
+            'where'  => 'price_num!=0 and price_rate!=0 and price_rule!=0'.$where, 
+            'extend' => 'ORDER BY goods_id ASC,sort_order DESC '.$limit
         ));
         $data = $this->db->getAll($this->sql);
-        print_r($data);
+        if ($data === false) {
+            failed_json('获取列表失败');
+        }
+        
+        //总记录数
+        if ($limit) {
+            self::selectSql(array(
+                'fields' => 'COUNT(*) AS num',
+                'where'  => 'price_num!=0 and price_rate!=0 and price_rule!=0'.$where,
+            ));
+            $total = $this->db->getOne($this->sql);
+        }
+        
+        
+        //所有物料类型id
+        $catId = array();
+        $goodsId = array();
+        foreach ($data as $k=>$v) {
+            $catId[] = $v['cat_id'];
+            $goodsId[] = $v['goods_id'];
+        }
+        $catId = array_unique($catId);
+        
+        //获取物料类型名称
+        if ($catId) {
+            $this->table = 'goods_type';
+            self::selectSql(array(
+                'fields' => array(
+                    'cat_id',
+                    'cat_name',
+                ),
+                'where'  => 'enabled=1 and cat_id in('.implode(',', $catId).')'
+            ));
+            $catName = $this->db->getAll($this->sql);
+            if ($catName === false) {
+                failed_json('获取物料类型失败');
+            }
+        }
+        
+        
+        //获取所有属性
+        if ($goodsId) {
+            $this->table = 'goods_attr';
+            self::selectSql(array(
+                'fields' => array(
+                    'goods_id', 
+                    'attr_id', 
+                    'attr_value'
+                ),
+                'where'  => 'goods_id in('.implode(',', $goodsId).')'
+            ));
+            $attr = $this->db->getAll($this->sql);
+            if ($attr === false) {
+                failed_json('获取属性列表失败');
+            }
+            $values = array();
+            foreach ($attr as $k=>$v) {
+                $values[$v['goods_id']]['attr_id'][] = $v['attr_id'];
+                $values[$v['goods_id']]['attr_value'][] = $v['attr_value'];
+            }
+        }
+        
+        
+        //物料名称、属性与商品绑定
+        if ($data) {
+            foreach ($data as $k=>$v) {
+                foreach ($catName as $cv) {
+                    if ($v['cat_id'] == $cv['cat_id']) {
+                        $data[$k]['cat_name'] = $cv['cat_name'];
+                    }
+                }
+                foreach ($values as $vk=>$vv) {
+                    if ($v['goods_id'] == $vk) {
+                        $data[$k]['attr_values'] = $vv['attr_value'];
+                        $data[$k]['attr_id'] = $vv['attr_id'];
+                    }
+                }
+                $data[$k]['price_type'] = ($v['price_type'] == 0) ? '批量' : '单个';
+            }
+        }
+        
+        //属性筛选
+        if ($psWhere['cat_id'] && $attributes) {
+            $atWhere = array();
+            
+            foreach ($attributes as $k=>$v) {
+                $i = 0;
+                foreach ($v as $vk=>$vv) {
+                    $atWhere[$vk][] = $vv;
+                    $i++;
+                }
+                
+            }
+            
+            foreach ($atWhere as $k=>$v) {
+                foreach ($data as $dk=>$dv) {
+                    if ($k == 'attr_values' && array_diff($v, $dv['attr_values'])) {
+                        unset($data[$dk]);
+                    }
+                    if ($k == 'attr_id' && array_diff($v, $dv['attr_id'])) {
+                        unset($data[$dk]);
+                    }
+                }
+            }
+            sort($data);
+            $total = count($data);
+            $data = array_slice($data, $params['limit'], $params['offset']);
+        }
+        
+        
+        make_json_result(array('total'=>$total, 'data'=>$data));
+    }
+    
+    
+    
+    /**
+     * 单个商品加价信息
+     * {
+     *      "command" : "singlePrice", 
+     *      "entity"  : "goods", 
+     *      "parameters" : {
+     *          "goods_id" : "(int)"
+     *      }
+     * }
+     */
+    public function singlePrice($entity, $paramters) 
+    {
+        self::init($entity, 'goods');
+        $goodsId = $paramters['goods_id'];
+        if (!$goodsId) {
+            failed_json('没有传参`goods_id`');
+        }
+        
+        //获取加价信息
+        self::selectSql(array(
+            'fields' => array(
+                'a.goods_id',
+                'a.cat_id',
+                'a.brand_id',
+                'a.suppliers_id',
+                'a.goods_name',
+                'a.price_num',
+                'a.price_rate',
+                'a.price_type',
+                'a.shop_price', 
+                'b.cat_name'
+            ), 
+            'as'     => 'a', 
+            'join'   => 'LEFT JOIN goods_type AS b on a.cat_id=b.cat_id', 
+            'where'  => 'goods_id='.$goodsId
+        ));
+        $data = $this->db->getRow($this->sql);
+        if ($data === false) {
+            failed_json('获取信息失败');
+        }
+        
+        //获取商品对应的属性
+        $this->table = 'goods_attr';
+        self::selectSql(array(
+            'fields' => array(
+                'a.goods_id', 
+                'attr_value', 
+                'b.attr_name'
+            ), 
+            'as'     => 'a', 
+            'join'   => 'LEFT JOIN attribute AS b on a.attr_id=b.attr_id', 
+            'where'  => 'goods_id='.$data['goods_id']
+        ));
+        $attr = $this->db->getAll($this->sql);
+        if ($attr === false) {
+            failed_json('获取属性失败');
+        }
+        
+        $data['attr'] = $attr;
+        make_json_result($data);
+    }
+    
+    
+    
+    /**
+     * 单个加价
+     * {
+     *      "command" : "setPrice", 
+     *      "entity"  : "goods", 
+     *      "parameters" : {
+     *          "goods_id" : "(int)", 
+     *          "params"   : {
+     *              "price_num" : "(int)"
+     *          }
+     *      }
+     * }
+     */
+    public function setPrice($entity, $parameters) 
+    {
+        self::init($entity, 'goods');
+        $goodsId = $parameters['goods_id'];
+        if (!$goodsId) {
+            failed_json('没有传参`goods_id`');
+        }
+        
+        $priceNum = $parameters['params']['price_num'];
+        
+        $sql = 'UPDATE '.$this->table.' SET price_num="'.$priceNum.'",price_type=1 WHERE goods_id='.$goodsId;
+        $res = $this->db->query($sql);
+        if ($res === false) {
+            failed_json('改价失败');
+        }
+        make_json_result(true);
     }
     
     
@@ -439,7 +706,7 @@ class Price extends ManageModel
         $fields = array();
         foreach ($upData as $k=>$v) {
             foreach ($v as $vk=>$vv) {
-                $fields[$vk][] = 'WHEN '.$v['price_adjust_id'].' THEN '.$v[$vk];
+                $fields[$vk][] = 'WHEN '.$v['price_adjust_id'].' THEN '.intval($v[$vk]);
             }
             $where[] = $v['price_adjust_id'];
         }
@@ -458,6 +725,7 @@ class Price extends ManageModel
         $values = substr($values, 0, -2);
         
         //sql
+        $this->table = 'price_adjust';
         $where = implode(',', $where);
         $sql = 'UPDATE '.$this->table.' SET '.$values.' WHERE price_adjust_id in('.$where.')';
         $res = $this->db->query($sql);
@@ -479,6 +747,7 @@ class Price extends ManageModel
     private function batchInsert($inData, $userId) 
     {
         //存在的加价信息
+        $this->table = 'price_adjust';
         self::selectSql(array(
             'fields' => array(
                 'cat_id',
@@ -545,9 +814,30 @@ class Price extends ManageModel
         $res = $this->db->query($sql);
         if ($res === false) {
             failed_json('批量加价失败');
-        } else {
-            return true;
         }
+        
+        //获取批量添加的id
+        $fields = array();
+        foreach ($new as $k=>$v) {
+            $fields[] = '(cat_id='.intval($v['cat_id']).' and brand_id='.intval($v['brand_id']).' and suppliers_id='.intval($v['suppliers_id']).')';
+        }
+        $where = implode(' or ', $fields);
+        self::selectSql(array(
+            'fields' => array(
+                'price_adjust_id',
+                'cat_id',
+                'brand_id',
+                'suppliers_id', 
+                'price_num', 
+                'price_rate'
+            ),
+            'where'  => $where
+        ));
+        $data = $this->db->getAll($this->sql);
+        if ($data === false) {
+            failed_json('商品改价失败');
+        }
+        return $data;
     }
     
     
@@ -585,11 +875,13 @@ class Price extends ManageModel
             failed_json('`params`传参内容错误');
         }
         
+        
         //商品匹配加价规则
         $newPrice = $this->ruleFirst($goods, $rule);
         if (!$newPrice) {
             make_json_result('none catch');
         }
+        
         
         //修改商品加价
         $fields = array();
@@ -612,6 +904,7 @@ class Price extends ManageModel
             $str .= ' END, ';
         }
         $str = substr($str, 0, -2);
+        $this->table = 'goods';
         $sql = 'UPDATE '.$this->table.' SET '.$str.' WHERE goods_id in('.implode(',', $id).')';
         $res = $this->db->query($sql);
         if ($res === false) {
@@ -642,16 +935,25 @@ class Price extends ManageModel
                         $newPrice[$i]['goods_id'] = $v['goods_id'];
                         $newPrice[$i]['price_num'] = $sv['price_num'];
                         $newPrice[$i]['price_rate'] = $sv['price_rate'];
+                        $newPrice[$i]['price_rule'] = $sv['price_adjust_id'];
                     }
                 }
             }
             $i++;
         }
-        if (!$newPrice) {
-            return $this->ruleSecond($goods, $rule);
-        } else {
-            return $newPrice;
+        
+        if ($newPrice) {
+            foreach ($newPrice as $k=>$v) {
+                foreach ($goods as $gk=>$gv) {
+                    if ($v['goods_id'] == $gv['goods_id']) {
+                        unset($goods[$gk]);
+                    }
+                    
+                }
+            }
+            
         }
+        return $this->ruleSecond($goods, $rule, $newPrice);
     }
     
     
@@ -662,11 +964,10 @@ class Price extends ManageModel
      * @param array $rule
      * @return array|boolean
      */
-    private function ruleSecond($goods, $rule) 
+    private function ruleSecond($goods, $rule, $newPrice) 
     {
-        $newPrice = array();
         $srule = array();
-        $i = 0;
+        $i = count($newPrice)+1;
         foreach ($goods as $k=>$v) {
             $srule = $rule[$v['cat_id']];
             if ($srule && $srule['second']) {
@@ -675,17 +976,25 @@ class Price extends ManageModel
                         $newPrice[$i]['goods_id'] = $v['goods_id'];
                         $newPrice[$i]['price_num'] = $sv['price_num'];
                         $newPrice[$i]['price_rate'] = $sv['price_rate'];
+                        $newPrice[$i]['price_rule'] = $sv['price_adjust_id'];
                     }
                 }
                 
             }
             $i++;
         }
-        if (!$newPrice) {
-            return $this->ruleThird($goods, $rule);
-        } else {
-            return $newPrice;
+        
+        if ($newPrice) {
+            foreach ($newPrice as $k=>$v) {
+                foreach ($goods as $gk=>$gv) {
+                    if ($v['goods_id'] == $gv['goods_id']) {
+                        unset($goods[$gk]);
+                    }
+                }
+            }
+        
         }
+        return $this->ruleThird($goods, $rule, $newPrice);
     }
     
     
@@ -696,11 +1005,10 @@ class Price extends ManageModel
      * @param array $rule
      * @return array|boolean
      */
-    private function ruleThird($goods, $rule) 
+    private function ruleThird($goods, $rule, $newPrice) 
     {
-        $newPrice = array();
         $srule = array();
-        $i = 0;
+        $i = count($newPrice)+1;
         foreach ($goods as $k=>$v) {
             $srule = $rule[$v['cat_id']];
             if ($srule && $srule['third']) {
@@ -709,17 +1017,24 @@ class Price extends ManageModel
                         $newPrice[$i]['goods_id'] = $v['goods_id'];
                         $newPrice[$i]['price_num'] = $sv['price_num'];
                         $newPrice[$i]['price_rate'] = $sv['price_rate'];
+                        $newPrice[$i]['price_rule'] = $sv['price_adjust_id'];
                     }
                 }
                 
             }
             $i++;
         }
-        if (!$newPrice) {
-            return $this->ruleFourth($goods, $rule);
-        } else {
-            return $newPrice;
+        if ($newPrice) {
+            foreach ($newPrice as $k=>$v) {
+                foreach ($goods as $gk=>$gv) {
+                    if ($v['goods_id'] == $gv['goods_id']) {
+                        unset($goods[$gk]);
+                    }
+                }
+            }
+        
         }
+        return $this->ruleFourth($goods, $rule, $newPrice);
     }
     
     
@@ -730,11 +1045,10 @@ class Price extends ManageModel
      * @param array $rule
      * @return array|boolean
      */
-    private function ruleFourth($goods, $rule) 
+    private function ruleFourth($goods, $rule, $newPrice) 
     {
-        $newPrice = array();
         $srule = array();
-        $i = 0;
+        $i = count($newPrice)+1;
         foreach ($goods as $k=>$v) {
             $srule = $rule[$v['cat_id']];
             if ($srule && $srule['fourth']) {
@@ -743,6 +1057,7 @@ class Price extends ManageModel
                         $newPrice[$i]['goods_id'] = $v['goods_id'];
                         $newPrice[$i]['price_num'] = $sv['price_num'];
                         $newPrice[$i]['price_rate'] = $sv['price_rate'];
+                        $newPrice[$i]['price_rule'] = $sv['price_adjust_id'];
                     }
                 }
             }
