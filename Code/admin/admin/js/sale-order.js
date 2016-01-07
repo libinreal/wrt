@@ -24,6 +24,18 @@ var SaleOrder = {
 		"add_time",
 		"operate"
 	],
+	suborder_arr: [
+		"add_time",
+		"contract_name",
+		"order_sn",
+		"goods_name",
+		"cat_name",
+		"attr",
+		"goods_price",
+		"goods_number",
+		"order_status",
+		"operate"
+	],
 	limit: 0,
 	offset: 8,
 	current_page: 1,
@@ -76,6 +88,7 @@ var SaleOrder = {
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=sale_order&act=detail&id="+value.order_id, "取消");
 								edit += createLink("demo_template.php?section=sale_order&act=detail&id="+value.order_id, "详情");
+								edit += createLink("demo_template.php?section=sale_order&act=suborder_list&id="+value.order_id, "子订单列表");
 								row += createTd(edit);
 								continue;
 							}
@@ -256,9 +269,13 @@ var SaleOrder = {
 		}, "json");
 	},
 
-	getSubOrderList: function(){
+	getSubOrderList: function(search){
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
 		if(typeof(search) === "undefined"){
-			serach = false;
+			search = false;
 		}else{
 			var condition = {};
 			var user_name = $('#search_form input[name=user_name]').val();
@@ -277,9 +294,9 @@ var SaleOrder = {
 		if(search != false){
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		}else{
-			var params = {"params":{"limit":this.limit, "offset":this.offset}};
+			var params = {"order_id":id};
 		}
-		strJson = createJson("page", this.entity, params);
+		strJson = createJson("childerList", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -289,15 +306,31 @@ var SaleOrder = {
 				that.total_page = Math.ceil(obj.content.total/that.offset);
 				if(obj.content.total == 0){
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#bill_amount_list>tbody").html(row);
-					$("#paginate").html('');
+					$("#suborder_list>tbody").html(row);
 				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 					var row = "";
+					$.each(obj.content.data,function(key,value){
+						row += "<tr>";
+						for(var i=0;i<that.suborder_arr.length;i++){
+							if(that.suborder_arr[i] == "operate"){
+								var edit = createLink("demo_template.php?section=bill_manage&act=info&id="+value.bill_id, "改价");
+								edit += createLink("demo_template.php?section=bill_manage&act=generate_note&bill_id="+value.bill_id, "详情");
+								row += createTd(edit);
+								continue;
+							}
+							if(value[that.suborder_arr[i]] != null){
+								row += createTd(subString(value[that.suborder_arr[i]],10,true));
+							}else{
+								row += createTd(createWarn('无数据'));
+							}
+						}
+						row += "</tr>";
+						$("#suborder_list>tbody").html(row);
+					});
 				}
 			}
 			$('#message_area').html('');
-		}, "json");		
+		}, "json");
 	},
 
 	getSubOrderDetail: function(){
