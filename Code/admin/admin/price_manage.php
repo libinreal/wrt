@@ -568,10 +568,8 @@ class Price extends ManageModel
             $atWhere = array();
             
             foreach ($attributes as $k=>$v) {
-                $i = 0;
                 foreach ($v as $vk=>$vv) {
                     $atWhere[$vk][] = $vv;
-                    $i++;
                 }
                 
             }
