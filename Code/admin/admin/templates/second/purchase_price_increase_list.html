@@ -19,7 +19,7 @@
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
 			<labe>物料类别：</labe>
-			<select name="attr_id"></select>
+			<select name="cat_id"></select>
 			&nbsp;
 			<labe>厂家：</labe>
 			<select name="brand_id" style="width:100px;"></select>
@@ -34,11 +34,11 @@
 			<select name="attr_id"></select>
 			&nbsp;
 			<labe>牌号：</labe>
-			<select name=""></select>
+			<select name="attr_values"></select>
 			&nbsp;
-			<input type="button" class="button" value="查询" onclick="Contract.getList('search')">
+			<input type="button" class="button" value="查询" onclick="Price.getList('search')">
 			&nbsp;
-			<input type="button" class="button" value="导出" onclick="Contract.getList('search')">
+			<input type="button" class="button" value="导出" onclick="Price.getList('search')">
 		</div>
 		</form>
 		<div class="list-div" id="listDiv">
@@ -72,7 +72,7 @@
 <script src="js/ajax.js" type="text/javascript" ></script>
 <script src="js/price.js" type="text/javascript" ></script>
 <script type="text/javascript">
-Price.getBrandsList();
+Price.getList();
 </script>
 	</body>
 </html>
