@@ -164,14 +164,10 @@ class Price extends ManageModel
         
         
         $where = '';
-        //类型名称
+        //where
         if ($catId) {
-           
             $where = 'cat_id='.$catId;
         }
-        
-        
-        //where
         if ($brandId) {
             $where .= ' and brand_id='.$brandId;
         }
@@ -190,7 +186,7 @@ class Price extends ManageModel
             failed_json('获取列表失败');
         }
         
-        //查询所有厂家、供应商
+        //查询所有物料类型、厂家、供应商
         $catId = array();
         $brandId = array();
         $suppliersId = array();
