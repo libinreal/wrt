@@ -90,8 +90,10 @@ class Credit extends ManageModel
         //load xml
         $registrationNum = '01234567890';
         $path = '../data/credit/'.$fileName;
-        $xml = simplexml_load_file($path);
-        
+        @$xml = simplexml_load_file($path);
+        if ($xml == false) {
+            failed_json('文件格式错误');
+        }
         
         //xml所有协议号
         $protocols = array();

@@ -395,7 +395,7 @@ class Price extends ManageModel
         if ($res === false) {
             failed_json('删除加价规则失败');
         } else {
-            make_json_result(true);
+            make_json_result($res);
         }
     }
     
@@ -428,7 +428,6 @@ class Price extends ManageModel
     public function priceList($entity, $parameters) 
     {
         self::init($entity, 'goods');
-        
         $params = $parameters['params'];
         $psWhere = $params['where'];
         
@@ -448,16 +447,21 @@ class Price extends ManageModel
             $where .= ' and suppliers_id='.$suppliersId;
         }
         
+        //当传值属性筛选时，不用mysql limit
+        $useLimit = true;
+        if ($catId && $attributes) {
+            $useLimit = false;
+        }
+        
         
         //page
-        if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
-            $page = intval($params['limit']);
-            if ($page < 0) $page = 0;
-            $offset = intval($params['offset']);
-            if ($offset < 0) $offset = 0;
+        if ($useLimit && is_numeric($params['limit']) && is_numeric($params['offset'])) {
+            $page = (intval($params['limit']) < 0) ? 0 : intval($params['limit']);
+            $offset = (intval($params['offset']) < 0) ? 0 : intval($params['offset']);
             $limit = 'limit '.$page.','.$offset;
         }
-        if ($catId && $attributes) {
+        
+        if (!$useLimit) {
             $limit = '';
         }
         
@@ -489,6 +493,9 @@ class Price extends ManageModel
                 'where'  => 'price_num!=0 and price_rate!=0 and price_rule!=0'.$where,
             ));
             $total = $this->db->getOne($this->sql);
+            if ($total === false) {
+                failed_json('获取总记录数失败');
+            }
         }
         
         
@@ -559,8 +566,8 @@ class Price extends ManageModel
             }
         }
         
-        //属性筛选
-        if ($psWhere['cat_id'] && $attributes) {
+        //当有属性筛选记录时，则使用手动数组分页
+        if (!$useLimit) {
             $atWhere = array();
             
             foreach ($attributes as $k=>$v) {
