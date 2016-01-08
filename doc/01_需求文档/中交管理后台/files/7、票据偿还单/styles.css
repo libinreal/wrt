@@ -3,7 +3,7 @@
   background-image:none;
   position:static;
   left:auto;
-  width:750px;
+  width:766px;
   margin-left:0;
   margin-right:0;
   text-align:left;
@@ -396,7 +396,7 @@
   position:absolute;
   left:570px;
   top:97px;
-  width:180px;
+  width:196px;
   height:16px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
@@ -407,13 +407,13 @@
   position:absolute;
   left:0px;
   top:0px;
-  width:180px;
+  width:196px;
   height:16px;
 }
 #u32 {
   position:absolute;
   left:0px;
   top:0px;
-  width:180px;
+  width:196px;
   white-space:nowrap;
 }

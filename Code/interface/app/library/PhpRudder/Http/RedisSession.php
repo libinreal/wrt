@@ -107,7 +107,7 @@ class RedisSession extends \Phalcon\Session\Adapter implements \ArrayAccess, \Tr
      * @param bool $remove
      * @return mixed
      */
-    public function get($index, $defaultValue = null) {
+    public function get($index, $defaultValue = null, $remove = NULL) {
 	    $value = unserialize($this->read($index));
         if ($value == null) return $defaultValue;
         return $value;
