@@ -166,13 +166,16 @@ class Price extends ManageModel
         $where = '';
         //where
         if ($catId) {
-            $where = 'cat_id='.$catId;
+            if (!empty(trim($where))) $where .= ' and ';
+            $where .= 'cat_id='.$catId;
         }
-        if ($brandId) {
-            $where .= ' and brand_id='.$brandId;
+        if ($catId && $brandId) {
+            if (!empty(trim($where))) $where .= ' and ';
+            $where .= 'brand_id='.$brandId;
         }
-        if ($suppliersId) {
-            $where .= ' and suppliers_id='.$suppliersId;
+        if ($catId && $suppliersId) {
+            if (!empty(trim($where))) $where .= ' and ';
+            $where .= 'suppliers_id='.$suppliersId;
         }
         
         //批量加价数据
@@ -210,6 +213,7 @@ class Price extends ManageModel
                 'where'  => 'cat_id in('.implode(',', $catId).')'
             ));
             $catName = $this->db->getAll($this->sql);
+            if ($catName === false) failed_json('查询物料失败');
         }
         
         
@@ -221,6 +225,7 @@ class Price extends ManageModel
                 'where'  => 'brand_id in('.implode(',', $brandId).')'
             ));
             $brandName = $this->db->getAll($this->sql);
+            if ($brandName === false) failed_json('查询厂家失败');
         }
         
         //所有供应商名称
@@ -231,6 +236,7 @@ class Price extends ManageModel
                 'where'  => 'suppliers_id in('.implode(',', $suppliersId).')'
             ));
             $suppliersName = $this->db->getAll($this->sql);
+            if ($suppliersName === false) failed_json('查询供应商失败');
         }
         
         //对接厂家、供应商名称
@@ -632,11 +638,11 @@ class Price extends ManageModel
             ), 
             'as'     => 'a', 
             'join'   => 'LEFT JOIN goods_type AS b on a.cat_id=b.cat_id', 
-            'where'  => 'goods_id='.$goodsId
+            'where'  => 'a.goods_id='.$goodsId
         ));
         $data = $this->db->getRow($this->sql);
         if ($data === false) {
-            failed_json('获取信息失败');
+            failed_json('获取信息失败，或者信息不存在');
         }
         
         //获取商品对应的属性
@@ -649,7 +655,7 @@ class Price extends ManageModel
             ), 
             'as'     => 'a', 
             'join'   => 'LEFT JOIN attribute AS b on a.attr_id=b.attr_id', 
-            'where'  => 'goods_id='.$data['goods_id']
+            'where'  => 'a.goods_id='.$data['goods_id']
         ));
         $attr = $this->db->getAll($this->sql);
         if ($attr === false) {
@@ -758,6 +764,7 @@ class Price extends ManageModel
             'where'  => 'type=0'
         ));
         $data = $this->db->getAll($this->sql);
+        if ($data === false) failed_json('查询加价信息失败');
         foreach ($data as $k=>$v) {
             $data[$k] = $v['cat_id'].$v['brand_id'].$v['suppliers_id'];
         }
@@ -814,7 +821,7 @@ class Price extends ManageModel
         $sql = 'INSERT '.$this->table.' ('.$fields.') values '.$values;
         $res = $this->db->query($sql);
         if ($res === false) {
-            failed_json('批量加价失败');
+            failed_json('添加加价规则失败');
         }
         
         //获取批量添加的id
@@ -836,7 +843,7 @@ class Price extends ManageModel
         ));
         $data = $this->db->getAll($this->sql);
         if ($data === false) {
-            failed_json('商品改价失败');
+            failed_json('获取加价规则id失败');
         }
         return $data;
     }
