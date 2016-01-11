@@ -49,6 +49,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'childerList'){
 				//
 				$this->childerListAction();
+			}elseif ($this->command == 'childerDetail'){
+				//
+				$this->childerDetailAction();
 			}
 		}
 		
@@ -826,9 +829,243 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 		}
+
+		/**
+		 * 接口名称：子订单详情
+		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "childerDetail",
+	     *      "parameters": {
+	     *          "params": {
+	     *          	"order_id":101//订单ID
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "",
+		 *	    "content": { 
+		 *	    	"info"://订单
+		 *	        {
+		 *	        	"order_id":1,//订单id
+		 *	        	"order_status":0,//订单状态 0 '未确认', 1 '已确认', 2 '待收货', 3 '已完成', 4 '订单取消'
+		 *	        	"order_sn":"os122311",//订单编号
+		 *	        	"user_id":1,//下单人id 
+		 *	        	"user_name":"王x",//下单人
+		 *	        	"add_time":"2015-01-01:11",//拆单时间
+		 *	        	"contract_sn":"10000",//合同号
+		 *	        	"contract_name":"钢材销售",//合同名称
+		 *	        	"company_name":"中铁一局",//公司名称
+		 *          	"check_status":0,//验签状态
+		 * 
+		 *	        	"consignee":"aa",//收货人
+		 *	        	"address":"xx地址",//收货地址
+		 *	        	"mobile":"13011111111",//手机号码
+		 *	        	"sign_building":"xx桥"//地址标签
+		 *	        },
+		 *	        "invoice"://发票
+		 *	        {
+		 *	        	"inv_type":0,//发票类型 0 增值税专用 1 普通发票
+		 *	        	"inv_payee":"xx公司",//发票抬头
+		 *	        },
+		 *	        "goods"://商品资料
+		 *	        {
+		 *	        	"goods_id":1,//商品id
+		 *	        	"goods_name":"螺纹hb400",//商品名称
+		 *	        	"attr":"45/T450/gangjin",//规格/型号/材质
+		 *	        	
+		 *	        	"goods_number_send_buyer":90,//销售信息.发货数量 = 子订单数量
+		 *	        	"goods_price_send_buyer":20, //销售信息.发货单价 = 采购信息.发货单价 + 加价幅度
+		 *	        	"shipping_fee_send_buyer":120,//销售信息.发货物流费
+		 *	        	"financial_send":100,//销售信息.发货金融费
+		 *	        	"order_amount_send_buyer":1800,//销售信息.发货总金额 = 物流费 + 金融费 + 单价 * 数量
+		 *
+		 *          	"goods_number_arr_buyer":90,//销售信息.到货数量 = 实际到货数量
+		 *	        	"goods_price_arr_buyer":20, //销售信息.到货单价 = 销售信息.发货单价
+		 *	        	"shipping_fee_arr_buyer":120,//销售信息.到货物流费
+		 *	        	"financial_arr":100,//销售信息.到货金融费
+		 *	        	"order_amount_arr_buyer":1800,//销售信息.到货总金额 = 物流费 + 金融费 + 单价 * 数量
+		 *
+		 *	        	"goods_number_send_saler":90,//采购信息.发货数量 = 子订单数量
+		 *	        	"goods_price_send_saler":20, //采购信息.发货单价
+		 *	        	"shipping_fee_send_saler":120,//采购信息.发货物流费
+		 *	        	"payment_send":100,//采购信息.发货付款方式
+		 *	        	"order_amount_send_saler":1800,//采购信息.发货总金额 = 物流费 + 金融费 + 单价 * 数量
+		 *	        	
+		 *          	"goods_number_arr_saler":90,//采购信息.到货数量 = 实际到货数量
+		 *	        	"goods_price_arr_saler":20, //采购信息.到货单价 = 采购信息.发货单价
+		 *	        	"shipping_fee_arr_saler":120,//采购信息.到货物流费
+		 *	        	"payment_arr":100,//采购信息.到货付款方式
+		 *	        	"order_amount_arr_saler":1800,//采购信息.到货总金额 = 物流费 + 金融费 + 单价 * 数量
+		 *
+		 *	        },
+		 *	        "shipping"://物流
+		 *	        {
+		 *	        	"company_name":"EMS",//物流公司
+		 *	        	"shipping_num":"xxx",//物流单号
+		 *	        	"tel":"1111111",//联系电话
+		 *	        	"shipping_time":"2017-01-01",//发货时间
+		 *	        	"log"://动态列表
+		 *	        	[
+		 *	        	{
+		 *	        		"date":"2017/01/02",//日期
+		 *	        		"order_num":"Exasd0123",//物流单号
+		 *	        		"content":"物流记录"//物流记录
+		 *	        	}
+		 *	        	]
+		 *	        }
+		 *	    }
+		 *	 }   
+		 */
+		public function childerDetailAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+
+			if( !isset( $params['order_id'] ) ){
+				make_json_response('', '-1', '订单ID错误');
+			}
+			$order_id = intval( $params['order_id'] );
+
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$user_table = $GLOBALS['ecs']->table('users');
+			$contract_table = $GLOBALS['ecs']->table('contract');
+			$suppliers_table = $GLOBALS['ecs']->table('suppliers');
+
+			//订单详情
+			$order_sql = 'SELECT odr.`order_status`, odr.`order_sn`, odr.`user_id`, usr.`user_name`, usr.`companyName` as `company_name`, odr.`add_time`, odr.`pay_id`, odr.`contract_sn`, '. "ifnull(crt.contract_name, '') as contract_name," .//订单相关
+						 ' odr.`consignee`, odr.`address`, odr.`mobile`, odr.`sign_building`, ' .
+					 	 ' odr.`inv_type`, odr.`inv_payee`, odr.`inv_bank_name`, odr.`inv_bank_account`, odr.`inv_bank_address`, odr.`inv_tel`, odr.`inv_fax`, ' .	//发票相关
+					 	 ' odr.`shipping_fee_send_buyer`, odr.`shipping_fee_arr_buyer`, odr.`shipping_fee_send_saler`, odr.`shipping_fee_arr_saler`, ' .//商品资料
+					 	 ' odr.`financial_send`, odr.`financial_arr`, ' .//金融费
+					 	 ' odr.`order_amount_send_buyer`, odr.`order_amount_arr_buyer`, odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`, ' .//总金额
+					 	 ' odr.`shipping_info`, odr.`shipping_log` ' .//物流信息
+						 'FROM ' .$order_info_table . ' AS odr LEFT JOIN ' . $user_table . '  AS usr ON odr.`user_id` = usr.`user_id` LEFT JOIN ' . $contract_table . ' AS crt ON odr.`contract_sn` = crt.`contract_num` ' . 
+						 ' WHERE odr.`order_id` = ' . $order_id;
+			$order_info = $GLOBALS['db']->getRow( $order_sql );
+
+			if( empty( $order_info ) )
+				make_json_response('', '-1', '子订单详情获取失败');
+
+			$order_info['order_id'] = $order_id;
+
+			//发票内容
+			$invoice = array();
+			$invoice['inv_type'] = $order_info['inv_type'];//类型
+			$invoice['inv_payee'] = $order_info['inv_payee'];//公司名称
+			$invoice['inv_bank_name'] = $order_info['inv_bank_name'];//银行
+			$invoice['inv_bank_account'] = $order_info['inv_bank_account'];//帐号
+			$invoice['inv_bank_address'] = $order_info['inv_bank_address'];//银行地址
+			$invoice['inv_tel'] = $order_info['inv_tel'];//联系电话
+			$invoice['inv_fax'] = $order_info['inv_fax'];//联系传真
+
+			unset( $order_info['inv_type'] );
+			unset( $order_info['inv_payee'] );
+			unset( $order_info['inv_bank_name'] );
+			unset( $order_info['inv_bank_account'] );
+			unset( $order_info['inv_bank_address'] );
+			unset( $order_info['inv_tel'] );
+			unset( $order_info['inv_fax'] );
+
+			//商品详情
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$goods_table = $GLOBALS['ecs']->table('goods');
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+
+			// $attribute_table = $GLOBALS['ecs']->table('attribute');
+			$order_goods_sql = 'SELECT og.`goods_id`, og.`goods_name`, og.`goods_price_add` AS `goods_price_send_buyer`, og.`goods_number` AS `goods_number_send_buyer`, og.`goods_number_arrival` AS `goods_number_arr_buyer`, ' .
+							   'og.`goods_price` AS `goods_price_send_saler`, sp.`suppliers_name` FROM ' .
+							   $order_goods_table . //物料编码 名称 下单数 已拆 未拆 供应商
+							   ' AS og LEFT JOIN '. $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
+						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' . 
+							   ' WHERE `order_id` = ' . $order_id;
+			$order_good = $GLOBALS['db']->getRow($order_goods_sql);
+
+			if( !empty( $order_good ) ){
+				//未拆单 小计
+				// foreach($order_goods_arr as &$order_good){
+					$order_good['remain_number'] = $order_good['goods_number'] - $order_good['send_number'];//未拆单
+					$order_good['subtotal'] = $order_good['goods_price'] * $order_good['goods_number'];//小计
+					$order_good['add_time'] = date('Y-m-d H:i:s', $order_info['add_time'] );
+
+					//规格、型号、材质
+					$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $order_good['goods_id'];
+					$goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
+					if( empty( $goods_attr ) ){
+						$order_good['attr'] = '';
+					}else{
+						$attr_arr = array();
+						foreach ($goods_attr as $value) {
+							$attr_arr[] = $value['attr_value'];
+						}
+						$order_good['attr'] = implode('/', $attr_arr);
+					}
+				// }
+				unset( $order_info['add_time'] );
+				// unset( $order_good );
+				
+				//采购信息
+				$order_good['goods_price_arr_saler'] = $order_good['goods_price_send_saler'];//销售订单 商品记录 价格
+				$order_good['goods_number_send_saler'] = $order_good['goods_number_send_buyer'];//销售订单 商品记录 数量
+				$order_good['goods_number_arr_saler'] = $order_good['goods_number_arr_buyer'];//销售订单 商品记录 数量
+				$order_good['shipping_fee_send_saler'] = $order_info['shipping_fee_send_saler'];//订单记录 物流
+				$order_good['shipping_fee_arr_saler'] = $order_info['shipping_fee_arr_saler'];//订单记录 物流
+
+				$payment_cfg = C( 'payment' );
+				$order_good['payment_arr'] = $order_good['payment_send'] = $payment_cfg[ $order_info['pay_id'] ];
+				$order_good['order_amount_send_saler'] = $order_info['order_amount_send_saler'];//采购订单 发货总金融
+				$order_good['order_amount_arr_saler'] = $order_info['order_amount_arr_saler'];//采购订单 到货总金融
+
+				unset($order_info['shipping_fee_send_saler']);
+				unset($order_info['shipping_fee_arr_saler']);
+				unset($order_info['order_amount_send_saler']);
+				unset($order_info['order_amount_arr_saler']);
+
+				//销售信息
+				$order_good['goods_price_arr_buyer'] = $order_good['goods_price_send_buyer'];//销售订单 商品记录 加价后价格
+				$order_good['shipping_fee_send_buyer'] = $order_info['shipping_fee_send_buyer'];//销售订单 物流
+				$order_good['shipping_fee_arr_buyer'] = $order_info['shipping_fee_arr_buyer'];//销售订单 物流
+				$order_good['financial_send'] = $order_info['financial_send'];//销售订单 发货金融费
+				$order_good['financial_arr'] = $order_info['financial_arr'];//销售订单 到货金融费
+				
+				$order_good['order_amount_send_buyer'] = $order_info['order_amount_send_buyer'];//销售订单 发货总金融
+				$order_good['order_amount_arr_buyer'] = $order_info['order_amount_arr_buyer'];//销售订单 到货总金融
+
+				unset($order_info['shipping_fee_send_buyer']);
+				unset($order_info['shipping_fee_arr_buyer']);
+				unset($order_info['financial_send']);
+				unset($order_info['financial_arr']);
+
+				unset($order_info['order_amount_send_buyer']);
+				unset($order_info['order_amount_arr_buyer']);
+
+				//物流
+				$shipping = empty( $order_info['shipping_info'] ) ? array() : json_decode( $order_info['shipping_info'], true);
+				$shipping['log'] = empty( $order_info['shipping_log'] ) ? array() : json_decode( $order_info['shipping_log'], true);
+
+			}else{
+				$order_good = array();
+			}
+				
+			$content = array();
+
+			$content['info'] = $order_info;
+			$content['invoice'] = $invoice;
+			$content['goods'] = $order_good;
+			$content['shipping'] = $shipping;
+
+
+
+			make_json_response($content, '0', '子订单详情查询成功');
+
+		}
 	
 		
 	}
-	$content = jsonAction( array( "splitInit", "split", "childerList" ) );
+	$content = jsonAction( array( "splitInit", "split", "childerList", "childerDetail" ) );
 	$orderModel = new OrderInfoModel($content);
 	$orderModel->run();
