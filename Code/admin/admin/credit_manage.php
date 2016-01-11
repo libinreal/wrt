@@ -171,7 +171,13 @@ class Credit extends ManageModel
             $this->insertBankCredit($insert);
         }
         
-        @unlink($path);
+        $newDir = '../data/credit/used/';
+        if (!file_exists($newDir) && mkdir($newDir)) {
+            @rename($path, $newDir.$fileName);
+        } elseif (file_exists($newDir)) {
+            @rename($path, $newDir.$fileName);
+        }
+        
         make_json_result(true);
     }
     
