@@ -852,16 +852,16 @@ class Price extends ManageModel
     
     /**
      * 修改加价规则对应的商品的加价幅度和加价比例
-     * $params =    [
-     *                  {
-     *                      "price_adjust_id" : "(int)", //编辑时传此值
-     *                      "cat_id"          : "(int)", //不能为空
-     *                      "brand_id"        : "(int)", //为空则值是0
-     *                      "suppliers_id"    : "(int)", //为空则值是0
-     *                      "price_num"       : "(int)", //不能为空
-     *                      "price_rate"      : "(float)" //不能为空
-     *                  }, ...
-     *              ];
+     * $params = [
+     *            {
+     *                "price_adjust_id" : "(int)", //编辑时传此值
+     *                "cat_id"          : "(int)", //不能为空
+     *                "brand_id"        : "(int)", //为空则值是0
+     *                "suppliers_id"    : "(int)", //为空则值是0
+     *                "price_num"       : "(int)", //不能为空
+     *                "price_rate"      : "(float)" //不能为空
+     *             }, ...
+     *  ];
      * $goods 商品数据
      */
     private function batchGoods($params, $goods) 
