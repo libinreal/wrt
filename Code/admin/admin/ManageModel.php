@@ -57,10 +57,10 @@ class ManageModel
         if ( is_array($params['fields']) ) {
             $params['fields'] = implode(',', $params['fields']);
         }
-        if ( !empty(trim($params['as'])) ) {
+        if ( !empty($params['as']) ) {
             $params['as'] = ' AS '.$params['as'];
         }
-        if ( !empty(trim($params['where'])) ) {
+        if ( !empty($params['where']) ) {
             $params['where'] = ' WHERE '.$params['where'];
         }
         $this->sql = 'SELECT '.$params['fields'].' FROM '.$this->table.' '
