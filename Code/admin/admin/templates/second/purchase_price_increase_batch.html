@@ -15,23 +15,25 @@
 		<div style="clear:both"></div>
 		</h1>
 		<div id="message_area"></div>
-		<form id="material_search_form">
+		<form id="search_form">
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
 			<labe>物料类别：</labe>
-			<select name="cat_id">
-				<option value="1">粉粒物料车</option>
-				<option value="2">车载泵</option>
+			<select name="cat_id" style="width:150px;">
+				<option value="">全部</option>
 			</select>
 			&nbsp;
 			<labe>厂家：</labe>
-			<select name="brand_id" style="width:150px;"></select>
-			&nbsp;
-			<labe>供应商：</labe>
-			<select name="suppliers_id">
-				<option value="1">北京佳合飞达</option>
+			<select name="brand_id" style="width:150px;">
+				<option value="">全部</option>
 			</select>
 			&nbsp;
+			<labe>供应商：</labe>
+			<select name="suppliers_id" style="width:150px;">
+				<option value="">全部</option>
+			</select>
+			&nbsp;
+			<input type="button" class="button" value="查询" onclick="Price.getExistBatch(true)">
 			<input type="button" class="button" value="添加" onclick="addRow(this)">
 		</div>
 		</form>
@@ -48,7 +50,8 @@
 				</tbody>
 			</table>
 			</form>
-			<div align="center"><input type="button" class="button" value=" 保存 " onclick="Price.setBatch()"></div>
+			<div align="center">
+				<input type="button" class="button" value=" 保存 " onclick="Price.setBatch()"></div>
 		</div>
 		<!-- 底部 -->
 		<div id="footer">
@@ -61,11 +64,17 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	Price.getBrandsList();
+	Price.getGoodsTypeList();
+	Price.getSuppliers();
+	Price.getExistBatch();
 });
 function addRow(elem){
 	var cat_id = $("select[name=cat_id]>option:selected").val();
 	var brand_id = $("select[name=brand_id]>option:selected").val();
 	var suppliers_id = $("select[name=suppliers_id]>option:selected").val();
+	if(cat_id == "" || brand_id == "" || suppliers_id == ""){
+		return false;
+	}
 	var id = cat_id + brand_id + suppliers_id;
 	if($("tr#"+id).length>0){
 		$('#message_area').html(createError("已添加该物料"));
@@ -75,7 +84,7 @@ function addRow(elem){
 	}
 	var row = '<tr id='+id+'>';
 	row += "<td class='title'>物料类别：</td>";
-	row += "<td>"+$("select[name=attr_id]>option:selected").text()+"</td>";
+	row += "<td>"+$("select[name=cat_id]>option:selected").text()+"</td>";
 	row += "<td class='title'>厂家：</td>";
 	row += "<td>"+subString($("select[name=brand_id]>option:selected").text(), 22, true)+"</td>";
 	row += "<td class='title'>供应商：</td>";
@@ -95,10 +104,13 @@ function addRow(elem){
 		$("#purchase_price_increase_table>tbody").append(row);
 	}
 }
-function removeRow(elem){
+function removeRow(elem, id){
 	$(elem).parent().parent().remove();
 	if($("#purchase_price_increase_table>tbody tr").length < 1){
-		$("#purchase_price_increase_table>tbody").html("<tr id='no-item'><td colspan='20' align='center'>无加价项目</td></tr>")
+		$("#purchase_price_increase_table>tbody").html("<tr id='no-item'><td colspan='20' align='center'>无加价项目</td></tr>");
+	}
+	if(id){
+		Price.deleteSingleBatch(id);
 	}
 }
 </script>

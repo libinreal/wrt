@@ -63,7 +63,7 @@
 <script type="text/javascript">
 $(document).ready(function(){
 	Credit.getCreditInfo();
-	$("#credit_id").text(getQueryStringByName(id));
+	$("#credit_id").text(getQueryStringByName("id"));
 	$("#remark_form").validate({
 		submitHandler: function(form) {
 			Credit.getUpdateCreditRemark();

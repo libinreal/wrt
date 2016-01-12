@@ -53,7 +53,6 @@ var Contract = {
 				this.current_page = 1;
 				this.limit = 0;
 			}
-			console.log(this.limit);
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("contList", "contract", params);

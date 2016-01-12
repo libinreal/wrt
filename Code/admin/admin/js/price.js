@@ -1,42 +1,57 @@
 var Price = {
 	order_arr: [
-
+		"goods_id",
+		"goods_name",
+		"cat_name",
+		"attr_values",
+		"shop_price",
+		"final_price",
+		"price_num",
+		"price_rate",
+		"price_type",
+		"operate",
+		"checkout"
 	],
 	limit: 0,
 	offset: 8,
 	total_page: 0,
+	current_page: 1,
 	url: "price_manage.php",
 	entity: "price_adjust",
 
-	getList: function(){
+	getList: function(search){
 		if(typeof(search) === "undefined"){
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}else{
 			var condition = {};
-			var search_type = $('#contract_search_form select[name=search_type]').val();
-			var search_value = $('#contract_search_form input[name=search_value]').val();
-			var contract_status = $('#contract_search_form select[name=contract_status]').val();
-			var start_time = $('#contract_search_form input[name=start_time]').val();
-			var end_time = $('#contract_search_form input[name=end_time]').val();
-			if(search_value != ''){
-				condition.like = {"search_type":search_type, "search_value":search_value};
+			var cat_id = $('#search_form select[name=cat_id]').val();
+			var brand_id = $('#search_form select[name=brand_id]').val();
+			var suppliers_id = $('#search_form select[name=suppliers_id]').val();
+			if(cat_id != ''){
+				condition.cat_id = cat_id;
 			}
-			if(contract_status != ''){
-				condition.contract_status = contract_status;
+			if(brand_id != ''){
+				condition.brand_id = brand_id;
 			}
-			if(start_time != ''){
-				condition.start_time = start_time;
-			}
-			if(end_time != ''){
-				condition.end_time = end_time;
+			if(suppliers_id != ''){
+				condition.suppliers_id = suppliers_id;
 			}
 			if(search == "search"){
 				this.current_page = 1;
 				this.limit = 0;
 			}
+			var attributes = [];
+			$('select[name*=attr_id] :selected').each(function(index, e){
+				if($(e).val() != ''){
+					attributes.push({"attr_id":$(e).val(), "attr_values":$(e).text()});
+				}
+			});
+			if(attributes.length > 0){
+				condition.attributes = attributes;
+			}
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		}
-		strJson = createJson("priceList", this.entity, params);
+		strJson = createJson("priceList", "goods", params);
 		that = this
 		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
@@ -47,10 +62,60 @@ var Price = {
 				that.total_page = Math.ceil(obj.content.total/that.offset);
 				if(obj.content.total == 0){
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#>tbody").html(row);
+					$("#purchase_price_increase_list>tbody").html(row);
 					$("#paginate").html('');
 				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
+					var row = "";
+					$.each(obj.content.data,function(key, value){
+						row += "<tr>";
+						for(var i=0;i<that.order_arr.length;i++){
+							if(that.order_arr[i] == "operate"){
+								var edit = createLink("demo_template.php?section=purchase_price_manage&act=single&id="+value.goods_id, "修改价格");
+								row += createTd(edit);
+								continue;
+							}
+							if(that.order_arr[i] == "attr_values"){
+								var attr = "";
+								$.each(value.attr_values, function(k, v){
+									attr += v + "/";
+								});
+								row += createTd(attr);
+								continue;
+							}
+							if(that.order_arr[i] == "price_rate"){
+								if(value.price_num == 0 || value.price_num == ''){
+									row += createTd(value.price_rate/100);
+								}else{
+									row += createTd(0);
+								}
+								continue;
+							}
+							if(that.order_arr[i] == "final_price"){
+								if(value.price_num == 0 || value.price_num == ''){
+									row += createTd(parseFloat(value.shop_price) + value.shop_price * value.price_rate/100);
+								}else{
+									row += createTd(parseFloat(value.shop_price) + parseFloat(value.price_num));
+								}
+								continue;
+							}
+							if(that.order_arr[i] == "attr_values"){
+								var attr = "";
+								$.each(value.attr_values, function(k, v){
+									attr += v + "/";
+								});
+								row += createTd(attr);
+								continue;
+							}
+							if(value[that.order_arr[i]] != null){
+								row += createTd(subString(value[that.order_arr[i]],20,true));
+							}else{
+								row += createTd(createWarn('无数据'));
+							}
+						}
+						row += "</tr>";
+						$("#purchase_price_increase_list>tbody").html(row);
+					});
 				}
 			}
 			$('#message_area').html('');
@@ -69,29 +134,128 @@ var Price = {
 				$.each(obj.content, function(k,v){
 					row += appendOption(v.brand_id, v.brand_name);
 				});
-				$("select[name=brand_id]").html(row);
+				$("select[name=brand_id]").append(row);
 			}
 			$('#message_area').html('');
 		}, "json");
 	},
 	// 获取物料类别列表
 	getGoodsTypeList: function(){
-		strJson = createJson("getAttributes", "attribute", {});
+		strJson = createJson("catList", "goods_type", {});
+		that = this
+		$.post("contract_manage.php", strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				var row = '';
+				$.each(obj.content, function(k,v){
+					row += appendOption(v.cat_id, v.cat_name);
+				});
+				$("select[name=cat_id]").append(row);
+			}
+			$('#message_area').html('');
+		}, "json");
+	},
+	// 获取供应商列表
+	getSuppliers: function(){
+		strJson = createJson("suppliers", "admin_user", {});
+		that = this
+		$.post("contract_manage.php", strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				var row = '';
+				$.each(obj.content, function(k,v){
+					row += appendOption(v.suppliers_id, v.suppliers_name);
+				});
+				$("select[name=suppliers_id]").append(row);
+			}
+			$('#message_area').html('');
+		}, "json");
+	},
+	// 获取物料属性
+	getAttributes: function(cat_id){
+		cat_id = $("select[name=cat_id]").val();
+		if(cat_id===""||!validateNumber(cat_id)){
+			return false;
+		}
+		params = {"cat_id": cat_id};
+		strJson = createJson("getAttributes", "attribute", params);
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				console.log(obj)
 				var row = '';
-				$.each(obj.content, function(k,v){
-					row += appendOption(v.brand_id, v.brand_name);
+				$.each(obj.content, function(k, v){
+					row += '<labe>'+v.attr_name+'：</labe>';
+					row += '<select name="attr_id[]" style="width:150px;">';
+					var option = '<option value="">全部</option>';
+					$.each(v.attr_values, function(k1, v1){
+						option += '<option value="'+v.attr_id+'">'+v1+'</option>';
+					});
+					row += option;
+					row += '</select> &nbsp;';
 				});
-				$("select[name=brand_id]").html(row);
+				$("#sub_search").html(row);
 			}
 			$('#message_area').html('');
 		}, "json");
+	},
+	// 获取批量加价列表
+	getExistBatch: function(search){
+		if(typeof(search) === "undefined"){
+			var params = {};
+		}else{
+			var params = {};
+			var cat_id = $('#search_form select[name=cat_id]').val();
+			var brand_id = $('#search_form select[name=brand_id]').val();
+			var suppliers_id = $('#search_form select[name=suppliers_id]').val();
+			if(cat_id != ''){
+				params.cat_id = cat_id;
+				if(brand_id != ''){
+					params.brand_id = brand_id;
+				}
+				if(suppliers_id != ''){
+					params.suppliers_id = suppliers_id;
+				}
+			}
+		}
+		strJson = createJson("getExistBatch", "price_adjust", params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				var row = '';
+				$.each(obj.content, function(k,v){
+					var id = v.cat_id + v.brand_id + v.suppliers_id;
+					row += '<tr id='+id+'>';
+					row += "<td class='title'>物料类别：</td>";
+					row += "<td>"+v.cat_name+"</td>";
+					row += "<td class='title'>厂家：</td>";
+					row += "<td>"+v.brand_name+"</td>";
+					row += "<td class='title'>供应商：</td>";
+					row += "<td>"+v.suppliers_name+"</td>";
+					row += "<td class='title'>加价幅度：</td>";
+					row += "<td><input type='text' class='number' name='price_num_"+id+"' value="+v.price_num+" /></td>";
+					row += "<td class='title'>加价比例：</td>";
+					row += "<td><input type='text' class='number' name='price_rate_"+id+"' value="+v.price_rate+" /></td>";
+					row += "<td><input type='button' class='button' value='删除' onclick='removeRow(this, "+v.price_adjust_id+")' />";
+					row += "<input type='hidden' name='cat_id_"+id+"' value='"+v.cat_id+"' />";
+					row += "<input type='hidden' name='brand_id_"+id+"' value='"+v.brand_id+"' />";
+					row += "<input type='hidden' name='suppliers_id_"+id+"' value='"+v.suppliers_id+"' />";
+					row += "<input type='hidden' name='price_adjust_id_"+id+"' value='"+v.price_adjust_id+"' /></td>";
+					row += "</tr>";
+				});
+				$("#purchase_price_increase_table>tbody").html(row);
+			}
+			$('#message_area').html('');
+		}, "json");		
 	},
 	//批量加价
 	setBatch: function(){
@@ -101,11 +265,103 @@ var Price = {
 		}else{
 			var arr = [];
 			$("#purchase_price_increase_table>tbody tr").each(function(index, elem){
-				arr.push({"cat_id":$(elem).find("input[name*='cat_id']").val(),"brand_id":$(elem).find("input[name*='brand_id']").val(),"suppliers_id":$(elem).find("input[name*='suppliers_id']").val(),"price_num":$(elem).find("input[name*='price_num']").val(),"price_rate":$(elem).find("input[name*='price_rate']").val()})
+				if($(elem).find("input[name*='price_num']").val() != '' && $(elem).find("input[name*='price_rate']").val() != '') {
+					if($(elem).find("input[name*='price_adjust_id']").val() != ''){
+						arr.push({"price_adjust_id":$(elem).find("input[name*='price_adjust_id']").val(),"cat_id":$(elem).find("input[name*='cat_id']").val(),"brand_id":$(elem).find("input[name*='brand_id']").val(),"suppliers_id":$(elem).find("input[name*='suppliers_id']").val(),"price_num":$(elem).find("input[name*='price_num']").val(),"price_rate":$(elem).find("input[name*='price_rate']").val()})
+					}else{
+						arr.push({"cat_id":$(elem).find("input[name*='cat_id']").val(),"brand_id":$(elem).find("input[name*='brand_id']").val(),"suppliers_id":$(elem).find("input[name*='suppliers_id']").val(),"price_num":$(elem).find("input[name*='price_num']").val(),"price_rate":$(elem).find("input[name*='price_rate']").val()})
+					}
+				}
 			});
 		}
 		params = {"params": arr}
 		strJson = createJson("batchPrice", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				that.total_page = Math.ceil(obj.content.total/that.offset);
+				if(obj.content.total == 0){
+					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
+					$("#>tbody").html(row);
+					$("#paginate").html('');
+				}else{
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
+				}
+			}
+			$('#message_area').html(createTip('更新成功'));
+		}, "json");
+	},
+	//删除批量加价中一条数据
+	deleteSingleBatch: function(id){
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		var params = {"price_adjust_id": id};
+		strJson = createJson("deletePrice", "goods", params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip('删除成功'));
+				return false;
+			}
+		}, "json");
+	},
+
+	setSingle: function(){
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		params = {"goods_id": id};
+		strJson = createJson("singlePrice", "goods", params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			console.log(obj);
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$.each(obj.content, function(key, value){
+					if(key == "attr"){
+						var attr_name = "";
+						var attr_val = "";
+						$.each(value, function(k, v){
+							attr_name += v.attr_name + "/";
+							attr_val += v.attr_value + "/";
+						});
+						$("#attr").html(attr_name + " : " + attr_val);
+						return;
+					}
+					if($("#"+key).length > 0){
+						$("#"+key).html(value);
+					}
+					if($("input[name="+key+"]").length >0){
+						$("input[name="+key+"]").val(value);
+					}
+				});
+				$("#final_price").text(parseFloat(obj.content.shop_price)+parseFloat(obj.content.price_num));
+			}
+			$('#message_area').html('');
+		}, "json");
+	},
+
+	editSingle: function(){
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		if($("#increase_form").valid() == false){
+			return false;
+		}
+		var formdata = $("#increase_form").FormtoJson();
+		var params = {"goods_id":id, "params":formdata};
+		strJson = createJson("setPrice", "goods", params);
 		that = this
 		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
@@ -113,104 +369,9 @@ var Price = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
-				}
-			}
-			$('#message_area').html('');
-		}, "json");
-	},
-	//编辑批量加价
-	editBatch: function(){
-		var params = {"params":{"limit":this.limit, "offset":this.offset}};
-		strJson = createJson("page", this.entity, params);
-		that = this
-		$.post(this.url, strJson, function(obj){
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
+				$('#message_area').html(createTip("更新成功"));
 				return false;
-			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
-				}
 			}
-			$('#message_area').html('');
-		}, "json");
-	},
-	//删除批量加价中一条数据
-	deleteSingleBatch: function(){
-		var params = {"params":{"limit":this.limit, "offset":this.offset}};
-		strJson = createJson("page", this.entity, params);
-		that = this
-		$.post(this.url, strJson, function(obj){
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
-				}
-			}
-			$('#message_area').html('');
-		}, "json");
-	},
-
-	setSingle: function(){
-		var params = {"params":{"limit":this.limit, "offset":this.offset}};
-		strJson = createJson("page", this.entity, params);
-		that = this
-		$.post(this.url, strJson, function(obj){
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
-				}
-			}
-			$('#message_area').html('');
-		}, "json");
-	},
-
-	editSingle: function(){
-		var params = {"params":{"limit":this.limit, "offset":this.offset}};
-		strJson = createJson("page", this.entity, params);
-		that = this
-		$.post(this.url, strJson, function(obj){
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
-				}
-			}
-			$('#message_area').html('');
 		}, "json");
 	},
 }
