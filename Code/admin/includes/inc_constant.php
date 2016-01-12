@@ -81,6 +81,22 @@ define('COS_ACCOUNT',                3); // 待验收
 define('COS_COMPLETE',               4); // 确认验收，待对账
 define('COS_CANCELED',               5); // 完成
 
+//子订单状态（二期）
+define('SOS_UNCONFIRMED', 			 0);//未确认
+define('SOS_CONFIRMED', 			 1);//已确认
+define('SOS_SEND_CC', 			     2);//客户已验签(发货)
+define('SOS_SEND_PC', 			     3);//平台已验签(发货)
+define('SOS_SEND_SC', 			     4);//供应商已验签(发货)
+define('SOS_SEND_PC2', 			     5);//平台已验签(发货)
+
+define('SOS_ARR_CC', 			     6);//客户已验签(到货)
+define('SOS_ARR_PC', 			     7);//平台已验签(到货)
+define('SOS_ARR_SC', 			     8);//供应商已验签(到货)
+define('SOS_ARR_PC2', 			     9);//平台已验签(到货)
+
+define('SOS_CANCELED', 			     11);//验签已取消
+
+
 /* 支付类型 */
 define('PAY_ORDER',                 0); // 订单支付
 define('PAY_SURPLUS',               1); // 会员预付款
