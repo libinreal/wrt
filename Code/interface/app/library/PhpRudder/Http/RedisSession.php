@@ -9,7 +9,7 @@
 namespace PhpRudder\Http;
 
 
-class RedisSession extends \Phalcon\Session\Adapter implements \ArrayAccess, \Traversable, \IteratorAggregate, \Countable, \Phalcon\Session\AdapterInterface {
+class RedisSession /* extends \Phalcon\Session\Adapter implements \ArrayAccess, \Traversable, \IteratorAggregate, \Countable, \Phalcon\Session\AdapterInterface */ {
 
     private $_host;
 

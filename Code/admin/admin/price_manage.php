@@ -166,15 +166,15 @@ class Price extends ManageModel
         $where = '';
         //where
         if ($catId) {
-            if (!empty(trim($where))) $where .= ' and ';
+            if (!empty($where)) $where .= ' and ';
             $where .= 'cat_id='.$catId;
         }
         if ($catId && $brandId) {
-            if (!empty(trim($where))) $where .= ' and ';
+            if (!empty($where)) $where .= ' and ';
             $where .= 'brand_id='.$brandId;
         }
         if ($catId && $suppliersId) {
-            if (!empty(trim($where))) $where .= ' and ';
+            if (!empty($where)) $where .= ' and ';
             $where .= 'suppliers_id='.$suppliersId;
         }
         

@@ -55,10 +55,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		//"command":"admin_users"
 		 *  	"parameters": {}
 		 *
+		 *     //"command":"payment"
+		 *     "parameters":{}
+		 *     
 		 * 		//"command":"order_status"
 		 * 		"parameters":{}
 		 *	    "entity": "type"
-		 *	    
+		 *
+		 *
 		 *	}
 		 *
 		 * 返回的数据格式:
@@ -111,8 +115,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$sql = 'SELECT `account` FROM ' . $GLOBALS['ecs']->table('user_bank_account') . ' WHERE `type` = 0 AND `user_id` = ' . $user_id.
 							' AND `bank_id` = ' . $bank_id;							
 					break;
-				case "order_status":
+				case 'order_status':
 					$content = array_merge( array("" => "全部" ), C('order_status') );
+					break;
+				case 'payment':
+					$content = C('payment');
 					break;
 				default:
 					# code...
@@ -132,7 +139,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 	}
 	$command_arr = array('bill_type', 'bill_currency', 'users', 'admin_users', 
-						'admin_user_banks', 'admin_user_bank_accounts', 'user_banks', 'user_bank_accounts'
+						'admin_user_banks', 'admin_user_bank_accounts', 'user_banks', 'user_bank_accounts',
+						'payment'
 					);
 	$content = jsonAction( $command_arr );
 	$typeModel = new TypeModel($content);
