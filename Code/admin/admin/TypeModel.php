@@ -32,6 +32,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 		
 		/**
+		 * 接口名称: 获取列表
+		 * 接口地址：http://admin.zj.dev/admin/TypeModel.php
+		 * 请求方法: POST
 		 * 获取配置或数据
 		 * {
 		 *	    "command": "bill_type",
@@ -55,10 +58,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		//"command":"admin_users"
 		 *  	"parameters": {}
 		 *
+		 *     //"command":"payment"
+		 *     "parameters":{}
+		 *
+		 * 		//"command":"childer_order_status"
+		 * 		"parameters":{}
+		 * 		
 		 * 		//"command":"order_status"
 		 * 		"parameters":{}
 		 *	    "entity": "type"
-		 *	    
+		 *
+		 *
 		 *	}
 		 *
 		 * 返回的数据格式:
@@ -86,6 +96,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 				case 'admin_user_banks':
 					$content = $this->content;
 					$user_id = $content['parameters']['user_id'];
+
+					if( empty( $user_id ) ){
+						make_json_response('', '-1', '用户id 不正确');
+					}
+
 					$sql = 'SELECT b.`bank_id`, b.`bank_name` FROM ' . $GLOBALS['ecs']->table('user_bank_account') . ' AS a LEFT JOIN ' .
 							$GLOBALS['ecs']->table('bank') . ' AS b ON a.`bank_id` = b.`bank_id` '. 'WHERE a.`type` = 1 AND a.`user_id` = ' . $user_id;
 					break;
@@ -94,12 +109,21 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$user_id = $content['parameters']['user_id'];
 					$bank_id = $content['parameters']['bank_id'];
 
+					if( empty( $user_id ) || empty( $bank_id ) ){
+						make_json_response('', '-1', '用户id 或 银行id 不正确');
+					}
+
 					$sql = 'SELECT `account` FROM ' . $GLOBALS['ecs']->table('user_bank_account') . ' WHERE `type` = 1 AND `user_id` = ' . $user_id.
 							' AND `bank_id` = ' . $bank_id;
 					break;							
 				case 'user_banks':
 					$content = $this->content;
 					$user_id = $content['parameters']['user_id'];
+
+					if( empty( $user_id ) ){
+						make_json_response('', '-1', '用户id 不正确');
+					}
+
 					$sql = 'SELECT b.`bank_id`, b.`bank_name` FROM ' . $GLOBALS['ecs']->table('user_bank_account') . ' AS a LEFT JOIN ' .
 							$GLOBALS['ecs']->table('bank') . ' AS b ON a.`bank_id` = b.`bank_id` '. 'WHERE a.`type` = 0 AND a.`user_id` = ' . $user_id;
 					break;							
@@ -108,11 +132,21 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$user_id = $content['parameters']['user_id'];
 					$bank_id = $content['parameters']['bank_id'];
 
+					if( empty( $user_id ) || empty( $bank_id ) ){
+						make_json_response('', '-1', '用户id 或 银行id 不正确');
+					}
+
 					$sql = 'SELECT `account` FROM ' . $GLOBALS['ecs']->table('user_bank_account') . ' WHERE `type` = 0 AND `user_id` = ' . $user_id.
 							' AND `bank_id` = ' . $bank_id;							
 					break;
-				case "order_status":
+				case 'order_status':
 					$content = array_merge( array("" => "全部" ), C('order_status') );
+					break;
+				case 'payment':
+					$content = C('payment');
+					break;
+				case 'childer_order_status':
+					$content = C('childer_order_status');
 					break;
 				default:
 					# code...
@@ -132,7 +166,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 	}
 	$command_arr = array('bill_type', 'bill_currency', 'users', 'admin_users', 
-						'admin_user_banks', 'admin_user_bank_accounts', 'user_banks', 'user_bank_accounts'
+						'admin_user_banks', 'admin_user_bank_accounts', 'user_banks', 'user_bank_accounts',
+						'payment', 'childer_order_status', 'order_status'
 					);
 	$content = jsonAction( $command_arr );
 	$typeModel = new TypeModel($content);

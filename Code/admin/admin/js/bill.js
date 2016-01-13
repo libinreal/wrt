@@ -52,7 +52,6 @@ var Bill = {
 		strJson = createJson("page", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -133,7 +132,6 @@ var Bill = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				console.log(obj);
 				// 初始化列表
 				TypeMode.getUsers("customer_id");
 				$.each(obj.content.init,function(key, value){

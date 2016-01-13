@@ -85,7 +85,6 @@ $('#from_ajust_amount').on('valuechange', function (e, previous) {
 	var from_amount_valid = parseFloat($("#from_amount_valid").text());
 	var from_ajust_amount = parseFloat($("#from_ajust_amount").val());
 	var to_amount_valid = parseFloat($("#to_amount_valid").text());
-	console.log(to_amount_valid + from_ajust_amount);
 	if(from_ajust_amount > from_amount_valid){
 		$('#message_area').html(createError('可用额度不足'));
 		return false;

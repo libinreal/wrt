@@ -1,4 +1,4 @@
-ï»¿/* common start */
+/* common start */
 .gray-box {
     margin-bottom: 10px;
     border: 1px solid #d3d3d3;
@@ -90,7 +90,7 @@
     display: block;
 }
 /* common end */
-/* å¯¼èˆª icon */
+/* µ¼º½ icon */
 
 .icon-nav-1 {
     background-position: 12px 10px;
@@ -133,8 +133,8 @@
 .content-left a.icon-nav-0:hover,.content-left a.icon-nav-0.active{
      background-image: url(../images/personal/icon-nav-0.png);
 }
-/*--------------------ä¼šå‘˜ä¿¡æ¯--------------------*/
-/*ä¸Šä¼ å¤´åƒ*/
+/*--------------------»áÔ±ĞÅÏ¢--------------------*/
+/*ÉÏ´«Í·Ïñ*/
 
 .upload-user-icon {
     padding: 35px 0;
@@ -208,7 +208,7 @@
     height: 37px;
     border-radius: 5px;
 }
-/*ä¼šå‘˜ä¿¡æ¯è¡¨æ ¼*/
+/*»áÔ±ĞÅÏ¢±í¸ñ*/
 
 .personal-info {
     height: 568px;
@@ -249,8 +249,8 @@
 .personal-info-value.big {
     width: 704px;
 }
-/*--------------------ä¼šå‘˜ä¿¡æ¯--------------------*/
-/*--------------------å®‰å…¨ä¸­å¿ƒ--------------------*/
+/*--------------------»áÔ±ĞÅÏ¢--------------------*/
+/*--------------------°²È«ÖĞĞÄ--------------------*/
 
 .safe-center {
     padding-left: 13px;
@@ -347,8 +347,8 @@
 .form-bottom .button {
     width: 118px;
 }
-/*--------------------å®‰å…¨ä¸­å¿ƒ--------------------*/
-/*--------------------æ”¶è´§åœ°å€--------------------*/
+/*--------------------°²È«ÖĞĞÄ--------------------*/
+/*--------------------ÊÕ»õµØÖ·--------------------*/
 .address-form{
     width: 860px;
     margin: auto;
@@ -448,19 +448,19 @@
 .add-addres .button {
     width: 162px;
 }
-/*--------------------æ”¶è´§åœ°å€--------------------*/
-/*--------------------è®¢å•--------------------*/
+/*--------------------ÊÕ»õµØÖ·--------------------*/
+/*--------------------¶©µ¥--------------------*/
 
-.order-list {
+.order-list , .contract_list{
     padding-right: 15px;
     padding-left: 15px;
     padding-bottom: 40px;
 }
-.order-list-header {
+.order-list-header , .contract-list-header{
     border-bottom: 1px solid #E6E6E6;
     font-weight: bold;
 }
-.order-list-col {
+.order-list-col , .contract-list-col{
     float: left;
     width: 175px;
     height: 59px;
@@ -470,18 +470,18 @@
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.order-list-content a {
+.order-list-content a , .contract-list-content a {
     display: block;
     height: 59px;
     border-bottom: 1px solid #E6E6E6;
 }
-.order-list-content a:hover {
+.order-list-content a:hover , .contract-list-content a:hover{
     background-color: #eee;
 }
-.order-list .no-apply {
+.order-list .no-apply , .contract-list .no-apply{
     color: red;
 }
-.order-list .button {
+.order-list .button , .contract-list .button{
     width: 110px;
 }
 .order {
@@ -740,8 +740,8 @@
     line-height: 32px;
     background-color: #e6e6e6;
 }
-/*--------------------è®¢å•--------------------*/
-/*--------------------å®šåˆ¶--------------------*/
+/*--------------------¶©µ¥--------------------*/
+/*--------------------¶¨ÖÆ--------------------*/
 
 .customize-list {
     font-size: 15px;
@@ -819,8 +819,8 @@
 .tab-ckdz {
 	padding: 0;
 }
-/*--------------------å®šåˆ¶--------------------*/
-/*--------------------æ”¶è—--------------------*/
+/*--------------------¶¨ÖÆ--------------------*/
+/*--------------------ÊÕ²Ø--------------------*/
 
 .collect-list {} .collect-list li {
     background-color: #fff;
@@ -878,8 +878,8 @@
     background-color: #e84c3d;
     background-image: url(../images/personal/icon_remove_select.png);
 }
-/*--------------------æ”¶è—--------------------*/
-/*--------------------é¡¹ç›®--------------------*/
+/*--------------------ÊÕ²Ø--------------------*/
+/*--------------------ÏîÄ¿--------------------*/
 
 .product-order-list li {
     height: 105px;
@@ -1021,8 +1021,8 @@
 .cut-num {
     background-image: url(../images/personal/icon_cut.png);
 }
-/*--------------------é¡¹ç›®--------------------*/
-/*--------------------ç§¯åˆ†--------------------*/
+/*--------------------ÏîÄ¿--------------------*/
+/*--------------------»ı·Ö--------------------*/
 
 .score-info {
     height: 222px;
@@ -1150,8 +1150,8 @@
 .gcdz-qh{
 	background:#fff;margin-bottom:0px;
 }
-/*--------------------ç§¯åˆ†--------------------*/
-/*æˆ‘çš„ä¿¡ç”¨B*/
+/*--------------------»ı·Ö--------------------*/
+/*ÎÒµÄĞÅÓÃB*/
 /*common creditB*/
 
 .creditb-amount, .creditB_bill, .creditB, .creditB_level, .creditB_history {
@@ -1388,7 +1388,7 @@
     padding-left: 15px;
     color: #818181;
 }
-/*æˆ‘çš„ä¿¡ç”¨B-é‡‡è´­é¢åº¦è¿½åŠ ç”³è¯·å•*/
+/*ÎÒµÄĞÅÓÃB-²É¹º¶î¶È×·¼ÓÉêÇëµ¥*/
 
 .creditb-amount .form-item em {
     color: #ff0000;
@@ -1413,7 +1413,7 @@
     width: 138px;
     height: 49px;
 }
-/*æˆ‘çš„ä¿¡ç”¨B-ç¥¨æ®å…‘ä»˜*/
+/*ÎÒµÄĞÅÓÃB-Æ±¾İ¶Ò¸¶*/
 
 .bill_header {
     background: #f26c4f url(../images/personal/credit_bill.png)no-repeat 185px center;
@@ -1509,7 +1509,7 @@
 .bill_select_drop a:hover span {
     color: #7cb234;
 }
-/*æˆ‘çš„ä¿¡ç”¨B-ä¿¡ç”¨ç­‰çº§*/
+/*ÎÒµÄĞÅÓÃB-ĞÅÓÃµÈ¼¶*/
 
 .creditb-level {
     margin-bottom: 0;
@@ -1541,7 +1541,7 @@
 .last {
     border-bottom: none;
 }
-/*å†å²æµæ°´è®°å½•*/
+/*ÀúÊ·Á÷Ë®¼ÇÂ¼*/
 
 .creditB_history {
     padding: 20px 24px 20px 24px;
@@ -1877,7 +1877,7 @@
 .pdt-detail .last {
     /*  border-bottom:none;*/
 }
-/*buttonæŒ‰é’®*/
+/*button°´Å¥*/
 .credit_level_r_right .btn-yellow, .m-c-i-right .btn-yellow {
     color: #fff;
     border-color: #fc9208;
@@ -1893,7 +1893,7 @@
     border-color: #5a698a;
     background-color: #5a698a;
 }
-/*å·¥ç¨‹å®šåˆ¶åˆ‡æ¢*/
+/*¹¤³Ì¶¨ÖÆÇĞ»»*/
 .gcdz{
     width:332px;
     margin: 0 auto;
@@ -1915,7 +1915,7 @@
 .ckxq a {
     display:block;
 }
-/*å®šåˆ¶è¯¦æƒ…*/
+/*¶¨ÖÆÏêÇé*/
 .apply-form {
     background: #fff;
     padding: 36px 83px 82px 32px;

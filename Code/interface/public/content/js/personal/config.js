@@ -24,6 +24,8 @@ define(function(require, exports, module) {
     config.getrestorehistory = config.server + '/credit/getrestorehistory';//信用流水记录
     config.getbillnotice = config.server + '/credit/getbillnotice';//票据到期提醒
     config.creditdetail = config.server + '/credit/creditdetail';//信用等级详情
+    
+    config.contractList = config.server + '/contract/getList';//我的合同列表
 
     config.getlist = config.server + '/order/getlist';//我的订单-列表
     config.getdetail = config.server + '/order/getdetail';//我的订单-详情

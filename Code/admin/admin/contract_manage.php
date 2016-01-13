@@ -244,10 +244,10 @@ class Contract extends ManageModel
         $contStauts = $params_where['contract_status'];
         if (is_numeric($contStauts)) {
             if ($contStauts == 0 || $contStauts == 1) {
-                if (!empty(trim($where))) $where .= ' and ';
+                if (!empty($where)) $where .= ' and ';
                 $where .= 'c.contract_status='.$contStauts.' and FROM_UNIXTIME(c.end_time, "%Y-%m-%d")>"'.date('Y-m-d').'"';
             } elseif ($contStauts == 2) {
-                if (!empty(trim($where))) $where .= ' and ';
+                if (!empty($where)) $where .= ' and ';
                 $where .= 'FROM_UNIXTIME(c.end_time, "%Y-%m-%d")<="'.date('Y-m-d').'"';
             }
         }
@@ -255,12 +255,12 @@ class Contract extends ManageModel
         //日期
         $sTime = $params_where['start_time'];
         if ( $sTime ) {
-            if (!empty(trim($where))) $where .= ' and ';
+            if (!empty($where)) $where .= ' and ';
             $where .= 'FROM_UNIXTIME(c.start_time, "%Y-%m-%d")>="'.$sTime.'"';
         }
         $eTime = $params_where['end_time'];
         if ( $eTime ) {
-            if (!empty(trim($where))) $where .= ' and ';
+            if (!empty($where)) $where .= ' and ';
             $where .= 'FROM_UNIXTIME(c.end_time, "%Y-%m-%d")<="'.$eTime.'"';
         }
         
@@ -693,11 +693,11 @@ class Contract extends ManageModel
             $where .= 'c.customer_id='.$customerId;
         }
         if ($contractId > 0) {
-            if (!empty(trim($where))) $where .= ' and ';
+            if (!empty($where)) $where .= ' and ';
             $where .= 'c.contract_id='.$contractId;
         }
         if ($regionId > 0) {
-            if (!empty(trim($where))) $where .= ' and ';
+            if (!empty($where)) $where .= ' and ';
             $where .= 's.region_id='.$regionId;
         }
         

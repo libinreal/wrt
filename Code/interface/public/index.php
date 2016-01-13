@@ -1,4 +1,5 @@
-﻿<!DOCTYPE HTML>
+﻿<?php header('location:/mall');die;?>
+<!DOCTYPE HTML>
 <!--[if lt IE 9 ]><html class="ie"><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!-->
 <html>
