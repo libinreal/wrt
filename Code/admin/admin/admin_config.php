@@ -20,9 +20,26 @@ $admin_config = array(
 	
     'bill_adjust_type' => array(0 => "采购额度账户", 1 => "现金账户"),//账户调整类型
 
-    'order_status' => array( 0 => '已下单', 1 => '处理中', 2 => '已完成', 3 => '订单取消'),//大订单状态
+    'order_status' => array(
+                        POS_SUBMIT => '已下单',
+                        POS_HANDLE => '处理中',
+                        POS_COMPLETE => '已完成',
+                        POS_CANCEL => '订单取消'
+                        ),//大订单状态
 
-    'childer_order_status' => array(0 => '未确认', 1 => '已确认', 2 => '待收货', 3 => '已完成', 4 => '订单取消'),//销售(子)订单状态
+    'childer_order_status' => array( 
+                                SOS_UNCONFIRMED => '未确认',
+                                SOS_CONFIRMED => '已确认',
+                                SOS_SEND_CC => '客户已验签(发货)',
+                                SOS_SEND_PC => '平台已验签(发货)',
+                                SOS_SEND_SC => '供应商已验签(发货)', 
+                                SOS_SEND_PC2 => '平台已验签(发货)',
+                                SOS_ARR_CC => '客户已验签(到货)',
+                                SOS_ARR_PC => '平台已验签(到货)',
+                                SOS_ARR_SC => '供应商已验签(到货)',
+                                SOS_ARR_PC2 => '平台已验签(到货)',
+                                SOS_CANCEL => '验签已取消'
+                            ),//(子)订单状态
 
     'purchase_status' => array(0 => '未确认', 1 => '已确认', 2 => '待完成', 3 => '已完成'),//采购订单状态
 
