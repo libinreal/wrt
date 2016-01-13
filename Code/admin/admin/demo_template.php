@@ -159,7 +159,7 @@ if($section == "sale_order"){
 			break;
 
 		case 'change_price':
-			$smarty->display('second/sale_order_change_price.html');
+			$smarty->display('second/sale_order_send_change_price.html');
 			break;
 
 		case 'split':

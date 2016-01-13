@@ -1,9 +1,15 @@
 $(document).ajaxStart(function() {
 	$('#message_area').html(createLoading());
+    $('input[type=button]').each(function(index, e){
+        $(e).attr("disabled",true);
+    });
 });
 $(document).ajaxSend(function(){
 });
 $(document).ajaxSuccess(function(){
+    $('input[type=button]').each(function(index, e){
+        $(e).attr("disabled",false);
+    });
 })
 $(document).ajaxError(function(event, jqxhr, settings, thrownError){
 	$("#error").html(settings.url +" error: "+ thrownError);
@@ -182,6 +188,7 @@ var redirectToUrl = function(url){
 }
 var popupLayer = function(){
 	$('#popupLayer').slideFadeToggle();
+    $('#mask_layout').slideFadeToggle();
 }
 var appendOption = function(name, text, selected){
     if(selected === 1){
