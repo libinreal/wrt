@@ -33,6 +33,10 @@ $di->set('dispatcher', function() use ($di) {
     return $dispatcher;
 });
 
+$di->set('profiler', function(){
+	return new \Phalcon\Db\Profiler();
+}, true);
+	
 $di->set('request', function() use ($di) {
 	$request = new Phalcon\Http\Request();
 	return $request;

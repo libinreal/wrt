@@ -132,7 +132,8 @@ class Security extends Plugin
 					),
 				'favorites' => array('getlist', 'save', 'delete'),
 				'helpcenter' => array('appointment', 'omplaint'),
-				'project' => array('getlist', 'getdetail', 'addcart', 'getlistbak')
+				'project' => array('getlist', 'getdetail', 'addcart', 'getlistbak'), 
+				'contract' => array('getlist')
 			);
 
 			foreach ($privateResources as $resource => $actions) {
