@@ -176,9 +176,7 @@ var Contract = {
 		var params = {"contract_id": id, "params":{}};
 		var strJson = createJson("singleCont", "contract", params);
 		var that = this;
-		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;

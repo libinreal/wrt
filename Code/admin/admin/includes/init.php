@@ -53,8 +53,6 @@ else
     include('../includes/config.php');
 }
 
-require_once './admin_config.php';
-
 /* 取得当前ecshop所在的根目录 */
 if(!defined('ADMIN_PATH'))
 {
@@ -90,6 +88,7 @@ require(ROOT_PATH . 'includes/lib_common.php');
 require(ROOT_PATH . ADMIN_PATH . '/includes/lib_main.php');
 require(ROOT_PATH . ADMIN_PATH . '/includes/cls_exchange.php');
 require(ROOT_PATH . ADMIN_PATH . '/includes/db.php');
+require(ROOT_PATH . ADMIN_PATH . '/admin_config.php');
 
 /* 对用户传入的变量进行转义操作。*/
 if (!get_magic_quotes_gpc())

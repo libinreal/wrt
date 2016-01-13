@@ -81,6 +81,12 @@ define('COS_ACCOUNT',                3); // 待验收
 define('COS_COMPLETE',               4); // 确认验收，待对账
 define('COS_CANCELED',               5); // 完成
 
+ // 父订单状态（二期）
+define('POS_SUBMIT',                 0);// 已下单
+define('POS_HANDLE',                 1); // 处理中
+define('POS_COMPLETE',               2); // 已完成
+define('POS_CANCEL',                 3); // 订单取消
+
 //子订单状态（二期）
 define('SOS_UNCONFIRMED', 			 0);//未确认
 define('SOS_CONFIRMED', 			 1);//已确认
@@ -94,7 +100,7 @@ define('SOS_ARR_PC', 			     7);//平台已验签(到货)
 define('SOS_ARR_SC', 			     8);//供应商已验签(到货)
 define('SOS_ARR_PC2', 			     9);//平台已验签(到货)
 
-define('SOS_CANCELED', 			     11);//验签已取消
+define('SOS_CANCEL', 			     11);//订单已撤销
 
 
 /* 支付类型 */
