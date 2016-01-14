@@ -690,6 +690,9 @@ class Price extends ManageModel
         }
         
         $priceNum = $parameters['params']['price_num'];
+        if ($priceNum <= 0) {
+        	failed_json('价格必须大于0');
+        }
         
         $sql = 'UPDATE '.$this->table.' SET price_num="'.$priceNum.'",price_type=1 WHERE goods_id='.$goodsId;
         $res = $this->db->query($sql);
