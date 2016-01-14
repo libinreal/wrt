@@ -73,8 +73,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'updateChilderStatus'){
 				//
 				$this->updateChilderStatusAction();
+			}elseif ($this->command == 'getAddPrice'){
+				//
+				$this->getAddPriceAction();
+			}elseif ($this->command == 'searchChilderList'){
+				//
+				$this->searchChilderListAction();
 			}
-
 		}
 		
 		/**
@@ -527,6 +532,251 @@ require(dirname(__FILE__) . '/includes/init.php');
 			make_json_response($content, '0', '子订单查询成功');
 			
 		}
+
+		/**
+		 * 接口名称：所有子订单
+		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "searchChilderList",
+	     *      "parameters": {
+	     *          "params": {
+	     *              "where": {
+	     *              	"like":{"order_sn":"no11232","user_name":"郭某某","contract_name":"xxxxx需求合同"},//订单号 客户名称 合同名称
+	     *                  "child_order_status": 0,//验签状态
+	     *                  "due_date1": 2015-01-01,//起始日期
+	     *                  "due_date2": 2015-01-01//结束日期
+	     *              },
+	     *              "limit": 0,//起始行号
+	     *              "offset": 2//返回的行数
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",//("0": 成功 ,"-1": 失败)
+		 *	    "message": "订单物品拆分信息获取成功",
+		 *	    "content":
+		 *	    [
+		 *	    {
+		 *     		"order_id":49,//订单id
+		 *     		"goods_id":339,//商品id
+		 *     		"add_time":"2015/01/01",//拆单时间
+		 *     		"contract_name":"ht222",//合同名称
+		 *     		"order_sn":"2014120330115-20",//订单号
+		 *     		"goods_name":"钢材24m",//物料名称
+		 *     		"cat_name":"锚具",//物料类别
+		 *     		"attr":"1/2/3",//规格/型号/牌号
+		 *     		"goods_price":100,//单价
+		 *     		"goods_number":20,//数量
+		 *     		"child_order_status":0//订单未确认
+		 *	    }
+		 *	    ]
+		 *	}
+		 *	
+		 */
+		public function searchChilderListAction(){
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$contract_table = $GLOBALS['ecs']->table('contract');//合同
+			$goods_table = $GLOBALS['ecs']->table('goods');//物料
+
+			$category_table = $GLOBALS['ecs']->table('category');//物料类别
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//物料属性
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
+
+			//搜索条件
+			if( isset( $params["where"] ) && isset( $params["where"]['customer_id'] ) )
+				$customer_id = trim( $params["where"]['customer_id'] );
+
+			$where = array();
+			if( isset($params['where']) )
+				$where = $params['where'];
+
+			$where_str = '';
+
+			if( isset( $where["like"] ) )
+			{
+				$like = $where["like"];
+				if ( isset( $like['user_name'] ) )//条件包含客户名的(先查users表，再根据结果中的user_id查找)
+				{
+					$user_table = $GLOBALS['ecs']->table('users');
+					$users_sql = 'SELECT `user_id` FROM ' . $user_table . ' WHERE `companyName` like \'%' . $like["user_name"] . '%\'';
+					$resultUsers = $GLOBALS['db']->getAll($users_sql);
+					
+					if( empty( $resultUsers ) )
+					{
+						$content = array();
+						$content['data'] = array();
+						$content['total'] = 0;
+						make_json_response( $content , '0', '未找到符合条件的订单');
+					}
+					else
+					{
+
+						$users = array();
+						foreach($resultUsers as $u)
+						{
+							$users[] = $u['user_id'];
+						}
+						
+						$users_ids = implode(',', $users);
+						$where_str = ' WHERE odr.`user_id` in(' . $users_ids . ')';
+					}
+				}
+
+				if ( isset( $like['contract_name'] ) )//根据合同名搜索
+				{
+					$contract_table = $GLOBALS['ecs']->table('contract');
+					$contract_sql = 'SELECT `contract_num` FROM ' . $contract_table . ' WHERE `contract_name` like \'%' . $like["contract_name"] . '%\'';
+					$contract = $GLOBALS['db']->getAll( $contract_sql );
+
+					if( empty( $contract ) ){
+
+						$content = array();
+						$content['data'] = array();
+						$content['total'] = 0;
+
+						make_json_response( $content, '0', '未找到符合条件的订单');
+					}
+
+					$contracts = array();
+					foreach ($contract as $c) {
+						$contracts[] = "'" . $c['contract_num'] . "'";
+					}
+
+					$contracts_str = implode(',', $contracts);
+
+					if( $where_str )
+						$where_str .= " AND odr.`contract_sn` IN(" . $contracts_str . ")";
+					else
+						$where_str .= " WHERE odr.`contract_sn` IN(" . $contracts_str . ")";				
+
+				}
+
+				if ( isset( $like['order_sn'] ) )//根据订单号搜索
+				{
+					$like['order_sn'] = trim($like['order_sn']);
+
+					if( $where_str )
+						$where_str .= " AND odr.`order_sn` LIKE '%" . $like['order_sn'] . "%'";
+					else
+						$where_str .= " WHERE odr.`order_sn` LIKE '%" . $like['order_sn'] . "%'";
+				}
+
+			}
+
+			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+			}
+			else if( isset( $where["due_date1"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "'";
+			}
+			else if( isset( $where["due_date2"] ) )
+			{
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` <= '" . $where['due_date2'] . "'";
+			}
+
+			if( isset( $where['child_order_status'] ) )
+			{
+				$where['child_order_status'] = intval( $where['child_order_status'] );
+
+				if( $where_str )
+					$where_str .= " AND odr.`child_order_status` = " . $where['child_order_status'];
+				else
+					$where_str .= " WHERE odr.`child_order_status` = " . $where['child_order_status'];
+			}
+
+			if( $where_str )
+				$where_str .= " AND odr.`parent_order_id` IS NOT NULL AND  odr.`parent_order_id` <> 0";
+			else
+				$where_str .= " WHERE odr.`parent_order_id` IS NOT NULL AND  odr.`parent_order_id` <> 0";
+
+
+			//所有子订单id
+			$total_sql = 'SELECT COUNT(*) AS `total` FROM ' . $order_info_table . ' AS odr ' . $where_str;
+			$total_data = $GLOBALS['db']->getRow( $total_sql );
+			$total = $total_data['total'];
+
+			if( empty( $total ) ){
+
+				$content = array();
+				$content['data'] = array();
+				$content['total'] = 0;
+
+				make_json_response($content, '0', '查询子订单成功');
+			}	
+
+			$order_str = ' ORDER BY odr.`add_time` DESC';
+			$limit_str = ' LIMIT ' . intval( $params['limit'] ) . ',' . intval( $params['offset'] );
+
+			$childer_order_sql = 'SELECT odr.`order_id`, odr.`order_sn`, odr.`add_time`, odr.`order_status`, IFNULL(crt.`contract_name`, \'\') AS `contract_name`, ogd.`goods_id`, ' .
+							     'ogd.`goods_name`, ogd.`goods_price`, ogd.`goods_number`, cat.`cat_name` FROM ' .
+							     $order_goods_table . ' AS ogd LEFT JOIN ' .
+							     $goods_table . ' AS g ON g.`goods_id` = ogd.`goods_id` LEFT JOIN ' .
+							     $category_table . ' AS cat ON cat.`cat_id` = g.`cat_id` LEFT JOIN '.
+							     $order_info_table . ' AS odr ON odr.`order_id` = ogd.`order_id` LEFT JOIN '.
+							     $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
+							     $where_str . $order_str . $limit_str;
+
+			$childer_orders = $GLOBALS['db']->getAll( $childer_order_sql );
+
+			$childer_goods_id_arr = array();
+			foreach ($childer_orders as $v) {
+				$childer_goods_id_arr[] = $v['goods_id'];
+			}
+			$childer_goods_ids = implode(',', $childer_goods_id_arr);
+
+			$goods_attr_sql = 'SELECT `goods_id`, `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` IN(' . $childer_goods_ids . ')';
+			$goods_attr_arr = $GLOBALS['db']->getAll( $goods_attr_sql );
+
+			$goods_attr_val = array();
+			foreach ($goods_attr_arr as $v) {
+				if( isset( $goods_attr_val[ $v['goods_id'] ] ) )
+					array_push( $goods_attr_val[ $v['goods_id'] ], $v['attr_value'] );
+				else
+					$goods_attr_val[ $v['goods_id'] ] = array( $v['attr_value'] );
+			}
+			
+			foreach( $goods_attr_val as &$v ){
+				$v = implode('/', $v);
+			}	
+			unset($v);
+
+			foreach ($childer_orders as &$v) {
+				$v['attr'] = $goods_attr_val[ $v['goods_id'] ];
+				$v['add_time'] = date('Y-m-d', $v['add_time']);
+			}
+			unset( $v );
+
+			$content = array();
+			$content['data'] = $childer_orders;
+			$content['total'] = $total;
+			make_json_response($content, '0', '子订单查询成功');
+
+		}
 		
 		public	function updateAction(){
 			$content = $this->content;
@@ -862,12 +1112,16 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				if( $createOrderGood ){
 					// $GLOBALS['db']->query("COMMIT");//事务提交
-					$order_info_sql = 'UPDATE ' . $order_goods_table . ' SET `send_number` = `send_number` + ' . $send_number . ', ' .
-							       		' `order_status` = ' . POS_HANDLE .//子订单状态-处理中
-										' WHERE `order_id` = ' . $order_id . ' AND `goods_id` = ' . $goods_id;
+					$order_info_sql = 'UPDATE ' . $order_goods_table . ' SET `send_number` = `send_number` + ' . $send_number .
+										' WHERE `order_id` = ' . $order_id . ' AND `goods_id` = ' . $goods_id . ' LIMIT 1';
 					$order_info_update = $GLOBALS['db']->query( $order_info_sql );
 					
-					if( $order_info_update ){					
+					$parent_order_sql = ' UPDATE ' . $order_info_table . ' SET `order_status` = ' .
+							       		POS_HANDLE . ' WHERE `order_id` = ' . $parent_order['order_id'] . ' LIMIT 1'; //子订单状态-处理中
+					$parent_order_update = $GLOBALS['db']->query( $parent_order_sql );		       		
+						
+
+					if( $order_info_update && $parent_order_update ){					
 						make_json_response('', '0', '订单拆分成功');
 					}else{
 						$GLOBALS['db']->query('DELETE FROM ' . $order_info_table . ' WHERE `order_sn` = ' . $childer_sn_new);
@@ -1001,7 +1255,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$suppliers_table = $GLOBALS['ecs']->table('suppliers');
 
 			//订单详情
-			$order_sql = 'SELECT odr.`order_status`, odr.`order_sn`, odr.`user_id`, usr.`user_name`, usr.`companyName` as `company_name`, odr.`add_time`, odr.`pay_id`, odr.`contract_sn`, '. "ifnull(crt.contract_name, '') as contract_name," .//订单相关
+			$order_sql = 'SELECT odr.`order_status`, odr.`child_order_status`, odr.`order_sn`, odr.`user_id`, usr.`user_name`, usr.`companyName` as `company_name`, odr.`add_time`, odr.`pay_id`, odr.`contract_sn`, '. "ifnull(crt.contract_name, '') as contract_name," .//订单相关
 						 ' odr.`consignee`, odr.`address`, odr.`mobile`, odr.`sign_building`, ' .
 					 	 ' odr.`inv_type`, odr.`inv_payee`, odr.`inv_bank_name`, odr.`inv_bank_account`, odr.`inv_bank_address`, odr.`inv_tel`, odr.`inv_fax`, ' .	//发票相关
 					 	 ' odr.`shipping_fee_send_buyer`, odr.`shipping_fee_arr_buyer`, odr.`shipping_fee_send_saler`, odr.`shipping_fee_arr_saler`, ' .//商品资料
@@ -1371,7 +1625,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
 	     *  {
 	     *      "entity": "order_info",
-	     *      "command": "addShippingLog",
+	     *      "command": "addShippingInfo",
 	     *      "parameters": {
 	     *          "params": {
 	     *          	"order_id":101//订单ID
@@ -1412,10 +1666,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$shipping_info['tel'] = $tel;
 			$shipping_info['shipping_time'] = $shipping_time;
 
-			$shippinf_info_str = json_encode( $shipping_info );
+			$shippinf_info_str = json_encode( $shipping_info, JSON_UNESCAPED_UNICODE );
 
-			$add_shipping_info_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_info` = ' . $shippinf_info_str .
-									 ' WHERE `order_id` = ' . $order_id; 
+			$add_shipping_info_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_info` = \'' . $shippinf_info_str .
+									 '\' WHERE `order_id` = ' . $order_id; 
 			$add_shipping = $GLOBALS['db']->query( $add_shipping_info_sql );
 
 			if( $add_shipping ){
@@ -1459,6 +1713,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			$order_id = intval( $params['order_id'] );
 
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+
 			$log = strval( trim( $params['log'] ) );
 			@$shipping_date = strval( trim( $params['date'] ) );
 			if( empty( $shipping_date ) ){
@@ -1475,18 +1731,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( empty( $shipping_log_old['shipping_log'] ) ){
 				$shipping_log = array();
 			}else{
-				$shipping_log = json_decode( $shipping_log_old['shipping_log'], true );
+				$shipping_log = json_decode( $shipping_log_old['shipping_log'] );
 			}
-
 			$shipping_log_temp['content'] = $log;
 			$shipping_log_temp['date'] = $shipping_date;
 			array_push( $shipping_log, $shipping_log_temp );
-			$shipping_log_str = json_encode( $shipping_log );
+			$shipping_log_str = json_encode( $shipping_log, JSON_UNESCAPED_UNICODE );
 
-			$order_info_table = $GLOBALS['ecs']->table('order_info');
-
-			$add_shipping_log_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_log` = ' . $shipping_log_str .
-									 ' WHERE `order_id` = ' . $order_id; 
+			$add_shipping_log_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_log` = \'' . $shipping_log_str .
+									 '\' WHERE `order_id` = ' . $order_id; 
 			$add_shipping_log = $GLOBALS['db']->query( $add_shipping_log_sql );
 
 			if( $add_shipping_log ){
@@ -1516,31 +1769,50 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "message": "发货改价信息获取成功",
 		 *	    "content": 
 		 *	    {
-		 *	    	"order_id":142,
-		 *	    	"goods_price_add":100,//客户价格.物料单价
-		 *	    	"goods_number":100,//客户价格|供应商价格.物料数量
-		 *	    	"suppers_id"://客户价格.实际供应商列表
-		 *	    	[
+		 *	    	"form":
 		 *	    	{
-		 *	    		"suppliers_id":1,//供应商id
-		 *	    		"suppliers_name":"天津天佑"//供应商名字
-		 *	    	}
-		 *	    	],
-		 *	    	"financial_send_rate":0.0001,//客户价格.金融费率 (数字)
-		 *	    	"shipping_fee_send_buyer":82,//客户价格.物流费用
-		 *	    	"financial_send":1,//客户价格.金融费用
-		 *      	"order_amount_send_buyer":200,//客户价格.发货总价
+		 *	    		"order_id":142,
+		 *	    	 	"goods_price_add":100,//客户价格.物料单价
+		 *	    	  	"goods_number":100,//客户价格|供应商价格.物料数量
+		 *	    	   	"suppers_id"://客户价格.实际供应商列表
+		 *	    	    [
+		 *	    	    {
+		 *	    		   "suppliers_id":1,//供应商id
+		 *	    		   "suppliers_name":"天津天佑"//供应商名字
+		 *	    	    }
+		 *	    	    ],
+		 *	    	    "financial_send_rate":0.0001,//客户价格.金融费率 (数字)
+		 *	    	    "shipping_fee_send_buyer":82,//客户价格.物流费用
+		 *	    	    "financial_send":1,//客户价格.金融费用
+		 *      	    "order_amount_send_buyer":200,//客户价格.发货总价
 		 *      	
-		 *	    	"goods_price":100,//供应商价格.物料单价
-		 *	    	"shipping_fee_send_saler":82//供应商价格.物流费用
-		 *	    	"pay_id"://支付方式列表
-		 *	    	[
-		 *	    	{
-		 *	    		"id":1,
-		 *	    		"name":"现金"
-		 *	    	}
-		 *	    	],
-		 *	    	"order_amount_send_saler":200//供应商价格.发货总价
+		 *	    	 	"goods_price":100,//供应商价格.物料单价
+		 *	    	  	"shipping_fee_send_saler":82//供应商价格.物流费用
+		 *	    	   	"pay_id"://支付方式列表
+		 *	    	    [
+		 *	    	    {
+		 *	    		   "id":1,
+		 *	    		   "name":"现金"
+		 *	    	    }
+		 *	    	    ],
+		 *	    	    "order_amount_send_saler":200//供应商价格.发货总价
+		 *	    	 },
+		 *	    	 "price_log":
+		 *	    	 {
+		 *	    	 [
+		 *	    	 	"good_code":"010102010701",//物料代码
+		 *	    	 	"goods_name":"钢圈",//物料名称
+		 *	    	 	"goods_attr":"45/T450/gangjin",//规格/型号/材质
+		 *	    	 	"suppliers_name":"天津钢铁",//供应商
+		 *	    	 	"suppliers_price":2000,//供应商报价
+		 *	    	 	"actual_price":1800,//实际单价
+		 *	    	 	"shipping_fee":50,//物流费用
+		 *	    	 	"financial":100,//金融费用
+		 *	    	 	"total":2150,//总金额
+		 *	    	 	"payment":"现金",//支付方式
+		 *	    	 	"price_date":"2016-01-07 10:09:00"//报价日期
+		 *	    	 ]
+		 *	    	 }
 		 *	    }  	
 	     *  }
 		 * 
@@ -1617,7 +1889,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 			unset($order_info['cat_id']);
 			unset($order_info['goods_id']);
 
-			make_json_response($order_info, '0', '发货改价初始化成功');
+			//历史报价
+			$price_log_table = $GLOBALS['ecs']->table( 'price_log' );
+			$price_log_sql = 'SELECT p.*, og.`goods_sn` FROM ' . $price_log_table . ' AS p LEFT JOIN ' .
+						     $order_goods_table . ' AS og ON og.`order_id` = p.`order_id` ORDER BY `total` ASC';
+			$price_log_arr = $GLOBALS['db']->getAll( $price_log_sql );
+
+			$content = array();
+			$content['form'] = $order_info;
+			$content['price_log'] = empty( $price_log_arr ) ? array() : $price_log_arr;
+
+			make_json_response($content, '0', '发货改价初始化成功');
 		}
 
 		/**
@@ -1670,7 +1952,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
 
 			//检查订单状态
-			$order_info_sql = 'SELECT o.`child_order_status`, og.`goods_number, g.`price_num`, g.`price_rate` FROM ' . $order_info_table .
+			$order_info_sql = 'SELECT o.`child_order_status`, og.`goods_number`, og.`goods_name`, g.`goods_id`, g.`price_num`, g.`price_rate` FROM ' . $order_info_table .
 							  ' AS o LEFT JOIN ' . $order_goods_table . ' AS og ON o.`order_id` = og.`order_id` ' .
 							  ' LEFT JOIN ' . $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 					 		  ' WHERE o.`order_id` = ' . $order_id;
@@ -1697,7 +1979,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$financial_send = $goods_price_add * $goods_number * $financial_send_rate;
 			}
 
-			$shipping_fee_send_saler = $params['shipping_fee_send_saler'];//供货信息.发货物流费
+			$shipping_fee_send_saler = (double)( $params['shipping_fee_send_saler'] );//供货信息.发货物流费
 			$pay_id = intval( $params['pay_id'] );//支付方式id
 
 			$order_amount_send_buyer = $goods_price_add * $goods_number + $financial_send + $shipping_fee_send_buyer;
@@ -1743,6 +2025,63 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_goods_update = $GLOBALS['db']->query( $order_goods_update_sql );
 
 				if ( $order_goods_update ) {
+
+					//保存报价到`price_log`
+					$price_log_table = $GLOBALS['ecs']->table( 'price_log' );
+					$price_log_sql = 'INSERT INTO ' . $price_log_table . ' (';
+
+					//商品属性	
+					$goods_attr_sql = 'SELECT `goods_id`, `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $order_status['goods_id'];
+					$goods_attr_arr = $GLOBALS['db']->getAll( $goods_attr_sql );
+
+					$goods_attr_val = array();
+					foreach ($goods_attr_arr as $v) {
+						$goods_attr_val[] = $v['attr_value'];
+					}
+					
+					$goods_attr_str = implode('/', $goods_attr_val);
+
+					$price_log = array();
+					$price_log['order_id'] = $order_id;
+					$price_log['goods_name'] = $order_status['goods_name'];
+					$price_log['goods_attr'] = $goods_attr_str;
+					//供应商名字
+					$suppliers_table = $GLOBALS['ecs']->table('suppliers');
+					$supplier_sql = 'SELECT `suppliers_name` FROM ' . $suppliers_table . ' WHERE `suppliers_id` = ' . $suppers_id;
+					$supplier = $GLOBALS['db']->getRow( $supplier_sql );
+					$supplier_name = empty( $supplier ) ? '' : $supplier['suppliers_name'];
+
+					$price_log['suppliers_name'] = $supplier_name;
+					$price_log['suppliers_price'] = $goods_price;
+					$price_log['actual_price'] = $goods_price_add;
+
+					$price_log['shipping_fee'] = $shipping_fee_send_buyer;
+					$price_log['financial'] = $financial_send;
+					$price_log['total'] = $order_amount_send_buyer;
+
+					//支付方式
+					$pay_cfg = C('payment');
+					$price_log['payment'] = $pay_cfg[ $pay_id ];
+					$price_log['price_date'] = date('Y-m-d H:i:s');
+
+					$price_log_keys = array_keys( $price_log );
+
+					foreach ($price_log_keys as $k => $v) {
+						$price_log_sql .= ' `' . $v . '`,';
+					}
+
+					$price_log_sql = substr($price_log_sql, 0, -1) . ") VALUES(";
+
+					foreach ($price_log as $v) {
+						if( is_string( $v ) )
+							$v = '\'' . $v . '\'';
+						$price_log_sql = $price_log_sql . $v . ",";
+					}
+					$price_log_sql = substr($price_log_sql, 0, -1) . ')';
+					
+					$GLOBALS['db']->query( $price_log_sql );//保存到历史报价
+
+
 					make_json_response('', '0', '发货改价成功');
 				}else{
 					make_json_response('', '-1', '发货改价失败');
@@ -2025,7 +2364,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *      "command": "getAddPrice",
 	     *      "parameters": {
 	     *          "params": {
-	     *          	"order_id":101//订单ID
+	     *          	"order_id":101,//订单ID
+	     *          	"price":20//实际价格
 	     *          }
 	     *      }
 	     *  }
@@ -2071,12 +2411,18 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$price_num = $order_info['price_num'];
 				$price_rate = $order_info['price_rate'];
 
+				$price = intval( $params['price'] );
+
+				if( empty( $price ) ){
+					make_json_response('', '-1', '价格参数错误');
+				}
+
 				if( empty( $price_num ) ){
 					$price_num = $shop_price * ( double ) ( $price_rate / 100 );
 				}
 
 				$content = array();
-				$content['goods_price_add'] = $goods_price + $price_num;
+				$content['goods_price_add'] = $price + $price_num;//参数价格 + 加价金额
 				make_json_response($content, '0', '获取客户物料价格 成功');
 			}
 			make_json_response('', '-1', '订单不存在');
@@ -2086,7 +2432,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 	}
 	$content = jsonAction( array( "splitInit", "split", "childerList", "childerDetail", "addShippingInfo", "addShippingLog",
-								 "initPriceSend", "updatePriceSend", "initPriceArr", "updatePriceArr", "updateChilderStatus"
+								 "initPriceSend", "updatePriceSend", "initPriceArr", "updatePriceArr", "updateChilderStatus",
+								 "getAddPrice", "searchChilderList"
 						 ) );
 	$orderModel = new OrderInfoModel($content);
 	$orderModel->run();
