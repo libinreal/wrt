@@ -37,6 +37,11 @@ var SaleOrder = {
 		"operate"
 	],
 	check_button: {
+		"confirm_check":{
+			"status": "0",
+			"name": "确认",
+			"func": ""
+		},
 		"sale_check":{
 			"status": "",
 			"name": "销售验签",
@@ -57,7 +62,7 @@ var SaleOrder = {
 			"name": "到货验签",
 			"func": ""
 		},
-		"confirm_check":{
+		"accounting_check":{
 			"status": "",
 			"name": "对账验签",
 			"func": ""
@@ -300,29 +305,6 @@ var SaleOrder = {
 		}, "json");
 	},
 
-	setOrderPrice: function(){
-		var params = {"params":{"limit":this.limit, "offset":this.offset}};
-		strJson = createJson("page", this.entity, params);
-		that = this
-		$.post(this.url, strJson, function(obj){
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#bill_amount_list>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
-					var row = "";
-				}
-			}
-			$('#message_area').html('');
-		}, "json");
-	},
-
 	getSubOrderList: function(search){
 		var id = getQueryStringByName('id');
 		if(id===""||!validateNumber(id)){
@@ -395,6 +377,7 @@ var SaleOrder = {
 		strJson = createJson("childerDetail", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -416,12 +399,10 @@ var SaleOrder = {
 				});
 				// 订单状态相应操作
 				var button = '';
-				$.each(that.check_button, function(k, v){
-					if(v.status.indexOf(obj.content.info.order_status) > 0){
-						button += '<input type="button" class="button" onclick="'+v.func+'" value="'+v.name+'" >';
-					}
+				$.each(obj.content.buttons, function(k, v){
+					button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
 				});
-				$("#handle_button").append(button);
+				$("#handle_button>span").html(button);
 
 				// 物流信息
 				var count = 0;
@@ -473,9 +454,7 @@ var SaleOrder = {
 		var params = {"params":formData};
 		strJson = createJson("addShippingLog", this.entity, params);
 		that = this
-		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -492,5 +471,90 @@ var SaleOrder = {
 			}
 			$('#message_area').html('');
 		}, "json");		
+	},
+
+	updateChilderStatus: function(handle){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var button_name = $(handle).val();
+		var params = {"params":{"order_id":order_id, "button":button_name}};
+		strJson = createJson("updateChilderStatus", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				that.total_page = Math.ceil(obj.content.total/that.offset);
+				if(obj.content.total == 0){
+					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
+					$("#bill_amount_list>tbody").html(row);
+					$("#paginate").html('');
+				}else{
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
+					var row = "";
+				}
+				$('#message_area').html(createTip(obj.message));
+			}
+		}, "json");
+	},
+
+	initPriceSend: function(){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		$("input[name=order_id]").val(order_id);
+		var params = {"params":{"order_id":order_id}};
+		strJson = createJson("initPriceSend", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			console.log(obj);
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				// 初始化列表
+				var key_arr = {
+					"pay_id":{id:"id",name:"name"},
+					"suppers_id":{id:"suppliers_id",name:"suppliers_name"}
+				}
+				$.each(obj.content,function(key, value){
+					var row = "";
+					if($("select[name='"+key+"']").length>0){
+						$.each(value, function(k, v){
+							row += appendOption(v[key_arr[key].id], v[key_arr[key].name])
+						});
+						$("select[name='"+key+"']").append(row);						
+					}
+					if($("input[name="+key+"]").length){
+						$("input[name="+key+"]").val(value);
+					}
+					if($("textarea[name="+key+"]").length){
+						$("textarea[name="+key+"]").text(value);
+					}
+				});
+				$('#message_area').html('');							
+			}
+		}, "json");
+	},
+
+	updatePriceSend: function(){
+		var formData = $("#change_price_form").FormtoJson();
+		var params = {"params":formData};
+		strJson = createJson("updatePriceSend", this.entity, params);
+		that = this
+		console.log(strJson);
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+				return false;	
+			}
+		}, "json");
 	}
 }
