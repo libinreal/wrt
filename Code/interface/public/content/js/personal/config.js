@@ -26,6 +26,7 @@ define(function(require, exports, module) {
     config.creditdetail = config.server + '/credit/creditdetail';//信用等级详情
     
     config.contractList = config.server + '/contract/getList';//我的合同列表
+    config.getNoteList  = config.server + '/note/getlist';//我的票据列表
 
     config.getlist = config.server + '/order/getlist';//我的订单-列表
     config.getdetail = config.server + '/order/getdetail';//我的订单-详情

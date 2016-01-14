@@ -3,6 +3,7 @@
 	<a href="my-info.html" class="icon-nav-1">会员信息</a>
 	<a href="my-creditb.html" class="icon-nav-2">我的信用B</a>
 	<a href="my-contract.html" class="icon-nav-3">我的合同</a>
+	<a href="my-note.html" class="icon-nav-4">我的票据</a>
 	<!-- <a href="my-project.html" class="icon-nav-3">我的项目</a>
 	<a href="my-customize.html" class="icon-nav-4">我的定制</a>
 	<a href="my-jifen.html" class="icon-nav-5">我的积分</a> -->

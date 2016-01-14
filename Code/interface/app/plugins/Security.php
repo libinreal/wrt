@@ -62,6 +62,9 @@ class Security extends Plugin
             		'getdetail',
             		'addcart'
             	),
+            		'contract' => array('getlist', 'findOne'),
+            		'note' => array('getlist', 'findOne'),
+            		'task' => array('setshopprice'), 
                 /* 'bank' => array(
                     'submitcontract',
                     'zjwccheck',
@@ -91,7 +94,10 @@ class Security extends Plugin
             		'creditsorder',
             		'creditslog'
                 ),
-            	'api' => array('getpurchase'),
+            	'api' => array('getpurchase'), 
+            		'contract' => array('getlist', 'findOne'),
+            		'note' => array('getlist', 'findOne'),
+            		'task' => array('setshopprice')
             );
 
             foreach ($vipResources as $resource => $actions) {
@@ -133,7 +139,9 @@ class Security extends Plugin
 				'favorites' => array('getlist', 'save', 'delete'),
 				'helpcenter' => array('appointment', 'omplaint'),
 				'project' => array('getlist', 'getdetail', 'addcart', 'getlistbak'), 
-				'contract' => array('getlist')
+					'contract' => array('getlist', 'findOne'), 
+					'note' => array('getlist', 'findOne'),
+					'task' => array('setshopprice')
 			);
 
 			foreach ($privateResources as $resource => $actions) {
@@ -165,6 +173,7 @@ class Security extends Plugin
 			        'confirmcontractadmin',
 			        'getconfirmdata',
 			    ),
+					'task' => array('setshopprice')
 			);
 			foreach ($publicResources as $resource => $actions) {
 				$acl->addResource(new Phalcon\Acl\Resource($resource), $actions);

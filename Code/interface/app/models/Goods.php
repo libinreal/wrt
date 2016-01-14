@@ -358,7 +358,11 @@ class Goods extends \PhpRudder\Mvc\ModelBase
             'user_id' => 'userId',
             'cat_code' => 'code',
             'wcode' => 'wcode',
-        	'shiplocal' => 'shiplocal'
+        	'shiplocal' => 'shiplocal', 
+        		'price_num' => 'priceNum', 
+        		'price_rate' => 'priceRate', 
+        		'price_type' => 'priceType', 
+        		'price_rule' => 'priceRule'
         );
     }
 
@@ -412,7 +416,11 @@ class Goods extends \PhpRudder\Mvc\ModelBase
     			'userId',
     			'code',
     			'wcode',
-    			'shiplocal'
+    			'shiplocal', 
+    			'priceNum', 
+    			'priceRate', 
+    			'priceType', 
+    			'priceRule'
     	);
     	$this->skipAttributesOnUpdate($attributes);
     }

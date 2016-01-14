@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * 我的合同
+ * @author 
+ */
 use PhpRudder\Mvc\ControllerBase;
 use PhpRudder\Http\ResponseApi;
 
@@ -42,5 +45,27 @@ class ContractController extends ControllerBase
         		->toArray();
         
         return ResponseApi::send($data);
+    }
+    
+    
+    /**
+     * 合同详情
+     * @return array
+     */
+    public function findOne() 
+    {
+    	$id = $this->request->get('id', 'int');
+    	if (!$id) {
+    		return ResponseApi::send('doesn\'t give `id`');
+    	}
+    	
+    	$data = ContractModel::query()
+		    	->where('contract_id='.$id)
+		    	->order('contract_id DESC')
+		    	->limit($size)
+		    	->execute()
+		    	->toArray();
+    	
+    	return ResponseApi::send($data);
     }
 }
