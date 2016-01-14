@@ -14,12 +14,14 @@ define(function(require) {
         Ajax.paging({
             url: config.contractList,
             data: {
-                customer_id : 1, 
-                size : config.pageSize, 
-                timeKey : 'create_time'
-            }
+                customer_id : 1, //当前登录用户id
+                size        : config.pageSize, 
+                
+            }, 
+            renderFor : 'contract-list-tmpl', 
+            renderEle : '#contract-list', 
+            timeKey   : 'contract_id'
         });
     };
     config.paging();
-    console.log(config.beginTime);
 });

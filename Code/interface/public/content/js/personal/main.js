@@ -1,8 +1,8 @@
 define(function(require) {
     var $ = require('jquery');
     require('../base/common');
-    var urls = ['index.html','my-info.', 'my-creditb',
-        'my-project', 'my-customize.',
+    var urls = ['index.html','my-info.', 'my-creditb', 'my-contract.', 
+        /*'my-project',*/ 'my-customize.',
         'my-jifen.', 'my-order.',
         'my-bill.', 'my-address.',
         'my-collect.', 'my-security.',

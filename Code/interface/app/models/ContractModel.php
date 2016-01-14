@@ -18,6 +18,12 @@ class ContractModel extends ModelBase
      */
     public $customer_id;
     
+    
+    /**
+     * init
+     * {@inheritDoc}
+     * @see \PhpRudder\Mvc\ModelBase::initialize()
+     */
     public function initialize() 
     {
     	$attributes = array(
@@ -28,6 +34,10 @@ class ContractModel extends ModelBase
     }
     
     
+    /**
+     * set table
+     * @return string
+     */
     public function getSource() 
     {
     	return 'contract';

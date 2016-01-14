@@ -20,14 +20,14 @@
 			</div>	
 			
 			<div class="contract-list gray-box">
-				<div class="order-list-header clearfix">
-					<div class="order-list-col c1">合同id</div>
-					<div class="order-list-col c2">合同编号</div>
-					<div class="order-list-col c3">合同名称</div>
-					<div class="order-list-col c4">合同金额</div>
-					<div class="order-list-col c5"></div>
+				<div class="contract-list-header clearfix">
+					<div class="contract-list-col c2">合同编号</div>
+					<div class="contract-list-col c3">合同名称</div>
+					<div class="contract-list-col c4">合同金额</div>
+					<div class="contract-list-col c5">开始时间</div>
+					<div class="contract-list-col c6">结束时间</div>
 				</div>
-				<div class="contract-list-content" id="zj-list"></div>
+				<div class="contract-list-content" id="contract-list"></div>
 			</div>
 		</div>
 	</div>
@@ -38,14 +38,14 @@
 <script src="../content/js/module/seajs/2.2.0/sea.js"></script>
 <script src="../content/js/module/seajs/2.2.0/sea-config.js"></script>
 
-<script id="zj-list-tmpl" type="text/html">
+<script id="contract-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<a href="my-order-detail.html?id=<!--[= list[i].contract_id]-->" class="clearfix">
-		<div class="order-list-col c1"><!--[= list[i].contract_id || '--']--></div>
-		<div class="order-list-col c2"><!--[= list[i].contract_num || '--']--></div>
-		<div class="order-list-col c3"><!--[= list[i].contract_name || '--']--></div>
-		<div class="order-list-col c4"><!--[= list[i].contract_amount || '--']--></div>
-		<div class="order-list-col c5"></div>
+	<a href="#?id=<!--[= list[i].contract_id]-->" class="clearfix">
+		<div class="contract-list-col c2"><!--[= list[i].contract_num || '--']--></div>
+		<div class="contract-list-col c3"><!--[= list[i].contract_name || '--']--></div>
+		<div class="contract-list-col c4"><!--[= list[i].contract_amount || '--']--></div>
+		<div class="contract-list-col c5"><!--[= $formatDate(list[i].start_time, 1) || '--']--></div>
+		<div class="contract-list-col c6"><!--[= $formatDate(list[i].end_time, 1) || '--']--></div>
 	</a>
     <!--[}]-->
 </script>
