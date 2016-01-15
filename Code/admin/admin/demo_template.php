@@ -158,8 +158,12 @@ if($section == "sale_order"){
 			$smarty->display('second/sale_order_detail.html');		
 			break;
 
-		case 'change_price':
+		case 'change_send_price':
 			$smarty->display('second/sale_order_send_change_price.html');
+			break;
+
+		case 'change_receive_price':
+			$smarty->display('second/sale_order_receive_change_price.html');
 			break;
 
 		case 'split':

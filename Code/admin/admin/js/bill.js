@@ -116,7 +116,7 @@ var Bill = {
 			}else if(obj.error == 0){
 				redirectToUrl("demo_template.php?section=bill_manage&act=list");
 			}
-		}, "json");		
+		}, "json");
 	},
 
 	getEdit: function(){

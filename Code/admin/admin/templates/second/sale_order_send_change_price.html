@@ -103,7 +103,7 @@
 			<tbody>
 				<tr>
 					<td class="title">物料单价：</td>
-					<td><input type="text" name="goods_price" data-rule-required="true"></td>
+					<td><input type="text" name="goods_price" data-rule-required="true" data-rule-number="true"></td>
 					<td class="title">物料数量：</td>
 					<td><input type="text" name="goods_number" disabled="disabled"></td>
 					<td class="title">物流费用：</td>
@@ -113,7 +113,7 @@
 					<td class="title">付款方式：</td>
 					<td><select name="pay_id" style="width:80px;"></select></td>
 					<td class="title">发货总价：</td>
-					<td><input type="text" name="order_amount_send_saler" data-rule-required="true" data-rule-number="true"></td>
+					<td><input type="text" name="order_amount_send_saler" disabled="disabled"></td>
 				</tr>
 			</tbody>
 			</table>
@@ -123,12 +123,12 @@
 		<div>&nbsp;</div>
 		<div align="center">
 			<input type="button" class="button" value=" 保存 " onclick="SaleOrder.updatePriceSend()"> 
-			<input type="button" class="button" value=" 取消 " onclick="">
+			<input type="button" class="button" value=" 取消 " onclick="javascript:history.back()">
 		</div>
 		<div>&nbsp;</div>
 		<div class="list-div" id="listDiv">
 			<h2>历史报价</h2>
-			<table cellpadding="3" cellspacing="1" id="credit_list">
+			<table cellpadding="3" cellspacing="1" id="price_log_list">
 				<thead>
 				<tr>
 					<th>物料代码</th>
