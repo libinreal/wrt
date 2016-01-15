@@ -40,7 +40,7 @@
 
 <script id="contract-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<a href="#?id=<!--[= list[i].contract_id]-->" class="clearfix">
+	<a href="my-contract-detail.html?contract_id=<!--[= list[i].contract_id]-->" class="clearfix">
 		<div class="contract-list-col c2"><!--[= list[i].contract_num || '--']--></div>
 		<div class="contract-list-col c3"><!--[= list[i].contract_name || '--']--></div>
 		<div class="contract-list-col c4"><!--[= list[i].contract_amount || '--']--></div>

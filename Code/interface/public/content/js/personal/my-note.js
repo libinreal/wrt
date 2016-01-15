@@ -11,8 +11,7 @@ define(function(require) {
         Ajax.paging({
             url: config.getNoteList,
             data: {
-                id: 1,
-                size: config.pageSize
+                size : config.pageSize
             }, 
             timeKey  : 'bill_id'
         });
