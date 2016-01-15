@@ -1455,11 +1455,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			$order_id = intval( $params['order_id'] );
 
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 
 			//检查订单状态
-			$order_info_sql = 'SELECT `child_order_status` FROM ' . $order_info_table .
-					 		  ' WHERE `order_id` = ' . $order_id;
+			$order_info_sql = 'SELECT odr.`child_order_status`, odr.`parent_order_id`, og.`goods_id`, og.`goods_number` FROM ' . $order_info_table .
+							  ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id` ' .
+					 		  ' WHERE odr.`order_id` = ' . $order_id;
 			$order_status = $GLOBALS['db']->getRow( $order_info_sql );
 			if( !$order_status ){
 				make_json_response('', '-1', '订单不存在');
@@ -1559,12 +1561,45 @@ require(dirname(__FILE__) . '/includes/init.php');
 							make_json_response('', '-1', '到货验签 失败');
 					}					
 					break;
-				case '撤销订单':
+				case '撤销订单'://更改子订单状态 恢复主订单商品对应子订单的数量 判断是否可以取消主订单
+					if( $order_status['child_order_status'] == SOS_CANCEL ){//已经为撤销状态 不做处理
+						break;
+					}
+
 					$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CANCEL);
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
-					if( $childer_order_update )
+					//恢复主订单扣除的数量
+					//查询主订单商品的数量
+					$order_sql = 'SELECT og.`send_number` FROM ' . $order_goods_table . ' AS og WHERE og.`goods_id` = ' .
+								 $order_status['goods_id'] . ' AND og.`order_id` = ' . $order_status['parent_order_id'];
+					$send_number_data = $GLOBALS['db']->getRow( $order_sql );
+
+					$send_number_new = ( $send_number_data['send_number'] - $order_status['goods_number'] < 0 ) ? 0 : ( $send_number_data['send_number'] - $order_status['goods_number'] );
+					
+					$update_order_sql = 'UPDATE ' . $order_goods_table . ' SET `send_number` = ' . $send_number_new .
+										' WHERE `order_id` = ' . $order_status['parent_order_id'] . ' AND `goods_id` =' . $order_status['goods_id'] . ' LIMIT 1';
+					$update_parent = $GLOBALS['db']->query( $update_order_sql );//echo '  '	. $update_order_sql;
+					//主订单是否可以取消(验证全部子订单的状态)
+					$all_childer_status_sql = 'SELECT `child_order_status` FROM ' . $order_info_table . ' WHERE `parent_order_id` = ' . $order_status['parent_order_id'];
+					$all_childer_status = $GLOBALS['db']->getAll( $all_childer_status_sql );
+
+					$cancel = true;
+					foreach ($all_childer_status as $c) {
+						if ( $c['child_order_status'] != SOS_CANCEL ) {
+							$cancel = false;
+							break;
+						}
+					}
+
+					if( $cancel ){//更新主订单状态 变为已取消
+						$cancel_sql = 'UPDATE ' . $order_info_table . ' SET `order_status` = ' . POS_CANCEL .
+										' WHERE `order_id` = ' . $order_status['parent_order_id'] . ' LIMIT 1';
+						$update_parent = $GLOBALS['db']->query( $cancel_sql );
+					}
+
+					if( $childer_order_update && $update_parent )
 						make_json_response('', '0', '撤销订单 成功');
 					else
 						make_json_response('', '-1', '撤销订单 失败');

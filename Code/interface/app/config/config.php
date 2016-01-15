@@ -3,7 +3,7 @@ return new \Phalcon\Config(array(
 		//数据库配置
 		'database' => array(
 			'adapter'     => 'Mysql',
-			'host'        => '192.168.2.204:3306', //数据库地址
+			'host'        => '192.168.2.204', //数据库地址
 			'username'    => 'root', //数据库用户名
 	        'password'    => '!Q@W#E$R%T', //数据库密码
 	        'dbname'      => 'zjwr', //数据库名
