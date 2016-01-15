@@ -14,9 +14,7 @@ define(function(require) {
         Ajax.paging({
             url: config.contractList,
             data: {
-                customer_id : 1, //当前登录用户id
-                size        : config.pageSize, 
-                
+                size  : config.pageSize
             }, 
             renderFor : 'contract-list-tmpl', 
             renderEle : '#contract-list', 

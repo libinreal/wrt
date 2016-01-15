@@ -451,6 +451,16 @@ class Users extends \PhpRudder\Mvc\ModelBase implements Auth
 			'credits' => 'credits',
             'customerAccount' => 'customerAccount',
             'customerNo' => 'customerNo',
+        	'bill_amount_history' => 'billAmountHistory', 
+        	'bill_amount_valid' => 'billAmountValid', 
+        	'cash_amount_history' => 'cashAmountHistory', 
+        	'cash_amount_valid' => 'cashAmountValid', 
+        	'inv_payee' => 'invPayee', 
+        	'inv_bank_name' => 'invBankName', 
+        	'inv_bank_account' => 'invBankAccount', 
+        	'inv_bank_address' => 'invBankAddress', 
+        	'inv_tel' => 'invTel', 
+        	'inv_fax' => 'invFax', 
         );
     }
 

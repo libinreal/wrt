@@ -16,12 +16,13 @@ class ContractController extends ControllerBase
     
     /**
      * 我的合同
+     * @return 
      */
     public function getListAction() 
     {
-    	$customerId = $this->request->get('customer_id', 'int');
+    	$customerId = $this->get_user()->id;
         $size = $this->request->get('size', 'int') ?: parent::SIZE;
-        $currentId = $this->request->get('contract_id', 'int') ?: time();
+        $currentId = $this->request->get('contract_id', 'int') ?: 0;
         $forward = $this->request->get('forward', 'int');
         
         if (!$customerId) {
@@ -29,12 +30,14 @@ class ContractController extends ControllerBase
         }
         
         $condition = 'customer_id="'.$customerId.'"';
-        if ($forward) {
-        	//上一页操作
-        	$condition .= ' AND (contract_id>"'.$currentId.'")';
+        if ($forward || !$currentId) {
+        	//上一页操作 或 第一页操作
+        	if (!empty($condition)) $condition .= ' AND ';
+        	$condition .= 'contract_id>"'.$currentId.'"';
         } else {
-        	//下一页操作 或 第一页操作
-        	$condition .= ' AND (contract_id<"'.$currentId.'")';
+        	//下一页操作
+        	if (!empty($condition)) $condition .= ' AND ';
+        	$condition .= 'contract_id<"'.$currentId.'"';
         }
         
         $data = ContractModel::query()
@@ -52,19 +55,36 @@ class ContractController extends ControllerBase
      * 合同详情
      * @return array
      */
-    public function findOne() 
+    public function getSingleAction() 
     {
-    	$id = $this->request->get('id', 'int');
-    	if (!$id) {
-    		return ResponseApi::send('doesn\'t give `id`');
+    	error_reporting(E_ALL^E_NOTICE);
+    	$contractId = $this->request->get('contract_id', 'int') ?: 0;
+    	$userId = $this->get_user()->id;
+    	if (!$contractId || !$userId) {
+    		return ResponseApi::send('doesn\'t give `contract_id` or `user_id`');
     	}
     	
-    	$data = ContractModel::query()
-		    	->where('contract_id='.$id)
-		    	->order('contract_id DESC')
-		    	->limit($size)
-		    	->execute()
-		    	->toArray();
+    	$data = ContractModel::findFirst(array(
+    			'conditions' => 'contract_id='.$contractId.' AND customer_id='.$userId
+    	));
+    	if (!$data) {
+    		return ResponseApi::send(null, -1, '该合同不存在！');
+    	}
+    	
+    	$status = array('作废', '生效');
+    	$type = array('', '销售合同', '采购合同');
+    	$signType = array('平台到银行', '银行到平台');
+    	
+    	if ($data->end_time < time()) {
+    		$data->contract_status = '过期';
+    	} else {
+    		$data->contract_status = $status[$data->contract_status];
+    	}
+    	$data->contract_type   = $type[$data->contract_type];
+    	$data->contract_sign_type = $signType[$data->contract_sign_type];
+    	$data->start_time = date('Y-m-d', $data->start_time);
+    	$data->end_time = date('Y-m-d', $data->end_time);
+    	$data->create_time = date('Y-m-d', $data->create_time);
     	
     	return ResponseApi::send($data);
     }

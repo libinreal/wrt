@@ -38,7 +38,7 @@
 
 <script id="zj-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<a href="#?orderSn=<!--[= list[i].bill_id]-->" class="clearfix">
+	<a href="my-note-detail.html?bill_id=<!--[= list[i].bill_id]-->" class="clearfix">
 		<div class="order-list-col c1"><!--[= list[i].bill_id]--></div>
 		<div class="order-list-col c2"><!--[= list[i].bill_num || '--']--></div>
 		<div class="order-list-col c3"><!--[= list[i].bill_type || '--']--></div>
