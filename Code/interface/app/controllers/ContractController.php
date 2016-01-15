@@ -26,7 +26,7 @@ class ContractController extends ControllerBase
         $forward = $this->request->get('forward', 'int');
         
         if (!$customerId) {
-        	return ResponseApi::send('', -1, 'doesn\'t give `customer_id`');
+        	return ResponseApi::send('', -1, '合同不存在！');
         }
         
         $condition = 'customer_id="'.$customerId.'"';
@@ -61,7 +61,7 @@ class ContractController extends ControllerBase
     	$contractId = $this->request->get('contract_id', 'int') ?: 0;
     	$userId = $this->get_user()->id;
     	if (!$contractId || !$userId) {
-    		return ResponseApi::send('doesn\'t give `contract_id` or `user_id`');
+    		return ResponseApi::send(null, -1, '合同不存在！');
     	}
     	
     	$data = ContractModel::findFirst(array(
