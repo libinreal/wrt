@@ -382,6 +382,7 @@
   top:0px;
   width:70px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -445,6 +446,7 @@
   top:0px;
   width:100px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -466,6 +468,7 @@
   top:0px;
   width:100px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -487,6 +490,7 @@
   top:0px;
   width:100px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -503,7 +507,6 @@
   height:56px;
   font-family:'Arial Negreta', 'Arial';
   font-weight:700;
-  font-style:normal;
   color:#FF0000;
 }
 #u42_img {
@@ -554,6 +557,7 @@
   top:0px;
   width:117px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -596,6 +600,7 @@
   top:0px;
   width:78px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -638,6 +643,7 @@
   top:0px;
   width:75px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -701,6 +707,7 @@
   top:0px;
   width:91px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -722,15 +729,13 @@
   top:0px;
   width:97px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u58_input:disabled {
-  color:grayText;
 }
 #u59 {
   position:absolute;
@@ -855,7 +860,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   text-align:center;
 }
 #u70_img {
@@ -902,7 +906,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   text-align:center;
 }
 #u74_img {
@@ -927,7 +930,6 @@
   height:36px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   text-align:center;
 }
 #u76_img {
@@ -952,7 +954,6 @@
   height:36px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   text-align:center;
 }
 #u78_img {
@@ -977,7 +978,6 @@
   height:36px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   text-align:center;
 }
 #u80_img {
@@ -1002,7 +1002,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   text-align:center;
 }
 #u82_img {
@@ -1027,7 +1026,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   text-align:center;
 }
 #u84_img {
@@ -1052,7 +1050,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   text-align:center;
 }
 #u86_img {

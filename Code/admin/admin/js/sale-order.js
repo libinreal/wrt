@@ -36,63 +36,19 @@ var SaleOrder = {
 		"order_status",
 		"operate"
 	],
-	check_button: {
-		"confirm_check":{
-			"status": "0",
-			"name": "确认",
-			"func": ""
-		},
-		"sale_check":{
-			"status": "",
-			"name": "销售验签",
-			"func": ""
-		},
-		"purchase_check":{
-			"status": "",
-			"name": "采购验签",
-			"func": ""
-		},
-		"send_check":{
-			"status": "2,4",
-			"name": "发货验签",
-			"func": ""
-		},
-		"receive_check":{
-			"status": "6,8",
-			"name": "到货验签",
-			"func": ""
-		},
-		"accounting_check":{
-			"status": "",
-			"name": "对账验签",
-			"func": ""
-		},
-		"cancel_check":{
-			"status": "2,3,4,5,6,7,8,9",
-			"name": "取消验签",
-			"func": ""
-		},
-		"revoke_order":{
-			"status": "",
-			"name": "撤销订单",
-			"func": ""
-		},
-		"purchase_order":{
-			"status": "3",
-			"name": "采购下单",
-			"func": ""
-		},
-		"send_change_price":{
-			"status": "1",
-			"name": "发货改价",
-			"func": ""
-		},
-		"receive_change_price":{
-			"status": "5",
-			"name": "到货改价",
-			"func": ""
-		}
-	},
+	price_log: [
+		"goods_sn",
+		"goods_name",
+		"goods_attr",
+		"suppliers_name",
+		"suppliers_price",
+		"actual_price",
+		"shipping_fee",
+		"financial",
+		"total",
+		"payment",
+		"price_date"
+	],
 	limit: 0,
 	offset: 8,
 	current_page: 1,
@@ -145,14 +101,18 @@ var SaleOrder = {
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=sale_order&act=detail&id="+value.order_id, "取消");
+								var edit = createLink("javascript:void(0)", "取消", "SaleOrder.cancelOrderInit('"+value.order_id+"','"+value.order_sn+"')");
 								edit += createLink("demo_template.php?section=sale_order&act=detail&id="+value.order_id, "详情");
 								edit += createLink("demo_template.php?section=sale_order&act=suborder_list&id="+value.order_id, "子订单列表");
 								row += createTd(edit);
 								continue;
 							}
-							if(value[that.order_arr[i]] != null){
-								row += createTd(value[that.order_arr[i]]);
+							if(value[that.order_arr[i]] != null || value[that.order_arr[i]] != ''){
+								if(that.order_arr[i] == "add_time" || that.order_arr[i] == "best_time"){
+									row += createTd(timestampToDate(value[that.order_arr[i]]));
+								}else{
+									row += createTd(value[that.order_arr[i]]);
+								}
 							}else{
 								row += createTd(createWarn('无数据'));
 							}
@@ -193,7 +153,7 @@ var SaleOrder = {
 					row = "<tr>";
 					for(var i=0;i<that.order_detail_arr.length;i++){
 						if(that.order_detail_arr[i] == "operate"){
-							var edit = createLink("demo_template.php?section=sale_order&act=detail&id="+obj.content.info.order_id, "取消未处理");
+							var edit = createLink("javascript:void(0)", "取消未处理", "");
 							edit += createLink("demo_template.php?section=sale_order&act=split&order_id="+obj.content.info.order_id+"&goods_id="+value.goods_id, "拆单");
 							edit += createLink("demo_template.php?section=sale_order&act=suborder_detail&order_id="+obj.content.info.order_id, "子订单");
 							row += createTd(edit);
@@ -227,6 +187,7 @@ var SaleOrder = {
 		strJson = createJson("splitInit", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -335,6 +296,7 @@ var SaleOrder = {
 		strJson = createJson("childerList", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -377,14 +339,20 @@ var SaleOrder = {
 		strJson = createJson("childerDetail", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
+				// 初始化
+				TypeMode.getOrderStatus('order_status');
+				TypeMode.getChilderOrderStatus('child_order_status');
+
 				$.each(obj.content.info, function(k, v){
 					if($("#"+k).length){
 						$("#"+k).text(v);
+					}
+					if($("select[name="+k+"]").length){
+						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");
 					}
 				});
 				$.each(obj.content.invoice, function(k, v){
@@ -400,7 +368,13 @@ var SaleOrder = {
 				// 订单状态相应操作
 				var button = '';
 				$.each(obj.content.buttons, function(k, v){
-					button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
+					if(v == "发货改价"){
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
+					}else if(v == "到货改价"){
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
+					}else{
+						button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
+					}
 				});
 				$("#handle_button>span").html(button);
 
@@ -415,7 +389,7 @@ var SaleOrder = {
 				}
 				if(count == 0){
 					$("#logistics_info").html('<div style="text-align:center">'+createWarn("暂无物流信息")+'</div>');
-					$("#logistics_operate").html(createLink("javascript:void(0);", "新增物流", "popupLayer()"));
+					$("#logistics_operate").html(createLink("javascript:void(0);", "新增物流", "SaleOrder.addShippingInfoInit("+order_id+")"));
 				}else{
 					var table='<table cellpadding="0" cellspacing="0"><thead><tr>';
 					table += '<td class="title text-right" width="100">物流公司：</td><td>'+obj.content.shipping.company_name+'</td>';
@@ -424,24 +398,72 @@ var SaleOrder = {
 					table += '<td class="title text-right" width="100">发货时间：</td><td>'+obj.content.shipping.shipping_time+'</td>';
 					table += '</tr></thead>';
 					if(obj.content.shipping.log.length == 0){
-						table += '<tbody><tr><td colspan="20">'+createWarning("暂无动态")+'</td></tr>';
-						table += '</tbody></table>';
+						table += '<tbody></tbody></table>';
 						$("#logistics_info").html(table);
 					}else{
 						table += '<tbody>';
+						table += '<tr><td class="title">日期</td><td class="title" colspan="7">动态</td></tr>';
 						$.each(obj.content.shipping.log, function(k, v){
-							table += '<td>'+v.date+'</td><td colspan="7">'+v.content+'</td>';
+							table += '<tr><td>'+v.date+'</td><td colspan="7">'+v.content+'</td></tr>';
 						});
 						table += '</tbody></table>';
 						$("#logistics_info").html(table);
 					}
+					$("#logistics_operate").html(createLink("javascript:void(0);", "添加物流信息", "SaleOrder.addShippingLogInit("+order_id+",'"+obj.content.shipping.shipping_num+"')"));
 				}
 			}
 			$('#message_area').html('');
 		}, "json");		
 	},
 
+	addShippingInfoInit: function(order_id){
+		$("#popupLayer").load("templates/second/addShippingInfo.html?order_id="+order_id);
+		popupLayer();
+		$('#message_area').html('');
+	},
+
 	addShippingInfo: function(){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		if($("#logistics_form").valid() == false){
+			return false;
+		}
+		$("input[name=order_id]").val(order_id);
+		var formData = $("#logistics_form").FormtoJson();
+		var params = {"params":formData};
+		strJson = createJson("addShippingInfo", this.entity, params);
+		var shipping_num = $('input[name="shipping_num"]').val();
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#logistics_form').html('<div style="text-align:center">'+createTip(obj.message)+'<input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " /></div>');
+				$("#logistics_operate").html(createLink("javascript:void(0);", "添加物流信息", "SaleOrder.addShippingLogInit("+order_id+",'"+shipping_num+"')"));
+				var table='<table cellpadding="0" cellspacing="0"><thead><tr>';
+				table += '<td class="title text-right" width="100">物流公司：</td><td>'+$("input[name=company_name]").val()+'</td>';
+				table += '<td class="title text-right" width="100">物流单号：</td><td>'+$("input[name=shipping_num]").val()+'</td>';
+				table += '<td class="title text-right" width="100">联系电话：</td><td>'+$("input[name=tel]").val()+'</td>';
+				table += '<td class="title text-right" width="100">发货时间：</td><td>'+$("input[name=shipping_time]").val()+'</td>';
+				table += '</tr></thead>';
+				table += '<tbody><tr><td colspan="20">'+createWarn("暂无动态")+'</td></tr>';
+				table += '</tbody></table>';
+				$("#logistics_info").html(table);
+				return false;
+			}
+		}, "json");
+	},
+
+	addShippingLogInit: function(order_id,shipping_num){
+		$("#popupLayer").load("templates/second/addShippingLog.html?order_id="+order_id+"&num="+shipping_num);
+		popupLayer();
+		$('#message_area').html('');
+	},
+
+	addShippingLog: function(){
 		var order_id = getQueryStringByName('order_id');
 		if(order_id===""||!validateNumber(order_id)){
 			return false;
@@ -459,18 +481,12 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#bill_amount_list>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
-					var row = "";
-				}
+				$('#message_area').html(createTip(obj.message));
+				var table = '<tr><td>'+$("input[name=date]").val()+'</td><td colspan="7">'+$("textarea[name=log]").val()+'</td></tr>';
+				$('#logistics_info>table>tbody').append(table);
+				return false;
 			}
-			$('#message_area').html('');
-		}, "json");		
+		}, "json");
 	},
 
 	updateChilderStatus: function(handle){
@@ -487,16 +503,8 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#bill_amount_list>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
-					var row = "";
-				}
 				$('#message_area').html(createTip(obj.message));
+				that.updateButtonStatus();
 			}
 		}, "json");
 	},
@@ -511,7 +519,89 @@ var SaleOrder = {
 		strJson = createJson("initPriceSend", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				// 初始化列表
+				var key_arr = {
+					"pay_id":{id:"id",name:"name"},
+					"suppers_id":{id:"suppliers_id",name:"suppliers_name"}
+				}
+				$.each(obj.content.form,function(key, value){
+					var row = "";
+					if($("select[name='"+key+"']").length>0){
+						$.each(value, function(k, v){
+							row += appendOption(v[key_arr[key].id], v[key_arr[key].name])
+						});
+						$("select[name='"+key+"']").append(row);		
+					}
+					if($("input[name="+key+"]").length){
+						$("input[name="+key+"]").val(value);
+					}
+					if($("textarea[name="+key+"]").length){
+						$("textarea[name="+key+"]").text(value);
+					}
+				});
+				var row = "";
+				$.each(obj.content.price_log,function(key, value){
+					row += "<tr>";
+					for(var i=0;i<that.price_log.length;i++){
+						if(value[that.price_log[i]] != null){
+							row += createTd(subString(value[that.price_log[i]],10,true));
+						}else{
+							row += createTd(createWarn('无数据'));
+						}
+					}
+					row += "</tr>";
+					$("#price_log_list>tbody").html(row);
+				});
+
+				$('#message_area').html('');		
+			}
+		}, "json");
+	},
+
+	updatePriceSend: function(){
+		if($("#change_price_form").valid() == false){
+			return false;
+		}
+		var formData = $("#change_price_form").FormtoJson();
+		var params = {"params":formData};
+		strJson = createJson("updatePriceSend", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				var row = '<tr>';
+				for(var i=0;i<that.price_log.length;i++){
+					row += "";
+					if($("input[name="+that.price_log[i]+"]").length>0){
+						row += createTd(subString($("input[name="+that.price_log[i]+"]").val(),10,true));
+					}else{
+						row += createTd(createWarn('无数据'));
+					}
+				}
+				row += "</tr>";
+				$("#price_log_list>tbody").prepend(row);
+				$('#message_area').html(createTip(obj.message));
+				return false;
+			}
+		}, "json");
+	},
+
+	initPriceArr: function(){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		$("input[name=order_id]").val(order_id);
+		var params = {"params":{"order_id":order_id}};
+		strJson = createJson("initPriceArr", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -527,34 +617,78 @@ var SaleOrder = {
 						$.each(value, function(k, v){
 							row += appendOption(v[key_arr[key].id], v[key_arr[key].name])
 						});
-						$("select[name='"+key+"']").append(row);						
+						$("select[name='"+key+"']").append(row);		
 					}
 					if($("input[name="+key+"]").length){
 						$("input[name="+key+"]").val(value);
 					}
-					if($("textarea[name="+key+"]").length){
-						$("textarea[name="+key+"]").text(value);
-					}
 				});
-				$('#message_area').html('');							
+
+				$('#message_area').html('');		
 			}
-		}, "json");
+		}, "json");		
 	},
 
-	updatePriceSend: function(){
+	updatePriceArr: function(){
+		if($("#change_price_form").valid() == false){
+			return false;
+		}
 		var formData = $("#change_price_form").FormtoJson();
 		var params = {"params":formData};
 		strJson = createJson("updatePriceSend", this.entity, params);
 		that = this
-		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
 				$('#message_area').html(createTip(obj.message));
-				return false;	
+				return false;
 			}
 		}, "json");
-	}
+	},
+
+	updateButtonStatus: function(){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var params = {"params":{"order_id":order_id}};
+		strJson = createJson("childerDetail", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				// 按钮状态更新
+				var button = '';
+				$.each(obj.content.buttons, function(k, v){
+					if(v == "发货改价"){
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
+					}else if(v == "到货改价"){
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
+					}else{
+						button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
+					}
+				});
+				$("#handle_button>span").html(button);
+			}
+			$('#message_area').html('');
+		}, "json");		
+	},
+
+	cancelOrderInit: function(order_id, order_num){
+		$("#order_num").text(order_num);
+		$("#order_id").val(order_id);
+		popupLayer();
+	},
+
+	cancelOrder: function(){
+
+	},
+
+	cancelSubOrderInit: function(order_id, order_num){
+		popupLayer();
+	},
 }

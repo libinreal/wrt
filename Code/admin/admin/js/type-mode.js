@@ -77,6 +77,9 @@ var TypeMode = {
 	},
 
 	getUserBanks: function(select_id, user_id){
+		if(user_id == ''){
+			return false;
+		}
 		var strJson = createJson("user_banks", "user_banks", {"user_id":user_id});
 		console.log(strJson);
 		that = this
@@ -96,6 +99,9 @@ var TypeMode = {
 	},
 
 	getUserBanksAccounts: function(select_id, user_id, bank_id){
+		if(user_id == ''){
+			return false;
+		}
 		var strJson = createJson("user_bank_accounts", "user_bank_accounts", {"user_id":user_id, "bank_id":bank_id});
 		that = this;
 		$.post(that.url, strJson, function(object){
@@ -117,7 +123,6 @@ var TypeMode = {
 		var strJson = createJson("admin_users", "admin_users", {});
 		that = this;
 		$.post(that.url, strJson, function(object){
-			console.log(object);
 			if(object.error == -1){
 				$('#message_area').html(createError(object.message));
 				return false;
@@ -133,6 +138,9 @@ var TypeMode = {
 	},
 
 	getAdminUserBanks: function(select_id, user_id){
+		if(user_id == ''){
+			return false;
+		}
 		var strJson = createJson("admin_user_banks", "admin_user_banks", {"user_id":user_id});
 		that = this;
 		$.post(that.url, strJson, function(object){
@@ -151,6 +159,9 @@ var TypeMode = {
 	},
 
 	getAdminUserBanksAccounts: function(select_id, user_id, bank_id){
+		if(user_id == '' || bank_id == ''){
+			return false;
+		}
 		var strJson = createJson("admin_user_bank_accounts", "admin_user_bank_accounts", {"user_id":user_id, "bank_id":bank_id});
 		that = this;
 		$.post(that.url, strJson, function(object){
@@ -166,5 +177,41 @@ var TypeMode = {
 			}
 			$('#message_area').html('');
 		},"json");
+	},
+
+	getOrderStatus: function(select_id){
+		var strJson = createJson("order_status", "order_status", {});
+		that = this;
+		$.post(that.url, strJson, function(object){
+			if(object.error == -1){
+				$('#message_area').html(createError(object.message));
+				return false;
+			}else{
+				var row = '';
+				$.each(object.content, function(k, v){
+					row += appendOption(k, v);
+				})
+				$('#'+select_id).html(row);
+			}
+			$('#message_area').html('');
+		},"json");		
+	},
+
+	getChilderOrderStatus: function(select_id){
+		var strJson = createJson("childer_order_status", "childer_order_status", {});
+		that = this;
+		$.post(that.url, strJson, function(object){
+			if(object.error == -1){
+				$('#message_area').html(createError(object.message));
+				return false;
+			}else{
+				var row = '';
+				$.each(object.content, function(k, v){
+					row += appendOption(k, v);
+				})
+				$('#'+select_id).html(row);
+			}
+			$('#message_area').html('');
+		},"json");		
 	}
 }

@@ -571,15 +571,13 @@
   top:0px;
   width:130px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u50_input:disabled {
-  color:grayText;
 }
 #u51 {
   position:absolute;
@@ -594,15 +592,13 @@
   top:0px;
   width:130px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u51_input:disabled {
-  color:grayText;
 }
 #u52 {
   position:absolute;
@@ -617,6 +613,7 @@
   top:0px;
   width:132px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -638,6 +635,7 @@
   top:0px;
   width:126px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -659,6 +657,7 @@
   top:0px;
   width:130px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -680,15 +679,13 @@
   top:0px;
   width:130px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u55_input:disabled {
-  color:grayText;
 }
 #u56 {
   position:absolute;
@@ -703,15 +700,13 @@
   top:0px;
   width:126px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u56_input:disabled {
-  color:grayText;
 }
 #u57 {
   position:absolute;
@@ -726,6 +721,7 @@
   top:0px;
   width:132px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -747,6 +743,7 @@
   top:0px;
   width:126px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -858,6 +855,7 @@
   top:0px;
   width:880px;
   height:186px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -879,6 +877,7 @@
   top:0px;
   width:100px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1043,6 +1042,7 @@
   top:0px;
   width:132px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1064,6 +1064,7 @@
   top:0px;
   width:116px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1085,6 +1086,7 @@
   top:0px;
   width:74px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1106,15 +1108,13 @@
   top:0px;
   width:126px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u86_input:disabled {
-  color:grayText;
 }
 #u87 {
   position:absolute;
@@ -1165,7 +1165,6 @@
   height:24px;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
-  font-style:normal;
   font-size:20px;
 }
 #u90_img {
@@ -1308,6 +1307,7 @@
   top:0px;
   width:100px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1324,7 +1324,6 @@
   height:24px;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
-  font-style:normal;
   font-size:20px;
 }
 #u101_img {
@@ -1349,7 +1348,6 @@
   height:19px;
   font-family:'Arial Negreta', 'Arial';
   font-weight:700;
-  font-style:normal;
   font-size:16px;
 }
 #u103_img {
@@ -1374,7 +1372,6 @@
   height:19px;
   font-family:'Arial Negreta', 'Arial';
   font-weight:700;
-  font-style:normal;
   font-size:16px;
 }
 #u105_img {
@@ -1399,7 +1396,6 @@
   height:19px;
   font-family:'Arial Negreta', 'Arial';
   font-weight:700;
-  font-style:normal;
   font-size:16px;
 }
 #u107_img {
@@ -1424,7 +1420,6 @@
   height:19px;
   font-family:'Arial Negreta', 'Arial';
   font-weight:700;
-  font-style:normal;
   font-size:16px;
 }
 #u109_img {
@@ -1554,7 +1549,6 @@
   height:19px;
   font-family:'Arial Negreta', 'Arial';
   font-weight:700;
-  font-style:normal;
   font-size:16px;
 }
 #u121_img {

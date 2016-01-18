@@ -260,6 +260,7 @@
   top:0px;
   width:156px;
   height:25px;
+  background-image:none;
   background-color:#CCCCCC;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
@@ -282,6 +283,7 @@
   top:0px;
   width:156px;
   height:25px;
+  background-image:none;
   background-color:#CCCCCC;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
@@ -304,6 +306,7 @@
   top:0px;
   width:156px;
   height:25px;
+  background-image:none;
   background-color:#CCCCCC;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
@@ -326,6 +329,7 @@
   top:0px;
   width:100px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -485,7 +489,6 @@
   height:150px;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
-  font-style:normal;
 }
 #u40_img {
   position:absolute;
@@ -963,15 +966,13 @@
   top:0px;
   width:200px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u83_input:disabled {
-  color:grayText;
 }
 #u84 {
   position:absolute;
@@ -986,15 +987,13 @@
   top:0px;
   width:200px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u84_input:disabled {
-  color:grayText;
 }
 #u85 {
   position:absolute;
@@ -1009,6 +1008,7 @@
   top:0px;
   width:156px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1030,15 +1030,13 @@
   top:0px;
   width:200px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u86_input:disabled {
-  color:grayText;
 }
 #u87 {
   position:absolute;
@@ -1053,15 +1051,13 @@
   top:0px;
   width:200px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u87_input:disabled {
-  color:grayText;
 }
 #u88 {
   position:absolute;
@@ -1076,13 +1072,11 @@
   top:0px;
   width:200px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u88_input:disabled {
-  color:grayText;
 }
