@@ -61,14 +61,18 @@ class ProjectController extends ControllerBase
 	 */
 	public function getDetailAction() {
         $customNo = $this->get_user()->customNo;
+        $customerId = $this->get_user()->id;
         $cno = $this->request->get('constractSn');
-        $sql1= "select contract.id as id,
-                            contract.conFnum as prjNo,
-                            contract.conName as prjName,
-                            contract.conAmt as price,
-                            contract.endDate as deadline
+        if (!$cno) {
+        	return ResponseApi::send(null, -1, 'doesn\'t give `constractSn`');
+        }
+        $sql1= "select contract.contract_id as id,
+                            contract.contract_num as prjNo,
+                            contract.contract_name as prjName,
+                            contract.contract_amount as price,
+                            contract.end_time as deadline
                         from contract
-                        where contract.conFnum = '".$cno."' and contract.cusFnum = '".$customNo."'";
+                        where contract.contract_num = '".$cno."' and contract.customer_id = '".$customerId."'";
 
         $result = $this->get_db()->fetchOne($sql1);
         if ($result) {

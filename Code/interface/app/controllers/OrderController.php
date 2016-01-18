@@ -22,7 +22,7 @@ class OrderController extends ControllerBase
 		$userId = $this->get_user()->id;
 		$criteria = OrderInfo::query();
 		$criteria->leftJoin('OrderInfo', 'OI.orderSn LIKE CONCAT(OrderInfo.orderSn, "-%")', 'OI');
-		$criteria->leftJoin('Contract', 'C.conFnum = OrderInfo.contractSn', 'C');
+		$criteria->leftJoin('ContractModel', 'C.contract_num = OrderInfo.contractSn', 'C');
 		$criteria->where('OrderInfo.userId = :userId:', compact('userId'));
 		$criteria->andWhere('OrderInfo.parentOrderId = 0');
 		$criteria->notInWhere('OrderInfo.status', array(5, 6));
@@ -39,8 +39,8 @@ class OrderController extends ControllerBase
 		$criteria->limit($size);
 		$criteria->columns('DISTINCT OrderInfo.id,
 				OrderInfo.orderSn,
-				C.conFnum prjNo,
-				C.name prjName,
+				C.contract_num prjNo,
+				C.contract_name prjName,
 				OrderInfo.status,
 				IF((OI.id > 0 OR OrderInfo.status >=2), 0, 1) allowCancel,
 				OrderInfo.createAt');
@@ -80,7 +80,7 @@ class OrderController extends ControllerBase
 		$orderDetail = array();
 		$builder = $this->modelsManager->createBuilder();
 		$builder->from('OrderInfo');
-		$builder->leftJoin('Contract', 'C.conFnum = OrderInfo.contractSn', 'C');
+		$builder->leftJoin('ContractModel', 'C.contract_num = OrderInfo.contractSn', 'C');
 		$builder->where('OrderInfo.id = :id:', compact('id'));
 		$builder->columns('
 				OrderInfo.id,
@@ -88,8 +88,8 @@ class OrderController extends ControllerBase
 				OrderInfo.status orderStatus,
 				OrderInfo.createAt doTime,
 				OrderInfo.remark,
-				C.conFnum prjNo,
-				C.name prjName,
+				C.contract_num prjNo,
+				C.contract_name prjName,
 				OrderInfo.isRemaind,
 				OrderInfo.name payer,
 				OrderInfo.address,
@@ -103,6 +103,7 @@ class OrderController extends ControllerBase
 			return ResponseApi::send(null, Message::$_ERROR_LOGIC, "要查看的订单不存在，或者已经被管理员删除！");
 		}
 		$order = $result->toArray();
+		
 		$order['payKind'] = 0;
 
 		$sqlStatement = 'SELECT
@@ -121,6 +122,8 @@ class OrderController extends ControllerBase
 			    order_goods.goods_sn goodsCode,
 			    order_goods.goods_name goodsName,
 			    goods.goods_thumb thumb,
+				goods.price_num, 
+				goods.price_rate, 
 			    category.measure_unit goodsUnit,
 			    order_goods.goods_number orderNums,
 			    order_goods.goods_price changePrice,
@@ -174,6 +177,8 @@ class OrderController extends ControllerBase
 				    order_goods.goods_sn goodsCode,
 				    order_goods.goods_name goodsName,
 				    goods.goods_thumb thumb,
+					goods.price_num, 
+					goods_price_rate, 
 				    category.measure_unit goodsUnit,
 				    order_goods.goods_number orderNums,
 				    order_goods.goods_price changePrice
@@ -270,6 +275,10 @@ class OrderController extends ControllerBase
                 $orderDetail['isAllCheck'] = 1;
             }
         }
+        foreach ($orderDetail['goodsList'] as $k=>$v) {
+        	$orderDetail['goodsList'][$k]['changePrice'] = $this->showShopPrice($v, 'changePrice');
+        }
+        
 		return ResponseApi::send($orderDetail);
 	}
 
@@ -296,7 +305,7 @@ class OrderController extends ControllerBase
 		$builder = $this->modelsManager->createBuilder();
 		$builder->from('OrderInfo');
 		$builder->leftJoin('OrderGoods', 'OG.orderId = OrderInfo.id', 'OG');
-		$builder->leftJoin('Contract', 'C.conFnum = OrderInfo.contractSn', 'C');
+		$builder->leftJoin('ContractModel', 'C.contract_num = OrderInfo.contractSn', 'C');
 		$builder->leftJoin('Goods', 'G.id = OG.goodsId', 'G');
 		$builder->leftJoin('Category', 'CAT.code=G.code', 'CAT');
 		$builder->leftJoin('GoodsAttr', 'A.goodsId=G.id', 'A');
@@ -308,8 +317,8 @@ class OrderController extends ControllerBase
 		$builder->columns('
 				OrderInfo.id,
 				OrderInfo.orderSn,
-				C.conFnum prjNo,
-				C.name prjName,
+				C.contract_num prjNo,
+				C.contract_name prjName,
 				G.goodsSn goodsCode,
 				CONCAT("'.$this->get_url().'", G.thumb) thumb,
 				G.name goodsName,
@@ -386,7 +395,7 @@ class OrderController extends ControllerBase
 		$builder->from('OrderInfo');
 		$builder->leftJoin('OrderInfo', 'OI.id = OrderInfo.parentOrderId', 'OI');
 		$builder->leftJoin('OrderGoods', 'OG.orderId = OrderInfo.id', 'OG');
-		$builder->leftJoin('Contract', 'C.conFnum = OrderInfo.contractSn', 'C');
+		$builder->leftJoin('Contract', 'C.contract_num = OrderInfo.contractSn', 'C');
 		$builder->leftJoin('Goods', 'G.id = OG.goodsId', 'G');
 		$builder->where('OrderInfo.id = ' . $id);
 		$builder->columns('OrderInfo.id,
@@ -394,8 +403,8 @@ class OrderController extends ControllerBase
 				OrderInfo.status orderStatus,
 				OrderInfo.createAt doTime,
 				OrderInfo.remark,
-				C.conFnum prjNo,
-				C.name prjName,
+				C.contract_num prjNo,
+				C.contract_name prjName,
 				OI.isRemaind,
 				OI.id parentOrderId,
 				OrderInfo.name payer,
@@ -513,7 +522,7 @@ class OrderController extends ControllerBase
 		}
 		$order->status = $status;
 		if(!$order->save()) {
-			foreach($order->getMessage() as $message) {
+			foreach($order->getMessages() as $message) {
 				return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
 			}
 		}
@@ -679,5 +688,20 @@ class OrderController extends ControllerBase
 		return ResponseApi::send();
 	}
 
+	/**
+	 * the price after batch price
+	 * @param array $arr
+	 * @return number
+	 */
+	private function showShopPrice($arr, $value = 'vipPrice')
+	{
+		if ($arr[$value] && $arr['price_num']) {
+			return $arr[$value] + $arr['price_num'];
+		} elseif ($arr[$value]) {
+			return $arr[$value] * (1 + ($arr['price_rate'] / 100));
+		} else {
+			return $arr[$value];
+		}
+	}
 }
 

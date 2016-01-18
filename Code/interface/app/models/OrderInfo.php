@@ -476,6 +476,12 @@ class OrderInfo extends \PhpRudder\Mvc\ModelBase
      * @var double
      */
     public $order_check_count;
+    
+    /**
+     * 
+     * @var varchar
+     */
+    public $inv_fax;
 
     /**
      * Independent Column Mapping.
@@ -561,7 +567,27 @@ class OrderInfo extends \PhpRudder\Mvc\ModelBase
         	'is_remaind' => 'isRemaind', //催办订单标识位
         	'suppers_id' => 'suppersId',
             'order_contract_count' => 'contractCount', //合同总金额
-            'order_check_count' => 'checkCount' //验收总金额
+            'order_check_count' => 'checkCount', //验收总金额
+            'inv_fax' => 'invFax', 
+        	'inv_tel' => 'invTel', 
+        	'inv_bank_name' => 'invBankName', 
+        	'inv_bank_account' => 'invBankAccount', 
+        	'inv_bank_address' => 'invBankAddress', 
+        	'shipping_info'    => 'shippingInfo', 
+        	'shipping_log'     => 'shippingLog', 
+        	'child_order_status' => 'childOrderStatus', 
+        	'financial_send_rate'=> 'financialSendRate', 
+        	'financial_send'   => 'financialSend', 
+        	'financial_arr_rate' => 'financialArrRate', 
+        	'financial_arr'      => 'financialArr', 
+        	'shipping_fee_send_buyer' => 'shippingFeeSendBuyer', 
+        	'shipping_fee_send_saler' => 'shippingFeeSendSaler', 
+        	'shipping_fee_arr_buyer'  => 'shippingFeeArrBuyer', 
+        	'shipping_fee_arr_saler'  => 'shippingFeeArrSaler', 
+        	'order_amount_send_buyer' => 'orderAmountSendBuyer', 
+        	'order_amount_send_saler' => 'orderAmountSendSaler', 
+        	'order_amount_arr_buyer'  => 'orderAmountArrBuyer', 
+        	'order_amount_arr_saler'  => 'orderAmountArrSaler'
         );
     }
 
@@ -626,7 +652,7 @@ class OrderInfo extends \PhpRudder\Mvc\ModelBase
     			'parent_id',
     			'discount',
     			'parent_order_sn',
-    			'suppersId'
+    			'suppersId', 
     	);
     	$this->skipAttributesOnCreate($attributes);
     	$this->skipAttributesOnUpdate($attributes);

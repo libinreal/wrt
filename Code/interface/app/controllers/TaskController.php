@@ -3,6 +3,8 @@
  * 定时任务
  * @author 
  */
+namespace Controller\Task;
+
 use PhpRudder\Mvc\ControllerBase;
 use PhpRudder\Http\ResponseApi;
 

@@ -140,6 +140,7 @@ $_LANG['11_priv_admin'] = '权限管理';
 $_LANG['12_stats'] = '报表统计';
 $_LANG['13_contract'] = '合同管理';
 $_LANG['14_credit'] = '授信管理';
+$_LANG['15_bthPrice'] = '采购价格管理';
 
 //合同管理
 $_LANG['01_contract_insert'] = '新增合同';
@@ -149,6 +150,10 @@ $_LANG['06_contract_supplier_list'] = '供应商、合同列表';
 
 //授信管理
 $_LANG['01_credit_list'] = '授信单列表';
+
+//采购价格管理
+$_LANG['01_batch_price'] = '批量加价';
+$_LANG['02_price_list'] = '加价列表';
 
 // 积分商品管理
 $_LANG['01_exchange_category'] = "分类列表";
