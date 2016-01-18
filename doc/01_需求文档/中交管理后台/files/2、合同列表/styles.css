@@ -20,7 +20,6 @@
   height:19px;
   font-family:'Arial Negreta', 'Arial';
   font-weight:700;
-  font-style:normal;
   font-size:16px;
 }
 #u0_img {
@@ -66,7 +65,6 @@
   height:25px;
   font-family:'Arial Negreta', 'Arial';
   font-weight:700;
-  font-style:normal;
   font-size:16px;
 }
 #u4_img {
@@ -274,7 +272,6 @@
   height:36px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   color:#FF0000;
   text-align:center;
 }
@@ -300,7 +297,6 @@
   height:36px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   color:#FF0000;
   text-align:center;
 }
@@ -326,7 +322,6 @@
   height:36px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   color:#FF0000;
   text-align:center;
 }
@@ -352,7 +347,6 @@
   height:36px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   color:#FF0000;
   text-align:center;
 }
@@ -702,6 +696,7 @@
   top:0px;
   width:100px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -744,6 +739,7 @@
   top:0px;
   width:114px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -765,6 +761,7 @@
   top:0px;
   width:114px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -807,6 +804,7 @@
   top:0px;
   width:159px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -849,6 +847,7 @@
   top:0px;
   width:159px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -891,6 +890,7 @@
   top:0px;
   width:159px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
