@@ -26,7 +26,7 @@ class NoteController extends ControllerBase
 		$forward = $this->request->get('forward', 'int');
 		
 		if (!$userId) {
-			return ResponseApi::send('doesn\'t give `user_id`');
+			return ResponseApi::send(null, -1, '票据不存在！');
 		}
 		
 		$condition = ''; //缺少user_id条件
@@ -73,7 +73,7 @@ class NoteController extends ControllerBase
 		$userId = $this->get_user()->id;
 		
 		if (!$billId || !$userId) {
-			return ResponseApi::send('doesn\'t give `bill_id` or `user_id`');
+			return ResponseApi::send(null, -1, '票据不存在！');
 		}
 		
 		$data = NoteModel::findFirst(array('bill_id='.$billId)); //缺少user_id条件
