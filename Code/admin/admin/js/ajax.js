@@ -237,6 +237,18 @@ var isNumeric = function( obj ) {
     return !jQuery.isArray( obj ) && (obj - parseFloat( obj ) + 1) >= 0;
 }
 
+var timestampToDate = function(unix_timestamp){
+      var a = new Date(unix_timestamp * 1000);
+      var year = a.getFullYear();
+      var month = a.getMonth() + 1;
+      var date = a.getDate();
+      var hour = a.getHours();
+      var min = a.getMinutes();
+      var sec = a.getSeconds();
+      var time = year + '/' + month + '/' + date + ' ' +  hour + ':' + min + ':' + sec ;
+      return time;
+}
+
 function piliskys(input_id, show_id){
     var test1= $("#input_id").val();
     creat(input_id, show_id)  

@@ -101,14 +101,18 @@ var SaleOrder = {
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=sale_order&act=detail&id="+value.order_id, "取消");
+								var edit = createLink("javascript:void(0)", "取消", "SaleOrder.cancelOrderInit('"+value.order_id+"','"+value.order_sn+"')");
 								edit += createLink("demo_template.php?section=sale_order&act=detail&id="+value.order_id, "详情");
 								edit += createLink("demo_template.php?section=sale_order&act=suborder_list&id="+value.order_id, "子订单列表");
 								row += createTd(edit);
 								continue;
 							}
-							if(value[that.order_arr[i]] != null){
-								row += createTd(value[that.order_arr[i]]);
+							if(value[that.order_arr[i]] != null || value[that.order_arr[i]] != ''){
+								if(that.order_arr[i] == "add_time" || that.order_arr[i] == "best_time"){
+									row += createTd(timestampToDate(value[that.order_arr[i]]));
+								}else{
+									row += createTd(value[that.order_arr[i]]);
+								}
 							}else{
 								row += createTd(createWarn('无数据'));
 							}
@@ -149,7 +153,7 @@ var SaleOrder = {
 					row = "<tr>";
 					for(var i=0;i<that.order_detail_arr.length;i++){
 						if(that.order_detail_arr[i] == "operate"){
-							var edit = createLink("demo_template.php?section=sale_order&act=detail&id="+obj.content.info.order_id, "取消未处理");
+							var edit = createLink("javascript:void(0)", "取消未处理", "");
 							edit += createLink("demo_template.php?section=sale_order&act=split&order_id="+obj.content.info.order_id+"&goods_id="+value.goods_id, "拆单");
 							edit += createLink("demo_template.php?section=sale_order&act=suborder_detail&order_id="+obj.content.info.order_id, "子订单");
 							row += createTd(edit);
@@ -183,6 +187,7 @@ var SaleOrder = {
 		strJson = createJson("splitInit", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -334,14 +339,20 @@ var SaleOrder = {
 		strJson = createJson("childerDetail", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
+				// 初始化
+				TypeMode.getOrderStatus('order_status');
+				TypeMode.getChilderOrderStatus('child_order_status');
+
 				$.each(obj.content.info, function(k, v){
 					if($("#"+k).length){
 						$("#"+k).text(v);
+					}
+					if($("select[name="+k+"]").length){
+						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");
 					}
 				});
 				$.each(obj.content.invoice, function(k, v){
@@ -358,13 +369,12 @@ var SaleOrder = {
 				var button = '';
 				$.each(obj.content.buttons, function(k, v){
 					if(v == "发货改价"){
-						button += createLink("demo_template.php?section=sale_order&act=change_send_price&order_id="+order_id, "发货改价");
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
 					}else if(v == "到货改价"){
-						button += createLink("demo_template.php?section=sale_order&act=change_receive_price&order_id="+order_id, "到货改价");
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
 					}else{
 						button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
 					}
-					
 				});
 				$("#handle_button>span").html(button);
 
@@ -388,8 +398,7 @@ var SaleOrder = {
 					table += '<td class="title text-right" width="100">发货时间：</td><td>'+obj.content.shipping.shipping_time+'</td>';
 					table += '</tr></thead>';
 					if(obj.content.shipping.log.length == 0){
-						table += '<tbody><tr><td colspan="20">'+createWarn("暂无动态")+'</td></tr>';
-						table += '</tbody></table>';
+						table += '<tbody></tbody></table>';
 						$("#logistics_info").html(table);
 					}else{
 						table += '<tbody>';
@@ -410,6 +419,7 @@ var SaleOrder = {
 	addShippingInfoInit: function(order_id){
 		$("#popupLayer").load("templates/second/addShippingInfo.html?order_id="+order_id);
 		popupLayer();
+		$('#message_area').html('');
 	},
 
 	addShippingInfo: function(){
@@ -450,6 +460,7 @@ var SaleOrder = {
 	addShippingLogInit: function(order_id,shipping_num){
 		$("#popupLayer").load("templates/second/addShippingLog.html?order_id="+order_id+"&num="+shipping_num);
 		popupLayer();
+		$('#message_area').html('');
 	},
 
 	addShippingLog: function(){
@@ -492,15 +503,8 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				that.total_page = Math.ceil(obj.content.total/that.offset);
-				if(obj.content.total == 0){
-					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
-					$("#bill_amount_list>tbody").html(row);
-					$("#paginate").html('');
-				}else{
-					var row = "";
-					$('#message_area').html(createTip(obj.message));
-				}
+				$('#message_area').html(createTip(obj.message));
+				that.updateButtonStatus();
 			}
 		}, "json");
 	},
@@ -642,5 +646,49 @@ var SaleOrder = {
 				return false;
 			}
 		}, "json");
-	}
+	},
+
+	updateButtonStatus: function(){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var params = {"params":{"order_id":order_id}};
+		strJson = createJson("childerDetail", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				// 按钮状态更新
+				var button = '';
+				$.each(obj.content.buttons, function(k, v){
+					if(v == "发货改价"){
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
+					}else if(v == "到货改价"){
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
+					}else{
+						button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
+					}
+				});
+				$("#handle_button>span").html(button);
+			}
+			$('#message_area').html('');
+		}, "json");		
+	},
+
+	cancelOrderInit: function(order_id, order_num){
+		$("#order_num").text(order_num);
+		$("#order_id").val(order_id);
+		popupLayer();
+	},
+
+	cancelOrder: function(){
+
+	},
+
+	cancelSubOrderInit: function(order_id, order_num){
+		popupLayer();
+	},
 }
