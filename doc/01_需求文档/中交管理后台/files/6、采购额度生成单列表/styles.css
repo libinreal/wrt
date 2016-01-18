@@ -225,7 +225,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   text-align:center;
 }
 #u19_img {
@@ -250,7 +249,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   color:#FF0000;
   text-align:center;
 }
@@ -540,7 +538,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   color:#FF0000;
   text-align:center;
 }
@@ -831,7 +828,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   color:#FF0000;
   text-align:center;
 }
@@ -1122,7 +1118,6 @@
   height:30px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   color:#FF0000;
   text-align:center;
 }
@@ -1327,6 +1322,7 @@
   top:0px;
   width:114px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1369,6 +1365,7 @@
   top:0px;
   width:114px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1390,6 +1387,7 @@
   top:0px;
   width:114px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1432,6 +1430,7 @@
   top:0px;
   width:100px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;

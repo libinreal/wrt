@@ -1042,15 +1042,13 @@
   top:0px;
   width:105px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u105_input:disabled {
-  color:grayText;
 }
 #u106 {
   position:absolute;
@@ -1065,6 +1063,7 @@
   top:0px;
   width:114px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1107,15 +1106,13 @@
   top:0px;
   width:126px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u109_input:disabled {
-  color:grayText;
 }
 #u110 {
   position:absolute;
@@ -1151,6 +1148,7 @@
   top:0px;
   width:114px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1172,6 +1170,7 @@
   top:0px;
   width:114px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -1214,6 +1213,7 @@
   top:0px;
   width:100px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;

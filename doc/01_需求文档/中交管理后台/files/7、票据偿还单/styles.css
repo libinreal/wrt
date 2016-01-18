@@ -109,6 +109,7 @@
   top:0px;
   width:477px;
   height:45px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -130,6 +131,7 @@
   top:0px;
   width:60px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -151,6 +153,7 @@
   top:0px;
   width:60px;
   height:25px;
+  background-image:url(../../resources/images/transparent.gif);
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -235,6 +238,7 @@
   top:0px;
   width:77px;
   height:25px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
@@ -256,15 +260,13 @@
   top:0px;
   width:100px;
   height:22px;
+  background-image:none;
   font-family:'Arial Normal', 'Arial';
   font-weight:400;
   font-style:normal;
   font-size:13px;
   text-decoration:none;
   color:#000000;
-}
-#u18_input:disabled {
-  color:grayText;
 }
 #u19 {
   position:absolute;
@@ -400,7 +402,6 @@
   height:16px;
   font-family:'Heiti SC Light', 'Heiti SC';
   font-weight:200;
-  font-style:normal;
   color:#FF0000;
 }
 #u31_img {
