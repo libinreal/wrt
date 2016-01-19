@@ -199,19 +199,7 @@
 			{$lang.copyright}
 		</div>
 		<!-- pop message -->
-		<div id="popupLayer" class="messagepop pop">
-		<div class="messagepop_header"><h4>取消未处理</h4></div>
-		<div class="clear"></div>
-		<hr>
-		<form id="cancel_form">
-			<div style="color:#f00;text-align:center;"><span id="order_num"></span> 取消所有未处理子订单？</div>
-			<input type="hidden" name="order_id">
-			<hr>
-			<div align="center">
-			<input type="button" class="button close" href="javascript:void(0)" onclick="SaleOrder.cancelOrder()" value=" 确认 "> <input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 ">
-			</div>
-		</form>
-		</div>
+		<div id="popupLayer" class="messagepop pop"></div>
 		<div id="mask_layout"></div>
 
 <script src="js/laydate/laydate.dev.js"></script>

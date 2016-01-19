@@ -1,6 +1,6 @@
 <?php
 
-class Contract extends \Phalcon\Mvc\Model
+class Contract1 extends \Phalcon\Mvc\Model
 {
 
     /**

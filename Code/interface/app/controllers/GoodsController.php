@@ -73,6 +73,7 @@ class GoodsController extends ControllerBase {
     	if(!$areaId) {
     		return ResponseApi::send(null, Message::$_ERROR_NOFOUND, "请先选择区域！");
     	}
+    	
     	$goodsObj = new Goods();
     	$rdGoods = array();
 		foreach(array_merge(self::$goodsDZCodes, self::$goodsBPCodes) as $code) {
@@ -83,7 +84,8 @@ class GoodsController extends ControllerBase {
 								IF(goods_thumb LIKE "http://%", goods_thumb, CONCAT("' . $this->get_url() . '", goods_thumb)) thumb,
 							    market_price price,
 							    shop_price vipPrice,
-								RPAD(LEFT(cat_code, 4), 8, 0) code
+								RPAD(LEFT(cat_code, 4), 8, 0) code, 
+								price_num, price_rate
 							FROM goods
 							WHERE (is_best = 1)
 										AND (LEFT(cat_code, 2) = '.$code.')
@@ -98,9 +100,15 @@ class GoodsController extends ControllerBase {
 			}
 		}
 // 		$cache->save('rdGoods', serialize($rdGoods));
+		foreach ($rdGoods as $k=>$v) {
+			foreach ($v as $vk=>$vv) {
+				$rdGoods[$k][$vk]['vipPrice'] = $this->showShopPrice($vv);
+			}			
+		}
 		return ResponseApi::send($rdGoods);
     }
 
+    
     /**
      * 获取推荐品牌 JJSC-03
      */
@@ -332,6 +340,8 @@ class GoodsController extends ControllerBase {
 				                goods.goods_thumb)) thumb,
 				    goods.shiplocal,
 				    goods.shop_price vipPrice,
+				    goods.price_num, 
+				    goods.price_rate, 
 				    goods.goods_number storeNum,
 				    brand.brand_name factoryName,
 				    suppliers.suppliers_name supplier,
@@ -417,6 +427,10 @@ class GoodsController extends ControllerBase {
 				$goods = array_reverse($goods);
 			}
 		}
+		foreach ($goods as $k=>$v) {
+			$goods[$k]['vipPrice'] = $this->showShopPrice($v);
+		}
+    
 		$nav = $this->getNavigate($code);
 		return ResponseApi::send(compact('goods', 'nav'));
     }
@@ -486,6 +500,8 @@ class GoodsController extends ControllerBase {
     			IF(Goods.thumb LIKE 'http://%', Goods.thumb, CONCAT('" . $this->get_url() . "', Goods.thumb)) thumb,
     			Goods.price,
     			Goods.vipPrice,
+    			Goods.price_num, 
+    			Goods.price_rate, 
     			IF(c.recId>0, 1, 0) hasFavorites,
     			Goods.createAt");
     	$builder->where($conditions);
@@ -500,6 +516,10 @@ class GoodsController extends ControllerBase {
     			$goods = array_reverse($goods);
     		}
     	}
+    	foreach ($goods as $k=>$v) {
+    		$goods[$k]['vipPrice'] = $this->showShopPrice($v);
+    	}
+    
     	$nav = $this->getNavigate($code);
     	return ResponseApi::send(compact('goods', 'nav'));
     }
@@ -536,6 +556,8 @@ class GoodsController extends ControllerBase {
 				cat.unit,
 				Goods.price,
 				Goods.vipPrice,
+				Goods.price_num, 
+				Goods.price_rate, 
 				Goods.createAt,
 				Goods.des,
 				Goods.spec,
@@ -580,6 +602,8 @@ class GoodsController extends ControllerBase {
 			$nav = $this->getNavigate($goodsDetail['code']);
 			unset($goodsDetail['code']);
 		}
+		$goodsDetail['vipPrice'] = $this->showShopPrice($goodsDetail);
+		
 		return ResponseApi::send(compact('goodsDetail', 'nav'));
     }
 
@@ -693,6 +717,8 @@ class GoodsController extends ControllerBase {
 					Cart.goodsName name,
 					IF(g.thumb LIKE "http://%", g.thumb, CONCAT("'.$this->get_url().'", g.thumb)) thumb,
 					g.vipPrice price,
+					g.price_num, 
+					g.price_rate, 
 					Cart.nums,
 					c.unit,
 					GROUP_CONCAT(DISTINCT CONCAT(a.goodsAttrId, ":", ab.name,":",a.attr_value,":",a.attrId,":",ab.sort)) attr');
@@ -721,6 +747,10 @@ class GoodsController extends ControllerBase {
 				$cartList[] = $r;
 			}
 		}
+		foreach ($cartList as $k=>$v) {
+			$cartList[$k]['price'] = $this->showShopPrice($v, 'price');
+		}
+	
 		return ResponseApi::send($cartList);
 
 	}
@@ -742,18 +772,19 @@ class GoodsController extends ControllerBase {
 		$result = Goods::findFirst(array(
 			'conditions' => 'id=:goodsId: AND isDelete = 0',
 			'bind' => compact('goodsId'),
-			'columns' => 'name goodsName, vipPrice price, goodsSn, storeNum',
+			'columns' => 'name goodsName, vipPrice price, goodsSn, storeNum, price_num, price_rate',
 		));
 		//添加商品到购物车
 		if(is_object($result) && $result) {
 			$goods = $result->toArray();
+			$goods['price'] = $this->showShopPrice($goods, 'price');
 			//库存检查
 			if($goods['storeNum'] < $nums) {
 				return ResponseApi::send(null, Message::$_ERROR_NOFOUND, "商品库存不足");
 			}
 			$userId = $this->get_user()->id;
 			extract($goods);
-			$cart = Cart::findFirst('goodsId=' . $goodsId . 'AND userId = '.$userId);
+			$cart = Cart::findFirst('goodsId=' . $goodsId . ' AND userId = '.$userId);
 			if(is_object($cart) && $cart) {
 				$cart->nums +=  $nums;
 			} else {
@@ -779,11 +810,11 @@ class GoodsController extends ControllerBase {
 	 * 获取合同列表 JJSC-13
 	 */
 	public function getContractsAction() {
-		$customNo = $this->get_user()->customNo;
-		$result = Contract::find(array(
-			'conditions' => 'cusFnum = :customNo:',
-			'bind' => compact('customNo'),
-			'columns' => 'id, name, conFnum code'
+		$customerId = $this->get_user()->id;
+		
+		$result = ContractModel::find(array(
+			'conditions' => 'customer_id = '.$customerId,
+			'columns' => 'contract_id, contract_name name, contract_num code'
 		));
 		$contract = array();
 		if(is_object($result) && $result->count()) {
@@ -829,7 +860,9 @@ class GoodsController extends ControllerBase {
 				Cart.goodsId,
 				Cart.goodsName,
 				Cart.goodsSn,
-				G.vipPrice price,
+				G.vipPrice price, 
+				G.price_num, 
+				G.price_rate, 
 				Cart.nums
 				')->execute();
 		if(!is_object($cartResults) || !$cartResults->count()) {
@@ -839,12 +872,21 @@ class GoodsController extends ControllerBase {
 		$buyGoods = array();
 		$totalAmt = 0;
 		foreach($cartResults as $cartResult) {
+			if ($cartResult->price_num) {
+				$cartResult->price = $cartResult->price + $cartResult->price_num;
+			} else {
+				$cartResult->price = $cartResult->price * (1+($cartResult->price_rate/100));
+			}
+		
 			$buyGoods[$cartResult->goodsId] = $cartResult->nums;
 			$totalAmt += $cartResult->nums * $cartResult->price;
 		}
 		//从金蝶接口得到采购额度
 		$api = new ApiController();
-		$cmt = $api->getCreAmt();
+		$cmt = $api->getCreAmt();	//得到采购额度 #bug#
+		
+		$cmt = '1000000';
+		
 		if($cmt === false) {
 			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, "您的订单暂时无法提交！");
 		}
@@ -916,7 +958,7 @@ class GoodsController extends ControllerBase {
 		$orderInfo->contractSn = $contractSn;
 		//获取订单总价
 		$orderAmount = $this->getCartAmount();
-
+		
 		$orderInfo->orderAmount = $orderAmount;
 		$orderInfo->goodsAmount = $orderAmount;
 		$orderInfo->status = -1;
@@ -1130,7 +1172,7 @@ class GoodsController extends ControllerBase {
 			$result = Goods::find(array(
 					'conditions' => '(code = :code:) AND (IF(:areaId: = 1, 1, areaId = :areaId: OR areaId = 1)) AND (id <> :id:)',
 					'bind' => compact('code', 'areaId', 'id'),
-					'columns' => 'id, name, IF(thumb LIKE "http://%", thumb, CONCAT("'.$this->get_url().'", thumb)) thumb, price, vipPrice',
+					'columns' => 'id, name, IF(thumb LIKE "http://%", thumb, CONCAT("'.$this->get_url().'", thumb)) thumb, price, vipPrice, price_num, price_rate',
 					'order' => 'createAt DESC',
 					'limit' => 5
 			));
@@ -1138,6 +1180,10 @@ class GoodsController extends ControllerBase {
 				$similarGoods = $result -> toArray();
 			}
 		}
+		foreach ($similarGoods as $k=>$v) {
+			$similarGoods[$k]['vipPrice'] = $this->showShopPrice($v);
+		}
+	
 		return ResponseApi::send($similarGoods);
 	}
 
@@ -1247,7 +1293,9 @@ class GoodsController extends ControllerBase {
 				'Goods.name',
 				'IF(Goods.thumb LIKE "http://%", Goods.thumb, CONCAT("'.$this->get_url().'", Goods.thumb)) thumb',
 				'Goods.price',
-				'Goods.vipPrice',
+				'Goods.vipPrice', 
+				'Goods.price_num', 
+				'Goods.price_rate', 
 				'Goods.createAt',
 				'IF(c.recId > 0, 1, 0) hasFavorites'
 		));
@@ -1258,6 +1306,10 @@ class GoodsController extends ControllerBase {
 		if(is_object($result) && $result) {
 			$goods = $result -> toArray();
 		}
+		foreach ($goods as $k=>$v) {
+			$goods[$k]['vipPrice'] = $this->showShopPrice($v);
+		}
+	
 		return $goods;
 	}
 
@@ -1279,6 +1331,8 @@ class GoodsController extends ControllerBase {
 				IF(Goods.thumb LIKE 'http://%', Goods.thumb, CONCAT('" . $this->get_url() . "', Goods.thumb)) thumb,
 				Goods.shiplocal,
 				Goods.vipPrice,
+				Goods.price_num, 
+				Goods.price_rate, 
 				Goods.storeNum,
 				b.factoryName,
 				s.supplier,
@@ -1324,6 +1378,10 @@ class GoodsController extends ControllerBase {
 				$goods[] = $r;
 			}
 		}
+		foreach ($goods as $k=>$v) {
+			$goods[$k]['vipPrice'] = $this->showShopPrice($v);
+		}
+			
 		return $goods;
 	}
 
@@ -1454,13 +1512,17 @@ class GoodsController extends ControllerBase {
     private function getCartAmount() {
     	$userId = $this->get_user()->id;
     	$result = Cart::query()
-    	->leftJoin('Goods', 'G.id = Cart.goodsId', 'G')
-    	->where('Cart.userId = ' . $userId)
-    	->columns('IF(SUM(Cart.nums * G.vipPrice) IS NULL , 0, SUM(Cart.nums * G.vipPrice)) amount')
-    	->execute()
-    	->getFirst()
-    	->toArray();
-    	$amount = $result['amount'];
+	    	->leftJoin('Goods', 'G.id = Cart.goodsId', 'G')
+	    	->where('Cart.userId = ' . $userId)
+	    	//->columns('IF(SUM(Cart.nums * G.vipPrice) IS NULL , 0, SUM(Cart.nums * G.vipPrice)) amount')
+	    	->columns('Cart.nums,G.vipPrice,G.price_num,G.price_rate')
+	    	->execute()
+	    	//->getFirst()
+	    	->toArray();
+    	$amount = 0;
+    	foreach ($result as $k=>$v) {
+    		$amount += $this->showShopPrice($v);
+    	}
 		return $amount;
     }
 
@@ -1513,4 +1575,20 @@ class GoodsController extends ControllerBase {
         return $salerInfo;
     }
 
+    
+    /**
+     * the price after batch price
+     * @param array $arr
+     * @return number
+     */
+    private function showShopPrice($arr, $value = 'vipPrice')
+    {
+    	if ($arr[$value] && $arr['price_num']) {
+    		return $arr[$value] + $arr['price_num'];
+    	} elseif ($arr[$value]) {
+    		return $arr[$value] * (1 + ($arr['price_rate'] / 100));
+    	} else {
+    		return $arr[$value];
+    	}
+    }
 }

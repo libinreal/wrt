@@ -38,7 +38,7 @@ $admin_config = array(
                                 SOS_ARR_PC => '平台已验签(到货)',
                                 SOS_ARR_SC => '供应商已验签(到货)',
                                 SOS_ARR_PC2 => '平台已验签(到货)',
-                                SOS_CANCEL => '验签已取消'
+                                SOS_CANCEL => '订单已取消'
                             ),//(子)订单状态
 
     'purchase_status' => array(0 => '未确认', 1 => '已确认', 2 => '待完成', 3 => '已完成'),//采购订单状态

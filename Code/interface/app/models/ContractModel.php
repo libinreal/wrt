@@ -20,6 +20,19 @@ class ContractModel extends ModelBase
     
     
     /**
+     * 
+     * @var varchar
+     */
+    public $contract_num;
+    
+    
+    /**
+     * 
+     * @var varchar
+     */
+    public $contract_name;
+    
+    /**
      * init
      * {@inheritDoc}
      * @see \PhpRudder\Mvc\ModelBase::initialize()
@@ -27,8 +40,10 @@ class ContractModel extends ModelBase
     public function initialize() 
     {
     	$attributes = array(
-    			'contract_id' => 'contract_id', 
-    			'customer_id' => 'customer_id'
+    			'contract_id'   => 'contract_id', 
+    			'contract_num'  => 'contract_num', 
+    			'contract_name' => 'contract_name', 
+    			'customer_id'   => 'customer_id'
     	);
     	$this->skipAttributesOnCreate($attributes);
     }

@@ -8,7 +8,7 @@ require_once('ManageModel.php');
  */
 if ($_REQUEST['act'] == 'list') 
 {
-    $smarty->display('cont_list.htm');
+    $smarty->display('second/purchase_price_increase_list.html');
     exit;
 }
 /**
@@ -16,7 +16,7 @@ if ($_REQUEST['act'] == 'list')
  */
 elseif ($_REQUEST['act'] == 'batch') 
 {
-    $smarty->display('');
+    $smarty->display('second/purchase_price_increase_batch.html');
     exit;
 }
 /**
@@ -24,7 +24,7 @@ elseif ($_REQUEST['act'] == 'batch')
  */
 elseif ($_REQUEST['act'] == 'single') 
 {
-    $smarty->display('');
+    $smarty->display('second/purchase_price_increase_single.html');
     exit;
 }
 

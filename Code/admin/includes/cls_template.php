@@ -298,7 +298,11 @@ class cls_template
             }
          }
          //return preg_replace("/{([^\}\{\n]*)}/e", "\$this->select('\\1');", $source);
-return preg_replace_callback("/{([^\}\{\n]*)}/", function($r) { return $this->select($r[1]); }, $source);    
+		return preg_replace_callback("/{([^\}\{\n]*)}/", 
+				function($r) {
+					$obj = new cls_template();
+					return $obj->select($r[1]); 
+				}, $source);    
 }
 
     /**

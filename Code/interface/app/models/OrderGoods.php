@@ -162,7 +162,9 @@ class OrderGoods extends \PhpRudder\Mvc\ModelBase
             'check_price' => 'checkPrice', //验收单价
             'check_number' => 'checkNums', //验收数
             'cat_code' => 'cat_code',
-            'wcode' => 'wcode'
+            'wcode' => 'wcode', 
+        	'goods_number_arrival' => 'goodsNumberArrival', 
+        	'goods_price_add'      => 'goodsPriceAdd'
         );
     }
 
