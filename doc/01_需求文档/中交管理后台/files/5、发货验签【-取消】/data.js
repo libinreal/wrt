@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"5、发货验签【-取消】.html",
-  "generationDate":new Date(1453109016988.13),
+  "generationDate":new Date(1453176613097.09),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

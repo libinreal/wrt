@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"应收单列表.html",
-  "generationDate":new Date(1453109044748.54),
+  "generationDate":new Date(1453176664881.42),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -664,7 +664,57 @@
                       "width":105,
                       "height":36}},
                   "adaptiveStyles":{
-}}],
+},
+                  "objects":[{
+                      "id":"d5d80e03b0b445a7a8d25f849a47a1fa",
+                      "label":"",
+                      "type":"hyperlink",
+                      "styleType":"hyperlink",
+                      "visible":true,
+                      "style":{
+},
+                      "adaptiveStyles":{
+},
+                      "interactionMap":{
+                        "onClick":{
+                          "description":"OnClick",
+                          "cases":[{
+                              "description":"Case 1",
+                              "isNewIfGroup":false,
+                              "actions":[{
+                                  "action":"linkWindow",
+                                  "description":"在 当前窗口 打开 应收单详情页",
+                                  "target":{
+                                    "targetType":"page",
+                                    "url":"应收单详情页.html",
+                                    "includeVariables":true},
+                                  "linkType":"current"}]}]}},
+                      "tabbable":true},
+{
+                      "id":"adbe9f40ec0046f1b7a72d3cb336b5b4",
+                      "label":"",
+                      "type":"hyperlink",
+                      "styleType":"hyperlink",
+                      "visible":true,
+                      "style":{
+},
+                      "adaptiveStyles":{
+},
+                      "interactionMap":{
+                        "onClick":{
+                          "description":"OnClick",
+                          "cases":[{
+                              "description":"Case 1",
+                              "isNewIfGroup":false,
+                              "actions":[{
+                                  "action":"linkWindow",
+                                  "description":"在 当前窗口 打开 应收单编辑页",
+                                  "target":{
+                                    "targetType":"page",
+                                    "url":"应收单编辑页.html",
+                                    "includeVariables":true},
+                                  "linkType":"current"}]}]}},
+                      "tabbable":true}]}],
               "images":{
                 "normal~":"images/应收单列表/u23.png"}},
 {
@@ -740,7 +790,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/应收单列表/u49.png"}},
+                "normal~":"images/应收单列表/u51.png"}},
 {
               "id":"0649d279e21a4419950cc23a3f8b939f",
               "label":"",
@@ -814,7 +864,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/应收单列表/u53.png"}},
+                "normal~":"images/应收单列表/u55.png"}},
 {
               "id":"abf6592cd60f486581ab88c583c1b9a0",
               "label":"",
@@ -851,7 +901,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/应收单列表/u55.png"}},
+                "normal~":"images/应收单列表/u57.png"}},
 {
               "id":"9c3c97a6311642609e0758929bad5108",
               "label":"",
@@ -888,7 +938,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/应收单列表/u57.png"}},
+                "normal~":"images/应收单列表/u59.png"}},
 {
               "id":"c95e791c3240450bad87b05290f64c78",
               "label":"",
@@ -925,7 +975,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/应收单列表/u59.png"}},
+                "normal~":"images/应收单列表/u61.png"}},
 {
               "id":"29ba9acf884f4667b0a2ebf32b90758a",
               "label":"",
@@ -1378,95 +1428,99 @@
       "scriptId":"u23"},
     "dbbe043d70c44d9d96eddd4398db5b4d":{
       "scriptId":"u24"},
-    "1f56ecaa6dc44f6cb417926c7387ce44":{
+    "d5d80e03b0b445a7a8d25f849a47a1fa":{
       "scriptId":"u25"},
-    "9a86eee8bfd24cb58300dfd381aca9d5":{
+    "adbe9f40ec0046f1b7a72d3cb336b5b4":{
       "scriptId":"u26"},
-    "1f9cdd590cc34544b554e0a6df011b1b":{
+    "1f56ecaa6dc44f6cb417926c7387ce44":{
       "scriptId":"u27"},
-    "3f1c72db057d489d949a2284f1458e25":{
+    "9a86eee8bfd24cb58300dfd381aca9d5":{
       "scriptId":"u28"},
-    "cfdf5fde70cb456999fae2d775c53113":{
+    "1f9cdd590cc34544b554e0a6df011b1b":{
       "scriptId":"u29"},
-    "57ac200095a04b3685541a6ce9322c1b":{
+    "3f1c72db057d489d949a2284f1458e25":{
       "scriptId":"u30"},
-    "c6ed96d5e6874fe5b6498c16727a4e85":{
+    "cfdf5fde70cb456999fae2d775c53113":{
       "scriptId":"u31"},
-    "3f1bd16f23494f26ab76f585820765e6":{
+    "57ac200095a04b3685541a6ce9322c1b":{
       "scriptId":"u32"},
-    "3e88091485964ccfadcfe2af0057425e":{
+    "c6ed96d5e6874fe5b6498c16727a4e85":{
       "scriptId":"u33"},
-    "87fc188340f141339c1f2bfdd63520af":{
+    "3f1bd16f23494f26ab76f585820765e6":{
       "scriptId":"u34"},
-    "ca2172db88c447c08dd794a3089ad0b0":{
+    "3e88091485964ccfadcfe2af0057425e":{
       "scriptId":"u35"},
-    "efb1a17aa01a4619baeec70553ad805f":{
+    "87fc188340f141339c1f2bfdd63520af":{
       "scriptId":"u36"},
-    "29ba9acf884f4667b0a2ebf32b90758a":{
+    "ca2172db88c447c08dd794a3089ad0b0":{
       "scriptId":"u37"},
-    "a9a2412844234ed2aee3ac00424a4882":{
+    "efb1a17aa01a4619baeec70553ad805f":{
       "scriptId":"u38"},
-    "b8c0f54e1e0a4d32a215df155c190f39":{
+    "29ba9acf884f4667b0a2ebf32b90758a":{
       "scriptId":"u39"},
-    "9ec362a07e9847fe99320c8385c95bbb":{
+    "a9a2412844234ed2aee3ac00424a4882":{
       "scriptId":"u40"},
-    "0027bb29985f40dab348157c1a1987d3":{
+    "b8c0f54e1e0a4d32a215df155c190f39":{
       "scriptId":"u41"},
-    "520bbcea46de4f969ba7e87e772affc4":{
+    "9ec362a07e9847fe99320c8385c95bbb":{
       "scriptId":"u42"},
-    "2572928565f94cc89f5f11f24b0452ab":{
+    "0027bb29985f40dab348157c1a1987d3":{
       "scriptId":"u43"},
-    "b072517f31e841eda3d50ee95d41b0cb":{
+    "520bbcea46de4f969ba7e87e772affc4":{
       "scriptId":"u44"},
-    "7e9fcd77500f4ee88e1e2af6ede58df5":{
+    "2572928565f94cc89f5f11f24b0452ab":{
       "scriptId":"u45"},
-    "1faa01d3fd744975af2b9febed2d1a64":{
+    "b072517f31e841eda3d50ee95d41b0cb":{
       "scriptId":"u46"},
-    "a48ebe8fc90c4b6b831326beeafcf290":{
+    "7e9fcd77500f4ee88e1e2af6ede58df5":{
       "scriptId":"u47"},
-    "d11525564fa64170a47938458d3f4c76":{
+    "1faa01d3fd744975af2b9febed2d1a64":{
       "scriptId":"u48"},
-    "3358939310524a9eb657ebcc6613edd7":{
+    "a48ebe8fc90c4b6b831326beeafcf290":{
       "scriptId":"u49"},
-    "497fe82c4e114b419b37ffbbe00e3e88":{
+    "d11525564fa64170a47938458d3f4c76":{
       "scriptId":"u50"},
-    "0649d279e21a4419950cc23a3f8b939f":{
+    "3358939310524a9eb657ebcc6613edd7":{
       "scriptId":"u51"},
-    "7db6651a4ab24937aeb9fd79c2ff3228":{
+    "497fe82c4e114b419b37ffbbe00e3e88":{
       "scriptId":"u52"},
-    "8a5d158a944b42a492d7bd9693f68c6e":{
+    "0649d279e21a4419950cc23a3f8b939f":{
       "scriptId":"u53"},
-    "7fd78311ff69492c803ae1c8d2be6a71":{
+    "7db6651a4ab24937aeb9fd79c2ff3228":{
       "scriptId":"u54"},
-    "abf6592cd60f486581ab88c583c1b9a0":{
+    "8a5d158a944b42a492d7bd9693f68c6e":{
       "scriptId":"u55"},
-    "0f7c2080c0e74c97a2a8e8041402319a":{
+    "7fd78311ff69492c803ae1c8d2be6a71":{
       "scriptId":"u56"},
-    "9c3c97a6311642609e0758929bad5108":{
+    "abf6592cd60f486581ab88c583c1b9a0":{
       "scriptId":"u57"},
-    "0a9d6e24e0844f3eaec031252d45e0f9":{
+    "0f7c2080c0e74c97a2a8e8041402319a":{
       "scriptId":"u58"},
-    "c95e791c3240450bad87b05290f64c78":{
+    "9c3c97a6311642609e0758929bad5108":{
       "scriptId":"u59"},
-    "8d6dca5dcc4b4ff8b7d1485cd8dcc0bf":{
+    "0a9d6e24e0844f3eaec031252d45e0f9":{
       "scriptId":"u60"},
-    "db37220ec6b34720b4550273cf4f66ac":{
+    "c95e791c3240450bad87b05290f64c78":{
       "scriptId":"u61"},
-    "c682935645734624b5739216936d6655":{
+    "8d6dca5dcc4b4ff8b7d1485cd8dcc0bf":{
       "scriptId":"u62"},
-    "5d6a32b11ecf4e389c077fb69b3a349d":{
+    "db37220ec6b34720b4550273cf4f66ac":{
       "scriptId":"u63"},
-    "b7525414e4144a0dbf0b311b570daafd":{
+    "c682935645734624b5739216936d6655":{
       "scriptId":"u64"},
-    "04294f184d7445f7baa5c93c2a3293ff":{
+    "5d6a32b11ecf4e389c077fb69b3a349d":{
       "scriptId":"u65"},
-    "9f1a227ec40f430e8ca9628be9b71645":{
+    "b7525414e4144a0dbf0b311b570daafd":{
       "scriptId":"u66"},
-    "7d04bed9c2ce47e188eef4858ab44609":{
+    "04294f184d7445f7baa5c93c2a3293ff":{
       "scriptId":"u67"},
-    "2335a40411bd4b38b9753f207209f4ef":{
+    "9f1a227ec40f430e8ca9628be9b71645":{
       "scriptId":"u68"},
-    "b2745e0334c04bcba47178ae573c01c1":{
+    "7d04bed9c2ce47e188eef4858ab44609":{
       "scriptId":"u69"},
+    "2335a40411bd4b38b9753f207209f4ef":{
+      "scriptId":"u70"},
+    "b2745e0334c04bcba47178ae573c01c1":{
+      "scriptId":"u71"},
     "311447a1e21747889efbf9a4d720f626":{
-      "scriptId":"u70"}}});
+      "scriptId":"u72"}}});
