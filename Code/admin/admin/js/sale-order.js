@@ -11,6 +11,12 @@ var SaleOrder = {
 		"order_status",
 		"operate"
 	],
+	order_status: {
+		"0":"已下单",
+		"1":"处理中",
+		"2":"已完成",
+		"3":"订单取消"
+	},
 	order_detail_arr: [
 		"goods_sn",
 		"goods_name",
@@ -85,6 +91,7 @@ var SaleOrder = {
 		strJson = createJson("page", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -101,7 +108,11 @@ var SaleOrder = {
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("javascript:void(0)", "取消", "SaleOrder.cancelOrderInit('"+value.order_id+"','"+value.order_sn+"')");
+								if(value.is_cancel == "yes"){
+									var edit = "<span id='cancel_"+value.order_id+"'>"+createLink("javascript:void(0)", "取消", "SaleOrder.cancelOrderInit('"+value.order_id+"','"+value.order_sn+"')")+"</span>";
+								}else{
+									var edit = '';
+								}
 								edit += createLink("demo_template.php?section=sale_order&act=detail&id="+value.order_id, "详情");
 								edit += createLink("demo_template.php?section=sale_order&act=suborder_list&id="+value.order_id, "子订单列表");
 								row += createTd(edit);
@@ -110,6 +121,8 @@ var SaleOrder = {
 							if(value[that.order_arr[i]] != null || value[that.order_arr[i]] != ''){
 								if(that.order_arr[i] == "add_time" || that.order_arr[i] == "best_time"){
 									row += createTd(timestampToDate(value[that.order_arr[i]]));
+								}else if(that.order_arr[i] == "order_status"){
+									row += createTd(that.order_status[key]);
 								}else{
 									row += createTd(value[that.order_arr[i]]);
 								}
@@ -133,15 +146,20 @@ var SaleOrder = {
 		}
 		var params = {"params":{"order_id":id}};
 		strJson = createJson("find", this.entity, params);
-		that = this
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
+				// 初始化
+				TypeMode.getOrderStatus('order_status');
 				$.each(obj.content.info, function(k, v){
 					if($("#"+k).length){
 						$("#"+k).text(v);
+					}
+					if($("select[name="+k+"]").length){
+						$("select[name="+k+"]>option[value=1]").attr("selected","selected");
 					}
 				});
 				$.each(obj.content.invoice, function(k, v){
@@ -153,7 +171,7 @@ var SaleOrder = {
 					row = "<tr>";
 					for(var i=0;i<that.order_detail_arr.length;i++){
 						if(that.order_detail_arr[i] == "operate"){
-							var edit = createLink("javascript:void(0)", "取消未处理", "");
+							var edit = "<span id='goods_"+value.goods_id+"'>"+createLink("javascript:void(0)", "取消未处理", "SaleOrder.cancelSubOrderInit('"+obj.content.info.order_id+"', '"+value.goods_id+"')") + "</span>";
 							edit += createLink("demo_template.php?section=sale_order&act=split&order_id="+obj.content.info.order_id+"&goods_id="+value.goods_id, "拆单");
 							edit += createLink("demo_template.php?section=sale_order&act=suborder_detail&order_id="+obj.content.info.order_id, "子订单");
 							row += createTd(edit);
@@ -423,6 +441,7 @@ var SaleOrder = {
 	},
 
 	addShippingInfo: function(){
+		cons
 		var order_id = getQueryStringByName('order_id');
 		if(order_id===""||!validateNumber(order_id)){
 			return false;
@@ -680,15 +699,52 @@ var SaleOrder = {
 
 	cancelOrderInit: function(order_id, order_num){
 		$("#order_num").text(order_num);
-		$("#order_id").val(order_id);
+		$("input[name=order_id]").val(order_id);
 		popupLayer();
 	},
 
 	cancelOrder: function(){
-
+		var order_id = $("input[name=order_id]").val();
+		if(order_id===""){
+			return false;
+		}
+		var params = {"params":{"order_id":order_id}};
+		strJson = createJson("cancelOrder", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+				$("#cancel_"+order_id).text('');
+			}
+		}, "json");	
 	},
 
-	cancelSubOrderInit: function(order_id, order_num){
+	cancelSubOrderInit: function(order_id, goods_id){
+		$("input[name=order_id]").val(order_id);
+		$("input[name=goods_id]").val(goods_id);
 		popupLayer();
+	},
+
+	cancelSubOrder: function(order_id, goods_id){
+		var order_id = $("input[name=order_id]").val();
+		var goods_id = $("input[name=goods_id]").val();
+		if(order_id==="" || goods_id===""){
+			return false;
+		}
+		var params = {"params":{"order_id":order_id, "goods_id":goods_id}};
+		strJson = createJson("removeGoods", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+				$("#goods_"+order_id).text('');
+			}
+		}, "json");	
 	},
 }
