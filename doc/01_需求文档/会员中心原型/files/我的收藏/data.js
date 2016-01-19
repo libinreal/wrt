@@ -1,0 +1,71 @@
+﻿$axure.loadCurrentPage({
+  "url":"我的收藏.html",
+  "generationDate":new Date(1453185911117.61),
+  "isCanvasEnabled":false,
+  "variables":["OnLoadVariable"],
+  "page":{
+    "packageId":"2228ac55b66a4e14902a3582544281c8",
+    "type":"Axure:Page",
+    "name":"我的收藏",
+    "notes":{
+},
+    "style":{
+      "baseStyle":"627587b6038d43cca051c114ac41ad32",
+      "pageAlignment":"near",
+      "fill":{
+        "fillType":"solid",
+        "color":0xFFFFFFFF},
+      "image":null,
+      "imageHorizontalAlignment":"near",
+      "imageVerticalAlignment":"near",
+      "imageRepeat":"auto",
+      "favicon":null,
+      "sketchFactor":"0",
+      "colorStyle":"appliedColor",
+      "fontName":"Applied Font",
+      "borderWidth":"0"},
+    "adaptiveStyles":{
+},
+    "interactionMap":{
+},
+    "diagram":{
+      "objects":[{
+          "id":"b7586126fd6144d5872abfc01066af5e",
+          "label":"",
+          "type":"imageBox",
+          "styleType":"imageBox",
+          "visible":true,
+          "style":{
+            "location":{
+              "x":20,
+              "y":10},
+            "size":{
+              "width":912,
+              "height":108}},
+          "adaptiveStyles":{
+},
+          "objects":[{
+              "id":"ce3ff2375817451daa8ef0dd5a6d35cb",
+              "label":"",
+              "isContained":true,
+              "type":"richTextPanel",
+              "styleType":"paragraph",
+              "visible":true,
+              "style":{
+                "location":{
+                  "x":20,
+                  "y":10},
+                "size":{
+                  "width":912,
+                  "height":108}},
+              "adaptiveStyles":{
+}}],
+          "images":{
+            "normal~":"images/我的收藏/u0.png"}}]}},
+  "masters":{
+},
+  "objectPaths":{
+    "b7586126fd6144d5872abfc01066af5e":{
+      "scriptId":"u0"},
+    "ce3ff2375817451daa8ef0dd5a6d35cb":{
+      "scriptId":"u1"}}});

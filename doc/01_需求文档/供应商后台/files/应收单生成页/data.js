@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"应收单生成页.html",
-  "generationDate":new Date(1453109044576.53),
+  "generationDate":new Date(1453176664332.38),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -1529,7 +1529,7 @@
               "x":18,
               "y":139},
             "size":{
-              "width":900,
+              "width":975,
               "height":30}},
           "adaptiveStyles":{
 },
@@ -1543,7 +1543,7 @@
                 "horizontalAlignment":"right",
                 "verticalAlignment":"middle",
                 "size":{
-                  "width":900,
+                  "width":975,
                   "height":30}},
               "adaptiveStyles":{
 },
@@ -1558,7 +1558,7 @@
                     "horizontalAlignment":"right",
                     "verticalAlignment":"middle",
                     "size":{
-                      "width":900,
+                      "width":975,
                       "height":30}},
                   "adaptiveStyles":{
 }}],
@@ -2109,11 +2109,10 @@
                   "isNewIfGroup":false,
                   "actions":[{
                       "action":"linkWindow",
-                      "description":"在 当前窗口 打开 已完成的订单",
+                      "description":"在 当前窗口 打开 Back",
                       "target":{
-                        "targetType":"page",
-                        "url":"已完成的订单.html",
-                        "includeVariables":true},
+                        "targetType":"backUrl",
+                        "includeVariables":false},
                       "linkType":"current"}]}]}},
           "tabbable":true}]}},
   "masters":{

@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"4、合同关联供应商_列表_.html",
-  "generationDate":new Date(1453109011593.82),
+  "generationDate":new Date(1453176606838.73),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
