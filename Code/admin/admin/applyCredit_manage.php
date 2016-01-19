@@ -159,10 +159,8 @@ class ApplyCredit extends ManageModel
 		
 		$status = ($status == 1) ? 2 : 3;
 		
-		$fields = 'check_amount="'.$amount.'" AND check_remark="'.$remark.'" AND status="'.$status.'"';
+		$fields = 'check_amount="'.$amount.'",check_remark="'.$remark.'",status="'.$status.'"';
 		$sql = 'UPDATE '.$this->table.' SET '.$fields.' WHERE apply_id='.$applyId;
-		echo $sql;
-		die;
 		$result = $this->db->query($sql);
 		if ($result === false) 
 			failed_json('审批失败');
