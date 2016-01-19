@@ -79,6 +79,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'searchChilderList'){
 				//
 				$this->searchChilderListAction();
+			}elseif ($this->command == 'cancelOrder'){
+				//
+				$this->cancelOrderAction();
+			}elseif ($this->command == 'removeGoods'){
+				//
+				$this->removeGoodsAction();
 			}
 		}
 		
@@ -269,7 +275,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "add_time": "2015-12-12 16:41:00" ,  //下单时间
 		 *                  "best_time": "2015-12-12 16:41:00" ,//希望到货时间
 		 *                  "goods_amount": 200,//下单金额
-		 *                  "status": 0 ,//订单状态 0:未偿还 1:已偿还
+		 *                  "status": 0 ,//订单状态
+		 *                  "is_cancel":"yes"//是否可以取消("yes":可以取消 "no"：不能取消)
 		 *           }
 		 *	         ],
 		 *	         "total":3
@@ -388,7 +395,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$where_str .= " WHERE odr.`add_time` <= '" . $where['due_date2'] . "'";
 			}
 
-			$sql = $sql . 
+			$sql = $sql .
 				   ' LEFT JOIN ' . $user_table . ' as usr ON odr.`user_id` = usr.`user_id` '.
 				   ' LEFT JOIN ' . $contract_table . ' as crt ON odr.`contract_sn` = crt.`contract_num` ' .
 				   $where_str .
@@ -403,14 +410,32 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			if( $resultTotal )
 			{
+				$orders = $orders ? $orders : array();
+				//订单是否可取消
+				foreach ($orders as &$v) {
+
+					$child_total_sql = 'SELECT COUNT(*) AS `child_number` FROM ' . $order_table . ' WHERE `parent_order_id` = ' .
+							 		   $v['order_id'] . ' AND `child_order_status` <> ' . SOS_UNCONFIRMED .
+							   ' AND `child_order_status` <> ' . SOS_CANCEL;
+					$child_total = $GLOBALS['db']->getRow( $child_total_sql );
+
+					if( $child_total['child_number'] == 0 ){
+						$v['is_cancel'] = 'yes';
+					}else{
+						$v['is_cancel'] = 'no';
+					}
+
+				}
+				unset( $v );
+
 				$content = array();
-				$content['data'] = $orders ? $orders : array();
+				$content['data'] = $orders;
 				$content['total'] = $resultTotal['total'];
-				make_json_response( $content, "0", "票据查询成功");
+				make_json_response( $content, "0", "订单查询成功");
 			}
 			else
 			{
-				make_json_response("", "-1", "票据查询失败");
+				make_json_response("", "-1", "订单查询失败");
 			}
 		}
 		
@@ -1117,7 +1142,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$order_info_update = $GLOBALS['db']->query( $order_info_sql );
 					
 					$parent_order_sql = ' UPDATE ' . $order_info_table . ' SET `order_status` = ' .
-							       		POS_HANDLE . ' WHERE `order_id` = ' . $parent_order['order_id'] . ' LIMIT 1'; //子订单状态-处理中
+							       		POS_HANDLE . ' WHERE `order_id` = ' . $parent_order['order_id'] . ' LIMIT 1'; //父订单状态-处理中
 					$parent_order_update = $GLOBALS['db']->query( $parent_order_sql );		       		
 						
 
@@ -1297,7 +1322,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			// $attribute_table = $GLOBALS['ecs']->table('attribute');
 			$order_goods_sql = 'SELECT og.`goods_id`, og.`goods_name`, og.`goods_price_add` AS `goods_price_send_buyer`, og.`goods_number` AS `goods_number_send_buyer`, og.`goods_number_arrival` AS `goods_number_arr_buyer`, ' .
 							   'og.`goods_price` AS `goods_price_send_saler`, sp.`suppliers_name` FROM ' .
-							   $order_goods_table . //物料编码 名称 下单数 已拆 未拆 供应商
+							   $order_goods_table . //物料编码 名称 下单数 供应商
 							   ' AS og LEFT JOIN '. $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' . 
 							   ' WHERE `order_id` = ' . $order_id;
@@ -2463,12 +2488,118 @@ require(dirname(__FILE__) . '/includes/init.php');
 			make_json_response('', '-1', '订单不存在');
 					 		  
 		}
-	
+
+		/**
+		 * 接口名称:取消主订单
+		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "cancelOrder",
+	     *      "parameters": {
+	     *          "params": {
+	     *          	"order_id":49//主订单ID
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+	     * 		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "取消订单成功",
+		 *	    "content": {}
+	     *  }
+		 */
+		public function cancelOrderAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+
+			if( !isset( $params['order_id'] ) ){
+				make_json_response('', '-1', '订单ID错误');
+			}
+			$order_id = intval( $params['order_id'] );
+
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+
+			$order_total_sql = 'SELECT COUNT(*) AS `total` FROM ' . $order_info_table . ' WHERE `parent_order_id` = ' .
+							   $order_id . ' AND `child_order_status` <> ' . SOS_UNCONFIRMED .
+							   ' AND `child_order_status` <> ' . SOS_CANCEL;
+			$order_total = $GLOBALS['db']->getRow( $order_total_sql );
+			if( !empty($order_total) ){
+				if( $order_total['total'] == 0 ){
+					$cancel_sql = 'UPDATE ' . $order_info_table . ' SET `order_status` = ' .
+							  POS_CANCEL . ' WHERE `order_id` = ' . $order_id . ' LIMIT 1';
+					$cancel_query = $GLOBALS['db']->query( $cancel_sql );
+
+					if( $cancel_query ){
+						make_json_response('', '0', '取消订单成功');
+					}else{
+						make_json_response('', '-1', '取消订单失败');		
+					}
+
+				}else{
+					make_json_response('', '-1', '无法取消处理中的订单');
+				}
+			}else{
+				make_json_response('', '-1', '取消订单失败');
+			}
+		}
 		
+		/**
+		 * 接口名称:取消未处理
+		 * 
+		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "removeGoods",
+	     *      "parameters": {
+	     *          "params": {
+	     *          	"order_id":49,//主订单ID
+	     *          	"goods_id":518//商品id
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+	     * 		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "取消未处理成功",
+		 *	    "content": {}  	
+	     *  }
+		 */
+		public function removeGoodsAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+
+			if( !isset( $params['order_id'] ) ){
+				make_json_response('', '-1', '订单ID错误');
+			}
+
+			if( !isset( $params['goods_id'] ) ){
+				make_json_response('', '-1', '商品ID错误');
+			}
+
+			$order_id = intval( $params['order_id'] );
+			$goods_id = intval( $params['goods_id'] );
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
+
+			//总数等于已拆分
+			$remove_sql = 'UPDATE ' . $order_goods_table . ' SET `goods_number` = `send_number` ' .
+						  ' WHERE `order_id` = ' . $order_id . ' AND `goods_id` = ' . $goods_id . ' LIMIT 1';
+			$remove_query = $GLOBALS['db']->query( $remove_sql );
+			if( $remove_query ){
+				make_json_response('', '0', '取消未拆分成功');
+			}else{
+				make_json_response('', '-1', '取消未拆分失败');
+			}
+		}
 	}
 	$content = jsonAction( array( "splitInit", "split", "childerList", "childerDetail", "addShippingInfo", "addShippingLog",
 								 "initPriceSend", "updatePriceSend", "initPriceArr", "updatePriceArr", "updateChilderStatus",
-								 "getAddPrice", "searchChilderList"
+								 "getAddPrice", "searchChilderList", "cancelOrder", "removeGoods"
 						 ) );
 	$orderModel = new OrderInfoModel($content);
 	$orderModel->run();
