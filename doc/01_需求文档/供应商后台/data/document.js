@@ -61,6 +61,14 @@
                 "type":"Wireframe",
                 "url":"应收单生成页.html"},
 {
+                "pageName":"应收单详情页",
+                "type":"Wireframe",
+                "url":"应收单详情页.html"},
+{
+                "pageName":"应收单编辑页",
+                "type":"Wireframe",
+                "url":"应收单编辑页.html"},
+{
                 "pageName":"应收单列表",
                 "type":"Wireframe",
                 "url":"应收单列表.html"}]}]}]},

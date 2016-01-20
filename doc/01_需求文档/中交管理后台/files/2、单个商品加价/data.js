@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"2、单个商品加价.html",
-  "generationDate":new Date(1453109013629.94),
+  "generationDate":new Date(1453176609217.87),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

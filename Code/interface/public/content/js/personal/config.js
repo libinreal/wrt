@@ -29,6 +29,10 @@ define(function(require, exports, module) {
     config.contractDetail = config.server + '/contract/getsingle';//我的合同详情
     config.getNoteList    = config.server + '/note/getlist';//我的票据列表
     config.noteDetail     = config.server + '/note/getsingle';//我的票据详情 
+    config.creditList     = config.server + '/applyCredit/creditList';//自有授信列表
+    config.getCreditDetail= config.server + '/applyCredit/creditSingle';//自有授信详情
+    config.CreditAdd      = config.server + '/applyCredit/creditAdd';//申请自有授信
+    config.CreditContract = config.server + '/applyCredit/contractList';//申请自有授信
 
     config.getlist = config.server + '/order/getlist';//我的订单-列表
     config.getdetail = config.server + '/order/getdetail';//我的订单-详情

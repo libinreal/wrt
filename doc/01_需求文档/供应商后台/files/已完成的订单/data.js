@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"已完成的订单.html",
-  "generationDate":new Date(1453109044397.52),
+  "generationDate":new Date(1453176664136.37),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -1469,7 +1469,22 @@
               "width":100,
               "height":25}},
           "adaptiveStyles":{
-}},
+},
+          "interactionMap":{
+            "onClick":{
+              "description":"OnClick",
+              "cases":[{
+                  "description":"Case 1",
+                  "isNewIfGroup":false,
+                  "actions":[{
+                      "action":"linkWindow",
+                      "description":"在 当前窗口 打开 应收单生成页",
+                      "target":{
+                        "targetType":"page",
+                        "url":"应收单生成页.html",
+                        "includeVariables":true},
+                      "linkType":"current"}]}]}},
+          "tabbable":true},
 {
           "id":"ad1b2efdc10b428db7b3ec0244812c9a",
           "label":"",

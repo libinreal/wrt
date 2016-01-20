@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"编辑授信申请.html",
-  "generationDate":new Date(1453109021471.39),
+  "generationDate":new Date(1453176618785.42),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

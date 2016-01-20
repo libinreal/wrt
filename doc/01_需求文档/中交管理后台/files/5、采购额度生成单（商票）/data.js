@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"5、采购额度生成单（商票）.html",
-  "generationDate":new Date(1453109012492.87),
+  "generationDate":new Date(1453176607842.79),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
