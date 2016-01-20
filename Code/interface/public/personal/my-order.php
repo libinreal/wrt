@@ -48,7 +48,7 @@
 
 <script id="zj-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<a href="my-order-detail.html?id=<!--[= list[i].id]-->" class="clearfix">
+	<a href="my-kid-order.html?id=<!--[= list[i].id]-->" class="clearfix">
 		<div class="order-list-col c1"><!--[= list[i].orderSn || '--']--></div>
 		<div class="order-list-col c2"><!--[= list[i].prjNo || '--']--></div>
 		<div class="order-list-col c3"><!--[= list[i].prjName || '--']--></div>

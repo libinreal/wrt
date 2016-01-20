@@ -19,12 +19,18 @@ class OrderController extends ControllerBase
 		$createAt = $this->request->get('createAt', 'int') ?: time();
 		$size = $this->request->get('size', 'int') ?: parent::SIZE;
 		$forward = $this->request->get('forward', 'int');
+		$parentId = $this->request->get('parent_id', 'int');
 		$userId = $this->get_user()->id;
 		$criteria = OrderInfo::query();
 		$criteria->leftJoin('OrderInfo', 'OI.orderSn LIKE CONCAT(OrderInfo.orderSn, "-%")', 'OI');
 		$criteria->leftJoin('ContractModel', 'C.contract_num = OrderInfo.contractSn', 'C');
 		$criteria->where('OrderInfo.userId = :userId:', compact('userId'));
-		$criteria->andWhere('OrderInfo.parentOrderId = 0');
+		if (!$parentId) {
+			$criteria->andWhere('OrderInfo.parentOrderId = 0');
+		} else {
+			$criteria->andWhere('OrderInfo.parentOrderId = '.intval($parentId));
+		}
+		
 		$criteria->notInWhere('OrderInfo.status', array(5, 6));
 		if ($status) {
 			$criteria->andWhere('OrderInfo.status = :status:' , compact('status'));

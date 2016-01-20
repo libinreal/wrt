@@ -9,6 +9,61 @@ class ApplyCreditController extends ControllerBase
 		$this->persistent->parameters = null;
 	}
 	
+	/**
+	 * 上传申请附件
+	 */
+	public function uploadAttachAction() {
+		if ($this->request->hasFiles() == true) {
+			$opath = "";
+			$filepath = date("Ym");
+			
+			$storedir = '../public/apply_attachment/'.$filepath;
+			
+			if(!is_dir($storedir)) {
+				if(!mkdir($storedir, 777, true)) {
+					return ResponseApi::send(null, Message::$_ERROR_SYSTEM, '目录创建失败，请稍后再试');
+				}
+			} else {
+				if(!is_writable($storedir)) {
+					return ResponseApi::send(null, Message::$_ERROR_SYSTEM, '目录不可写，请稍后再试');
+				}
+			}
+	
+			$files = array();
+			// Print the real file names and sizes
+			foreach ($this->request->getUploadedFiles() as $file) {
+				//Move the file into the application
+				$fileType = '';
+				if ($fileType == null) {
+					$fileType= $file->getType();
+				}
+				$tmp = explode("/", $fileType);
+				if (is_array($tmp)) {
+					$fileType = $tmp[count($tmp)-1];
+				}
+	
+				if ($fileType != null) {
+					$filename = time().\PhpRudder\CommonUtil::random(2, '123456789').".".$fileType;
+				} else {
+					$filename = time().\PhpRudder\CommonUtil::random(8, '123456789');
+				};
+				array_push($files, $opath.$filename);
+	
+				$file->moveTo($storedir."/".$filename);
+			}
+			
+			$files = array_map(function($file) {
+				
+				return $file;
+			}, $files);
+			foreach ($files as $k=>$v) {
+				$files[$k] = $filepath.'/'.$v;
+			}
+				return ResponseApi::send($files);
+		}
+		return ResponseApi::send(null, Message::$_ERROR_CODING, "no upload file");
+	}
+	
 	
 	/**
 	 * 授信列表

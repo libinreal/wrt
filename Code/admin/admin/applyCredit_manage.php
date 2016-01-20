@@ -7,12 +7,51 @@ define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
 require_once('ManageModel.php');
 
+/**
+ * 授信列表
+ */
+if ($_REQUEST['act'] == 'list') {
+	$smarty->display('');
+	exit;
+} 
 
+/**
+ * 回收站列表
+ */
+elseif ($_REQUEST['act'] == 'recycle') {
+	$smarty->display('');
+	exit;
+} 
+
+/**
+ * 授信详情
+ */
+elseif ($_REQUEST['act'] == 'detail') {
+	$smarty->display('');
+	exit;
+}
+
+
+/**
+ * API access
+ * @var $ApiList
+ */
 $ApiList = array(
 		'applyCreditSingle', 
-		'applyCreditStatus'
+		'applyCreditStatus', 
+		'applyCreditList', 
+		'applyCreditDelete'
 );
 
+
+/**
+ * 平台自有授信管理API
+ * @author Administrator
+ * @todo http://admin.zj.dev/admin/applyCredit_manage.php
+ * @param $entity	table name
+ * @param $parameters	url params
+ * @return json
+ */
 class ApplyCredit extends ManageModel 
 {
 	protected static $_instance;
@@ -23,11 +62,127 @@ class ApplyCredit extends ManageModel
 	
 	
 	/**
+	 * 自有授信列表
+	 * {
+	 * 		"command" : "applyCreditList", 
+	 * 		"entity"  : "apply_credit", 
+	 * 		"parameters" : {
+	 * 			"status" : 4, //移入回收站列表
+	 * 			"params" : {
+	 * 				"where" : {
+	 * 					"like" : {
+	 * 						"user_name"     : "(string)", 
+	 * 						"contract_name" : "(string)"
+	 * 					}
+	 * 					"start_time" : "(string)2016-01-20", 
+	 * 					"end_time"   : "(string)2016-01-20"
+	 * 				}, 
+	 * 				"limit" : "(int)", 
+	 * 				"offset": "(int)"
+	 * 			}
+	 * 		}
+	 * }
+	 */
+	public function applyCreditList($entity, $parameters) 
+	{
+		self::init($entity, 'apply_credit');
+		$status = $parameters['status'];
+		$limit = intval($parameters['params']['limit']);
+		$offset = intval($parameters['params']['offset']);
+
+		//where conditions
+		$userName = $parameters['params']['where']['like']['user_name'];
+		$contractName = $parameters['params']['where']['like']['contract_name'];
+		$startTime = $parameters['params']['where']['start_time'];
+		$endTime = $parameters['params']['where']['end_time'];
+		unset($parameters);
+		if (!$offset) 
+			make_json_result(array());
+		
+		//
+		$limit = ($limit < 0) ? 0 : $limit; 
+			
+		//where conditions
+		$where = '';
+		if ($userName) {
+			if (!empty($where)) $where .= ' AND ';
+			$where .= 'u.user_name LIKE "%'.$userName.'%"';
+		}
+		if ($contractName) {
+			if (!empty($where)) $where .= ' AND ';
+			$where .= 'c.contract_name LIKE "%'.$contractName.'%"';
+		}
+		if ($startTime) {
+			if (!empty($where)) $where .= ' AND ';
+			$where .= 'DATE_FORMAT(ac.create_date, "%Y-%m-%d")>="'.$startTime.'"';
+		}
+		if ($endTime) {
+			if (!empty($where)) $where .= ' AND ';
+			$where .= 'DATE_FORMAT(ac.create_date, "%Y-%m-%d")<="'.$endTime.'"';
+		}
+		if ($status == 4) {
+			if (!empty($where)) $where .= ' AND ';
+			$where .= 'ac.status=4';
+		}
+		//获取数据
+		self::selectSql(array(
+				'fields' => array(
+						'ac.*', 
+						'DATE_FORMAT(ac.create_date, "%Y-%m-%d") AS create_date', 
+						'u.user_name', 
+						'c.contract_name'
+				), 
+				'as'     => 'ac', 
+				'join'   => 'LEFT JOIN users AS u on ac.user_id=u.user_id'
+							.' LEFT JOIN contract AS c on ac.contract_id=c.contract_id', 
+				'where'  => $where, 
+				'extend' => 'ORDER BY apply_id ASC limit '.$limit.','.$offset
+		));
+		$data = $this->db->getAll($this->sql);
+		if ($result === false) 
+			failed_json('获取列表失败');
+		
+		$status = array('审核中', '已审核', '审批通过', '审批失败', '已删除');
+		foreach ($data as $k=>$v) {
+			$data[$k]['status'] = $status[$v['status']];
+		}
+		make_json_result($data);
+	}
+	
+	
+	
+	/**
+	 * 删除自有授信记录
+	 * {
+	 * 		"command" : "applyCreditDelete", 
+	 * 		"entity"  : "apply_credit", 
+	 * 		"parameters" : {
+	 * 			"apply_id" : "(int)" //required
+	 * 		}
+	 * }
+	 */
+	public function applyCreditDelete($entity, $parameters) 
+	{
+		self::init($entity, 'apply_credit');
+		$applyId = $parameters['apply_id'];
+		if (!$applyId) 
+			failed_json('没有传参`apply_id`');
+		
+		$sql = 'DELETE FROM '.$this->table.' WHERE apply_id='.$applyId;
+		$result = $this->db->query($sql);
+		if ($result === false) 
+			failed_json('删除记录失败');
+		make_json_result($result);
+	}
+	
+	
+	
+	/**
 	 * 自有授信详情
 	 * {
-	 * 		command : 'applyCreditSingle', 
-	 * 		entity  : 'apply_credit', 
-	 * 		parameters : {
+	 * 		"command" : 'applyCreditSingle', 
+	 * 		"entity"  : 'apply_credit', 
+	 * 		"parameters" : {
 	 * 			"apply_id" : "(int)" // required
 	 * 		}
 	 * }
@@ -89,12 +244,12 @@ class ApplyCredit extends ManageModel
 	/**
 	 * 修改自有授信状态
 	 * {
-	 * 		command : 'applyCreditStatus', 
-	 * 		entity  : 'apply_credit', 
-	 * 		parameters : {
+	 * 		"command" : 'applyCreditStatus', 
+	 * 		"entity"  : 'apply_credit', 
+	 * 		"parameters" : {
 	 * 			"apply_id" : "(int or array)",  //required
 	 * 			"flag"     : "(int)", //required 1 移入回收站 2 审批
-	 * 			params     : {
+	 * 			"params"   : {
 	 * 				//审批申请时传递的参数 required
 	 * 				"apply_id"     : "(int)", 
 	 * 				"check_remark" : "(string)", 
@@ -140,7 +295,7 @@ class ApplyCredit extends ManageModel
 	
 	/**
 	 * 审批
-	 * params : {
+	 * "params" : {
 	 * 		//审批申请时传递的参数 required
 	 *		"apply_id"     : "(int)",
 	 * 		"check_remark" : "(string)",
