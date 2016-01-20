@@ -116,6 +116,7 @@ define('PURCHASE_ORDER_UNCONFIRMED', 0);//未确认
 define('PURCHASE_ORDER_CONFIRMED',   1);//已确认
 define('PURCHASE_ORDER_UNCOMPLETE',  2);//待完成
 define('PURCHASE_ORDER_COMPLETE',    3);//已完成
+define('PURCHASE_ORDER_CANCEL',      4);//订单取消
 
 /* 支付类型 */
 define('PAY_ORDER',                 0); // 订单支付

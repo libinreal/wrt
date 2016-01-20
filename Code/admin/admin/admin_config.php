@@ -53,8 +53,34 @@ $admin_config = array(
                                 PURCHASE_ORDER_UNCONFIRMED => '未确认',
                                 PURCHASE_ORDER_CONFIRMED => '已确认',
                                 PURCHASE_ORDER_UNCOMPLETE => '待完成',
-                                PURCHASE_ORDER_COMPLETE => '已完成'
+                                PURCHASE_ORDER_COMPLETE => '已完成',
+                                PURCHASE_ORDER_CANCEL => '订单取消'
                             ),//采购订单状态
+
+    'purchase_to_childer_map' => array(
+                                PURCHASE_ORDER_UNCONFIRMED =>array(
+                                    SOS_UNCONFIRMED,
+                                    SOS_CONFIRMED,
+                                    SOS_SEND_CC,
+                                    SOS_SEND_PC 
+                                ),
+                                PURCHASE_ORDER_CONFIRMED => array(
+                                    SOS_SEND_SC,
+                                    SOS_SEND_PC2,
+                                    SOS_ARR_CC,
+                                    SOS_ARR_PC
+                                ),
+                                PURCHASE_ORDER_UNCOMPLETE => array(
+                                    SOS_ARR_SC
+                                ),
+                                PURCHASE_ORDER_COMPLETE => array(
+                                    SOS_ARR_PC2     
+                                ),
+                                PURCHASE_ORDER_CANCEL => array(
+                                    SOS_CANCEL
+                                ),
+
+                            ),//采购订单 和 子订单 映射关系
 
     'pay_status' => array(0 => '未付款', 1 => '付款中', 2 => '已付款'),//付款状态
 

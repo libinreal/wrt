@@ -66,8 +66,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * 		
 		 * 		//"command":"order_status"
 		 * 		"parameters":{}
-		 *	    "entity": "type"
 		 *
+		 * 		//"command":"purchase_status"
+		 * 		"parameters":{}
+		 *	    "entity": "type"
 		 *
 		 *	}
 		 *
@@ -148,6 +150,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				case 'childer_order_status':
 					$content = C('childer_order_status');
 					break;
+				case 'purchase_status':
+					$content = C('purchase_status');
 				default:
 					# code...
 					break;
