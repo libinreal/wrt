@@ -149,19 +149,16 @@ var SaleOrder = {
 		strJson = createJson("find", this.entity, params);
 		var that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				// 初始化
-				TypeMode.getOrderStatus('order_status');
-
 				$.each(obj.content.info, function(k, v){
-					if($("#"+k).length){
+					if($("span#"+k).length){
 						$("#"+k).text(v);
 					}
 					if($("select[name="+k+"]").length){
-						console.log($("select[name="+k+"]>option[value='"+v+"']").val());
 						$("select[name="+k+"]>option[value='"+v+"']").attr("selected","selected");
 					}
 				});
@@ -178,8 +175,8 @@ var SaleOrder = {
 								var edit = "";
 							}else{
 								var edit = "<span id='goods_"+value.goods_id+"'>"+createLink("javascript:void(0)", "取消未处理", "SaleOrder.cancelSubOrderInit('"+obj.content.info.order_id+"', '"+value.goods_id+"')") + "</span>";
+								edit += createLink("demo_template.php?section=sale_order&act=split&order_id="+obj.content.info.order_id+"&goods_id="+value.goods_id, "拆单");
 							}
-							edit += createLink("demo_template.php?section=sale_order&act=split&order_id="+obj.content.info.order_id+"&goods_id="+value.goods_id, "拆单");
 							edit += createLink("demo_template.php?section=sale_order&act=suborder_detail&order_id="+obj.content.info.order_id, "子订单");
 							row += createTd(edit);
 							continue;
@@ -368,13 +365,10 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				// 初始化
-				TypeMode.getOrderStatus('order_status');
-				TypeMode.getChilderOrderStatus('child_order_status');
 
 				$.each(obj.content.info, function(k, v){
-					if($("#"+k).length){
-						$("#"+k).text(v);
+					if($("span#"+k).length){
+						$("span#"+k).text(v);
 					}
 					if($("select[name="+k+"]").length){
 						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");
@@ -549,6 +543,7 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
+				console.log(obj)
 				// 初始化列表
 				var key_arr = {
 					"pay_id":{id:"id",name:"name"},
