@@ -178,7 +178,7 @@ class OrderController extends ControllerBase
 				    order_goods.goods_name goodsName,
 				    goods.goods_thumb thumb,
 					goods.price_num, 
-					goods_price_rate, 
+					goods.price_rate, 
 				    category.measure_unit goodsUnit,
 				    order_goods.goods_number orderNums,
 				    order_goods.goods_price changePrice

@@ -3,9 +3,9 @@
  */
 define(function(require) {
 	var $ = require('jquery'),
-    config = require('./config'),
-    Ajax = require('../base/ajax'),
-    Tools = require('../base/tools');
+	    config = require('./config'),
+	    Ajax = require('../base/ajax'),
+	    Tools = require('../base/tools');
 
 	require('../base/common');
 	
