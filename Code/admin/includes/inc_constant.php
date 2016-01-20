@@ -103,6 +103,20 @@ define('SOS_ARR_PC2', 			     9);//平台已验签(到货)
 define('SOS_CANCEL', 			     11);//订单已撤销
 
 
+/*  销售订单状态  */
+define('SALE_ORDER_UNCONFIRMED',     0);//未确认
+define('SALE_ORDER_CONFIRMED',       1);//已确认
+define('SALE_ORDER_UNRECEIVE',       2);//待收货
+define('SALE_ORDER_COMPLETE',        3);//已完成
+define('SALE_ORDER_CANCEL',          4);//订单取消
+
+
+/*  采购订单状态  */
+define('PURCHASE_ORDER_UNCONFIRMED', 0);//未确认
+define('PURCHASE_ORDER_CONFIRMED',   1);//已确认
+define('PURCHASE_ORDER_UNCOMPLETE',  2);//待完成
+define('PURCHASE_ORDER_COMPLETE',    3);//已完成
+
 /* 支付类型 */
 define('PAY_ORDER',                 0); // 订单支付
 define('PAY_SURPLUS',               1); // 会员预付款

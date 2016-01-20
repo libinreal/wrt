@@ -39,13 +39,24 @@ $admin_config = array(
                                 SOS_ARR_SC => '供应商已验签(到货)',
                                 SOS_ARR_PC2 => '平台已验签(到货)',
                                 SOS_CANCEL => '订单已取消'
-                            ),//(子)订单状态
+                            ),//(子)订单状态，也是验签状态
 
-    'purchase_status' => array(0 => '未确认', 1 => '已确认', 2 => '待完成', 3 => '已完成'),//采购订单状态
+    'sale_status' => array(
+                                SALE_ORDER_UNCONFIRMED => '未确认',
+                                SALE_ORDER_CONFIRMED => '已确认',
+                                SALE_ORDER_UNRECEIVE => '待收货',
+                                SALE_ORDER_COMPLETE => '已完成',
+                                SALE_ORDER_CANCEL => '订单取消'
+                            ),//销售订单状态
+
+    'purchase_status' => array(
+                                PURCHASE_ORDER_UNCONFIRMED => '未确认',
+                                PURCHASE_ORDER_CONFIRMED => '已确认',
+                                PURCHASE_ORDER_UNCOMPLETE => '待完成',
+                                PURCHASE_ORDER_COMPLETE => '已完成'
+                            ),//采购订单状态
 
     'pay_status' => array(0 => '未付款', 1 => '付款中', 2 => '已付款'),//付款状态
-
-    'check_status' => array(0 => '未验签', 1 => '客户已验签', 2 => '平台已验签', 3 => '供应商已验签', 4 => '平台已验签', 5 => '客户已验签', 6 => '平台已验签', 7 => '供应商已验签', 8 => '验签已完成'),//验签状态
 
     'shipping_status' => array( 0 => '未发货', 1 => '已发货', 2 => '收货中', 3 => '已收货', 4 => '确认收货'),//发货状态
 
