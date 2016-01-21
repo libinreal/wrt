@@ -44,7 +44,7 @@ class GlobalController extends ControllerBase
             // Print the real file names and sizes
             foreach ($this->request->getUploadedFiles() as $file) {
                 //Move the file into the application
-                $fileType = $file->getRealType();
+                $fileType = '';//$file->getRealType();
                 if ($fileType == null) {
                     $fileType= $file->getType();
                 }

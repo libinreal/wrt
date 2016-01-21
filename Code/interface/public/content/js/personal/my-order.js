@@ -10,7 +10,7 @@ define(function(require) {
     template.helper('$getStatus', function(content) {
         if(!content)
             return '--';
-        return config.ORDERSTATUS[content] || '--';
+        return config.SENDORDERSTATUS[content] || '--';
     });
 
     //获取列表数据

@@ -33,6 +33,7 @@ define(function(require, exports, module) {
     config.getCreditDetail= config.server + '/applyCredit/creditSingle';//自有授信详情
     config.CreditAdd      = config.server + '/applyCredit/creditAdd';//申请自有授信
     config.CreditContract = config.server + '/applyCredit/contractList';//申请自有授信
+    config.applyAttachment= config.server + '/applyCredit/uploadAttach';//上传申请附件
 
     config.getlist = config.server + '/order/getlist';//我的订单-列表
     config.getdetail = config.server + '/order/getdetail';//我的订单-详情
@@ -55,6 +56,31 @@ define(function(require, exports, module) {
 
     config.myproject = config.server + '/customize/myproject';//我的工程定制
     config.myprojectdetail = config.server + '/customize/myprojectdetail';//我的工程定制详情
+    
+    
+    
+    //订单状态（二期）
+    config.SENDORDERSTATUS = {
+    	'0' : '已下单', 
+    	'1' : '处理中', 
+    	'2' : '已完成', 
+    	'3' : '订单取消'
+    };
+    
+    //子订单状态（二期）
+    config.KIDORDERSTATUS = {
+    		'0' : '未确认', 
+    		'1' : '已确认', 
+    		'2' : '客户已验签(发货)', 
+    		'3' : '平台已验签(发货)', 
+    		'4' : '供应商已验签(发货)', 
+    		'5' : '平台已验签(发货)', 
+    		'6' : '客户已验签(到货)', 
+    		'7' : '平台已验签(到货)', 
+    		'8' : '供应商已验签(到货)', 
+    		'9' : '平台已验签(到货)', 
+    		'11' : '订单已取消', 
+    };
 
     //订单状态，0：已提交，1：确认中 ，2：验收中，3、对账中，4、完成
     //添加验签逻辑
