@@ -157,7 +157,7 @@ class ApplyCredit extends ManageModel
 	 * 		"command" : "applyCreditDelete", 
 	 * 		"entity"  : "apply_credit", 
 	 * 		"parameters" : {
-	 * 			"apply_id" : "(int)" //required
+	 * 			"apply_id" : "(int or array)" //required
 	 * 		}
 	 * }
 	 */
@@ -168,7 +168,14 @@ class ApplyCredit extends ManageModel
 		if (!$applyId) 
 			failed_json('没有传参`apply_id`');
 		
-		$sql = 'DELETE FROM '.$this->table.' WHERE apply_id='.$applyId;
+		$where = 'apply_id='.$applyId;
+		
+		if (is_array($applyId)) {
+			$applyId = implode(',', $applyId);
+			$where = 'apply_id in('.$applyId.')';
+		}
+		
+		$sql = 'DELETE FROM '.$this->table.' WHERE status=4 AND '.$where;
 		$result = $this->db->query($sql);
 		if ($result === false) 
 			failed_json('删除记录失败');
