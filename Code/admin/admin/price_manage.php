@@ -348,20 +348,21 @@ class Price extends ManageModel
         //修改批量加价信息
         if ($upData) {
             $this->batchUpdate($upData);
-            if ($goods) {
-                $this->batchGoods($upData, $goods);
-            }
-            
         }
         
         //添加新信息
         if ($inData) {
             $data = $this->batchInsert($inData, $userId);
-                
-            if ($goods && is_array($data)) {
-                $this->batchGoods($data, $goods);
-            }
-            
+        }
+        
+        //匹配修改符合批量加价条件的商品加价规则
+        if ($upData && $goods) {
+        	$this->batchGoods($upData, $goods);
+        }
+        
+        //匹配添加符合批量加价条件的商品加价规则
+        if ($inData && $goods && is_array($data)) {
+        	$this->batchGoods($data, $goods);
         }
         
         make_json_result(true);
@@ -890,7 +891,7 @@ class Price extends ManageModel
         //商品匹配加价规则
         $newPrice = $this->ruleFirst($goods, $rule);
         if (!$newPrice) {
-            make_json_result('none catch');
+            return true;
         }
         
         
