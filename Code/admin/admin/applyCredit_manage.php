@@ -103,7 +103,7 @@ class ApplyCredit extends ManageModel
 		$limit = ($limit < 0) ? 0 : $limit; 
 			
 		//where conditions
-		$where = 'status!=4';
+		$where = '';
 		if ($userName) {
 			if (!empty($where)) $where .= ' AND ';
 			$where .= 'u.user_name LIKE "%'.$userName.'%"';
@@ -123,6 +123,9 @@ class ApplyCredit extends ManageModel
 		if ($status == 4) {
 			if (!empty($where)) $where .= ' AND ';
 			$where .= 'ac.status=4';
+		} else {
+			if (!empty($where)) $where .= ' AND ';
+			$where .= 'ac.status!=4';
 		}
 		//获取数据
 		self::selectSql(array(
