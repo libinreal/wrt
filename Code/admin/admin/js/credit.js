@@ -42,11 +42,12 @@ var Credit = {
 							if(value[that.order_arr[i]] != null){
 								row += createTd(subString(value[that.order_arr[i]],10,true));
 							}else{
-								row += createTd(createWarn('无数据'));
-							}
-							if(that.order_arr[i] == "operate"){
-								var edit = createLink(that.url+"?act=detail&id="+value.credit_id, "详情");
-								row += createTd(edit);
+								if(that.order_arr[i] == "operate"){
+									var edit = createLink(that.url+"?act=detail&id="+value.credit_id, "详情");
+									row += createTd(edit);
+								}else{
+									row += createTd(createWarn('无数据'));
+								}
 							}
 						}
 						row += "</tr>";

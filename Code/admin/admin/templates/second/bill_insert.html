@@ -21,7 +21,7 @@
 				<tbody>
 					<tr>
 						<td class="title">票据编号：</td>
-						<td><input type="text" class="number" name="bill_num" data-rule-required="true" ></td>
+						<td><input type="text" name="bill_num" data-rule-required="true" ></td>
 						<td class="title">票据类型：</td>
 						<td><select name="bill_type" id="bill_type">
 						</select></td>
@@ -85,7 +85,7 @@
 					</tr>
 					<tr>
 						<td class="title">票据状态：</td>
-						<td><select name="status">
+						<td><select name="status" id="bill_status">
 						</select></td>
 						<td class="title">折后额度：</td>
 						<td><input type="text" class="number" name="discount_amount" data-rule-required="true" data-rule-number="true"></td>

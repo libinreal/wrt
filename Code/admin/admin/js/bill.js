@@ -92,6 +92,7 @@ var Bill = {
 	getInitCreate: function(){
 		// 票据类型
 		TypeMode.getBillType("bill_type");
+		TypeMode.getBillType("bill_status");
 		TypeMode.getUsers("customer_id");
 		// 调用收付款列表
 		TypeMode.getUsers("pay_user_id");
@@ -110,7 +111,6 @@ var Bill = {
 		strJson = createJson("create", this.entity, form_data);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 			}else if(obj.error == 0){
