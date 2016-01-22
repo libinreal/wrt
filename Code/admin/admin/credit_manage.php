@@ -312,7 +312,7 @@ class Credit extends ManageModel
                 'registration_name',
                // 'create_type'
             ),
-            'extend' => 'ORDER BY add_time ASC '.$limit
+            'extend' => 'ORDER BY add_time DESC '.$limit
         ));
         $res = $this->db->getAll($this->sql);
         if ($res === false) {
@@ -354,18 +354,7 @@ class Credit extends ManageModel
         $config = $this->creditConf();
     
         self::selectSql(array(
-            'fields' => array(
-                'credit_id',
-                'add_time',
-                'customer_name',
-                'amount_all',
-                'credit_status',
-                'registration_name',
-                'end_time',
-                'registration_num',
-                'customer_bank_num',
-                'remark'
-            ),
+            'fields' => '*',
             'where'  => 'credit_id='.$creditId,
         ));
         $res = $this->db->getRow($this->sql);
