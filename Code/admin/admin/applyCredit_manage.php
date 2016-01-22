@@ -103,7 +103,7 @@ class ApplyCredit extends ManageModel
 		$limit = ($limit < 0) ? 0 : $limit; 
 			
 		//where conditions
-		$where = '';
+		$where = 'status!=4';
 		if ($userName) {
 			if (!empty($where)) $where .= ' AND ';
 			$where .= 'u.user_name LIKE "%'.$userName.'%"';
