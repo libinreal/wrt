@@ -310,7 +310,7 @@ class Credit extends ManageModel
                 'start_time',
                 'end_time',
                 'registration_name',
-                'create_type'
+               // 'create_type'
             ),
             'extend' => 'ORDER BY add_time ASC '.$limit
         ));
@@ -320,7 +320,7 @@ class Credit extends ManageModel
         }
         foreach ($res as $k=>$v) {
             $res[$k]['credit_status'] = $config['creditStatus'][$v['credit_status']];
-            $res[$k]['create_type']   = $config['creditType'][$v['create_type']];
+            //$res[$k]['create_type']   = $config['creditType'][$v['create_type']];
         }
         
         self::selectSql(array(

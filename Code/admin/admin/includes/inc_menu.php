@@ -102,4 +102,8 @@ $modules['14_credit']['01_credit_list']    = 'credit_manage.php?act=list';
 $modules['15_bthPrice']['01_batch_price'] = 'price_manage.php?act=batch';
 $modules['15_bthPrice']['02_price_list'] = 'price_manage.php?act=list';
 
+//平台授信管理
+$modules['16_applyCredit']['01_applyCredit_list'] = 'applyCredit_manage.php?act=list';
+$modules['16_applyCredit']['02_applyCredit_rlist'] = 'applyCredit_manage.php?act=recycle';
+
 ?>
