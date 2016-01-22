@@ -204,7 +204,8 @@ class ApplyCredit extends ManageModel
 	 * 		"command" : 'applyCreditSingle', 
 	 * 		"entity"  : 'apply_credit', 
 	 * 		"parameters" : {
-	 * 			"apply_id" : "(int)" // required
+	 * 			"apply_id" : "(int)", // required
+	 * 			"flag"     : "1" //默认不填 若为1 则是已删除的状态的自有授信详情
 	 * 		}
 	 * }
 	 */
@@ -216,14 +217,19 @@ class ApplyCredit extends ManageModel
 		if (!$applyId) {
 			failed_json('没有传参`apply_id`');
 		}
+		$flag = $parameters['flag'];
+		if (!$flag) {
+			$where = ' AND status!=4';
+		}
+		
 		//授信详情
 		self::selectSql(array(
 				'fields' => '*', 
-				'where'  => 'apply_id='.$applyId.' AND status!=4'
+				'where'  => 'apply_id='.$applyId.$where
 		));
 		$data = $this->db->getRow($this->sql);
 		if ($data === false) 
-			failed_json('获取列表失败');
+			failed_json('没有此数据');
 		if (empty($data)) 
 			make_json_result(array());
 		

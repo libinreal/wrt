@@ -294,7 +294,7 @@ class Contract extends ManageModel
             'as'     => 'c',
             'join'   => 'LEFT JOIN users AS u on c.customer_id=u.user_id LEFT JOIN suppliers as s on c.customer_id=s.suppliers_id', 
             'where'  => $where, 
-            'extend' => 'ORDER BY contract_id ASC '.$limit
+            'extend' => 'ORDER BY contract_id DESC '.$limit
         ));
         
         $res = $this->db->getAll($this->sql);
@@ -725,7 +725,7 @@ class Contract extends ManageModel
                     .' LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
                     .' LEFT JOIN region AS r on s.region_id=r.region_id', 
             'where' => $where, 
-            'extend'=> $limit
+            'extend'=> 'ORDER BY cs.contract_id DESC,cs.suppliers_id DESC'.$limit
         ));
         $res = $this->db->getAll($this->sql);
         
