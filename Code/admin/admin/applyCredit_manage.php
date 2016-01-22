@@ -142,11 +142,22 @@ class ApplyCredit extends ManageModel
 		if ($result === false) 
 			failed_json('获取列表失败');
 		
+		self::selectSql(array(
+				'fields' => 'count(ac.apply_id) AS num', 
+				'as'     => 'ac', 
+				'join'   => 'LEFT JOIN users AS u on ac.user_id=u.user_id'
+							.' LEFT JOIN contract AS c on ac.contract_id=c.contract_id', 
+				'where'  => $where
+		));
+		$total = $this->db->getOne($this->sql);
+		if ($total === false) 
+			failed_json('获取总记录数失败');
+		
 		$status = array('审核中', '已审核', '审批通过', '审批失败', '已删除');
 		foreach ($data as $k=>$v) {
 			$data[$k]['status'] = $status[$v['status']];
 		}
-		make_json_result($data);
+		make_json_result(array('total' => $total, 'data'=>$data));
 	}
 	
 	
