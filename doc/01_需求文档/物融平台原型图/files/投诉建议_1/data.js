@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"投诉建议_1.html",
-  "generationDate":new Date(1453199924097.08),
+  "generationDate":new Date(1453446814806.91),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

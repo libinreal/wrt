@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"销售订单列表.html",
-  "generationDate":new Date(1453199908042.16),
+  "generationDate":new Date(1453446799110.01),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -1308,7 +1308,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/销售订单列表/u67.png"}},
 {
               "id":"f7f03af01458469d9c4268896092064b",
               "label":"",
@@ -1345,7 +1345,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/销售订单列表/u67.png"}},
 {
               "id":"244afd4e4f254aa384c7d5bf085f9b64",
               "label":"",
@@ -1382,7 +1382,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/销售订单列表/u67.png"}},
 {
               "id":"ded2c70fe9c64d38a2807d6bdf3eb6ba",
               "label":"",
@@ -1419,7 +1419,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/销售订单列表/u67.png"}},
 {
               "id":"91ccd422a19a48c9bbaa5c9e4f513402",
               "label":"",
@@ -1456,7 +1456,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/销售订单列表/u67.png"}},
 {
               "id":"536de62ac9044a93a47a0639c182ce96",
               "label":"",
@@ -1493,7 +1493,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/销售订单列表/u67.png"}},
 {
               "id":"889cc7024dd74c73870f0fd05afd25ea",
               "label":"",
@@ -1530,7 +1530,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/销售订单列表/u67.png"}},
 {
               "id":"9af453aee87a4b8da015b1c1a85b20ac",
               "label":"",

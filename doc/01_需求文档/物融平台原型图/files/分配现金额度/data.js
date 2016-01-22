@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"分配现金额度.html",
-  "generationDate":new Date(1453199907465.13),
+  "generationDate":new Date(1453446798404.97),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

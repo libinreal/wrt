@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"我的收藏_1.html",
-  "generationDate":new Date(1453199923885.07),
+  "generationDate":new Date(1453446814539.89),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

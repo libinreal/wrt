@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"发货改价.html",
-  "generationDate":new Date(1453199911299.35),
+  "generationDate":new Date(1453446801536.15),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -1927,7 +1927,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/销售订单列表/u67.png"}},
 {
               "id":"7ca1d5bd7535481687b165c42f4cc53a",
               "label":"",
@@ -2075,7 +2075,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/销售订单列表/u67.png"}},
 {
               "id":"c29eb204868246b19acf38c908f2d232",
               "label":"",
