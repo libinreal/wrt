@@ -75,7 +75,11 @@ var SelfCredit = {
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=self_credit&act=check_detail&id="+value.apply_id, "详情");
+								if(check_status == 4){
+									var edit = createButton("SelfCredit.deleteRecord("+value.apply_id+")", "移除");
+								}else{
+									var edit = createLink("applyCredit_manage.php?act=detail&id="+value.apply_id, "详情");
+								}
 								row += createTd(edit);
 								continue;
 							}
@@ -202,20 +206,24 @@ var SelfCredit = {
 		},"json");		
 	},
 
-	deleteRecord: function(){
+	deleteRecord: function(apply_id){
 		var params = {};
-		var apply_id = [];
-		var formData = $("#main_form").FormtoJson();
-		if(formData.apply_id === undefined){
-			$('#message_area').html(createError('请选择ID'));
-			return false;
+		if(apply_id){
+			params.apply_id = apply_id;	
 		}else{
-			$('#message_area').html('');
-		}
-		if(formData.apply_id.length == 1){
-			params.apply_id = parseInt(formData.apply_id[0]);			
-		}else{
-			params.apply_id = formData.apply_id;
+			var apply_id = [];
+			var formData = $("#main_form").FormtoJson();
+			if(formData.apply_id === undefined){
+				$('#message_area').html(createError('请选择ID'));
+				return false;
+			}else{
+				$('#message_area').html('');
+			}
+			if(formData.apply_id.length == 1){
+				params.apply_id = parseInt(formData.apply_id[0]);			
+			}else{
+				params.apply_id = formData.apply_id;
+			}
 		}
 		params.flag = 1;
 		var strJson = createJson("applyCreditDelete", this.entity, params);

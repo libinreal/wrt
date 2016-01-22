@@ -9,7 +9,6 @@ var Credit = {
 		"start_time",
 		"end_time",
 		"registration_name",
-		"create_type",
 		"operate"
 	],
 	limit: 0,
@@ -40,15 +39,11 @@ var Credit = {
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
-							$.each(value, function(k, v){
-								if(k == that.order_arr[i]){
-									if(v == null){
-										row += createTd(v);
-									}else{
-										row += createTd(subString(v,10,true));
-									}
-								}
-							});
+							if(value[that.order_arr[i]] != null){
+								row += createTd(subString(value[that.order_arr[i]],10,true));
+							}else{
+								row += createTd(createWarn('无数据'));
+							}
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink(that.url+"?act=detail&id="+value.credit_id, "详情");
 								row += createTd(edit);

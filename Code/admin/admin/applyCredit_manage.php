@@ -11,7 +11,7 @@ require_once('ManageModel.php');
  * 授信列表
  */
 if ($_REQUEST['act'] == 'list') {
-	$smarty->display('');
+	$smarty->display('second/self_credit_list.html');
 	exit;
 } 
 
@@ -19,7 +19,7 @@ if ($_REQUEST['act'] == 'list') {
  * 回收站列表
  */
 elseif ($_REQUEST['act'] == 'recycle') {
-	$smarty->display('');
+	$smarty->display('second/self_credit_recycle.html');
 	exit;
 } 
 
@@ -27,7 +27,7 @@ elseif ($_REQUEST['act'] == 'recycle') {
  * 授信详情
  */
 elseif ($_REQUEST['act'] == 'detail') {
-	$smarty->display('');
+	$smarty->display('second/self_credit_check_detail.html');
 	exit;
 }
 

@@ -405,7 +405,7 @@ var SaleOrder = {
 					$("#logistics_info").html('<div style="text-align:center">'+createWarn("暂无物流信息")+'</div>');
 					$("#logistics_operate").html(createLink("javascript:void(0);", "新增物流", "SaleOrder.addShippingInfoInit("+order_id+")"));
 				}else{
-					var table='<table cellpadding="0" cellspacing="0"><thead><tr>';
+					var table='<table cellpadding="0" cellspacing="1"><thead><tr>';
 					table += '<td class="title text-right" width="100">物流公司：</td><td>'+obj.content.shipping.company_name+'</td>';
 					table += '<td class="title text-right" width="100">物流单号：</td><td>'+obj.content.shipping.shipping_num+'</td>';
 					table += '<td class="title text-right" width="100">联系电话：</td><td>'+obj.content.shipping.tel+'</td>';

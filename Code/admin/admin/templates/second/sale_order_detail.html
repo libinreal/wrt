@@ -16,9 +16,11 @@
 		</h1>
 		<div id="message_area"></div>
 		<div class="list-note-2">
-			<table>
+			<table cellspacing="1" cellpadding="0">
+				<thead>
+					<tr><td class="title">订单资料</td></tr>
+				</thead>
 				<tbody>
-				<tr><td class="title">订单资料</td></tr>
 				<tr>
 					<td colspan="20">
 					<span class="head">订单编号：</span><span class="info" id="order_sn"></span>
@@ -38,8 +40,10 @@
 		</div>
 		<div class="list-note-2">
 			<table cellpadding="3" cellspacing="1" id="bill_purchase_assign_list">
+				<thead>
+					<tr><td class="title">开票资料</td></tr>
+				</thead>
 				<tbody>
-				<tr><td class="title">开票资料</td></tr>
 				<tr>
 					<td colspan="20">
 					<span class="head">发票类型：</span><span class="info" id="inv_type"></span>
@@ -60,7 +64,7 @@
 			</table>
 		</div>
 		<div class="list-div" id="listDiv">
-			<table cellpadding="3" cellspacing="1" id="sale_order_detail_list">
+			<table cellpadding="0" cellspacing="1" id="sale_order_detail_list">
 				<thead>
 				<tr>
 					<th>物料代码</th>
