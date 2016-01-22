@@ -67,20 +67,25 @@ function checktotal(){
 	}
 }
 function first(){
+	BillAssign.current_page = 1;
 	BillAssign.limit = 0;
 	BillAssign.getList(0);
 }
 function next(){
-	BillAssign.limit = BillAssign.limit + 1;
-	BillAssign.getList(0);	
+	BillAssign.current_page = BillAssign.current_page + 1;
+	BillAssign.limit = (BillAssign.current_page - 1)*BillAssign.offset;
+	console.log(BillAssign.limit)
+	BillAssign.getList(0);
 }
 function prev(){
-	BillAssign.limit = BillAssign.limit - 1;
+	BillAssign.current_page = BillAssign.current_page - 1;
+	BillAssign.limit = (BillAssign.current_page - 1)*BillAssign.offset;
 	BillAssign.getList(0);
 }
 function last(){
-	BillAssign.limit = BillAssign.total_page;
-	BillAssign.getList(0);	
+	BillAssign.current_page = BillAssign.total_page;
+	BillAssign.limit = (BillAssign.current_page - 1)*BillAssign.offset;
+	BillAssign.getList(0);
 }
 </script>
 	</body>

@@ -11,7 +11,7 @@ require_once('ManageModel.php');
  * 授信列表
  */
 if ($_REQUEST['act'] == 'list') {
-	$smarty->display('');
+	$smarty->display('second/self_credit_list.html');
 	exit;
 } 
 
@@ -19,7 +19,7 @@ if ($_REQUEST['act'] == 'list') {
  * 回收站列表
  */
 elseif ($_REQUEST['act'] == 'recycle') {
-	$smarty->display('');
+	$smarty->display('second/self_credit_recycle.html');
 	exit;
 } 
 
@@ -27,7 +27,7 @@ elseif ($_REQUEST['act'] == 'recycle') {
  * 授信详情
  */
 elseif ($_REQUEST['act'] == 'detail') {
-	$smarty->display('');
+	$smarty->display('second/self_credit_check_detail.html');
 	exit;
 }
 
@@ -123,6 +123,9 @@ class ApplyCredit extends ManageModel
 		if ($status == 4) {
 			if (!empty($where)) $where .= ' AND ';
 			$where .= 'ac.status=4';
+		} else {
+			if (!empty($where)) $where .= ' AND ';
+			$where .= 'ac.status!=4';
 		}
 		//获取数据
 		self::selectSql(array(
@@ -142,11 +145,22 @@ class ApplyCredit extends ManageModel
 		if ($result === false) 
 			failed_json('获取列表失败');
 		
+		self::selectSql(array(
+				'fields' => 'count(ac.apply_id) AS num', 
+				'as'     => 'ac', 
+				'join'   => 'LEFT JOIN users AS u on ac.user_id=u.user_id'
+							.' LEFT JOIN contract AS c on ac.contract_id=c.contract_id', 
+				'where'  => $where
+		));
+		$total = $this->db->getOne($this->sql);
+		if ($total === false) 
+			failed_json('获取总记录数失败');
+		
 		$status = array('审核中', '已审核', '审批通过', '审批失败', '已删除');
 		foreach ($data as $k=>$v) {
 			$data[$k]['status'] = $status[$v['status']];
 		}
-		make_json_result($data);
+		make_json_result(array('total' => $total, 'data'=>$data));
 	}
 	
 	

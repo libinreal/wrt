@@ -263,6 +263,7 @@ var Contract = {
 				$('#message_area').html(createError(obj.message));
 			}else{
 				$('#message_area').html(createTip('保存成功'));
+				redirectToUrl("contract_manage.php?act=contractList");
 			}
 		}, "json");
 	},
@@ -580,6 +581,7 @@ var Contract = {
 				return false;
 			}else{
 				$('#message_area').html(createTip("保存成功"));
+				redirectToUrl("contract_manage.php?act=supplierList");
 			}
 		}, "json");
 	},

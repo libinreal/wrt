@@ -2,6 +2,7 @@ var BillAssign = {
 	limit: 0,
 	offset: 8,
 	total_page: 0,
+	current_page: 1,
 	url: "BillAssignModel.php",
 	entity: "bill_assign_log",
 
@@ -12,7 +13,7 @@ var BillAssign = {
 		}
 		params = {"params":{"where":{"customer_id":id,"type":type},"limit":this.limit,"offset":this.offset}};
 		strJson = createJson("page", this.entity, params);
-		that = this
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -29,7 +30,7 @@ var BillAssign = {
 					return false;
 				}else{
 					that.total_page = Math.ceil(obj.content.total/that.offset);
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
 					var row = "";
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";
@@ -87,7 +88,6 @@ var BillAssign = {
 			}else{
 				$('#message_area').html(createTip(obj.message));
 			}
-			$('#message_area').html('');
 		}, "json");
 	}
 }

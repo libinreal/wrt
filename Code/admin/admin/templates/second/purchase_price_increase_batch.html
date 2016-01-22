@@ -39,7 +39,7 @@
 		</form>
 		<div class="table_info">
 			<form id="price_increase_form">
-				<table id="purchase_price_increase_table" style="min-width:600px;">
+				<table id="purchase_price_increase_table" cellspacing="1" cellpadding="0" style="width:100%;">
 				<thead>
 					<tr>
 						<th colspan="20" style="min-width:250px;"> 批量加价 </th>
@@ -70,9 +70,9 @@ $(document).ready(function(){
 });
 function addRow(elem){
 	var cat_id = $("select[name=cat_id]>option:selected").val();
-	var brand_id = $("select[name=brand_id]>option:selected").val();
-	var suppliers_id = $("select[name=suppliers_id]>option:selected").val();
-	if(cat_id == "" || brand_id == "" || suppliers_id == ""){
+	var brand_id = $("select[name=brand_id]>option:selected").val() == "" ? 0 : $("select[name=brand_id]>option:selected").val();
+	var suppliers_id = $("select[name=suppliers_id]>option:selected").val() == "" ? 0 : $("select[name=suppliers_id]>option:selected").val();
+	if(cat_id == ""){
 		return false;
 	}
 	var id = cat_id + brand_id + suppliers_id;

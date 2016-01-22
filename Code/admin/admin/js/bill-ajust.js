@@ -13,6 +13,7 @@ var BillAjust = {
 		params = {"user_id":id}
 		strJson = createJson("addInit", this.entity, params);
 		that = this
+		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));

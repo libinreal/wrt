@@ -143,6 +143,14 @@ h1 .action-span1 {
     text-align: center;
 }
 
+.list-div tbody tr:nth-of-type(even) td{
+    background: #e2e2e2;
+}
+
+.list-div tbody tr:hover td{
+    background: #bbb;
+}
+
 .list-div td.first-cell{
     font-weight: bold;
     padding-left: 10px;
@@ -1074,12 +1082,12 @@ em, cite, th {
 
 /** 表格详情 **/
 .table_info table{
-    margin: 0 auto;
-    background: #fff;
-    padding: 10px;
+    background: #ccc;
+    width: 100%;
+    margin-bottom: 15px;
 }
 .table_info table thead{
-    background: #7BB233 none repeat scroll 0% 0%;
+    background: #303030;
 }
 .table_info table th{
     color:#fff;
@@ -1089,9 +1097,9 @@ em, cite, th {
 .table_info table td{
     line-height: 30px;
     padding: 0 10px;
-    border: 1px solid #ccc;
     position: relative;
     min-width: 30px;
+    background: #fff;
 }
 .table_info td.title{
     text-align: right;
@@ -1117,21 +1125,22 @@ em, cite, th {
 /** table_info_2**/
 .table_info_2{
     margin: 0 auto;
-    background: #fff;
+    background: #ccc;
+    width: 100%;
 }
 .table_info_2 table{
-    width: 850px;
+    width: 100%;
 }
-.table_info_2 table th{
+.table_info_2 th{
     font-weight: bold;
     line-height: 30px;
     color:#666;
-    border-bottom: 1px solid #ccc;
+    background: #fff;
 }
 .table_info_2 table td{
     text-align: center;
     line-height: 30px;
-    border: none;
+    background: #fff;
 }
 .table_info_2 td.title{
     text-align: right;
@@ -1139,14 +1148,13 @@ em, cite, th {
     padding: 5px 1em;
 }
 .table_info_2 td{
-
-    border:1px solid #ccc;   
+    background: #fff;
 }
 /** table_info_3**/
 .table_info_3{
     margin: 15px auto;
     background: #fff;
-    width: 80%;
+    width: 100%;
 }
 .table_info_3 .header{
     line-height: 30px;
@@ -1177,23 +1185,25 @@ em, cite, th {
 }
 
 /**  **/
-.list-note{
-
-}
 .list-note table{
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
-    background-color: #fff;
+    background-color: #ccc;
 }
-.list-note table .head{
-    padding: 0 10px;
+.list-note table thead td{
     line-height: 30px;
     font-weight: bold;
+    background: #303030;
+    color: #fff;
+}
+.list-note table .head{
+    margin-right: 15px;
 }
 .list-note table td{
-    border-bottom: 1px solid #ccc;
-    text-align: right;
     position: relative;
+    background: #fff;
+    line-height: 30px;
+    padding-left: 10px;
 }
 .list-note td.title{
     text-align: right;
@@ -1208,21 +1218,23 @@ em, cite, th {
     font-size: 10px;
 }
 /**  **/
-.list-note-2{
-}
 .list-note-2 table{
-    width: 80%;
-    margin: 0 auto 10px auto;
-    background-color: #fff;
+    width: 100%;
+    background-color: #ccc;
+    margin-bottom: 15px;
 }
 .list-note-2 table .head{
     padding: 0 10px;
     line-height: 25px;
     font-weight: bold;
-    color: #9CACAF;
 }
 .list-note-2 table thead{
-    background: #efefef;
+    background: #303030;
+    color: #fff;
+}
+.list-note-2 table tbody td{
+    background: #fff;
+    line-height: 50px;
 }
 .list-note-2 table td.title{
     font-size: 16px;
@@ -1256,9 +1268,6 @@ em, cite, th {
 }
 
 /** 物流列表样式 **/
-.goods_type_list{
-
-}
 .goods_type_list ul{
     margin: 0;
     padding: 0;
@@ -1279,4 +1288,12 @@ em, cite, th {
 }
 input.error{
     border: 1px solid red;
+}
+
+/** 物流样式列表2 **/
+.goods_type_list2{
+    background: #
+}
+.goods_type_list2{
+    
 }

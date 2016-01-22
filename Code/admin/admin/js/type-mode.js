@@ -192,7 +192,6 @@ var TypeMode = {
 					row += appendOption(k, v);
 				})
 				$('#'+select_id).html(row);
-				console.log(row)
 			}
 			$('#message_area').html('');
 		},"json");		
