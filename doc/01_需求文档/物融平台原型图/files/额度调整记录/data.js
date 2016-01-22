@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"额度调整记录.html",
-  "generationDate":new Date(1453199907824.15),
+  "generationDate":new Date(1453446798866.99),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

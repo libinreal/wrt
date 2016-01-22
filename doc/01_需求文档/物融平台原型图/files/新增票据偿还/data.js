@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"新增票据偿还.html",
-  "generationDate":new Date(1453199906807.09),
+  "generationDate":new Date(1453446797604.92),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

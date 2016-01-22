@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"商票管理_1.html",
-  "generationDate":new Date(1453199922538.99),
+  "generationDate":new Date(1453446812831.79),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -1357,7 +1357,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/商品列表/u1.png"}},
+                "normal~":"images/商品列表_1/u1.png"}},
 {
               "id":"2bd90e00eb5d46d098b6e83d46f19363",
               "label":"",
@@ -1394,7 +1394,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/商品列表/u1.png"}},
+                "normal~":"images/商品列表_1/u1.png"}},
 {
               "id":"9e832998f4864e979adc1da87e44b229",
               "label":"",
@@ -1431,7 +1431,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/商品列表/u1.png"}},
+                "normal~":"images/商品列表_1/u1.png"}},
 {
               "id":"8d1194f2a686462791524e048fceb642",
               "label":"",

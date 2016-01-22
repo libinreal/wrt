@@ -39,7 +39,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * {
 		 *	    "command": "bill_type",
 		 *	    "parameters": {}
-		 *	    		
+		 *
+		 * 	    "command": "bill_status",
+		 *      "parameters": {}
+		 * 
 		 *	    //"command":"admin_user_banks"
 		 *	    "parameters": {"user_id":4}
 		 *	    
@@ -84,10 +87,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$sql = '';
 			switch ( $this->command ) {
 				case 'bill_type':
-					$content = array_merge( array(""=> "所有"), C('bill_type') );
+					$content = array_merge( C('bill_type') );
+					break;
+				case 'bill_status':
+					$content = array_merge( C('bill_status') );
 					break;
 				case 'bill_currency':
-					$content = array_merge( array(""=> "所有" ), C('bill_currency') );//
+					$content = array_merge( C('bill_currency') );//
 					break;
 				case 'users':
 					$sql = 'SELECT `user_id`,`user_name`,`companyName` FROM ' . $GLOBALS['ecs']->table('users');
@@ -169,7 +175,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 		
 	}
-	$command_arr = array('bill_type', 'bill_currency', 'users', 'admin_users', 
+	$command_arr = array('bill_type', 'bill_status', 'bill_currency', 'users', 'admin_users', 
 						'admin_user_banks', 'admin_user_bank_accounts', 'user_banks', 'user_bank_accounts',
 						'payment', 'childer_order_status', 'order_status'
 					);

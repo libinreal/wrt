@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"物流费用设置.html",
-  "generationDate":new Date(1453199914414.52),
+  "generationDate":new Date(1453446804931.34),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

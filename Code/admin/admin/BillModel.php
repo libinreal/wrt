@@ -520,9 +520,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 */
 		public function addInitAction()
 		{
-			$bill_type = array_merge( array(""=> "所有"), C('bill_type') );//
-			$currency = array_merge( array(""=> "所有" ), C('bill_currency') );//
-			$status = array(""=> "所有", "0" => "已扣减", "1" => "已恢复" );//
+			$bill_type = array_merge( C('bill_type') );//
+			$currency = array_merge(  C('bill_currency') );//
+			$status = array("0" => "已扣减", "1" => "已恢复" );//
 
 			$is_recourse = array( '0' =>"否", '1' => "是");//
 			$sql = "SELECT `user_id`, `companyName` as `user_name` FROM " . $GLOBALS['ecs']->table('users');

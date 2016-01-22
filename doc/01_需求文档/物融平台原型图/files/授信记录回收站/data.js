@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"授信记录回收站.html",
-  "generationDate":new Date(1453199913495.47),
+  "generationDate":new Date(1453446804021.29),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -191,7 +191,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/订单详情/u83.png"}},
+                "normal~":"images/额度生成列表（？）/u1.png"}},
 {
               "id":"e273efacc5ae4a66973b19d8752a3cc9",
               "label":"",
@@ -265,7 +265,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/订单详情/u107.png"}},
+                "normal~":"images/额度生成列表（？）/u79.png"}},
 {
               "id":"8178c73cac32468fae6e6f800b59ed08",
               "label":"",
@@ -413,7 +413,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u7.png"}},
+                "normal~":"images/额度生成列表（？）/u120.png"}},
 {
               "id":"815deb7ed67944959ab63a247cbf8acf",
               "label":"",
@@ -487,7 +487,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"95bcc45ce0b943c8a651a82711dffb66",
               "label":"",
@@ -524,7 +524,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u7.png"}},
+                "normal~":"images/额度生成列表（？）/u120.png"}},
 {
               "id":"a1d20112525e46c6bb111e5106a58410",
               "label":"",
@@ -598,7 +598,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"fec0363180db40c59175863c0b114cfc",
               "label":"",
@@ -635,7 +635,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u7.png"}},
+                "normal~":"images/额度生成列表（？）/u120.png"}},
 {
               "id":"39acae9c9c7e4175a9acc08c73e46ca8",
               "label":"",
@@ -709,7 +709,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"7904b0ccccc149d8828b5d0274c52032",
               "label":"",
@@ -968,7 +968,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/应付款详情/u17.png"}},
+                "normal~":"images/额度生成列表（？）/u124.png"}},
 {
               "id":"674d8eb8e28140f1ba3749a82d14f6a5",
               "label":"",
@@ -1083,7 +1083,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/采购订单管理/u52.png"}},
+                "normal~":"images/额度生成列表（？）/u136.png"}},
 {
               "id":"99043ce3c7714ce981045eac917f43d9",
               "label":"",
@@ -1120,7 +1120,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u7.png"}},
+                "normal~":"images/额度生成列表（？）/u120.png"}},
 {
               "id":"07504ded5bb64e81b1b49469cff2e9db",
               "label":"",
@@ -1194,7 +1194,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"28c750eea0644ba9976fa55681e8ca7b",
               "label":"",
@@ -1225,7 +1225,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u7.png"}},
+                "normal~":"images/额度生成列表（？）/u120.png"}},
 {
               "id":"24141d6a36e64b56897d318337ab50ce",
               "label":"",
@@ -1299,7 +1299,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}}]},
+                "normal~":"images/额度生成列表（？）/u132.png"}}]},
 {
           "id":"2ee0382da70644c981b1f3ca74c053aa",
           "label":"",

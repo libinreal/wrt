@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"采购订单管理.html",
-  "generationDate":new Date(1453199911641.37),
+  "generationDate":new Date(1453446801936.17),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -324,7 +324,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"b8031996195449088acee3d68851006c",
               "label":"",
@@ -404,7 +404,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"50fbffd847d141eeb08b426013d907d6",
               "label":"",
@@ -484,7 +484,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"c93562b3818d44e1bdec4d2c6cfcf937",
               "label":"",
@@ -564,7 +564,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"591bc7fc7b974e2ca340d0ed691624af",
               "label":"",
@@ -644,7 +644,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"4978abd557ae4ae49501df2b61c25214",
               "label":"",
@@ -724,7 +724,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"10b91f795d17445583e1a9fdac0d04cd",
               "label":"",
@@ -804,7 +804,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"868bfe2cac954152a092bd423a1ccb1a",
               "label":"",
@@ -884,7 +884,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}},
+                "normal~":"images/额度生成列表（？）/u132.png"}},
 {
               "id":"752042cef9944e7ca6d655e5aaba0a22",
               "label":"",
@@ -997,7 +997,7 @@
                                   "linkType":"current"}]}]}},
                       "tabbable":true}]}],
               "images":{
-                "normal~":"images/采购订单管理/u52.png"}},
+                "normal~":"images/额度生成列表（？）/u136.png"}},
 {
               "id":"8f41a77add78491cba7c4b490456f43a",
               "label":"",
@@ -1077,7 +1077,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度分配调整/u38.png"}}]},
+                "normal~":"images/额度生成列表（？）/u132.png"}}]},
 {
           "id":"f0fed671139740f2928e0beecb523bc5",
           "label":"",

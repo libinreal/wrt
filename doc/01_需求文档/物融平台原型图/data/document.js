@@ -17,6 +17,38 @@
         "type":"Folder",
         "url":"",
         "children":[{
+            "pageName":"商品管理",
+            "type":"Folder",
+            "url":"",
+            "children":[{
+                "pageName":"商品列表",
+                "type":"Wireframe",
+                "url":"商品列表.html"},
+{
+                "pageName":"商品回收站",
+                "type":"Wireframe",
+                "url":"商品回收站.html"},
+{
+                "pageName":"推荐商品",
+                "type":"Wireframe",
+                "url":"推荐商品.html"},
+{
+                "pageName":"推荐品牌",
+                "type":"Wireframe",
+                "url":"推荐品牌.html"}]},
+{
+            "pageName":"客户管理",
+            "type":"Folder",
+            "url":"",
+            "children":[{
+                "pageName":"客户列表",
+                "type":"Wireframe",
+                "url":"客户列表.html"},
+{
+                "pageName":"添加客户",
+                "type":"Wireframe",
+                "url":"添加客户.html"}]},
+{
             "pageName":"授信管理",
             "type":"Folder",
             "url":"",
@@ -71,15 +103,15 @@
 {
                     "pageName":"票据详情",
                     "type":"Wireframe",
-                    "url":"票据详情.html"}]},
+                    "url":"票据详情.html"},
+{
+                    "pageName":"采购额度生成",
+                    "type":"Wireframe",
+                    "url":"采购额度生成.html"}]},
 {
                 "pageName":"添加票据",
                 "type":"Wireframe",
                 "url":"添加票据.html"},
-{
-                "pageName":"采购额度生成",
-                "type":"Wireframe",
-                "url":"采购额度生成.html"},
 {
                 "pageName":"现金额度添加",
                 "type":"Wireframe",
@@ -87,11 +119,19 @@
 {
                 "pageName":"额度生成列表（？）",
                 "type":"Wireframe",
-                "url":"额度生成列表（？）.html"},
+                "url":"额度生成列表（？）.html",
+                "children":[{
+                    "pageName":"额度生成详情",
+                    "type":"Wireframe",
+                    "url":"额度生成详情.html"}]},
 {
                 "pageName":"票据偿还列表（？）",
                 "type":"Wireframe",
-                "url":"票据偿还列表（？）.html"},
+                "url":"票据偿还列表（？）.html",
+                "children":[{
+                    "pageName":"票据偿还详情",
+                    "type":"Wireframe",
+                    "url":"票据偿还详情.html"}]},
 {
                 "pageName":"新增票据偿还",
                 "type":"Wireframe",
@@ -191,7 +231,11 @@
 {
                 "pageName":"授信记录回收站",
                 "type":"Wireframe",
-                "url":"授信记录回收站.html"}]}]},
+                "url":"授信记录回收站.html"}]},
+{
+            "pageName":"内容管理",
+            "type":"Folder",
+            "url":""}]},
 {
         "pageName":"订单流程状态表述",
         "type":"Wireframe",
@@ -207,7 +251,7 @@
             "children":[{
                 "pageName":"商品列表",
                 "type":"Wireframe",
-                "url":"商品列表.html"},
+                "url":"商品列表_1.html"},
 {
                 "pageName":"物流费用设置",
                 "type":"Wireframe",
@@ -219,7 +263,7 @@
 {
                 "pageName":"商品回收站",
                 "type":"Wireframe",
-                "url":"商品回收站.html"}]},
+                "url":"商品回收站_1.html"}]},
 {
             "pageName":"订单管理",
             "type":"Folder",

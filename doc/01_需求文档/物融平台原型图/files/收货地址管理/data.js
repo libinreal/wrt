@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"收货地址管理.html",
-  "generationDate":new Date(1453199917091.68),
+  "generationDate":new Date(1453446807371.48),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -597,7 +597,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/收货地址管理/u27.png"}}]},
+                "normal~":"images/额度生成列表（？）/u103.png"}}]},
 {
           "id":"8f33b8b23ca245ae91494987df08e0cc",
           "label":"",
