@@ -1,0 +1,127 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 添加商品</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1"> - 添加商品</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div id="message_area"></div>
+		<div class="table_info">
+			<form id="contract_content">
+			<table width="600">
+				<tbody>
+						<tr>
+							<td class="title">商品名称：</td><td><input type="text" name="" data-rule-required="true"></td>
+						</tr>
+						<tr>
+							<td class="title">商品分类：</td><td><select name="customer_id" style="width:80px;">
+							</select></td>
+						</tr>
+						<tr>
+							<td class="title">物料厂商：</td><td><input type="text" name="" data-rule-required="true"></td>
+						</tr>
+						<tr>
+							<td class="title">出厂价格：</td><td><input type="text" name="" data-rule-required="true"></td>
+						</tr>
+						<tr>
+							<td class="title">上传商品图片：</td><td><input type="file" name="" data-rule-required="true"></td>
+						</tr>
+						<tr>
+							<td class="title">上传商品缩略图：</td><td><input type="file" name="" data-rule-required="true"></td>
+						</tr>
+						<tr>
+							<td class="title">商品库存数量：</td><td><input type="text" name="" data-rule-required="true"></td>
+						</tr>
+						<tr>
+							<td class="title">库存警告数量：</td><td><input type="text" name="" data-rule-required="true"></td>
+						</tr>
+						<tr>
+							<td class="title">销售区域：</td><td><input type="text" name="" data-rule-required="true"></td>
+						</tr>
+						<tr>
+							<td class="title">发货地点：</td><td><input type="text" name="" data-rule-required="true"></td>
+						</tr>
+						<tr>
+							<td class="title">上架：</td><td><input type="checkbox" name="" data-rule-required="true">&nbsp;勾选则上架</td>
+						</tr>
+						<tr>
+							<td class="title">牌号：</td><td><select name="customer_id" style="width:80px;">
+							</select></td>
+						</tr>
+						<tr>
+							<td class="title">规格：</td><td><select name="customer_id" style="width:80px;">
+							</select></td>
+						</tr>
+						<tr>
+							<td class="title">长度：</td><td><select name="customer_id" style="width:80px;">
+							</select></td>
+						</tr>
+						<tr>
+							<td class="title">商品描述：</td><td><textarea></textarea></td>
+						</tr>
+				</tbody>
+			</table>
+			</form>
+			<div align="center" id="handle_button">
+				<input type="button" class="button" value="确定" onclick="">&nbsp;
+				<input type="button" class="button" value="重置" onclick="">
+			</div>
+		</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+		<!-- pop message -->
+		<div id="popupLayer" class="messagepop pop">
+			<div class="messagepop_header"><h4>物料类型</h4></div>
+			<div class="clear"></div>
+			<hr>
+			<form id="goods_type_form">
+				<div id="goods_type_list" class="goods_type_list"></div>
+				<hr>
+				<div align="center"><input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " /></div>
+			</form>
+		</div>
+		<div id="mask_layout"></div>
+		
+<script src="js/laydate/laydate.dev.js"></script>
+<script src="js/jquery.validate.js" type="text/javascript" ></script>
+<script src="js/additional-methods.js" type="text/javascript"></script>
+<script src="js/ajaxfileupload.js" type="text/javascript" ></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/contract.js" type="text/javascript" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	laydate({
+        elem: '#start_time'
+    });
+	laydate({
+        elem: '#end_time'
+    });
+	$('input[name=is_control]').click(function(){
+		if($(this).val() == 0){
+			$('#is_goods_type_visible').html(createWarn("物料类型不可用"));
+		}else{
+			$('#is_goods_type_visible').html(createLink("javascript:void(0);", "查看物料类型", "popupLayer()"));
+		}
+	});
+	$('select[name=contract_type]').click(function(){
+		if($(this).val() == 2){
+			$('#is_rate_visible>input').attr('disabled', true);
+		}else{
+			$('#is_rate_visible>input').attr('disabled', false);
+		}
+	});
+});
+</script>
+	</body>
+</html>

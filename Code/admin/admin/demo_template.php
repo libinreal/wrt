@@ -227,3 +227,79 @@ if($section == "payment"){
 			break;
 	}
 }
+
+if($section == "self_credit"){
+	switch ($act) {
+		case 'check_detail':
+			$smarty->display('second/self_credit_check_detail.html');
+			break;
+
+		case 'list':
+			$smarty->display('second/self_credit_list.html');
+			break;
+
+		case 'recycle':
+			$smarty->display('second/self_credit_recycle.html');
+			break;
+		
+		default:
+			exit;
+			break;
+	}
+}
+
+if($section == "index_supplier"){
+	$smarty->display('index_suppliers.htm');
+}
+
+if($section == "supplier"){
+	switch ($act) {
+		case 'goods_list':
+			$smarty->display('supplier/goods_list.html');
+			break;
+
+		case 'goods_insert':
+			$smarty->display('supplier/goods_insert.html');
+			break;
+
+		case 'goods_recycle':
+			$smarty->display('supplier/goods_recycle.html');
+			break;
+
+		case 'goods_shipping_setting':
+			$smarty->display('supplier/goods_shipping_setting.html');
+			break;
+
+		case 'order_detail':
+			$smarty->display('supplier/order_detail.html');
+			break;
+
+		case 'order_list':
+			$smarty->display('supplier/order_list.html');
+			break;
+
+		case 'recipient_complete':
+			$smarty->display('supplier/recipient_complete.html');
+			break;
+
+		case 'recipient_detail':
+			$smarty->display('supplier/recipient_detail.html');
+			break;
+
+		case 'recipient_edit':
+			$smarty->display('supplier/recipient_edit.html');
+			break;
+
+		case 'recipient_list':
+			$smarty->display('supplier/recipient_list.html');
+			break;
+
+		case 'recipient_render':
+			$smarty->display('supplier/recipient_render.html');
+			break;
+		
+		default:
+			exit;
+			break;
+	}
+}

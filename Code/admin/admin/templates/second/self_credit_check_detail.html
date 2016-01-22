@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 自有授信申请详情</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1">- 自有授信申请详情</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div id="message_area"></div>
+		<form id="main_form" onsubmit="return false;">
+		<div class="table_info">
+			<table cellpadding="0" cellspacing="1" width="100%">
+				<thead>
+					<tr>
+						<th colspan="6"> 自有授信申请详情 </th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="title">申请人：</td><td id="account"></td>
+						<td class="title">申请时间：</td><td id="create_date"></td>
+					</tr>
+					<tr>
+						<td class="title">用途：</td><td id="contractName"></td>
+						<td class="title">申请额度：</td><td id="apply_amount"></td>
+					</tr>
+					<tr>
+						<td class="title">所属单位：</td><td id="companyName"></td>
+						<td class="title">审批额度：</td><td id=""><input type="text" name="check_amount" data-rule-required="true" data-msg-required=""></td>
+					</tr>
+					<tr>
+						<td class="title">申请备注：</td><td id="apply_remark"></td>
+						<td class="title">申请状态：</td><td>
+							<select name="status" disabled="disabled">
+								<option value="0">审核中</option>
+								<option value="1">已审核</option>
+								<option value="2">审批通过</option>
+								<option value="3">审批失败</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td class="title">审批备注：</td><td colspan="3"><textarea name="check_remark" style="width:80%"></textarea></td>
+					</tr>
+					<tr>
+						<td class="title">申请附件：</td><td colspan="3"><img src="" id="img" /></td>
+					</tr>
+				</tbody>
+			</table>
+			<div align="center">
+				<input type="button" onclick="SelfCredit.setStatus(1);" value="通过" class="button">
+				<input type="button" onclick="SelfCredit.setStatus(0);" class="button" value=" 不通过 ">
+				<input type="button" onclick="history.back()" class="button" value=" 返回 ">
+			</div>
+		</div>
+		</form>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+
+<script src="js/jquery.validate.js" type="text/javascript" ></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/self-credit.js" type="text/javascript" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+});
+SelfCredit.getDetail();
+</script>
+	</body>
+</html>

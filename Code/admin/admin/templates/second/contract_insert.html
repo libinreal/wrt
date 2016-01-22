@@ -17,59 +17,59 @@
 		<div id="message_area"></div>
 		<div class="table_info">
 			<form id="contract_content">
-			<table>
+			<table style="width:100%;" cellpadding="0" cellspacing="1">
 				<tbody>
-						<tr>
-							<td class="title">合同编号：</td><td><input type="text" name="contract_num" data-rule-required="true"></td>
-							<td class="title">合同名称：</td><td><input type="text" name="contract_name" data-rule-required="true"></td>
-							<td class="title">合同金额：</td><td><input type="text" name="contract_amount" data-rule-required="true" data-rule-number="true"></td>
-							<td class="title">合同状态：</td>
-							<td><select name="contract_status">
-								<option value="1">生效</option>
-								<option value="0">过期</option>
-							</select></td>
-						</tr>
-						<tr>
-							<td class="title">公司：</td><td>中交物融</td>
-							<td class="title">客户：</td>
-							<td><select name="customer_id" style="width:80px;">
-							</select></td>
-							<td class="title">合同类型：</td>
-							<td><select name="contract_type">
-								<option value="1">销售合同</option>
-								<option value="2">采购合同</option>
-							</select></td>
-							<td class="title">签署类型：</td>
-							<td><select name="contract_sign_type">
-								<option value="1">平台-&gt;银行</option>
-								<option value="2">银行-&gt;平台</option>
-							</select></td>
-						</tr>
-						<tr>
-							<td class="title">合同开始日期：</td><td><input type="text" id="start_time" name="start_time" readonly  data-rule-required="true"></td>
-							<td class="title">合同结束日期：</td><td><input type="text" id="end_time" name="end_time" readonly  data-rule-required="true"></td>
-							<td class="title">是否控制类型：</td>
-							<td>是<input type="radio" name="is_control" value="1" checked="checked" >&nbsp;&nbsp;
-							否<input type="radio" name="is_control" value="0" /></td>
-							<td>物料类型：</td><td id="is_goods_type_visible">
-							<a onclick="popupLayer()" href="javascript:void(0);">查看物料类型</a></td>
-						</tr>
-						<tr>
-							<td class="title">金融费率：</td>
-							<td><div id="is_rate_visible"><input type="text" name="rate" data-rule-number="true"></div></td>
-							<td class="title">登记机构：</td>
-							<td><select name="bank_id">
-							</select></td>
-						</tr>
-						<tr>
-							<td class="title">备注</td>
-							<td colspan="7"><textarea name="remark"></textarea></td>
-						</tr>
+					<tr>
+						<td class="title">合同编号：</td><td><input type="text" name="contract_num" data-rule-required="true"></td>
+						<td class="title">合同名称：</td><td><input type="text" name="contract_name" data-rule-required="true"></td>
+						<td class="title">合同金额：</td><td><input type="text" name="contract_amount" data-rule-required="true" data-rule-number="true"></td>
+						<td class="title">合同状态：</td>
+						<td><select name="contract_status">
+							<option value="1">生效</option>
+							<option value="0">过期</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td class="title">公司：</td><td>中交物融</td>
+						<td class="title">客户：</td>
+						<td><select name="customer_id" style="width:80px;">
+						</select></td>
+						<td class="title">合同类型：</td>
+						<td><select name="contract_type">
+							<option value="1">销售合同</option>
+							<option value="2">采购合同</option>
+						</select></td>
+						<td class="title">签署类型：</td>
+						<td><select name="contract_sign_type">
+							<option value="1">平台-&gt;银行</option>
+							<option value="2">银行-&gt;平台</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td class="title">合同开始日期：</td><td><input type="text" id="start_time" name="start_time" readonly  data-rule-required="true"></td>
+						<td class="title">合同结束日期：</td><td><input type="text" id="end_time" name="end_time" readonly  data-rule-required="true"></td>
+						<td class="title">是否控制类型：</td>
+						<td>是<input type="radio" name="is_control" value="1" checked="checked" >&nbsp;&nbsp;
+						否<input type="radio" name="is_control" value="0" /></td>
+						<td>物料类型：</td><td id="is_goods_type_visible">
+						<a onclick="popupLayer()" href="javascript:void(0);">查看物料类型</a></td>
+					</tr>
+					<tr>
+						<td class="title">金融费率：</td>
+						<td><div id="is_rate_visible"><input type="text" name="rate" data-rule-number="true"></div></td>
+						<td class="title">登记机构：</td>
+						<td><select name="bank_id"></select></td>
+						<td></td><td></td><td></td><td></td>
+					</tr>
+					<tr>
+						<td class="title">备注</td>
+						<td colspan="7"><textarea name="remark" style="width:80%"></textarea></td>
+					</tr>
 				</tbody>
 			</table>
 			</form>
 			<div class="table_info">
-				<table>
+				<table style="width:100%;" cellpadding="0" cellspacing="1">
 					<tr>
 						<td class="title">附件：</td>
 						<td colspan="4">

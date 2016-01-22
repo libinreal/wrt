@@ -1074,12 +1074,11 @@ em, cite, th {
 
 /** 表格详情 **/
 .table_info table{
-    margin: 0 auto;
-    background: #fff;
-    padding: 10px;
+    background: #ccc;
+    width: 100%;
 }
 .table_info table thead{
-    background: #7BB233 none repeat scroll 0% 0%;
+    background: #303030;
 }
 .table_info table th{
     color:#fff;
@@ -1089,9 +1088,9 @@ em, cite, th {
 .table_info table td{
     line-height: 30px;
     padding: 0 10px;
-    border: 1px solid #ccc;
     position: relative;
     min-width: 30px;
+    background: #fff;
 }
 .table_info td.title{
     text-align: right;
@@ -1177,23 +1176,25 @@ em, cite, th {
 }
 
 /**  **/
-.list-note{
-
-}
 .list-note table{
-    width: 80%;
+    width: 100%;
     margin: 0 auto;
-    background-color: #fff;
+    background-color: #ccc;
 }
-.list-note table .head{
-    padding: 0 10px;
+.list-note table thead td{
     line-height: 30px;
     font-weight: bold;
+    background: #303030;
+    color: #fff;
+}
+.list-note table .head{
+    margin-right: 15px;
 }
 .list-note table td{
-    border-bottom: 1px solid #ccc;
-    text-align: right;
     position: relative;
+    background: #fff;
+    line-height: 30px;
+    padding-left: 10px;
 }
 .list-note td.title{
     text-align: right;
@@ -1208,8 +1209,6 @@ em, cite, th {
     font-size: 10px;
 }
 /**  **/
-.list-note-2{
-}
 .list-note-2 table{
     width: 80%;
     margin: 0 auto 10px auto;
@@ -1256,9 +1255,6 @@ em, cite, th {
 }
 
 /** 物流列表样式 **/
-.goods_type_list{
-
-}
 .goods_type_list ul{
     margin: 0;
     padding: 0;
@@ -1279,4 +1275,12 @@ em, cite, th {
 }
 input.error{
     border: 1px solid red;
+}
+
+/** 物流样式列表2 **/
+.goods_type_list2{
+    background: #
+}
+.goods_type_list2{
+    
 }

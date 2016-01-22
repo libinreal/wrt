@@ -67,6 +67,7 @@ var Price = {
 				}else{
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
 					var row = "";
+					console.log(obj)
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
@@ -84,10 +85,10 @@ var Price = {
 								continue;
 							}
 							if(that.order_arr[i] == "price_rate"){
-								if(value.price_num == 0 || value.price_num == ''){
-									row += createTd(value.price_rate/100);
-								}else{
+								if(value.price_rate == 0 || value.price_rate == ''){
 									row += createTd(0);
+								}else{
+									row += createTd(value.price_rate+"%");
 								}
 								continue;
 							}
@@ -234,13 +235,15 @@ var Price = {
 				var row = '';
 				$.each(obj.content, function(k,v){
 					var id = v.cat_id + v.brand_id + v.suppliers_id;
+					var brand_name = v.brand_name == '' ? '全部' : v.brand_name;
+					var suppliers_name = v.suppliers_name == '' ? '全部' : v.suppliers_name;
 					row += '<tr id='+id+'>';
 					row += "<td class='title'>物料类别：</td>";
 					row += "<td>"+v.cat_name+"</td>";
 					row += "<td class='title'>厂家：</td>";
-					row += "<td>"+v.brand_name+"</td>";
+					row += "<td>"+brand_name+"</td>";
 					row += "<td class='title'>供应商：</td>";
-					row += "<td>"+v.suppliers_name+"</td>";
+					row += "<td>"+suppliers_name+"</td>";
 					row += "<td class='title'>加价幅度：</td>";
 					row += "<td><input type='text' class='number' name='price_num_"+id+"' value="+v.price_num+" /></td>";
 					row += "<td class='title'>加价比例：</td>";

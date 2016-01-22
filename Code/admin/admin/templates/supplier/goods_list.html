@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 商品列表</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1"> - 商品列表</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div id="message_area"></div>
+		<form id="search_form">
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>选择分类：</labe>
+			<select id="" name=""></select>
+			&nbsp;
+			<labe>选择厂商：</labe>
+			<select id="" name=""></select>
+			&nbsp;
+			<labe>选择区域：</labe>
+			<select id="" name=""></select>
+			&nbsp;
+			<labe>关键字：</labe>
+			<input type="text" name=""/>
+			&nbsp;
+			&nbsp;
+			<input type="button" class="button" value="搜索" onclick="">
+		</div>
+		</form>
+		<div class="list-div" id="listDiv">
+		<form>
+			<table cellpadding="3" cellspacing="1" id="sale_order_list">
+				<thead>
+				<tr>
+					<th><input type="checkbox" /> 商品编号</th>
+					<th>商品名称</th>
+					<th>销售区域</th>
+					<th>出厂价格</th>
+					<th>上架</th>
+					<th>推荐排序</th>
+					<th>库存</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<div style="margin-top:10px;">&nbsp;
+			<select id="" name=""></select>&nbsp;
+			<input type="button" class="button" value="确认" />&nbsp;
+			<input type="button" class="button" value="批量导入" /></div>
+		</form>
+		</div>
+		<!-- 分页 -->
+		<div id="paginate"></div>
+		
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+
+		<!-- pop message -->
+		<div id="popupLayer" class="messagepop pop">
+		<div class="messagepop_header"><h4>取消订单</h4></div>
+		<div class="clear"></div>
+		<hr>
+		<form id="cancel_form">
+			<div style="color:#f00;text-align:center;"><span id="order_num"></span> 确认取消该订单？</div>
+			<input type="hidden" name="order_id">
+			<hr>
+			<div align="center">
+			<input type="button" class="button close" href="javascript:void(0)" onclick="SaleOrder.cancelOrder()" value=" 确认 "><input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 ">
+			</div>
+		</form>
+		</div>
+		<div id="mask_layout"></div>
+
+<script src="js/laydate/laydate.dev.js"></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/sale-order.js" type="text/javascript" ></script>
+<script src="js/type-mode.js" type="text/javascript" ></script>
+<script type="text/javascript">
+function first(){
+	SaleOrder.limit = 0;
+	SaleOrder.getList(true);
+}
+function next(){
+	SaleOrder.current_page = SaleOrder.current_page + 1;
+	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
+	SaleOrder.getList(true);
+}
+function prev(){
+	SaleOrder.current_page = SaleOrder.current_page - 1;
+	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
+	SaleOrder.getList(true);
+}
+function last(){
+	SaleOrder.current_page = SaleOrder.total_page;
+	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
+	SaleOrder.getList(true);
+}
+</script>
+	</body>
+</html>

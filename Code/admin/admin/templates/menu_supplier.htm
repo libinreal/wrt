@@ -1,0 +1,186 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>中交物融 - 供应商后台</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="styles/general.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        body {
+            background: #3D3D3D;margin: 0px;padding:0px;
+        }
+        dl,dd,dt,ul,ol,li {
+            margin: 0px;padding:0px;
+        }
+        ul,ol,li {
+            list-style-type: none;
+        }
+        #tabbar-div {
+            background: #3D3D3D;
+            padding-left: 10px;
+            height: 21px;
+            padding-top: 0px;
+        }
+        #tabbar-div p {
+            margin: 1px 0 0 0;
+        }
+        .tab-front {
+            background: #A5A5A5;
+            line-height: 20px;
+            font-weight: bold;
+            padding: 4px 15px 4px 18px;
+            border-right: 2px solid #335b64;
+            cursor: hand;
+            cursor: pointer;
+        }
+        .tab-back {
+            color: #F4FAFB;
+            line-height: 20px;
+            padding: 4px 15px 4px 18px;
+            cursor: hand;
+            cursor: pointer;
+        }
+        .tab-hover {
+            color: #F4FAFB;
+            line-height: 20px;
+            padding: 4px 15px 4px 18px;
+            cursor: hand;
+            cursor: pointer;
+            background: #2F9DB5;
+        }
+        #top-div
+        {
+            padding: 3px 0 2px;
+            background: #BBDDE5;
+            margin: 5px;
+            text-align: center;
+        }
+        #main-div {
+            border: 1px solid #345C65;
+            background: #FFF;
+        }
+        #menu-list {
+            padding: 0;
+            margin: 0;
+        }
+        #menu-list ul {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+            color: #335B64;
+        }
+        #menu-list li {
+            padding-left: 16px;
+            line-height: 16px;
+            cursor: hand;
+            cursor: pointer;
+        }
+        #main-div a:visited, #menu-list a:link, #menu-list a:hover {
+            color: #335B64
+            text-decoration: none;
+        }
+        #menu-list a:active {
+            color: #EB8A3D;
+        }
+        .explode {
+            background: url(images/menu_minus.gif) no-repeat 0px 3px;
+            font-weight: bold;
+        }
+        .collapse {
+            background: url(images/menu_plus.gif) no-repeat 0px 3px;
+            font-weight: bold;
+        }
+        .menu-item {
+            background: url(images/menu_arrow.gif) no-repeat 0px 3px;
+            font-weight: normal;
+        }
+        #help-title {
+            font-size: 14px;
+            color: #000080;
+            margin: 5px 0;
+            padding: 0px;
+        }
+        #help-content {
+            margin: 0;
+            padding: 0;
+        }
+        .tips {
+            color: #CC0000;
+        }
+        .link {
+            color: #000099;
+        }
+
+        #accordion {
+        }
+
+        .accordion {
+            font: 12px Verdana, Arial;
+            color: #333
+        }
+
+        .accordion dt {
+            font-weight: bold;padding-left: 10px;
+            cursor: pointer;
+            background-color: #5E5E5E;
+            background-image: url(images/arrow-d.png);
+            background-position: right center;
+            background-repeat: no-repeat;
+            color: #fff;
+            height: 25px;
+            line-height: 25px;
+            border-bottom: 1px solid #ffffff;
+        }
+
+        .accordion dt:hover {
+            background-color: #A5A5A5;
+        }
+
+        .accordion .open {
+            background-color: #A5A5A5;color: #000000;
+            background-image: url(images/arrow-u.png)
+        }
+
+        .accordion dd {
+            overflow: hidden;
+            background: #fff;
+        }
+        .accordion dd ul li {margin-left: 20px;height: 20px;line-height: 20px;}
+
+    </style>
+</head>
+<body>
+<div id="main-div">
+    <div id="accordion">
+        <dl class="accordion" id="slider">
+            <dt>商品管理</dt>
+            <dd>
+                <ul>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=goods_list" target="main-frame">商品列表</a></li>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=goods_shipping_setting" target="main-frame">物流费用设置</a></li>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=goods_insert" target="main-frame">添加商品</a></li>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=goods_recycle" target="main-frame">商品回收站</a></li>
+                </ul>
+            </dd>
+            <dt>订单管理</dt>
+            <dd>
+                <ul>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=order_list" target="main-frame">订单列表</a></li>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=order_detail" target="main-frame">订单详情</a></li>
+                </ul>
+            </dd>
+            <dt>应收款管理</dt>
+            <dd>
+                <ul>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=recipient_complete" target="main-frame">已完成的订单</a></li>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=recipient_render" target="main-frame">应收单生成页</a></li>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=recipient_detail" target="main-frame">应收单详情页</a></li>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=recipient_edit" target="main-frame">应收单编辑页</a></li>
+                    <li name="menu"><a href="../demo_template.php?section=supplier&act=recipient_list" target="main-frame">应收单列表</a></li>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+
+</body>
+</html>

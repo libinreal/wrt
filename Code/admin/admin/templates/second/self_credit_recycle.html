@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 平台授信回收站</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1">- 平台授信回收站</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div id="message_area"></div>
+		<form id="search_form">
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>申请人：</labe>
+			<input type="text" name="user_name"/>
+			&nbsp;
+			<labe>申请合同：</labe>
+			<input type="text" name="contract_name"/>
+			&nbsp;
+		</div>
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>申请日期：</labe>
+			<input type="text" name="start_time" id="start_time" placeholder="开始日期" readonly>
+			&nbsp;
+			至
+			&nbsp;
+			<input type="text" name="end_time" id="end_time" placeholder="结束日期" readonly>
+			&nbsp;
+			&nbsp;
+			<input type="button" class="button" value="查询" onclick="SelfCredit.getList('search', 4)">
+		</div>
+		</form>
+		<div class="list-div" id="listDiv">
+		<form id="main_form">
+			<table cellpadding="3" cellspacing="1" id="main_list">
+				<thead>
+				<tr>
+					<th>ID<input type="checkbox" id="check_all" onclick="checkbox_all()" /></th>
+					<th>申请人</th>
+					<th>申请时间</th>
+					<th>申请金额</th>
+					<th>合同名称</th>
+					<th>审批金额</th>
+					<th>申请备注</th>
+					<th>审批意见</th>
+					<th>申请状态</th>
+					<th>操作</th>
+				</tr>
+				</thead>
+				<tbody></tbody>
+			</table>
+			<div style="margin-top:10px;">&nbsp;<input type="button" class="button" onclick="SelfCredit.deleteRecord();" value="批量移除" /></div>
+		</form>
+		</div>
+		<!-- 分页 -->
+		<div id="paginate"></div>
+		
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+
+<script src="js/laydate/laydate.dev.js"></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/self-credit.js" type="text/javascript" ></script>
+<script src="js/type-mode.js" type="text/javascript" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	laydate({
+        elem: '#start_time'
+    });
+	laydate({
+        elem: '#end_time'
+    });
+});
+SelfCredit.getList(false, 4);
+function first(){
+	SelfCredit.limit = 0;
+	SelfCredit.getList(true, 4);
+}
+function next(){
+	SelfCredit.current_page = SelfCredit.current_page + 1;
+	SelfCredit.limit = (SelfCredit.current_page - 1)*SelfCredit.offset;
+	SelfCredit.getList(true, 4);
+}
+function prev(){
+	SelfCredit.current_page = SelfCredit.current_page - 1;
+	SelfCredit.limit = (SelfCredit.current_page - 1)*SelfCredit.offset;
+	SelfCredit.getList(true, 4);
+}
+function last(){
+	SelfCredit.current_page = SelfCredit.total_page;
+	SelfCredit.limit = (SelfCredit.current_page - 1)*SelfCredit.offset;
+	SelfCredit.getList(true);
+}
+function checkbox_all(){
+	if($("#check_all:checkbox:checked").length == 1){
+		$("form#main_form input[type='checkbox']").each(function(index, elem){
+			$(elem).attr("checked",true);
+		});
+	}else if($("#check_all:checkbox:checked").length == 0){
+		$("form#main_form input[type='checkbox']").each(function(index, elem){
+			$(elem).attr("checked",false);
+		});
+	}
+}
+</script>
+	</body>
+</html>
