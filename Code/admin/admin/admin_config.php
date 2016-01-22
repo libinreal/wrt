@@ -11,7 +11,8 @@
 //可手动添加配置
 $admin_config = array(
 	'bill_currency' => array( 0 => "人民币", 1 => "美元" ),//票据币种
-	'bill_type' => array( 0 => "商业承兑汇票", 1 => "银行承兑汇票"),//票据类型
+    'bill_type' => array( 0 => "商业承兑汇票", 1 => "银行承兑汇票"),//票据类型
+	'bill_status' => array( 0 => "已扣减", 1 => "已恢复" ),//票据状态
 	
     'bill_amount_type' => array(0 => "商票", 1 => "现金", 2 => "承兑"),//额度生成类型
 	'cash_bill_amount_type' => array( 1 => "现金", 2 => "承兑", 3=> "国内信用证"),//额度生成类型（现金）
