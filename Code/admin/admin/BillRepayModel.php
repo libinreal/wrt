@@ -403,7 +403,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 
 		/**
-		 * 创建初始化
+		 * 接口名称：票据偿还单(创建初始化)
 		 * 接口地址：http://admin.zjgit.dev/admin/BillRepayModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下:
@@ -425,7 +425,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    		"user_name":"库某",//往来单位名称
 		 *	    		"user_id":1,//客户id（往来单位id）
 		 *	    		"issuing_date":"2015-12-01",//签发日
-		 *	    		"due_date":"2015-12-01"//到期日
+		 *	    		"due_date":"2015-12-01",//到期日
+		 *              "need_repay":0 //需要偿还
 		 *	    	}
 		 *	    }
 		 *	}
@@ -439,7 +440,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			{
 				$bill_table = $GLOBALS['ecs']->table( 'bill' );//票据表
 				$user_table = $GLOBALS['ecs']->table( 'users' );//用户表
-				$sql = 'SELECT a.`bill_num`, a.`customer_id` as `user_id`, b.`companyName` as `user_name`, a.`issuing_date`, a.`due_date`' .  
+
+				$sql = 'SELECT a.`bill_num`, a.`discount_amount` AS `need_repay`, a.`customer_id` as `user_id`, ifnull(b.`companyName`, \'\') as `user_name`, a.`issuing_date`, a.`due_date`' .  
 						' FROM ' . $bill_table . ' as a LEFT JOIN ' . $user_table . ' as b on a.`customer_id` = b.`user_id` ' . 
 						' WHERE a.`bill_id` = ' . $bill_id;
 				$bill = $GLOBALS['db']->getRow( $sql );
@@ -447,8 +449,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					make_json_response('', '-1', '票据未找到');
 
 				$content = array();
-				$content['info'] = $bill; 		
-
+				$content['info'] = $bill;
 				make_json_response( $content, '0', '偿还初始化成功');
 			}
 			else
@@ -482,6 +483,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "remark": "虚拟数据" ,
 		 *                  "user_name": "钟某",//客户名称
 		 * 	                "bill_id": 0 ,//票据ID
+		 * 	                "need_repay":0 //需要偿还
 		 * 	        }
 		 *	}
 		 */
@@ -494,8 +496,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 			{
 				$repay_table = $GLOBALS['ecs']->table('bill_repay_log');
 				$user_table = $GLOBALS['ecs']->table('users');				
-				$sql = 'SELECT a.`bill_id`, a.`user_id`, b.`companyName` as `user_name`, a.`repay_amount`, a.`remark` FROM ' . $repay_table .
-					 	' as a LEFT JOIN ' . $user_table . ' as b on a.`user_id` = b.`user_id` WHERE `bill_repay_log_id` = ' . 
+				$bill_table = $GLOBALS['ecs']->table('bill');				
+
+				$sql = 'SELECT a.`bill_id`, a.`user_id`, b.`companyName` as `user_name`, a.`repay_amount`, a.`remark`, ' .
+						' c.`discount_amount` AS `need_repay`' .
+						' FROM ' . $repay_table .
+					 	' as a LEFT JOIN ' . $user_table . ' as b on a.`user_id` = b.`user_id` ' .
+					 	' LEFT JOIN ' . $bill_table . ' AS c ON c.`bill_id` = a.`bill_id` ' .
+					 	' WHERE `bill_repay_log_id` = ' . 
 						$repay_id;
 
 				$repay = $GLOBALS['db']->getRow($sql);
