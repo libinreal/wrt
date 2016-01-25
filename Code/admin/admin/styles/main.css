@@ -1064,6 +1064,16 @@ em, cite, th {
     height: 300px;
     overflow: auto;
 }
+.goods_type_list ul{
+
+}
+.goods_type_list ul li{
+    width: 18%;
+}
+.goods_type_list ul li label{
+    width: 100px;
+    overflow: hidden;
+}
 .messagepop .row{
     text-indent: 2em;
 }
@@ -1292,8 +1302,28 @@ input.error{
 
 /** 物流样式列表2 **/
 .goods_type_list2{
-    background: #
+    width:100%;
+    margin-top: 15px;
 }
-.goods_type_list2{
-    
+.goods_type_list2 .left{
+    float: left;
+}
+.goods_type_list2 .right{
+    float: right;
+}
+.goods_type_list2 table{
+    width: 48%;
+    background: #ccc;
+}
+.goods_type_list2 table td{
+    background: #fff;
+}
+.goods_type_list2 table tbody td{
+    text-align: center;
+    line-height: 30px;
+}
+
+/** 物流样式列表 **/
+#logistics_form .row{
+    margin: 5px 0 5px 0;
 }

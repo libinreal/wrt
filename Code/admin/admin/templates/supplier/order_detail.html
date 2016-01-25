@@ -16,27 +16,27 @@
 		</h1>
 		<div id="message_area"></div>
 		<div class="list-note-2">
-			<table>
+			<table cellspacing="1" cellpadding="0">
 				<tbody>
 				<tr><td class="title">订单资料</td></tr>
 				<tr>
 					<td colspan="20">
 					<span class="head">订单编号：</span><span class="info" id="order_sn"></span>
-					<span class="head">订单时间：</span><span class="info" id="user_name"></span>
-					<span class="head">订单状态：</span><span class="info" id="contract_name"></span>
+					<span class="head">订单时间：</span><span class="info" id="add_time"></span>
+					<span class="head">订单状态：</span><span class="info" id="order_status"></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="20">
-					<span class="head">商品编号：</span><span class="info" id=""></span>
-					<span class="head">商品名称：</span><span class="info" id="add_time"></span>
-					<span class="head">规格/牌号/属性：</span><span class="info" id="order_status"></span></td>
+					<span class="head">商品编号：</span><span class="info" id="goods_sn"></span>
+					<span class="head">商品名称：</span><span class="info" id="goods_name"></span>
+					<span class="head">规格/牌号/属性：</span><span class="info" id="attr"></span></td>
 				</tr>
 				<tr>
 					<td colspan="20">
-					<span class="head">单价：</span><span class="info" id=""></span>
-					<span class="head">数量：</span><span class="info" id="add_time"></span>
-					<span class="head">物流费：</span><span class="info" id="order_status"></span></td>
+					<span class="head">单价：</span><span class="info" id="goods_price"></span>
+					<span class="head">数量：</span><span class="info" id="goods_number"></span>
+					<span class="head">物流费：</span><span class="info" id="shipping_fee"></span></td>
 				</tr>
 				</tbody>
 			</table>
@@ -47,11 +47,11 @@
 				<tr><td class="title">送货信息</td></tr>
 				<tr>
 					<td colspan="20">
-					<span class="head">收货单位：</span><span class="info" id="inv_type"></span>
-					<span class="head">收货人：</span><span class="info" id="inv_payee"></span>
-					<span class="head">联系电话：</span><span class="info" id=""></span>
-					<span class="head">收货地址：</span><span class="info" id=""></span>
-					<span class="head">希望到货时间：</span><span class="info" id=""></span>
+					<span class="head">收货单位：</span><span class="info" id="receiver"></span>
+					<span class="head">收货人：</span><span class="info" id="consignee"></span>
+					<span class="head">联系电话：</span><span class="info" id="mobile"></span>
+					<span class="head">收货地址：</span><span class="info" id="address"></span>
+					<span class="head">希望到货时间：</span><span class="info" id="best_time"></span>
 					</td>
 				</tr>
 				</tbody>
@@ -66,15 +66,26 @@
 			<div id="logistics_info"></div>
 		</div>
 		
-		<div align="center"><input type="button" class="button" value=" 返回 " onclick="history.back()"></div>
+		<div align="center" id="handle_button">
+			<input type="button" class="button" value=" 返回 " onclick="history.back()">
+			<span></span>
+		</div>
 		<!-- 底部 -->
 		<div id="footer">
 			{$lang.copyright}
 		</div>
+		<!-- pop message -->
+		<div id="popupLayer" class="messagepop pop"></div>
+		<div id="mask_layout"></div>
 
+<script src="js/jquery.validate.js" type="text/javascript" ></script>
+<script src="js/laydate/laydate.dev.js"></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
-<script src="js/sale-order.js" type="text/javascript" ></script>
 <script src="js/type-mode.js" type="text/javascript" ></script>
+<script src="js/supplier.js" type="text/javascript" ></script>
+<script type="text/javascript">
+Supplier.getDetail();
+</script>
 
 	</body>
 </html>
