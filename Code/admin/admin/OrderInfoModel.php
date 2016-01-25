@@ -419,6 +419,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$where_str .= " WHERE odr.`add_time` <= '" . $where['due_date2'] . "'";
 			}
 
+			//过滤子订单
+			if( $where_str ){
+				$where_str .= ' AND ( odr.`parent_order_id` IS NULL OR odr.`parent_order_id` = 0 )';
+			}else{
+				$where_str .= ' WHERE ( odr.`parent_order_id` IS NULL OR odr.`parent_order_id` = 0 )';
+			}
+
 			$sql = $sql .
 				   ' LEFT JOIN ' . $user_table . ' as usr ON odr.`user_id` = usr.`user_id` '.
 				   ' LEFT JOIN ' . $contract_table . ' as crt ON odr.`contract_sn` = crt.`contract_num` ' .
