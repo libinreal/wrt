@@ -233,7 +233,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "content":{ 
 		 *	    	"init":{	
 		 *	    		"contracts":[
-		 *	    			{"contract_id":1, "bill_amount_valid":1300, "cash_amount_valid":1100 }
+		 *	    			{"contract_id":1, "contract_name":"合同1", "bill_amount_valid":1300, "cash_amount_valid":1100 }
 		 *	    		],//合同列表
 		 *	    		"type":{"0":"采购额度账户", "1":"现金账户"},//账户类型
 		 *	    	}
@@ -249,9 +249,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( empty( $customer_id ) )
 				make_json_response('', '-1', '客户id错误');
 
-			$type = array_merge( array("" => "所有" ), C('bill_adjust_type') );
+			$type = C('bill_adjust_type');
 			$contract_table = $GLOBALS['ecs']->table('contract');
-			$sql = 'SELECT `contract_id`, `bill_amount_valid`, `cash_amount_valid` FROM ' . $contract_table .
+			$sql = 'SELECT `contract_id`, `bill_amount_valid`, `contract_name`, `cash_amount_valid` FROM ' . $contract_table .
 						' WHERE `customer_id` = ' . $customer_id . ' ORDER BY `contract_id` ASC';
 			$resultContract = $GLOBALS['db']->getAll( $sql );
 
