@@ -131,11 +131,22 @@ class Credit extends ManageModel
         
         $update = array();  //需要修改的数据集合
         $insert = array();  //需要添加的数据集合
+        $users  = array();  //需要创建或修改的用户集合
+        $allowUser = array(
+        		'CUSTOMERID', 'CUSTOMERNAME', 'INPUTORG'
+        );
         
         //区分数据操作
-        $cl = '';$n = 0;$i = 0;
+        $cl = '';$n = 0;$i = 0;$j = 0;
         foreach ($xml->CZB2SINOT->Record as $v) {
             $cl = $v->Property->__toString();
+            
+            foreach ($v->Property as $pv) {
+            	if (in_array($pv->attributes()->name->__toString(), $allowUser)) {
+            		$users[$j][] = $pv->__toString();
+            	}
+            }
+            $j++;
             //修改
             if (!empty($intersect)) {
                 if (in_array($cl, $intersect)) {
@@ -159,6 +170,11 @@ class Credit extends ManageModel
                     $i++;
                 }
             }
+        }
+
+        //写入用户表
+        if (!empty($users)) {
+        	$this->addCreditUser($users);
         }
         
         //修改操作
@@ -185,11 +201,90 @@ class Credit extends ManageModel
     
     
     /**
+     * 根据授信文件的客户号和登记机构写入users表，创建用户，若存在则修改客户名称companyName
+     * @param array $user
+     */
+    private function addCreditUser($users) 
+    {
+    	$this->table = 'users';
+    	
+    	//授信文件中客户号和登记机构的唯一值 查询
+    	$condition = array();
+    	foreach ($users as $k=>$v) {
+    		$users[$k]['id'] = $v[0].$v[2];
+    		$condition[] = 'customerNo="'.$v[0].'" AND bank_name="'.$v[2].'"';
+    	}
+    	$where = implode(' OR ', $condition);
+    	
+    	//查询存在的授信用户
+    	self::selectSql(array(
+    			'fields' => array(
+    					'user_id', 
+    					'customerNo', 
+    					'bank_name'
+    			), 
+    			'where'  => $where
+    	));
+    	$result = $this->db->getAll($this->sql);
+    	if ($result === false)
+    		failed_json('查询用户失败');
+    	
+    	//更新数据$update 添加数据$users
+    	$update = array();
+    	if ($result) {
+    		$id = '';$i = 0;
+    		foreach ($result as $k=>$v) {
+    			$id = $v['customerNo'].$v['bank_name'];
+    			foreach ($users as $uk=>$uv) {
+    				if ($id == $uv['id']) {
+    					$update[$i]['user_id']     = $v['user_id'];
+    					$update[$i]['companyName'] = $uv[1];
+    					unset($users[$uk]);
+    				}
+    				$i++;
+    			}
+    		}
+    	}
+    	
+    	
+    	//update
+    	if ($update) {
+    		$sql = 'UPDATE '.$this->table.' SET companyName = CASE user_id';
+    		$userId = array();
+    		foreach ($update as $k=>$v) {
+    			$userId[] =  $v['user_id'];
+    			$sql .= ' WHEN '.$v['user_id'].' THEN "'.$v['companyName'].'" ';
+    		}
+    		$sql .= 'END WHERE user_id in('.implode(',', $userId).')';
+    		$result = true;//$this->db->query($sql);
+    		if ($result === false)
+    			failed_json('更新用户资料失败');
+    	}
+    	
+    	
+    	//insert
+    	if ($users) {
+    		$value = array();
+    		foreach ($users as $v) {
+    			$value[] = '("'.$v[0].'","'.$v[1].'","'.$v[2].'","'.time().'")';
+    		}
+    		$sql = 'INSERT '.$this->table.' (customerNo,companyName,bank_name,reg_time)values'.implode(',', $value);
+    		$result = $this->db->query($sql);
+    		if ($result === false)
+    			failed_json('写入新用户失败');
+    	}
+    	
+    }
+    
+    
+    
+    /**
      * 导入xml时，更新已经存在的协议号信息
      * @param array $update
      */
     private function updateBankCredit($update) 
     {
+    	$this->table = 'bank_credit';
         $fields = array(
             'customer_num'      => '', 
             'customer_name'     => '', 
@@ -242,6 +337,7 @@ class Credit extends ManageModel
      */
     private function insertBankCredit($insert) 
     {
+    	$this->table = 'bank_credit';
         $fields = array(
             'credit_num',
             'customer_num',

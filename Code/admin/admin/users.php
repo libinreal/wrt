@@ -56,6 +56,9 @@ elseif ($_REQUEST['act'] == 'add')
 {
     /* 检查权限 */
     admin_priv('users_manage');
+    
+    $parents = parentList();
+    $smarty->assign('parents', $parents);
 
     $user = array('sex'=> 0,'customLevel'=> 1);
     $smarty->assign('ur_here',$_LANG['04_users_add']);
@@ -91,6 +94,9 @@ elseif ($_REQUEST['act'] == 'insert')
     $contactsPhone = empty($_POST['contactsPhone']) ? '' : trim($_POST['contactsPhone']);
     $secondContacts = empty($_POST['secondContacts']) ? '' : trim($_POST['secondContacts']);
     $secondPhone = empty($_POST['secondPhone']) ? '' : trim($_POST['secondPhone']);
+    
+    $parentId = empty($_POST['parent_id']) ? '' : trim($_POST['parent_id']);
+    
     $customNo = empty($_POST['customNo']) ? '' : trim($_POST['customNo']);
     $customLevel = empty($_POST['customLevel']) ? '' : trim($_POST['customLevel']);
     $customerNo = empty($_POST['customerNo']) ? '' : trim($_POST['customerNo']);
@@ -128,8 +134,8 @@ elseif ($_REQUEST['act'] == 'insert')
         exit();
     }
     $sql = "INSERT INTO ".$GLOBALS['ecs']->table('users')."".
-        "(user_name,password,email,sex,qq,weixin,companyName,companyAddress,officePhone,fax,position,projectName,projectBrief,contacts,contactsPhone,secondContacts,secondPhone,customNo,customLevel,reg_time,credit_rank,department,msn,customerNo,customerAccount)".
-        " VALUES('".$username."','".sha1($password)."','".$email."','".$sex."','".$qq."','".$weixin."','".$companyName."','".$companyAddress."','".$officePhone."','".$fax."','".$position."','".$projectName."','".$projectBrief."','".$contacts."','".$contactsPhone."','".$secondContacts."','".$secondPhone."','".$customNo."','".$customLevel."','".gmtime()."','".$credit_rank."','".$department."','".$privilege."','".$customerNo."','".$customerAccount."')";
+        "(user_name,password,email,sex,qq,weixin,companyName,companyAddress,officePhone,fax,position,projectName,projectBrief,contacts,contactsPhone,secondContacts,secondPhone,customNo,customLevel,reg_time,credit_rank,department,msn,customerNo,customerAccount,parent_id)".
+        " VALUES('".$username."','".sha1($password)."','".$email."','".$sex."','".$qq."','".$weixin."','".$companyName."','".$companyAddress."','".$officePhone."','".$fax."','".$position."','".$projectName."','".$projectBrief."','".$contacts."','".$contactsPhone."','".$secondContacts."','".$secondPhone."','".$customNo."','".$customLevel."','".gmtime()."','".$credit_rank."','".$department."','".$privilege."','".$customerNo."','".$customerAccount."','".$parentId."')";
     //$GLOBALS['db']->query($sql);
     $res = $GLOBALS['db']->query($sql);
     if($res) {// 添加用户成功记录日志，如果是Vip下单会员还要发送短息通知对方
@@ -154,6 +160,9 @@ elseif ($_REQUEST['act'] == 'edit')
     $sql = "SELECT * from ".$GLOBALS['ecs']->table('users')." where user_id=".$userId."";
     $users = $db->GetRow($sql);
     assign_query_info();
+    
+    $parents = parentList();
+    $smarty->assign('parents', $parents);
     $smarty->assign('ur_here',          $_LANG['users_edit']);
     $smarty->assign('action_link',      array('text' => $_LANG['03_users_list'], 'href'=>'users.php?act=list&' . list_link_postfix()));
     $smarty->assign('user',$users);
@@ -189,6 +198,9 @@ elseif ($_REQUEST['act'] == 'update')
     $contactsPhone = empty($_POST['contactsPhone']) ? '' : trim($_POST['contactsPhone']);
     $secondContacts = empty($_POST['secondContacts']) ? '' : trim($_POST['secondContacts']);
     $secondPhone = empty($_POST['secondPhone']) ? '' : trim($_POST['secondPhone']);
+    
+    $parentId = empty($_POST['parent_id']) ? '' : trim($_POST['parent_id']);
+    
     $customNo = empty($_POST['customNo']) ? '' : trim($_POST['customNo']);
     $customLevel = empty($_POST['customLevel']) ? '' : trim($_POST['customLevel']);
     $customerNo = empty($_POST['customerNo']) ? '' : trim($_POST['customerNo']);
@@ -221,17 +233,17 @@ elseif ($_REQUEST['act'] == 'update')
         exit();
     }
     if(!empty($password)) {
-        $sql = "UPDATE ".$GLOBALS['ecs'] -> table('users')." SET user_name='".$username."', password='".sha1($password)."'".
+        $sql = "UPDATE ".$GLOBALS['ecs'] -> table('users')." SET user_name='".$username."', password='".sha1($password)."',".
             " email='".$email."',sex='".$sex."',qq='".$qq."',weixin='".$weixin."',companyName='".$companyName."',".
             " companyAddress='".$companyAddress."',officePhone='".$officePhone."',fax='".$fax."',position='".$position."',".
             " projectName='".$projectName."',projectBrief='".$projectBrief."',contacts='".$contacts."',contactsPhone='".$contactsPhone."',".
-            " secondContacts='".$secondContacts."',secondPhone='".$secondPhone."',customNo='".$customNo."',customLevel='".$customLevel."',credit_rank='".$credit_rank."',department='".$department."',msn='".$privilege."',customerNo='".$customerNo."',customerAccount='".$customerAccount."' Where user_id=".$userId."";
+            " secondContacts='".$secondContacts."',secondPhone='".$secondPhone."',parent_id='".$parentId."',customNo='".$customNo."',customLevel='".$customLevel."',credit_rank='".$credit_rank."',department='".$department."',msn='".$privilege."',customerNo='".$customerNo."',customerAccount='".$customerAccount."' Where user_id=".$userId."";
     }else {
         $sql = "UPDATE ".$GLOBALS['ecs'] -> table('users')." SET user_name='".$username."',".
             " email='".$email."',sex='".$sex."',qq='".$qq."',weixin='".$weixin."',companyName='".$companyName."',".
             " companyAddress='".$companyAddress."',officePhone='".$officePhone."',fax='".$fax."',position='".$position."',".
             " projectName='".$projectName."',projectBrief='".$projectBrief."',contacts='".$contacts."',contactsPhone='".$contactsPhone."',".
-            " secondContacts='".$secondContacts."',secondPhone='".$secondPhone."',customNo='".$customNo."',customLevel='".$customLevel."',credit_rank='".$credit_rank."',department='".$department."',msn='".$privilege."',customerNo='".$customerNo."',customerAccount='".$customerAccount."' Where user_id=".$userId."";
+            " secondContacts='".$secondContacts."',secondPhone='".$secondPhone."',parent_id='".$parentId."',customNo='".$customNo."',customLevel='".$customLevel."',credit_rank='".$credit_rank."',department='".$department."',msn='".$privilege."',customerNo='".$customerNo."',customerAccount='".$customerAccount."' Where user_id=".$userId."";
     }
     $GLOBALS['db']->query($sql);
     /* 记录管理员操作 */
@@ -489,5 +501,15 @@ function user_list()
     }
     $arr = array('user_list' => $user_list, 'filter' => $filter,'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
     return $arr;
+}
+
+/**
+ * 总账号列表
+ */
+function parentList() 
+{
+	$sql = 'SELECT user_id,user_name FROM '.$GLOBALS['ecs']->table('users').' WHERE user_name!=""';
+	$data = $GLOBALS['db']->getAll($sql);
+	return $data;
 }
 ?>

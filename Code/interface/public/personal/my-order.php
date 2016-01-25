@@ -5,6 +5,17 @@
 	<title>我的订单-个人中心</title>
 	<link rel="stylesheet" href="../content/css/common.css" />
 	<link rel="stylesheet" href="../content/css/personal.css" />
+	<style>
+	.order-list-col{
+		width: 155px;
+	}
+	.order-list-col.c5{
+		width: 256px;
+	}
+	.order-list-col.c5 a{
+		display: inline-block;
+	}
+	</style>
 </head>
 <body>
 
@@ -24,7 +35,7 @@
 					<div class="order-list-col c2">项目编号</div>
 					<div class="order-list-col c3">项目名称</div>
 					<div class="order-list-col c4">订单状态</div>
-					<div class="order-list-col c5"></div>
+					<div class="order-list-col c5">操作</div>
 				</div>
 				<div class="order-list-content" id="zj-list"></div>
 			</div>
@@ -48,7 +59,7 @@
 
 <script id="zj-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<a href="my-kid-order.html?id=<!--[= list[i].id]-->" class="clearfix">
+	<div href="javascript:void(0);" class="clearfix">
 		<div class="order-list-col c1"><!--[= list[i].orderSn || '--']--></div>
 		<div class="order-list-col c2"><!--[= list[i].prjNo || '--']--></div>
 		<div class="order-list-col c3"><!--[= list[i].prjName || '--']--></div>
@@ -60,8 +71,11 @@
 		<!--[}else{]-->
 			<button class="button btn-gray" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消订单</button>
 		<!--[}}]-->
+		
+			<a href="my-kid-order.html?id=<!--[= list[i].id]-->">子订单</a>
+			<a href="my-order-detail.html?id=<!--[= list[i].id]-->">详情</a>
 		</div>
-	</a>
+	</div>
     <!--[}]-->
 </script>
 

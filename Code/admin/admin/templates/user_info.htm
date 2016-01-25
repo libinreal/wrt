@@ -1,4 +1,4 @@
-{include file="pageheader.htm"}
+﻿{include file="pageheader.htm"}
 <div class="main-div">
     <form method="post" action="users.php" name="theForm" onsubmit="return validate()">
         <input type="hidden" id="Action" name="act" value="{$form_action}" />
@@ -7,7 +7,7 @@
             <tr>
                 <td class="label">{$lang.username}:</td>
                 <td>
-                    {if $form_action eq "update"}{$user.user_name}<input type="hidden" name="username" value="{$user.user_name}" />
+                    {if $form_action eq "update"}<!-- {$user.user_name} --><input type="text" name="username" id="username" onblur="fnUserName();" maxlength="60" value="{$user.user_name}" /><span class="require-field" id="field-name">*</span>
                     {else}<input type="text" name="username" id="username" onblur="fnUserName();" maxlength="60" value="{$user.user_name}" />
                     <span class="require-field" id="field-name">*</span>
                     {/if}
@@ -101,7 +101,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="label">{$lang.credit_rank}</td>
+                <td class="label">{$lang.credit_rank}:</td>
                 <td>
                     <select id="rank" name="credit_rank" onchange="fnRank();">
                         {html_options name=credit_rank options=$lang.rank selected=$user.credit_rank}
@@ -139,6 +139,21 @@
                 <td>
                     <input name="secondPhone" type="text" size="40" class="inputBg" value="{$user.secondPhone}"/>
                 </td>
+            </tr>
+            <tr>
+            	<td class="label">总帐户:</td>
+            	<td>
+            		<select name="parent_id">
+            			<option value="0">请选择</option>
+            			{foreach from=$parents item=v}
+            				{if $user.parent_id eq $v.user_id}
+            					<option value="{$v.user_id}" selected="seleced">{$v.user_name}</option>
+            				{else}
+            					<option value="{$v.user_id}">{$v.user_name}</option>
+            				{/if}
+            			{/foreach}
+            		</select>
+            	</td>
             </tr>
             <tr>
                 <td class="label">{$lang.customLevel}:</td>
@@ -305,7 +320,7 @@
     }
     else
     {
-        document.forms['theForm'].elements['email'].focus();
+        document.forms['theForm'].elements['username'].focus();
     }
     onload = function()
     {
@@ -345,6 +360,10 @@
         {/if}
         {if $form_action eq "update"}
         {literal}
+        if($("#username").val()=='') {
+            $('#field-name').html('用户名必须填写');
+            return false;
+        }
         if($("#password").val().length > 0) {
             if(/ /.test($("#password").val()) == true) {
                 $('#field-password').html('密码中不能包含空格');

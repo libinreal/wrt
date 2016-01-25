@@ -399,13 +399,18 @@ class cls_template
                     break;
 
                 case 'foreach':
+                	
                     if ($this->_foreachmark == 'foreachelse')
                     {
                         $output = '<?php endif; unset($_from); ?>';
                     }
                     else
                     {
-                        array_pop($this->_patchstack);
+                    	
+                    	if (is_array($this->_patchstack)) {
+                    		array_pop($this->_patchstack);
+                    	}
+                        
                         $output = '<?php endforeach; endif; unset($_from); ?>';
                     }
                     $output .= "<?php \$this->pop_vars();; ?>";
