@@ -16,6 +16,7 @@ $(document).ajaxError(function(event, jqxhr, settings, thrownError){
 	$("#error").fadeIn();
 });
 $(document).ajaxComplete(function(){
+    $("#message_area").fadeOut();
 });
 $(document).ajaxStop(function () {
 });

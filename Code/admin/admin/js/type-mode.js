@@ -234,7 +234,7 @@ var TypeMode = {
 				$.each(object.content, function(k, v){
 					row += appendOption(k, v);
 				})
-				$('#'+select_id).html(row);
+				$('#'+select_id).append(row);
 			}
 			$('#message_area').html('');
 		},"json");		

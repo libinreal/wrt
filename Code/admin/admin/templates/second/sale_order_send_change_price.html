@@ -16,45 +16,44 @@
 		</h1>
 		<div id="message_area"></div>
 		<div class="list-note-2">
-			<table>
+			<table cellpadding="0" cellspacing="1">
 				<tbody>
 				<tr><td class="title">订单资料</td></tr>
 				<tr>
 					<td colspan="20">
-					<span class="head">订单编号：</span><span class="info" id=""></span>
-					<span class="head">公司名称：</span><span class="info" id=""></span>
-					<span class="head">合同名称：</span><span class="info" id=""></span>
-					<span class="head">合同号：</span><span class="info" id=""></span>
+					<span class="head">订单编号：</span><span class="info" id="order_sn"></span>
+					<span class="head">合同名称：</span><span class="info" id="contract_name"></span>
+					<span class="head">合同号：</span><span class="info" id="contract_sn"></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="20">
-					<span class="head">下单人：</span><span class="info" id=""></span>
-					<span class="head">下单时间：</span><span class="info" id=""></span>
-					<span class="head">订单状态：</span><span class="info" id=""></span>
+					<span class="head">下单人：</span><span class="info" id="user_name"></span>
+					<span class="head">下单时间：</span><span class="info" id="add_time"></span>
+					<span class="head">订单状态：</span><span class="info" id="check_status"></span>
 					</td>
 				</tr>
 				</tbody>
 			</table>
 		</div>
 		<div class="list-note-2">
-			<table cellpadding="3" cellspacing="1" id="bill_purchase_assign_list">
+			<table cellpadding="0" cellspacing="1" id="bill_purchase_assign_list">
 				<tbody>
 				<tr><td class="title">开票资料</td></tr>
 				<tr>
 					<td colspan="20">
-					<span class="head">发票类型：</span><span class="info" id=""></span>
-					<span class="head">发票抬头：</span><span class="info" id=""></span>
+					<span class="head">发票类型：</span><span class="info" id="inv_type"></span>
+					<span class="head">发票抬头：</span><span class="info" id="inv_payee"></span>
 					<span class="head">内容：</span><span class="info" id=""></span>
 					<span class="head">备注：</span><span class="info" id=""></span>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="20">
-					<span class="head">收货人：</span><span class="info" id=""></span>
-					<span class="head">收货地址：</span><span class="info" id=""></span>
-					<span class="head">手机号码：</span><span class="info" id=""></span>
-					<span class="head">地址标签：</span><span class="info" id=""></span>
+					<span class="head">收货人：</span><span class="info" id="consignee"></span>
+					<span class="head">收货地址：</span><span class="info" id="address"></span>
+					<span class="head">手机号码：</span><span class="info" id="mobile"></span>
+					<span class="head">地址标签：</span><span class="info" id="sign_building"></span>
 					</td>
 				</tr>
 				</tbody>
@@ -62,7 +61,7 @@
 		</div>
 		<div class="table_info">
 			<form id="change_price_form">
-			<table width="80%">
+			<table cellpadding="0" cellspacing="1">
 			<thead>
 			<tr>
 				<th colspan="20">客户价格</th>
@@ -94,7 +93,7 @@
 			</tbody>
 			</table>
 			<div>&nbsp;</div>
-			<table width="80%">
+			<table cellpadding="0" cellspacing="1">
 			<thead>
 			<tr>
 				<th colspan="20">供应商价格</th>
@@ -114,6 +113,7 @@
 					<td><select name="pay_id" style="width:80px;"></select></td>
 					<td class="title">发货总价：</td>
 					<td><input type="text" name="order_amount_send_saler" id="order_amount_send_saler" disabled="disabled"></td>
+					<td></td><td></td>
 				</tr>
 			</tbody>
 			</table>

@@ -102,6 +102,7 @@ var Credit = {
 				return false;
 			}else{
 				$('#message_area').html(createTip('保存成功'));
+				redirectToUrl("credit_manage.php?act=list");
 			}
 		});
 	},

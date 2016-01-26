@@ -309,7 +309,6 @@ input.button {
     padding: 2px 8px 0px;
     margin: 2px 2px;
     border: 1px solid #2D5082;
-    background: url(../images/button_bg.gif) repeat-x;
     cursor: pointer;
 }
 
@@ -1097,7 +1096,7 @@ em, cite, th {
     margin-bottom: 15px;
 }
 .table_info table thead{
-    background: #303030;
+    background: #666;
 }
 .table_info table th{
     color:#fff;
@@ -1106,10 +1105,17 @@ em, cite, th {
 }
 .table_info table td{
     line-height: 30px;
-    padding: 0 10px;
+    padding:5px;
     position: relative;
     min-width: 30px;
     background: #fff;
+}
+.table_info table td input{
+    height: 20px;
+    line-height: 20px;
+}
+.table_info table td select{
+    line-height: 20px;
 }
 .table_info td.title{
     text-align: right;
@@ -1203,7 +1209,7 @@ em, cite, th {
 .list-note table thead td{
     line-height: 30px;
     font-weight: bold;
-    background: #303030;
+    background: #666;
     color: #fff;
 }
 .list-note table .head{
@@ -1239,7 +1245,7 @@ em, cite, th {
     font-weight: bold;
 }
 .list-note-2 table thead{
-    background: #303030;
+    background: #666;
     color: #fff;
 }
 .list-note-2 table tbody td{
@@ -1261,8 +1267,14 @@ em, cite, th {
 
 /** message area **/
 #message_area{
-    height: 20px;
     text-align: center;
+    position: fixed;
+    top: 30%;
+    left: 50%;
+    z-index: 100;
+    background: #fff;
+    padding: 5px;
+    border: 2px solid #ccc;
 }
 .error{
     color:red;
