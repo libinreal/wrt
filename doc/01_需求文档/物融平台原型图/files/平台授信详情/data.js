@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"平台授信详情.html",
-  "generationDate":new Date(1453446803660.27),
+  "generationDate":new Date(1453803501929.25),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -605,7 +605,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"72f91283f14c41349150b434256e46fe",
               "label":"",
@@ -642,7 +642,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"495bdaa334d14e3fae4e9454166a0dd7",
               "label":"",
@@ -679,7 +679,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"c5adeb1d50704f688eb4d481a6b56631",
               "label":"",
@@ -716,7 +716,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"b4c41836dbba4a9d83246219956d78af",
               "label":"",
@@ -753,7 +753,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"eb000bbdc4f84c1a8caa9f83d36a956f",
               "label":"",
@@ -790,7 +790,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"e22770cb04ea44a283ece30da4a2dc04",
               "label":"",
@@ -827,7 +827,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"bcc67bad7c624f4b810bf99c01c097be",
               "label":"",
@@ -864,7 +864,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"403913d23dc34200a01102fed2c3b572",
               "label":"",
@@ -901,7 +901,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"15e71f9754644ca8a7b8828b764bba56",
               "label":"",
@@ -938,7 +938,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"3ceb8ddd354247df8245c820ef713858",
               "label":"",
@@ -975,7 +975,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"d9da71abb41f4b38bc3a39ae6b781746",
               "label":"",
@@ -1049,7 +1049,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"a8ecdd7615ac4148ad0c5b458cbdb9ae",
               "label":"",
@@ -1123,7 +1123,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"49c7dc6c5ddd4367bea8df93a869068c",
               "label":"",
@@ -1197,7 +1197,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u85.png"}},
+                "normal~":"images/额度生成详情（更新）/u5.png"}},
 {
               "id":"e78d30366594418bbec9f37bee1cfc34",
               "label":"",
@@ -1496,7 +1496,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u3.png"}},
+                "normal~":"images/额度生成详情（更新）/u1.png"}},
 {
               "id":"66609f62a7ec440bb4a9ac069177e64b",
               "label":"",
@@ -1533,7 +1533,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u3.png"}},
+                "normal~":"images/额度生成详情（更新）/u1.png"}},
 {
               "id":"89db23a1539a42b6b94e3f717c810520",
               "label":"",
@@ -1570,7 +1570,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u3.png"}},
+                "normal~":"images/额度生成详情（更新）/u1.png"}},
 {
               "id":"ce14d30ea60549c8a2e0795bcacc5e54",
               "label":"",
@@ -1784,7 +1784,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/平台授信列表/u3.png"}},
+                "normal~":"images/额度生成详情（更新）/u1.png"}},
 {
               "id":"b79e3e3a05fa4d7a9be9328c0fd86d04",
               "label":"",

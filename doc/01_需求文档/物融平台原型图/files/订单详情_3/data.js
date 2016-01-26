@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"订单详情_3.html",
-  "generationDate":new Date(1453446808109.52),
+  "generationDate":new Date(1453803506923.64),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -976,7 +976,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u1.png"}},
+                "normal~":"images/额度生成列表/u1.png"}},
 {
               "id":"b36d68c68ff34d90b8f923bf22e46b53",
               "label":"",
@@ -1410,7 +1410,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u79.png"}},
+                "normal~":"images/额度生成列表/u80.png"}},
 {
               "id":"b0b3bce8e4744189ae3426144164dcec",
               "label":"",
@@ -2071,7 +2071,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"2e2b87a812f945d888f121d6f15639f2",
               "label":"",
@@ -2108,7 +2108,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}}]},
+                "normal~":"images/额度分配调整/u38.png"}}]},
 {
           "id":"86dbd5085cab4d0baf5f233d5d4e7a51",
           "label":"",

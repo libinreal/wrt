@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"发货改价.html",
-  "generationDate":new Date(1453446801536.15),
+  "generationDate":new Date(1453803499869.57),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"现金额度添加.html",
-  "generationDate":new Date(1453446796957.88),
+  "generationDate":new Date(1453803494588.37),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

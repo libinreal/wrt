@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"授信单列表.html",
-  "generationDate":new Date(1453446793460.68),
+  "generationDate":new Date(1453803490949.39),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
