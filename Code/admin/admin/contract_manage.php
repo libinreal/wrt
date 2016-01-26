@@ -725,7 +725,7 @@ class Contract extends ManageModel
                     .' LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
                     .' LEFT JOIN region AS r on s.region_id=r.region_id', 
             'where' => $where, 
-            'extend'=> 'ORDER BY cs.contract_id DESC,cs.suppliers_id DESC'.$limit
+            'extend'=> 'ORDER BY cs.contract_id DESC,cs.suppliers_id DESC '.$limit
         ));
         $res = $this->db->getAll($this->sql);
         

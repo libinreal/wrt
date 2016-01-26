@@ -34,6 +34,8 @@
 	padding: 0;
 	cursor: pointer;
 	border: 1px solid black;
+	height: 25px;
+	line-height: 25px;
 }
 
 .ms2side__options p.ms2side_hover, .ms2side__updown p.ms2side_hover {
@@ -52,4 +54,9 @@
 .ms2side__div select {
 	width: 350px;
 	float: left;
+	height: 300px;
+}
+
+.ms2side__div select option{
+	padding: 3px;
 }

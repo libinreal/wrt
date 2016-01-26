@@ -28,11 +28,7 @@
 			<input type="text" name="search_value">
 			&nbsp;
 			<labe>票据状态：</labe>
-			<select name="status">
-				<option value="">全部</option>
-				<option value="0">未还</option>
-				<option value="1">已还</option>
-			</select>
+			<select id="status" name="status"></select>
 		</div>
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
@@ -83,7 +79,13 @@ $(document).ready(function(){
         elem: '#due_date2'
     });
 });
-Bill.getList();
+TypeMode.getBillStatus("status", "init");
+function init(){
+	$("#status>option").each(function(index, elem){
+		Bill.bill_status[$(elem).val] = $(elem).text();
+	});
+	Bill.getList();
+}
 function first(){
 	Bill.current_page = 1;
 	Bill.limit = 0;

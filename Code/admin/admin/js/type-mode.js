@@ -22,9 +22,34 @@ var TypeMode = {
 		},"json");
 	},
 
-	getBillStatus: function(select_id){
+	getBillStatus: function(select_id, func){
 		var strJson = createJson("bill_status", "bill_status", {});
 		that = this;
+		$.ajax({
+			url: that.url,
+			data: strJson,
+			method: "POST",
+			dataType: "json",
+			success: function(object){
+				if(object.error == -1){
+					$('#message_area').html(createError(object.message));
+					return false;
+				}else{
+					var row = "";
+					$.each(object.content, function(k, v){
+						row += appendOption(k, v);
+					})
+					$('#'+select_id).html(row);
+				}
+				$('#message_area').html('');
+			},
+			complete: function(){
+				if(func){
+					window[func]();
+				}
+			}
+		});
+		return false;
 		$.post(that.url, strJson, function(object){
 			if(object.error == -1){
 				$('#message_area').html(createError(object.message));
@@ -199,7 +224,7 @@ var TypeMode = {
 
 	getOrderStatus: function(select_id){
 		var strJson = createJson("order_status", "order_status", {});
-		that = this;
+		var that = this;
 		$.post(that.url, strJson, function(object){
 			if(object.error == -1){
 				$('#message_area').html(createError(object.message));
@@ -215,21 +240,32 @@ var TypeMode = {
 		},"json");		
 	},
 
-	getChilderOrderStatus: function(select_id){
+	getChilderOrderStatus: function(select_id, func){
 		var strJson = createJson("childer_order_status", "childer_order_status", {});
-		that = this;
-		$.post(that.url, strJson, function(object){
-			if(object.error == -1){
-				$('#message_area').html(createError(object.message));
-				return false;
-			}else{
-				var row = '';
-				$.each(object.content, function(k, v){
-					row += appendOption(k, v);
-				})
-				$('#'+select_id).html(row);
+		var that = this;
+		$.ajax({
+			url: that.url,
+			data: strJson,
+			method: "POST",
+			dataType: 'json',
+			success: function(object){
+				if(object.error == -1){
+					$('#message_area').html(createError(object.message));
+					return false;
+				}else{
+					var row = '';
+					$.each(object.content, function(k, v){
+						row += appendOption(k, v);
+					})
+					$('#'+select_id).append(row);
+				}
+				$('#message_area').html('');
+			},
+			complete: function(){
+				if(func){
+					window[func]();
+				}
 			}
-			$('#message_area').html('');
-		},"json");		
+		});
 	}
 }

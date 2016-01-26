@@ -389,11 +389,11 @@ var Contract = {
 			}else{
 				that.total_page = Math.ceil(obj.content.total/that.offset);
 				if(obj.content.total == 0){
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
+					$("#paginate").html('');
 					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
 					$("#list>tbody").html(row);
 				}else{
-					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
 					var row = "";
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";

@@ -48,7 +48,7 @@ var BillRepay = {
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("page", this.entity, params);
-		that = this
+		var that = this;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -64,6 +64,7 @@ var BillRepay = {
 					var row = "";
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";
+
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=bill_manage&act=repay_view&id="+value.bill_repay_log_id, "详情");

@@ -103,6 +103,7 @@ $(document).ready(function(){
 TypeMode.getOrderStatus('order_status');
 SaleOrder.getList();
 function first(){
+	SaleOrder.current_page = 1;
 	SaleOrder.limit = 0;
 	SaleOrder.getList(true);
 }

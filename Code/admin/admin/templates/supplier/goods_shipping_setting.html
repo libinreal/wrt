@@ -21,7 +21,7 @@
 			<select id="cat" name="cat_id"></select>
 			&nbsp;
 			<labe>物流费用：</labe>
-			<input type="text" class="num" data-rule-required="true" name="shipping_fee" >
+			<input type="text" class="number" data-rule-required="true" name="shipping_fee" >
 			<span>元/吨/公里</span>
 			&nbsp;
 			<labe>说明：</labe>
@@ -58,6 +58,9 @@
 <script src="js/jquery.validate.js" type="text/javascript" ></script>
 <script src="js/supplier.js" type="text/javascript" ></script>
 <script type="text/javascript">
+$("#main_form").validate({
+	errorPlacement: function(error, element) {}
+});
 Supplier.setShippingFeeInit();
 function first(){
 	Supplier.limit = 0;
