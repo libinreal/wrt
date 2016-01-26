@@ -145,6 +145,7 @@ class ApplyCredit extends ManageModel
 		if ($result === false) 
 			failed_json('获取列表失败');
 		
+		//总记录数
 		self::selectSql(array(
 				'fields' => 'count(ac.apply_id) AS num', 
 				'as'     => 'ac', 
@@ -166,7 +167,7 @@ class ApplyCredit extends ManageModel
 	
 	
 	/**
-	 * 删除自有授信记录
+	 * 删除自有授信记录 只删除回收站的数据
 	 * {
 	 * 		"command" : "applyCreditDelete", 
 	 * 		"entity"  : "apply_credit", 
@@ -182,11 +183,13 @@ class ApplyCredit extends ManageModel
 		if (!$applyId) 
 			failed_json('没有传参`apply_id`');
 		
-		$where = 'apply_id='.$applyId;
-		
 		if (is_array($applyId)) {
 			$applyId = implode(',', $applyId);
 			$where = 'apply_id in('.$applyId.')';
+		} elseif (is_numeric($applyId)) {
+			$where = 'apply_id='.$applyId;
+		} else {
+			failed_json('传参错误');
 		}
 		
 		$sql = 'DELETE FROM '.$this->table.' WHERE status=4 AND '.$where;
@@ -217,6 +220,8 @@ class ApplyCredit extends ManageModel
 		if (!$applyId) {
 			failed_json('没有传参`apply_id`');
 		}
+		
+		//是否查看已删除的数据
 		$flag = $parameters['flag'];
 		if (!$flag) {
 			$where = ' AND status!=4';
@@ -264,6 +269,7 @@ class ApplyCredit extends ManageModel
 		$data['companyName']  = $users['companyName'];
 		$data['contractName'] = $contracts['contract_name'];
 		$data['create_date']  = substr($data['create_date'], 0, 10);
+		unset($users, $contracts);
 		make_json_result($data);
 	}
 	
@@ -274,7 +280,7 @@ class ApplyCredit extends ManageModel
 	 * 		"command" : 'applyCreditStatus', 
 	 * 		"entity"  : 'apply_credit', 
 	 * 		"parameters" : {
-	 * 			"apply_id" : "(int or array)",  //required
+	 * 			"apply_id" : "(int or array)",  //required 移入回收站时传值
 	 * 			"flag"     : "(int)", //required 1 移入回收站 2 审批
 	 * 			"params"   : {
 	 * 				//审批申请时传递的参数 required
