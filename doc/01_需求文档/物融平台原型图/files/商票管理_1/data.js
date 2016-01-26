@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"商票管理_1.html",
-  "generationDate":new Date(1453446812831.79),
+  "generationDate":new Date(1453803513020.36),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -584,7 +584,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/票据偿还列表（？）/u1.png"}},
+                "normal~":"images/票据偿还列表/u1.png"}},
 {
               "id":"27191dd7c76d48ff933df46df5963703",
               "label":"",
@@ -621,7 +621,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/票据偿还列表（？）/u1.png"}},
+                "normal~":"images/票据偿还列表/u1.png"}},
 {
               "id":"bc6367fcbefe4d479ba758e9da5ef5f8",
               "label":"",
@@ -658,7 +658,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/票据偿还列表（？）/u1.png"}},
+                "normal~":"images/票据偿还列表/u1.png"}},
 {
               "id":"85972f32e80d42f7a9b7d9312524f408",
               "label":"",

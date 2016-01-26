@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"子订单列表.html",
-  "generationDate":new Date(1453446799975.06),
+  "generationDate":new Date(1453803497873.25),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -814,7 +814,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/票据偿还列表（？）/u9.png"}},
+                "normal~":"images/票据偿还列表/u9.png"}},
 {
               "id":"4d8e28d1d54a4b85bd494c59d658a59e",
               "label":"",
@@ -1250,7 +1250,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/票据偿还列表（？）/u89.png"}},
+                "normal~":"images/票据偿还列表/u89.png"}},
 {
               "id":"23225f8fd0b04b52bed12a011f8a29a8",
               "label":"",

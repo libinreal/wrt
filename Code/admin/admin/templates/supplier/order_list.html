@@ -80,6 +80,7 @@ $(document).ready(function(){
 TypeMode.getOrderStatus("status");
 Supplier.getList();
 function first(){
+	Supplier.current_page = 1;
 	Supplier.limit = 0;
 	Supplier.getList(true);
 }

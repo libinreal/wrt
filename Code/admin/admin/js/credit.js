@@ -67,8 +67,8 @@ var Credit = {
 		var params = {"credit_id": id, "params":{}};
 		strJson = createJson("creditInfo", this.entity, params);
 		that = this
-//		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
+			console.log(obj)
 			if(obj.error){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -102,6 +102,7 @@ var Credit = {
 				return false;
 			}else{
 				$('#message_area').html(createTip('保存成功'));
+				redirectToUrl("credit_manage.php?act=list");
 			}
 		});
 	},

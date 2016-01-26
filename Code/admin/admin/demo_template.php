@@ -174,6 +174,10 @@ if($section == "sale_order"){
 			$smarty->display('second/sale_suborder_list.html');
 			break;
 
+		case 'suborder_all':
+			$smarty->display('second/sale_suborder_all.html');
+			break;
+
 		case 'suborder_detail':
 			$smarty->display('second/sale_suborder_detail.html');
 			break;

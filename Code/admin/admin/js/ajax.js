@@ -10,13 +10,14 @@ $(document).ajaxSuccess(function(){
     $('input[type=button]').each(function(index, e){
         $(e).attr("disabled",false);
     });
-})
+});
 $(document).ajaxError(function(event, jqxhr, settings, thrownError){
 	$("#error").html(settings.url +" error: "+ thrownError);
 	$("#error").fadeIn();
-})
+});
 $(document).ajaxComplete(function(){
-})
+    $("#message_area").fadeOut();
+});
 $(document).ajaxStop(function () {
 });
 $.fn.FormtoJson = function(options) {

@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"额度分配调整.html",
-  "generationDate":new Date(1453446797814.93),
+  "generationDate":new Date(1453803495847.99),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -407,7 +407,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"bd58ca29151847d290d5c92ee88b9ff7",
               "label":"",
@@ -481,7 +481,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"089a7eae461041c590a36c7e267dfbb6",
               "label":"",

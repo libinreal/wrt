@@ -372,7 +372,7 @@ var Price = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				$('#message_area').html(createTip("更新成功"));
+				redirectToUrl("price_manage.php?act=list");
 				return false;
 			}
 		}, "json");

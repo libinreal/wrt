@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"新增票据偿还.html",
-  "generationDate":new Date(1453446797604.92),
+  "generationDate":new Date(1453803495691.08),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -572,7 +572,7 @@
               "x":570,
               "y":97},
             "size":{
-              "width":196,
+              "width":180,
               "height":16}},
           "adaptiveStyles":{
 },
@@ -594,7 +594,7 @@
                   "x":570,
                   "y":97},
                 "size":{
-                  "width":196,
+                  "width":180,
                   "height":16}},
               "adaptiveStyles":{
 }}],

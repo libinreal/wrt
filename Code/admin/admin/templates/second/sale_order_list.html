@@ -28,7 +28,9 @@
 			<input type="text" name="contract_name"/>
 			&nbsp;
 			<labe>订单状态：</labe>
-			<select id="order_status" name="status"></select>
+			<select id="order_status" name="status">
+				<option value="">全部</option>
+			</select>
 			&nbsp;
 		</div>
 		<div class="form-div">
@@ -103,6 +105,7 @@ $(document).ready(function(){
 TypeMode.getOrderStatus('order_status');
 SaleOrder.getList();
 function first(){
+	SaleOrder.current_page = 1;
 	SaleOrder.limit = 0;
 	SaleOrder.getList(true);
 }

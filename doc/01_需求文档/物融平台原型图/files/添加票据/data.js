@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"添加票据.html",
-  "generationDate":new Date(1453446796839.88),
+  "generationDate":new Date(1453803494490.29),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{

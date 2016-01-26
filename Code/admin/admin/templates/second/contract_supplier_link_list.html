@@ -60,25 +60,29 @@
 <script src="js/ajax.js" type="text/javascript" ></script>
 <script src="js/contract.js" type="text/javascript" ></script>
 <script type="text/javascript">
-	Contract.getContSupsList();
-	Contract.getUserList();
-	Contract.getRegionList();
-	function first(){
-		Contract.limit = 0;
-		Contract.getContSupsList("paginate");
-	}
-	function next(){
-		Contract.limit = Contract.limit + 1;
-		Contract.getContSupsList("paginate");
-	}
-	function prev(){
-		Contract.limit = Contract.limit - 1;
-		Contract.getContSupsList("paginate");
-	}
-	function last(){
-		Contract.limit = Contract.total_page;
-		Contract.getContSupsList("paginate");
-	}
+Contract.getContSupsList();
+Contract.getUserList();
+Contract.getRegionList();
+function first(){
+	Contract.current_page = 1;
+	Contract.limit = 0;
+	Contract.getContSupsList(true);
+}
+function next(){
+	Contract.current_page = Contract.current_page + 1;
+	Contract.limit = (Contract.current_page - 1)*Contract.offset;
+	Contract.getContSupsList(true);
+}
+function prev(){
+	Contract.current_page = Contract.current_page - 1;
+	Contract.limit = (Contract.current_page - 1)*Contract.offset;
+	Contract.getContSupsList(true);
+}
+function last(){
+	Contract.current_page = Contract.total_page;
+	Contract.limit = (Contract.current_page - 1)*Contract.offset;
+	Contract.getContSupsList(true);
+}
 </script>
 	</body>
 </html>

@@ -17,6 +17,7 @@ var SaleOrder = {
 		"2":"<span style='color:#999;'>已完成</span>",
 		"3":"<span style='color:#999;'>订单取消</span>"
 	},
+	suborder_status: {},
 	order_detail_arr: [
 		"goods_sn",
 		"goods_name",
@@ -90,7 +91,7 @@ var SaleOrder = {
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("page", this.entity, params);
-		that = this
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -278,6 +279,7 @@ var SaleOrder = {
 				return false;
 			}else{
 				$('#message_area').html(createTip(obj.message));
+				redirectToUrl("demo_template.php?section=sale_order&act=detail&id="+order_id);
 				return false;
 			}
 		}, "json");
@@ -288,28 +290,7 @@ var SaleOrder = {
 		if(id===""||!validateNumber(id)){
 			return false;
 		}
-		if(typeof(search) === "undefined"){
-			search = false;
-		}else{
-			var condition = {};
-			var user_name = $('#search_form input[name=user_name]').val();
-			var due_date1 = $('#search_form input[name=due_date1]').val();
-			var due_date2 = $('#search_form input[name=due_date2]').val();
-			if(user_name != ''){
-				condition.like = {"user_name":user_name};
-			}
-			if(due_date1 != ''){
-				condition.due_date1 = due_date1;
-			}
-			if(due_date2 != ''){
-				condition.due_date2 = due_date2;
-			}
-		}
-		if(search != false){
-			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
-		}else{
-			var params = {"order_id":id};
-		}
+		var params = {"order_id":id};
 		strJson = createJson("childerList", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
@@ -345,6 +326,88 @@ var SaleOrder = {
 			}
 			$('#message_area').html('');
 		}, "json");
+	},
+
+	getSubOrderAll: function(search){
+		if(typeof(search) === "undefined"){
+			search = false;
+		}else{
+			var condition = {};
+			condition.like = {};
+			var user_name = $('#search_form input[name=user_name]').val();
+			var order_sn = $('#search_form input[name=order_sn]').val();
+			var contract_name = $('#search_form input[name=contract_name]').val();
+			var child_order_status = $("select[name=child_order_status]>option:selected").val();
+			var due_date1 = $('#search_form input[name=due_date1]').val();
+			var due_date2 = $('#search_form input[name=due_date2]').val();
+			if(user_name != ''){
+				condition.like = {"user_name":user_name};
+			}
+			if(order_sn != ''){
+				condition.like = {"order_sn":order_sn};
+			}
+			if(contract_name != ''){
+				condition.like = {"contract_name":contract_name};
+			}
+			if(child_order_status != ''){
+				condition["child_order_status"] = child_order_status;
+			}
+			if(due_date1 != ''){
+				condition.due_date1 = due_date1;
+			}
+			if(due_date2 != ''){
+				condition.due_date2 = due_date2;
+			}
+		}
+		if(search != false){
+			if(search == "search"){
+				this.limit = 0;
+			}
+			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
+
+		}else{
+			var params = {"params":{"limit":this.limit, "offset":this.offset}};
+		}
+		var strJson = createJson("searchChilderList", this.entity, params);
+		var that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				that.total_page = Math.ceil(obj.content.total/that.offset);
+				if(obj.content.total == 0){
+					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
+					$("#suborder_list>tbody").html(row);
+					$("#paginate").html('');
+				}else{
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
+					var row = "";
+					$.each(obj.content.data,function(key,value){
+						row += "<tr>";
+						for(var i=0;i<that.suborder_arr.length;i++){
+							if(that.suborder_arr[i] == "operate"){
+								var edit = createLink("demo_template.php?section=sale_order&act=suborder_detail&order_id="+value.order_id, "详情");
+								row += createTd(edit);
+								continue;
+							}
+							if(that.suborder_arr[i] == "order_status"){
+								row += createTd(that.suborder_status[key]);
+								continue;
+							}
+							if(value[that.suborder_arr[i]] != null){
+								row += createTd(subString(value[that.suborder_arr[i]],10,true));
+							}else{
+								row += createTd(createWarn('无数据'));
+							}
+						}
+						row += "</tr>";
+						$("#suborder_list>tbody").html(row);
+					});
+				}
+			}
+			$('#message_area').html('');
+		}, "json");		
 	},
 
 	getSubOrderDetail: function(){
@@ -437,16 +500,15 @@ var SaleOrder = {
 	},
 
 	addShippingInfo: function(){
-				var table='<table cellpadding="0" cellspacing="0"><thead><tr>';
-				table += '<td class="title text-right" width="100">物流公司：</td><td>'+$("input[name=company_name]").val()+'</td>';
-				table += '<td class="title text-right" width="100">物流单号：</td><td>'+$("input[name=shipping_num]").val()+'</td>';
-				table += '<td class="title text-right" width="100">联系电话：</td><td>'+$("input[name=tel]").val()+'</td>';
-				table += '<td class="title text-right" width="100">发货时间：</td><td>'+$("input[name=shipping_time]").val()+'</td>';
-				table += '</tr></thead>';
-				table += '<tbody><tr><td colspan="20">'+createWarn("暂无动态")+'</td></tr>';
-				table += '</tbody></table>';
-				$("#logistics_info").html(table);
-				return false;
+		var table='<table cellpadding="0" cellspacing="0"><thead><tr>';
+		table += '<td class="title text-right" width="100">物流公司：</td><td>'+$("input[name=company_name]").val()+'</td>';
+		table += '<td class="title text-right" width="100">物流单号：</td><td>'+$("input[name=shipping_num]").val()+'</td>';
+		table += '<td class="title text-right" width="100">联系电话：</td><td>'+$("input[name=tel]").val()+'</td>';
+		table += '<td class="title text-right" width="100">发货时间：</td><td>'+$("input[name=shipping_time]").val()+'</td>';
+		table += '</tr></thead>';
+		table += '<tbody><tr><td colspan="20">'+createWarn("暂无动态")+'</td></tr>';
+		table += '</tbody></table>';
+		$("#logistics_info").html(table);
 		var order_id = getQueryStringByName('order_id');
 		if(order_id===""||!validateNumber(order_id)){
 			return false;
@@ -467,15 +529,6 @@ var SaleOrder = {
 			}else{
 				$('#logistics_form').html('<div style="text-align:center">'+createTip(obj.message)+'<input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " /></div>');
 				$("#logistics_operate").html(createLink("javascript:void(0);", "添加物流信息", "SaleOrder.addShippingLogInit("+order_id+",'"+shipping_num+"')"));
-				var table='<table cellpadding="0" cellspacing="0"><thead><tr>';
-				table += '<td class="title text-right" width="100">物流公司：</td><td>'+$("input[name=company_name]").val()+'</td>';
-				table += '<td class="title text-right" width="100">物流单号：</td><td>'+$("input[name=shipping_num]").val()+'</td>';
-				table += '<td class="title text-right" width="100">联系电话：</td><td>'+$("input[name=tel]").val()+'</td>';
-				table += '<td class="title text-right" width="100">发货时间：</td><td>'+$("input[name=shipping_time]").val()+'</td>';
-				table += '</tr></thead>';
-				table += '<tbody><tr><td colspan="20">'+createWarn("暂无动态")+'</td></tr>';
-				table += '</tbody></table>';
-				$("#logistics_info").html(table);
 				return false;
 			}
 		}, "json");
@@ -512,6 +565,7 @@ var SaleOrder = {
 				return false;
 			}
 		}, "json");
+		popupLayer();
 	},
 
 	updateChilderStatus: function(handle){
@@ -569,6 +623,11 @@ var SaleOrder = {
 						$("textarea[name="+key+"]").text(value);
 					}
 				});
+				$.each(obj.content.info,function(key, value){
+					if($("span#"+key).length){
+						$("span#"+key).text(value);	
+					}
+				});
 				var row = "";
 				$.each(obj.content.price_log,function(key, value){
 					row += "<tr>";
@@ -592,7 +651,19 @@ var SaleOrder = {
 		if($("#change_price_form").valid() == false){
 			return false;
 		}
+		var row = '<tr>';
+		for(var i=0;i<this.price_log.length;i++){
+			row += "";
+			if($("input[name="+that.price_log[i]+"]").length>0){
+				row += createTd(subString($("input[name="+that.price_log[i]+"]").val(),10,true));
+			}else{
+				row += createTd(createWarn('无数据'));
+			}
+		}
+		row += "</tr>";
 		var formData = $("#change_price_form").FormtoJson();
+		console.log(formData);
+		return false;
 		var params = {"params":formData};
 		strJson = createJson("updatePriceSend", this.entity, params);
 		that = this
@@ -601,16 +672,6 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				var row = '<tr>';
-				for(var i=0;i<that.price_log.length;i++){
-					row += "";
-					if($("input[name="+that.price_log[i]+"]").length>0){
-						row += createTd(subString($("input[name="+that.price_log[i]+"]").val(),10,true));
-					}else{
-						row += createTd(createWarn('无数据'));
-					}
-				}
-				row += "</tr>";
 				$("#price_log_list>tbody").prepend(row);
 				$('#message_area').html(createTip(obj.message));
 				return false;
@@ -707,7 +768,7 @@ var SaleOrder = {
 				$("#handle_button>span").html(button);
 			}
 			$('#message_area').html('');
-		}, "json");		
+		}, "json");
 	},
 
 	cancelOrderInit: function(order_id, order_num){

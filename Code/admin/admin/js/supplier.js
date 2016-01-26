@@ -59,7 +59,7 @@ var Supplier = {
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("orderPage", this.entity, params);
-		that = this
+		var that = this
 		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -295,15 +295,49 @@ var Supplier = {
 	},
 
 	setShippingFee: function(){
+		if($("#main_form").valid() == false){
+			return false;
+		}
+		var goods_type_exist = false;
+		$("#main_list>tbody>tr").each(function(index, elem){
+			if($(elem).children(":first").text() == $("select#cat>option:selected").text()){
+				goods_type_exist = true;
+				return false;
+			}else{
+				$('#message_area').html('');
+			}
+		});
+		if(goods_type_exist){
+			$('#message_area').html(createError("物料类别已存在"));
+			return false;
+		}
+		var row = "<tr>";
+		row += "<td>"+$("#cat>option:selected").text()+"</td>";
+		row += "<td>"+$("input[name=shipping_fee]").val()+"元/吨/公里</td>";
+		row += "<td>"+$("input[name=desc]").val()+"</td>";
+		row += "<td></td>";
+		$("#main_list>tbody").prepend(row);
 		
-		console.log($("#main_form").FormtoJson())
+		var formData = $("#main_form").FormtoJson();
+		var params = {"params":formData};
+		strJson = createJson("addCategoryShippingFee", this.entity, params);
+		var that = this;
+		$.post(this.url, strJson, function(obj){
+			console.log(obj)
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+				return false;
+			}
+		}, "json");
 	},
 
 	removeShippingFee: function(id, handle){
 		var params = {"params":{"shipping_fee_id": id}};
 		strJson = createJson("removeCategoryShipping", this.entity, params);
-		var that = this
-		console.log(strJson);
+		var that = this;
 		$.post(this.url, strJson, function(obj){
 			console.log(obj)
 			if(obj.error == -1){

@@ -14,6 +14,11 @@ var BillAmount = {
 		"bill_date",
 		"operate"
 	],
+	note_type: {
+		0:"商票",
+		1:"现金",
+		2:"承兑"
+	},
 	limit: 0,
 	offset: 8,
 	total_page: 0,
@@ -51,7 +56,7 @@ var BillAmount = {
 		console.log(strJson);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
+			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -65,16 +70,17 @@ var BillAmount = {
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
 					var row = "";
 					$.each(obj.content.data,function(key, value){
-						if(value.amount_type == 0){
-							return;
-						}
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
+							if(that.order_arr[i] == "amount_type"){
+								row += createTd(that.note_type[value.amount_type]);
+								continue;
+							}
 							if(that.order_arr[i] == "operate"){
 								if(value.amount_type == 1 || value.amount_type == 2){
 									var edit = createLink("demo_template.php?section=bill_manage&act=generate_edit&log_id="+value.bill_amount_log_id, "详情");
 								}else{
-									var edit = createTd(createWarn('无数据'));
+									var edit = createWarn('无数据');
 								}
 								row += createTd(edit);
 								continue;
@@ -86,8 +92,8 @@ var BillAmount = {
 							}
 						}
 						row += "</tr>";
-						$("#bill_amount_list>tbody").html(row);
 					});
+					$("#bill_amount_list>tbody").html(row);
 				}
 			}
 			$('#message_area').html('');

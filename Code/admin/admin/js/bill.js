@@ -12,6 +12,7 @@ var Bill = {
 		"status",
 		"operate"
 	],
+	bill_status: {},
 	limit: 0,
 	offset: 8,
 	total_page: 0,
@@ -202,6 +203,7 @@ var Bill = {
 				$('#message_area').html(createError(obj.message));
 			}else if(obj.error == 0){
 				$('#message_area').html(createTip(obj.message));
+				redirectToUrl("demo_template.php?section=bill_manage&act=list");
 			}
 		}, "json");
 	}

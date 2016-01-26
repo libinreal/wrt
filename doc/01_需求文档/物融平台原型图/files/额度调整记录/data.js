@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"额度调整记录.html",
-  "generationDate":new Date(1453446798866.99),
+  "generationDate":new Date(1453803496744.26),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -468,7 +468,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度调整记录/u35.png"}},
+                "normal~":"images/票据偿还详情（更新）/u1.png"}},
 {
               "id":"1dbda247ee264b33869f962acdb50b2f",
               "label":"",
@@ -505,7 +505,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度调整记录/u55.png"}},
+                "normal~":"images/票据偿还详情（更新）/u37.png"}},
 {
               "id":"29e5ae5200a44c20b852b16e94ea357f",
               "label":"",

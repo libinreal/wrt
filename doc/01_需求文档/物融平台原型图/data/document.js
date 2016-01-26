@@ -117,21 +117,21 @@
                 "type":"Wireframe",
                 "url":"现金额度添加.html"},
 {
-                "pageName":"额度生成列表（？）",
+                "pageName":"额度生成列表",
                 "type":"Wireframe",
-                "url":"额度生成列表（？）.html",
+                "url":"额度生成列表.html",
                 "children":[{
-                    "pageName":"额度生成详情",
+                    "pageName":"额度生成详情（更新）",
                     "type":"Wireframe",
-                    "url":"额度生成详情.html"}]},
+                    "url":"额度生成详情（更新）.html"}]},
 {
-                "pageName":"票据偿还列表（？）",
+                "pageName":"票据偿还列表",
                 "type":"Wireframe",
-                "url":"票据偿还列表（？）.html",
+                "url":"票据偿还列表.html",
                 "children":[{
-                    "pageName":"票据偿还详情",
+                    "pageName":"票据偿还详情（更新）",
                     "type":"Wireframe",
-                    "url":"票据偿还详情.html"}]},
+                    "url":"票据偿还详情（更新）.html"}]},
 {
                 "pageName":"新增票据偿还",
                 "type":"Wireframe",

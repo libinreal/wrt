@@ -1,6 +1,6 @@
 ﻿$axure.loadCurrentPage({
   "url":"应收单生成页.html",
-  "generationDate":new Date(1453446805762.39),
+  "generationDate":new Date(1453803504310.21),
   "isCanvasEnabled":false,
   "variables":["OnLoadVariable"],
   "page":{
@@ -74,7 +74,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"0f4ffe4ce625421a8f526b713601000e",
               "label":"",
@@ -111,7 +111,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"6e261f6b934642e99455e2d8885fcee1",
               "label":"",
@@ -148,7 +148,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"ed615bd4032349e3a5990ac92f31fe3d",
               "label":"",
@@ -185,7 +185,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"34fd45d41f8848ba926fece755164461",
               "label":"",
@@ -222,7 +222,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"bd811f08d40c4090bc3a78df7eee6970",
               "label":"",
@@ -259,7 +259,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"fc3833874ec54bf7b84344e125a5fc05",
               "label":"",
@@ -296,7 +296,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"c6d0764f84e5477a9ec6a79dc18b346d",
               "label":"",
@@ -333,7 +333,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"db26b8443017486fae1f20e5400404bd",
               "label":"",
@@ -370,7 +370,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"289c84f40daf4c3aabd2377dcdd2488c",
               "label":"",
@@ -407,7 +407,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"c4a65fcd6cb6410e9117829c0b8c74ef",
               "label":"",
@@ -444,7 +444,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"e407a81b5f584cdf88ededc3663f7cec",
               "label":"",
@@ -481,7 +481,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"58d0f4a5b5314816ac879f7272e1d4eb",
               "label":"",
@@ -518,7 +518,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"fd6e3e51f6634352a1e4580e46f1d7b6",
               "label":"",
@@ -555,7 +555,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"22c1f8d2cc69454cae0806ae9a9240f9",
               "label":"",
@@ -592,7 +592,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"decec06b67884df6b30b47c8a7b77382",
               "label":"",
@@ -629,7 +629,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"288a56a7e066462aad78fff8e29c5717",
               "label":"",
@@ -666,7 +666,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"c74a956d63dc43a09ea42ee1c5095e2a",
               "label":"",
@@ -703,7 +703,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"62a2c31782a64aaaa47bebe306b99d5e",
               "label":"",
@@ -740,7 +740,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"a453b7d643654435be9fc86680614680",
               "label":"",
@@ -777,7 +777,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"bc1cacef545a4ecba866ad2900fe3166",
               "label":"",
@@ -814,7 +814,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"dce3e86201fb45acb01b339c4c7927eb",
               "label":"",
@@ -851,7 +851,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"4a91021618304031856021fd4ae57cf6",
               "label":"",
@@ -888,7 +888,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"35c08339cbdf40c5aa4b66a705c1ce23",
               "label":"",
@@ -925,7 +925,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"7a53e5bce0af47638c6a17708842bb34",
               "label":"",
@@ -962,7 +962,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"87cd8acade9543d59e7400b67e12c09a",
               "label":"",
@@ -999,7 +999,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"0e69c66c105e4a1da0f01cd4aa4be62b",
               "label":"",
@@ -1036,7 +1036,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"82fec8ecfeab4617a9e0f88320d0a4c7",
               "label":"",
@@ -1073,7 +1073,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"8493ad412d7d4cb7a641a353065e535b",
               "label":"",
@@ -1110,7 +1110,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"2051a3e6c4f646e582ab91fdd450d063",
               "label":"",
@@ -1147,7 +1147,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"d923c731497a436aa45179610ce1f4ea",
               "label":"",
@@ -1184,7 +1184,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"d48887fbc5a94b4fb04991d85f204334",
               "label":"",
@@ -1221,7 +1221,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"b518d2c476b84e83818e2afa2608f7d4",
               "label":"",
@@ -1258,7 +1258,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"1628eb2a53e94d699724eec125637ebd",
               "label":"",
@@ -1295,7 +1295,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"328eab5e43724e5cb052efd5c1af39ea",
               "label":"",
@@ -1332,7 +1332,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u120.png"}},
+                "normal~":"images/额度分配调整/u7.png"}},
 {
               "id":"34ee4a414a1c4b4c93109febd7cf6e8e",
               "label":"",
@@ -1369,7 +1369,7 @@
                   "adaptiveStyles":{
 }}],
               "images":{
-                "normal~":"images/额度生成列表（？）/u132.png"}},
+                "normal~":"images/额度分配调整/u38.png"}},
 {
               "id":"662367fee61b4118b050f39bf19c64d0",
               "label":"",
