@@ -191,6 +191,7 @@ var SelfCredit = {
 
 		strJson = createJson("applyCreditStatus", this.entity, params);
 		var that = this
+		console.log('')
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));

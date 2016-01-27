@@ -115,11 +115,13 @@ var BillAmount = {
 		that = this
 		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
 				$('#message_area').html(createTip(obj.message));
+				redirectToUrl("demo_template.php?section=bill_manage&act=list");
 			}
 		}, "json");
 	},

@@ -306,8 +306,8 @@ td.micro-label {
 }
 
 input.button {
-    padding: 2px 8px 0px;
-    margin: 2px 2px;
+    padding: 5px 10px;
+    margin: 2px;
     border: 1px solid #2D5082;
     cursor: pointer;
 }
@@ -1034,6 +1034,10 @@ em, cite, th {
   top: 20%;
   left: 20%;
   z-index:101; 
+  padding: 10px;
+}
+.messagepop input, .messagepop textarea{
+    border: 1px solid #ccc;
 }
 .messagepop p, .messagepop.div {
   border-bottom: 1px solid #EFEFEF;
