@@ -329,7 +329,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * {
 		 *	    "error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "票据更新成功",
-		 *	    "content": ""
+		 *	    "content": 
+		 *	    "content": {
+         *       "data": 
+         *       [
+         *        {
+         *       	"user_id": "10",
+         *       	"email": "test@3ti.us",
+         *       	"custom_no": "010060101",
+         *       	"customer_name": "中铁三局第六工程有限公司宝汉告诉公路坪坎至汉中",
+         *       	"user_name": "v00010",
+         *       	"mobile": ""
+         *   	}
+         *		],
+         *		"total": "1"
 		 * }
 		 */
 		public	function updateAction(){
@@ -479,11 +492,16 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "content":{ 
 		 *	       "info":{
 		 *                  "user_id": 1 ,//客户id(往来单位id)
-		 *                  "repay_amount": 100 ,//生成的额度
-		 *                  "remark": "虚拟数据" ,
-		 *                  "user_name": "钟某",//客户名称
+		 *                  "repay_amount": 100 ,//还票金额
+		 *                  "remark": "虚拟数据" ,//操作备注
+		 *                  "user_name": "v00001",//还票人
 		 * 	                "bill_id": 0 ,//票据ID
-		 * 	                "need_repay":0 //需要偿还
+		 * 	                "need_repay":0 ,//票据金额
+		 * 	                "create_by":"",//操作人
+		 * 	                "receive_date":"",//还票日
+		 * 	                "due_date":"",/到期日
+		 * 	                "bill_num":"",//票据编号
+		 * 	                "create_time":"2016-02-14"//操作日期
 		 * 	        }
 		 *	}
 		 */
@@ -498,8 +516,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$user_table = $GLOBALS['ecs']->table('users');				
 				$bill_table = $GLOBALS['ecs']->table('bill');				
 
-				$sql = 'SELECT a.`bill_id`, a.`user_id`, b.`companyName` as `user_name`, a.`repay_amount`, a.`remark`, ' .
-						' c.`discount_amount` AS `need_repay`' .
+				$sql = 'SELECT a.`bill_id`, a.`user_id`, b.`user_name`, b.`companyName` as `customer_name`, a.`repay_amount`, a.`remark`, ' .
+						' a.`create_time`, a.`create_by`,c.`bill_num`, c.`discount_amount` AS `need_repay`, c.`due_date`,c.`receive_date` ' .
 						' FROM ' . $repay_table .
 					 	' as a LEFT JOIN ' . $user_table . ' as b on a.`user_id` = b.`user_id` ' .
 					 	' LEFT JOIN ' . $bill_table . ' AS c ON c.`bill_id` = a.`bill_id` ' .
@@ -509,6 +527,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$repay = $GLOBALS['db']->getRow($sql);
 				if( !empty( $repay ) )
 				{
+					$repay['create_time'] = date( 'Y/m/d', $repay['create_time'] );
+
 					$content = array();
 					$content['info'] = $repay;
 					make_json_response( $content, '0', '偿还单编辑初始化成功');

@@ -93,9 +93,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "customer_name": "ad11223", //客户名称
 		 *                  "user_name":  "v000001" ,//用户名
 		 *                  "mobile": "+8613830000000" ,//手机
-		 *                  "email": "sdasdas@3ti.us" ,//用户邮箱
-		 *                  
-		 *                  "status": 0
+		 *                  "email": "sdasdas@3ti.us" //用户邮箱
 		 *           }
 		 *	         ],
 		 *	         "total":3
