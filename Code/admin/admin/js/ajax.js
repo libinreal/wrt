@@ -10,6 +10,7 @@ $(document).ajaxSuccess(function(){
     $('input[type=button]').each(function(index, e){
         $(e).attr("disabled",false);
     });
+    $("#error").fadeIn();
 });
 $(document).ajaxError(function(event, jqxhr, settings, thrownError){
 	$("#error").html(settings.url +" error: "+ thrownError);
