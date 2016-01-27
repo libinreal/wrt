@@ -56,9 +56,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif($this->command == 'addInit'){
 				//
 				$this->addInitAction();
-			}else {
-				//
-				$this->pageAction();
 			}
 		}
 				
@@ -66,7 +63,106 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 		}
 		
+		/**
+		 * 接口名称：额度分配调整列表
+		 * 接口地址：http://admin.zjgit.dev/admin/BillAdjustModel.php
+		 * 传入的接口数据格式如下(字段以及对应的值 在parameters里)：* 
+		 * 请求方法：POST
+		 *  {
+	     *      "entity": 'bill_adjust',
+	     *      "command": 'page',
+	     *      "parameters": {
+	     *          "params": {
+	     *              "where": {
+	     *              "like":{"customer_name":"no11232","user_name":"v0001","mobile":"+8613830000000"}//客户名称 用户名 手机号码
+	     *              },
+	     *              "limit": 0,//起始行号
+	     *              "offset": 2//返回的行数
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "票据列表查询成功",
+		 *	    "content": { 
+		 *	    	"data":[
+		 *	        {
+		 *                  "user_id":2 ,//ID
+		 *                  "custom_no": "s0001" ,//客户号
+		 *                  "customer_name": "ad11223", //客户名称
+		 *                  "user_name":  "v000001" ,//用户名
+		 *                  "mobile": "+8613830000000" ,//手机
+		 *                  "email": "sdasdas@3ti.us" ,//用户邮箱
+		 *                  
+		 *                  "status": 0
+		 *           }
+		 *	         ],
+		 *	         "total":3
+		 *	}
+		 */
+		public function pageAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+			
+			$bill_table = $GLOBALS["ecs"]->table("bill");
+			$user_table = $GLOBALS["ecs"]->table("users");
+
+			$sql = 'SELECT `user_id`, `email`, `customNo` AS `custom_no`, `companyName` AS `customer_name`, `user_name`, `mobile_phone` AS `mobile` ' .
+						  'FROM ' . $GLOBALS['ecs']->table('users') . ' AS usr';
+
+			$total_sql = 'SELECT COUNT(*) AS `total` FROM ' . $GLOBALS['ecs']->table('users') . ' AS usr'; 	
 		
+			$where = array();
+			if( isset($params['where']) )
+				$where = $params['where'];
+
+			$where_str = '';
+
+			if( isset( $where["like"] ) )
+			{
+				$like = $where["like"];
+				if( isset( $like["customer_name"] ) ){
+					if( !$where_str )
+						$where_str = " WHERE `companyName` like '%" . trim( $like["customer_name"] ) . "%'";
+					else
+						$where_str .= " AND `companyName` like '%" . trim( $like["customer_name"] ) . "%'";
+				}
+				if( isset( $like["user_name"] ) ){
+					if( !$where_str )
+						$where_str = " WHERE `user_name` like '%" . trim( $like["user_name"] ) . "%'";
+					else
+						$where_str .= ' AND `user_name` like \'%' . trim( $like['user_name'] ) . '%\'';
+				}
+				if( isset( $like["mobile"] ) ){
+					if( !$where_str )
+						$where_str = " WHERE `mobile_phone` like '%" . trim( $like["mobile"] ) . "%'";
+					else
+						$where_str .= " AND `mobile_phone` like '%" . trim( $like["mobile"] ) . "%'";
+				}
+			}
+
+			$sql .= $where_str . ' LIMIT ' . $params['limit']. ','.$params['offset'];
+			$users = $GLOBALS['db']->getAll( $sql );
+			
+			$total_sql = $total_sql . $where_str;
+			$resultTotal = $GLOBALS['db']->getRow( $total_sql );
+
+			if( $resultTotal )
+			{
+				$content = array();
+				$content['data'] = $users ? $users : array();
+				$content['total'] = $resultTotal['total'];
+				make_json_response( $content, "0", "票据额度调整列表查询成功");
+			}
+			else
+			{
+				make_json_response("", "-1", "票据额度调整列表查询失败");
+			}
+
+		}				  
+
 		/**
 		 * 创建
 		 * 接口地址：http://admin.zjgit.dev/admin/BillAdjustModel.php
@@ -81,6 +177,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "to_contract_id": 100 ,//被调整的目标合同id
 		 *                  "adjust_amount": 4//调整的具体额度
 		 *           }
+		 * }
 		 * 返回数据格式如下 
 		 * {
 		 *	    "error": "0",("0": 成功 ,"-1": 失败)
@@ -271,6 +368,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 		
 	}
-	$content = jsonAction( array( 'addInit' ) );
+	$content = jsonAction( array( 'addInit', 'editInit', 'create', 'page' ) );
 	$billAdjustModel = new BillAdjustModel($content);
 	$billAdjustModel->run();
