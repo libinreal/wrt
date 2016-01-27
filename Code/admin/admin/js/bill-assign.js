@@ -19,6 +19,7 @@ var BillAssign = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
+				console.log(obj)
 				//客户信息
 				$.each(obj.content.info, function(k, v){
 					$("#"+k).text(v);
