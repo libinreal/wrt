@@ -8,14 +8,16 @@ $jump = 'http://www.baidu.com'; //如：http://xxx.xxx.xx
 $domainArr = array(
     'admin.zj.dev'
 );
+header('content-type:text/html;charset=utf-8');
 
 //域名信息
 $host = $_SERVER['REQUEST_SCHEME'];
 $domain = $_SERVER['SERVER_NAME'];
 
 //允许访问
-if (!in_array($domain, $domainArr) || !isset($_GET['act']) || !isset($_SERVER['HTTP_REFERER'])) {
-    header('location:'.$jump);
+if (/* !in_array($domain, $domainArr) || */ !isset($_GET['act']) || !isset($_SERVER['HTTP_REFERER'])) {
+    //header('location:'.$jump);
+    die('文件不存在');
 }
 
 //文件
