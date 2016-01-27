@@ -1,9 +1,89 @@
 var BillAjust = {
+	order_arr: [
+		"user_id",
+		"custom_no",
+		"customer_name",
+		"user_name",
+		"email",
+		"mobile",
+		"operate"
+	],
+	bill_status: {},
 	limit: 0,
 	offset: 8,
 	total_page: 0,
+	current_page: 1,
 	url: "BillAdjustModel.php",
 	entity: "bill_adjust",
+
+	getList: function(search){
+		if(typeof(search) === "undefined"){
+			serach = false;
+		}else{
+			var condition = {};
+			var user_name = $('#search_form input[name=user_name]').val();
+			var customer_name = $('#search_form input[name=customer_name]').val();
+			var mobile = $('#search_form input[name=mobile]').val();
+			condition.like = {};
+			if(user_name != ''){
+				condition.like['user_name'] = user_name;
+			}
+			if(customer_name != ''){
+				condition.like['customer_name'] = customer_name;
+			}
+			if(mobile != ''){
+				condition.like['mobile'] = mobile;
+			}
+		}
+		if(search != false){
+			if(search == "search"){
+				this.limit = 0;
+			}
+			var params = {"params":{"where":condition,"limit":this.limit, "offset":this.offset}};
+		}else{
+			var params = {"params":{"limit":this.limit, "offset":this.offset}};
+		}
+		var strJson = createJson("page", this.entity, params);
+		var that = this
+		console.log(strJson)
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				that.total_page = Math.ceil(obj.content.total/that.offset);
+				if(obj.content.total == 0){
+					var row = "<tr><td colspan='20'>"+createWarn("无数据")+"</td></tr>";
+					$("#user_list>tbody").html(row);
+					$("#paginate").html('');
+				}else{
+					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
+					var row = "";
+					console.log(obj.content.data)
+					$.each(obj.content.data,function(key, value){
+						row += "<tr>";
+						for(var i=0;i<that.order_arr.length;i++){
+							if(that.order_arr[i] == "operate"){
+								var edit = createLink("demo_template.php?section=bill_manage&act=assign_note&id="+value.user_id, "分配商票采购额度");
+								edit += createLink("demo_template.php?section=bill_manage&act=assign_cash&id="+value.user_id, "分配现金采购额度");
+								edit += createLink("demo_template.php?section=bill_manage&act=adjust&id="+value.user_id, "额度调整");
+								row += createTd(edit);
+								continue;
+							}
+							if(value[that.order_arr[i]] != null){
+								row += createTd(subString(value[that.order_arr[i]],10,true));
+							}else{
+								row += createTd(createWarn('无数据'));
+							}
+						}
+						row += "</tr>";
+					});
+					$("#user_list>tbody").html(row);
+				}
+			}
+			$('#message_area').html('');
+		}, "json");
+	},
 
 	getAddInitAction: function(){
 		var id = getQueryStringByName('id');

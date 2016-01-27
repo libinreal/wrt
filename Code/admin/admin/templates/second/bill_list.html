@@ -28,7 +28,9 @@
 			<input type="text" name="search_value">
 			&nbsp;
 			<labe>票据状态：</labe>
-			<select id="status" name="status"></select>
+			<select id="status" name="status">
+				<option value="">全部</option>
+			</select>
 		</div>
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
@@ -52,7 +54,7 @@
 					<th>出票人</th>
 					<th>承兑人</th>
 					<th>审核状态</th>
-					<th>还票状态</th>
+					<th>票据状态</th>
 					<th>操作</th>
 				</tr></thead>
 				<tbody></tbody>
@@ -82,7 +84,7 @@ $(document).ready(function(){
 TypeMode.getBillStatus("status", "init");
 function init(){
 	$("#status>option").each(function(index, elem){
-		Bill.bill_status[$(elem).val] = $(elem).text();
+		Bill.bill_status[$(elem).val()] = $(elem).text();
 	});
 	Bill.getList();
 }

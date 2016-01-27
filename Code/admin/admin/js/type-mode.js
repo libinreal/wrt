@@ -39,7 +39,7 @@ var TypeMode = {
 					$.each(object.content, function(k, v){
 						row += appendOption(k, v);
 					})
-					$('#'+select_id).html(row);
+					$('#'+select_id).append(row);
 				}
 				$('#message_area').html('');
 			},
@@ -50,19 +50,6 @@ var TypeMode = {
 			}
 		});
 		return false;
-		$.post(that.url, strJson, function(object){
-			if(object.error == -1){
-				$('#message_area').html(createError(object.message));
-				return false;
-			}else{
-				var row = "";
-				$.each(object.content, function(k, v){
-					row += appendOption(k, v);
-				})
-				$('#'+select_id).html(row);
-			}
-			$('#message_area').html('');
-		},"json");
 	},
 
 	getUsers: function(select_id){

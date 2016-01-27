@@ -51,8 +51,9 @@ var Bill = {
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
 		strJson = createJson("page", this.entity, params);
-		that = this
+		var that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -76,7 +77,11 @@ var Bill = {
 								continue;
 							}
 							if(value[that.order_arr[i]] != null){
-								row += createTd(subString(value[that.order_arr[i]],10,true));
+								if(that.order_arr[i] == "status"){
+									row += createTd(that.bill_status[value["status"]]);
+								}else{
+									row += createTd(subString(value[that.order_arr[i]],10,true));
+								}
 							}else{
 								row += createTd(createWarn('无数据'));
 							}
@@ -127,7 +132,7 @@ var Bill = {
 		}
 		var params = {"bill_id":id};
 		strJson = createJson("editInit", this.entity, params);
-		that = this
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));

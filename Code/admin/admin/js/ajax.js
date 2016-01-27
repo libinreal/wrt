@@ -1,4 +1,5 @@
 $(document).ajaxStart(function() {
+    $("#message_area").fadeIn("slow");
 	$('#message_area').html(createLoading());
     $('input[type=button]').each(function(index, e){
         $(e).attr("disabled",true);
@@ -17,7 +18,7 @@ $(document).ajaxError(function(event, jqxhr, settings, thrownError){
 	$("#error").fadeIn();
 });
 $(document).ajaxComplete(function(){
-    $("#message_area").fadeOut();
+    $("#message_area").fadeOut("slow");
 });
 $(document).ajaxStop(function () {
 });
