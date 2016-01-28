@@ -142,6 +142,8 @@ $_LANG['13_contract'] = '合同管理';
 $_LANG['14_credit'] = '授信管理';
 $_LANG['15_bthPrice'] = '采购价格管理';
 $_LANG['16_applyCredit'] = '平台授信管理';
+$_LANG['17_bill_manage'] = '应收票据管理';
+$_LANG['18_sale_order'] = '销售订单管理';
 
 //合同管理
 $_LANG['01_contract_insert'] = '新增合同';
@@ -159,6 +161,18 @@ $_LANG['02_price_list'] = '加价列表';
 //平台授信管理
 $_LANG['01_applyCredit_list'] = '平台授信列表';
 $_LANG['02_applyCredit_rlist'] = '平台授信回收站';
+
+//应收票据管理
+$_LANG['01_bill_manage_insert'] = '票据添加';
+$_LANG['02_bill_manage_list'] = '票据列表';
+$_LANG['03_bill_manage_generate'] = '现金额度生成单';
+$_LANG['04_bill_manage_order_list'] = '现金额度生成单列表';
+$_LANG['05_bill_manage_repay_list'] = '票据偿还单列表';
+$_LANG['06_bill_manage_user_list'] = '额度分配调整列表';
+
+//销售订单管理
+$_LANG['01_sale_order_list'] = '订单列表';
+$_LANG['02_sale_order_suborder_all'] = '子订单列表';
 
 // 积分商品管理
 $_LANG['01_exchange_category'] = "分类列表";

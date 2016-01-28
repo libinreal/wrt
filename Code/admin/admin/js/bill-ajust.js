@@ -108,16 +108,16 @@ var BillAjust = {
 				var	to_contract_id = $('select[name=to_contract_id]').val();
 				$.each(obj.content.init.contracts, function(k, v){
 					if(from_contract_id != "" && from_contract_id == v.contract_id){
-						from_row += appendOption(v.contract_id, v.contract_id, 1);
+						from_row += appendOption(v.contract_id, v.contract_name, 1);
 						from_order = k;
 					}else{
-						from_row += appendOption(v.contract_id, v.contract_id);
+						from_row += appendOption(v.contract_id, v.contract_name);
 					}
 					if(to_contract_id != "" && to_contract_id == v.contract_id){
-						to_row += appendOption(v.contract_id, v.contract_id, 1);
+						to_row += appendOption(v.contract_id, v.contract_name, 1);
 						to_order = k;
 					}else{
-						to_row += appendOption(v.contract_id, v.contract_id);
+						to_row += appendOption(v.contract_id, v.contract_name);
 					}
 				});
 				$("select[name=from_contract_id]").html(from_row);

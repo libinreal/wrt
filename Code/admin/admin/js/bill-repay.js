@@ -101,9 +101,14 @@ var BillRepay = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
+				// 初始化
+				TypeMode.getBillRepayType("bill_repay_type");
+
 				$.each(obj.content.info, function(k, v){
 					if($("input[name="+k+"]").length > 0){
 						$("input[name="+k+"]").val(v);
+					}else if($("input#"+k).length > 0){
+						$("input#"+k).val(v);
 					}else{
 						$("#"+k).text(v);
 					}

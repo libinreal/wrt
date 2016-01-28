@@ -16,168 +16,103 @@
 		</h1>
 		<div id="message_area"></div>
 		<div class="list-note-2">
-			<table>
+			<table cellpadding="0" cellspacing="1">
 				<tbody>
-				<tr><td class="title">订单资料</td></tr>
-				<tr>
-					<td colspan="20">
-					<span class="head">订单编号：</span><span class="info" id="order_sn"></span>
-					<span class="head">公司名称：</span><span class="info" id="user_name"></span>
-					<span class="head">合同名称：</span><span class="info" id="contract_name"></span>
-					<span class="head">合同号：</span><span class="info" id="contract_sn"></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="20">
-					<span class="head">下单人：</span><span class="info" id=""></span>
-					<span class="head">下单时间：</span><span class="info" id="add_time"></span>
-					<span class="head">订单状态：</span><span class="info" id="order_status"></span>
-					<span class="head">子订单状态：</span><select id="child_order_status" name="child_order_status" disabled="disabled"></select>
-					</td>
-				</tr>
+					<tr><td class="title" colspan="8">订单资料</td></tr>
+					<tr>
+						<th>订单编号：</th><td id="order_sn"></td>
+						<th>公司名称：</th><td id="user_name"></td>
+						<th>合同名称：</th><td id="contract_name"></td>
+						<th>合同号：</th><td id="contract_sn"></td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
 		<div class="list-note-2">
-			<table cellpadding="3" cellspacing="1" id="bill_purchase_assign_list">
+			<table cellpadding="0" cellspacing="1">
 				<tbody>
-				<tr><td class="title">开票资料</td></tr>
-				<tr>
-					<td colspan="20">
-					<span class="head">发票类型：</span><span class="info" id="inv_type"></span>
-					<span class="head">发票抬头：</span><span class="info" id="inv_payee"></span>
-					<span class="head">内容：</span><span class="info" id=""></span>
-					<span class="head">备注：</span><span class="info" id=""></span>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="20">
-					<span class="head">收货人：</span><span class="info" id="consignee"></span>
-					<span class="head">收货地址：</span><span class="info" id="address"></span>
-					<span class="head">手机号码：</span><span class="info" id="mobile"></span>
-					<span class="head">地址标签：</span><span class="info" id="sign_building"></span>
-					</td>
-				</tr>
+					<tr><td class="title" colspan="8">订单资料</td></tr>
+					<tr>
+						<th>收货人：</th><td id="consignee"></td>
+						<th>收货地址：</th><td id="address"></td>
+						<th>手机号码：</th><td id="mobile"></td>
+						<th>地址标签：</th><td id="sign_building"></td>
+					</tr>
 				</tbody>
 			</table>
 		</div>
 		<div>
 			<form id="contract_content">
-			<table class="table_info_2" cellpadding="0" cellspacing="1">
-			<tbody>
-				<tr>
-					<td class="title" colspan="2"  width="100">商品名称：</td><td colspan="2" id="goods_name"></td>
-					<td class="title" width="100">规格/型号/材质：</td><td id="attr"></td>
-				</tr>
-				<tr>
-					<td class="title" rowspan="3">供货信息</td>
-				</tr>
-				<tr>
-					<td class="title">发货信息</td>
-					<td colspan="20">
-						<table cellpadding="0" cellspacing="1">
-							<thead>
-								<tr>
-								<th>发货单价</th>
-								<th>发货数量</th>
-								<th>物流费用</th>
-								<th>金融费用</th>
-								<th>发货总金额</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td id="goods_price_send_buyer"></td>
-									<td id="goods_number_send_buyer"></td>
-									<td id="shipping_fee_send_buyer"></td>
-									<td id="financial_send"></td>
-									<td id="order_amount_send_buyer"></td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td class="title">到货信息</td>
-					<td colspan="20">
-						<table>
-							<thead>
-								<tr>
-								<th>到货单价</th>
-								<th>到货数量</th>
-								<th>物流费用</th>
-								<th>金融费用</th>
-								<th>到货总金额</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td id="goods_price_arr_buyer"></td>
-									<td id="goods_number_arr_buyer"></td>
-									<td id="shipping_fee_arr_buyer"></td>
-									<td id="financial_arr"></td>
-									<td id="order_amount_arr_buyer"></td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-
-				<tr>
-					<td class="title" rowspan="3">采购信息</td>
-				</tr>
-				<tr>
-					<td class="title">发货信息</td>
-					<td colspan="20">
-						<table cellpadding="0" cellspacing="1">
-							<thead>
-								<tr>
-								<th>发货单价</th>
-								<th>发货数量</th>
-								<th>物流费用</th>
-								<th>付款方式</th>
-								<th>发货总金额</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td id="goods_price_send_saler"></td>
-									<td id="goods_number_send_saler"></td>
-									<td id="shipping_fee_send_saler"></td>
-									<td id="payment_send"></td>
-									<td id="order_amount_send_saler"></td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td class="title">到货信息</td>
-					<td colspan="20">
-						<table cellpadding="0" cellspacing="1">
-							<thead>
-								<tr>
-								<th>到货单价</th>
-								<th>到货数量</th>
-								<th>物流费用</th>
-								<th>付款方式</th>
-								<th>到货总金额</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td id="goods_price_arr_saler"></td>
-									<td id="goods_number_arr_saler"></td>
-									<td id="shipping_fee_arr_saler"></td>
-									<td id="payment_arr"></td>
-									<td id="order_amount_arr_saler"></td>
-								</tr>
-							</tbody>
-						</table>
-					</td>
-				</tr>
-			</tbody>
-			</table>
+				<table cellpadding="0" cellspacing="1" class="table_info_2">
+					<tr>
+				    	<th width="150" align="right">商品名称：</th><td id="goods_name">a</td>
+				    	<th width="150" align="right">规格/型号/材质：</th><td id="attr">a</td>
+				    </tr>
+				</table>
+				<table cellpadding="0" cellspacing="1" class="table_info_2 t_1">
+					<tr>
+						<td rowspan="4" align="center">供货信息</td>
+						<th rowspan="2">发货信息</th>
+						<th>发货单价</th>
+						<th>发货数量</th>
+						<th>物流费用</th>
+						<th>金融费用</th>
+						<th>总金额</th>
+					</tr>
+				    <tr>
+				    	<td id="goods_price_send_buyer">a</td>
+				    	<td id="goods_number_send_buyer">a</td>
+				    	<td id="shipping_fee_send_buyer">a</td>
+				    	<td id="financial_send">a</td>
+				    	<td id="order_amount_send_buyer">a</td>
+				    </tr>
+				    <tr>
+				    	<th rowspan="2">到货信息</th>
+				    	<th>到货单价</th>
+				    	<th>到货数量</th>
+				    	<th>物流费用</th>
+				    	<th>金融费用</th>
+				    	<th>总金额</th>
+				    </tr>
+				    <tr>
+				    	<td id="goods_price_arr_buyer">a</td>
+				    	<td id="goods_number_arr_buyer">a</td>
+				    	<td id="shipping_fee_arr_buyer">a</td>
+				    	<td id="financial_arr">a</td>
+				    	<td id="order_amount_arr_buyer">a</td>
+				    </tr>
+					<tr>
+						<td rowspan="4" align="center">采购信息</td>
+						<th rowspan="2">发货信息</th>
+						<th>发货单价</th>
+						<th>发货数量</th>
+						<th>物流费用</th>
+						<th>付款方式</th>
+						<th>总金额</th>
+					</tr>
+				    <tr>
+				    	<td id="goods_price_send_saler">a</td>
+				    	<td id="goods_number_send_saler">a</td>
+				    	<td id="shipping_fee_send_saler">a</td>
+				    	<td id="payment_send">a</td>
+				    	<td id="order_amount_send_saler">a</td>
+				    </tr>
+				    <tr>
+				    	<th rowspan="2">到货信息</th>
+				    	<th>到货单价</th>
+				    	<th>到货数量</th>
+				    	<th>物流费用</th>
+				    	<th>付款方式</th>
+				    	<th>总金额</th>
+				    </tr>
+				    <tr>
+				    	<td id="goods_price_arr_saler">a</td>
+				    	<td id="goods_number_arr_saler">a</td>
+				    	<td id="shipping_fee_arr_saler">a</td>
+				    	<td id="payment_arr">a</td>
+				    	<td id="order_amount_arr_saler">a</td>
+				    </tr>
+				</table>
 			</form>
 		</div>
 

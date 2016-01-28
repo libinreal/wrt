@@ -46,12 +46,12 @@ BillAssign.getList(1);
 function checktotal(){
 	var amount_valid = parseFloat($("#amount_valid").text());
 	var total = 0;
-	$("#BillAssign_purchase_form input[type=text]").each(function(index, element){
+	$("#bill_purchase_form input[type=text]").each(function(index, element){
 		if($(element).val() != ""&&isNumeric($(element).val())){
 			var ajust_amount = parseFloat($(element).val());
 			total = total + ajust_amount;
 			contract_id = $(element).next("input").val()
-			var BillAssign_amount_valid = parseFloat($("#BillAssign_amount_valid"+contract_id).text());
+			var BillAssign_amount_valid = parseFloat($("#bill_amount_valid"+contract_id).text());
 
 			$("#total"+contract_id).text(ajust_amount + BillAssign_amount_valid)
 		}

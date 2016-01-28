@@ -154,7 +154,7 @@ var SaleOrder = {
 				return false;
 			}else{
 				$.each(obj.content.info, function(k, v){
-					if($("span#"+k).length){
+					if($("#"+k).length){
 						$("#"+k).text(v);
 					}
 				});
@@ -163,8 +163,9 @@ var SaleOrder = {
 						$("#"+k).text(v);
 					}
 				});
+				var row = "";
 				$.each(obj.content.goods, function(key, value){
-					row = "<tr>";
+					row += "<tr>";
 					for(var i=0;i<that.order_detail_arr.length;i++){
 						if(that.order_detail_arr[i] == "operate"){
 							if(value.remain_number == 0){
@@ -173,7 +174,7 @@ var SaleOrder = {
 								var edit = "<span id='goods_"+value.goods_id+"'>"+createLink("javascript:void(0)", "取消未处理", "SaleOrder.cancelSubOrderInit('"+obj.content.info.order_id+"', '"+value.goods_id+"')") + "</span>";
 								edit += createLink("demo_template.php?section=sale_order&act=split&order_id="+obj.content.info.order_id+"&goods_id="+value.goods_id, "拆单");
 							}
-							edit += createLink("demo_template.php?section=sale_order&act=suborder_detail&order_id="+obj.content.info.order_id, "子订单");
+							edit += createLink("demo_template.php?section=sale_order&act=suborder_list&id="+obj.content.info.order_id, "子订单列表");
 							row += createTd(edit);
 							continue;
 						}
@@ -183,9 +184,9 @@ var SaleOrder = {
 							row += createTd(createWarn('无数据'));
 						}
 					}
-					row += "</tr>";
-					$("#sale_order_detail_list>tbody").html(row);					
+					row += "</tr>";					
 				});
+				$("#sale_order_detail_list>tbody").html(row);
 			}
 			$('#message_area').html('');
 		}, "json");
@@ -370,7 +371,9 @@ var SaleOrder = {
 		}
 		var strJson = createJson("searchChilderList", this.entity, params);
 		var that = this
+		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
+			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -391,8 +394,8 @@ var SaleOrder = {
 								row += createTd(edit);
 								continue;
 							}
-							if(that.suborder_arr[i] == "order_status"){
-								row += createTd(that.suborder_status[key]);
+							if(that.suborder_arr[i] == "child_order_status"){
+								row += createTd(that.suborder_status[value["child_order_status"]]);
 								continue;
 							}
 							if(value[that.suborder_arr[i]] != null){
@@ -423,10 +426,10 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-
+				console.log(obj)
 				$.each(obj.content.info, function(k, v){
-					if($("span#"+k).length){
-						$("span#"+k).text(v);
+					if($("#"+k).length){
+						$("#"+k).text(v);
 					}
 					if($("select[name="+k+"]").length){
 						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");
@@ -602,7 +605,6 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				console.log(obj)
 				// 初始化列表
 				var key_arr = {
 					"pay_id":{id:"id",name:"name"},
@@ -651,30 +653,50 @@ var SaleOrder = {
 		if($("#change_price_form").valid() == false){
 			return false;
 		}
-		var row = '<tr>';
-		for(var i=0;i<this.price_log.length;i++){
-			row += "";
-			if($("input[name="+that.price_log[i]+"]").length>0){
-				row += createTd(subString($("input[name="+that.price_log[i]+"]").val(),10,true));
-			}else{
-				row += createTd(createWarn('无数据'));
-			}
-		}
-		row += "</tr>";
 		var formData = $("#change_price_form").FormtoJson();
-		console.log(formData);
-		return false;
 		var params = {"params":formData};
-		strJson = createJson("updatePriceSend", this.entity, params);
+		var strJson = createJson("updatePriceSend", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				$("#price_log_list>tbody").prepend(row);
 				$('#message_area').html(createTip(obj.message));
+				that.getPriceLog();
 				return false;
+			}
+		}, "json");
+	},
+
+	getPriceLog: function(){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var params = {"params":{"order_id":order_id}};
+		strJson = createJson("initPriceSend", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				// 初始化列表
+				var row = "";
+				$.each(obj.content.price_log,function(key, value){
+					row += "<tr>";
+					for(var i=0;i<that.price_log.length;i++){
+						if(value[that.price_log[i]] != null){
+							row += createTd(subString(value[that.price_log[i]],10,true));
+						}else{
+							row += createTd(createWarn('无数据'));
+						}
+					}
+					row += "</tr>";
+					$("#price_log_list>tbody").html(row);
+				});
+				$('#message_area').html('');		
 			}
 		}, "json");
 	},

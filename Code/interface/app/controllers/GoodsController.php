@@ -961,7 +961,7 @@ class GoodsController extends ControllerBase {
 		
 		$orderInfo->orderAmount = $orderAmount;
 		$orderInfo->goodsAmount = $orderAmount;
-		$orderInfo->status = -1;
+		$orderInfo->status = 0;
 		try {
 			if(!$orderInfo->save()) {
 				foreach($orderInfo->getMessages() as $message) {
