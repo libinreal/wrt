@@ -42,6 +42,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *
 		 * 	    "command": "bill_status",
 		 *      "parameters": {}
+		 *      
+		 * 	    "command": "bill_repay_type",
+		 *      "parameters": {}*      
 		 * 
 		 *	    //"command":"admin_user_banks"
 		 *	    "parameters": {"user_id":4}
@@ -94,6 +97,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case 'bill_currency':
 					$content = array_merge( C('bill_currency') );//
+					break;
+				case 'bill_repay_type':
+					$content = array_merge( C('bill_repay_type') );//
 					break;
 				case 'users':
 					$sql = 'SELECT `user_id`,`user_name`,`companyName` FROM ' . $GLOBALS['ecs']->table('users');
@@ -177,7 +183,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	}
 	$command_arr = array('bill_type', 'bill_status', 'bill_currency', 'users', 'admin_users', 
 						'admin_user_banks', 'admin_user_bank_accounts', 'user_banks', 'user_bank_accounts',
-						'payment', 'childer_order_status', 'order_status'
+						'payment', 'childer_order_status', 'order_status', 'bill_repay_type'
 					);
 	$content = jsonAction( $command_arr );
 	$typeModel = new TypeModel($content);
