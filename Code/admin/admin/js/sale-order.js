@@ -154,7 +154,7 @@ var SaleOrder = {
 				return false;
 			}else{
 				$.each(obj.content.info, function(k, v){
-					if($("span#"+k).length){
+					if($("#"+k).length){
 						$("#"+k).text(v);
 					}
 				});
@@ -371,7 +371,9 @@ var SaleOrder = {
 		}
 		var strJson = createJson("searchChilderList", this.entity, params);
 		var that = this
+		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
+			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -392,8 +394,8 @@ var SaleOrder = {
 								row += createTd(edit);
 								continue;
 							}
-							if(that.suborder_arr[i] == "order_status"){
-								row += createTd(that.suborder_status[value["order_status"]]);
+							if(that.suborder_arr[i] == "child_order_status"){
+								row += createTd(that.suborder_status[value["child_order_status"]]);
 								continue;
 							}
 							if(value[that.suborder_arr[i]] != null){
@@ -426,8 +428,8 @@ var SaleOrder = {
 			}else{
 				console.log(obj)
 				$.each(obj.content.info, function(k, v){
-					if($("span#"+k).length){
-						$("span#"+k).text(v);
+					if($("#"+k).length){
+						$("#"+k).text(v);
 					}
 					if($("select[name="+k+"]").length){
 						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");

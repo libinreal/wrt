@@ -177,73 +177,8 @@
                 {/if}
             </dd>
             {/foreach}
-            <dt>应收票据管理</dt>
-            <dd>
-                <ul>
-                    <li name="menu"><a href="demo_template.php?section=bill_manage&act=insert" target="main-frame">票据添加</a></li>
-                    <li name="menu"><a href="demo_template.php?section=bill_manage&act=list" target="main-frame">票据列表</a></li>
-                    <li name="menu"><a href="demo_template.php?section=bill_manage&act=generate" target="main-frame">现金额度生成单</a></li>
-                    <li name="menu"><a href="demo_template.php?section=bill_manage&act=order_list" target="main-frame">额度生成单列表</a></li>
-                    <li name="menu"><a href="demo_template.php?section=bill_manage&act=repay_list" target="main-frame">票据偿还单列表</a></li>
-                    <li name="menu"><a href="demo_template.php?section=bill_manage&act=user_list" target="main-frame">额度分配调整列表</a></li>
-                </ul>
-            </dd>
-            <!-- <dt>采购价格管理</dt>
-            <dd>
-                <ul>
-                    <li name="menu"><a href="demo_template.php?section=purchase_price_manage&act=batch" target="main-frame">批量加价</a></li>
-                    <li name="menu"><a href="demo_template.php?section=purchase_price_manage&act=list" target="main-frame">加价列表</a></li>
-                </ul>
-            </dd> -->
-            <dt>销售订单管理</dt>
-            <dd>
-                <ul>
-                    <li name="menu"><a href="demo_template.php?section=sale_order&act=list" target="main-frame">订单列表</a></li>
-                    <li name="menu"><a href="demo_template.php?section=sale_order&act=suborder_all" target="main-frame">子订单列表</a></li>
-                </ul>
-            </dd>
-            <!-- 
-            <dt>采购订单管理</dt>
-            <dd>
-                <ul>
-                    <li name="menu"><a href="demo_template.php?section=purchase_order&act=check_first" target="main-frame">下单列表（第一次验签）</a></li>
-                    <li name="menu"><a href="demo_template.php?section=purchase_order&act=suborder_check_first" target="main-frame">子订单验签(第一次验签)</a></li>
-                    <li name="menu"><a href="demo_template.php?section=purchase_order&act=check_second" target="main-frame">下单列表（第二次验签）</a></li>
-                    <li name="menu"><a href="demo_template.php?section=purchase_order&act=suborder_check_second" target="main-frame">子订单验签(第二次验签)</a></li>
-                </ul>
-            </dd>
-            <dt>应付款管理</dt>
-            <dd>
-                <ul>
-                    <li name="menu"><a href="demo_template.php?section=payment&act=detail" target="main-frame">应付单详情</a></li>
-                    <li name="menu"><a href="demo_template.php?section=payment&act=list" target="main-frame">采购应付单列表</a></li>
-                    <li name="menu"><a href="demo_template.php?section=payment&act=handle" target="main-frame">付款单处理</a></li>
-                </ul>
-            </dd> -->
         </dl>
     </div>
-    <!--
-    <div id="menu-list">
-        <ul id="menu-ul">
-            {foreach from=$menus item=menu key=k}
-            {if $menu.action}
-            <li class="explode"><a href="{$menu.action}" target="main-frame">{$menu.label}</a></li>
-            {else}
-            <li class="explode" key="{$k}" name="menu">
-                {$menu.label}
-                {if $menu.children}
-                <ul>
-                    {foreach from=$menu.children item=child}
-                    <li class="menu-item"><a href="{$child.action}" target="main-frame">{$child.label}</a></li>
-                    {/foreach}
-                </ul>
-                {/if}
-            </li>
-            {/if}
-            {/foreach}
-        </ul>
-    </div>
-    -->
 </div>
 
 {insert_scripts files="accordion.js,../js/global.js,../js/utils.js,../js/transport.js,menu.js"}

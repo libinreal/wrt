@@ -1,9 +1,10 @@
+<div class="messagepop_bot">
 <div class="messagepop_header"><h4>添加物流记录</h4></div>
 <div class="clear"></div>
 <hr>
 <form id="logistics_form">
-	<div class="row"><label>物流记录：</label> <textarea name="log" data-rule-required="true"></textarea></div>
-	<div class="row"><label>记录时间：</label> <input type="text" style="width:100px;" id="log_time" name="date" readonly="readonly" /></div>
+	<div class="row"><label>物流记录：</label> <textarea name="log" style="width: 500px;" data-rule-required="true"></textarea></div>
+	<div class="row"><label>记录时间：</label> <input type="text" id="log_time" name="date" readonly="readonly" /></div>
 	<input type="hidden" name="order_id" />
 	<hr>
 	<div align="center">
@@ -11,6 +12,7 @@
 	<input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " />
 	</div>
 </form>
+</div>
 <script type="text/javascript">
 $(document).ready(function(){
 	laydate({

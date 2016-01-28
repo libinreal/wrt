@@ -1035,7 +1035,10 @@ em, cite, th {
   top: 20%;
   left: 20%;
   z-index:101; 
-  padding: 10px;
+}
+
+.messagepop .messagepop_bot {
+    margin: 20px;
 }
 .messagepop input, .messagepop textarea{
     border: 1px solid #ccc;
@@ -1053,7 +1056,9 @@ em, cite, th {
 .messagepop_header h4{
     margin:0;
     padding: 0;
+    padding-top: 8px;
     float: left;
+    font-size: 1.2em;
 }
 .messagepop_header .close{
     float: right;
@@ -1150,10 +1155,9 @@ em, cite, th {
     width: 100%;
 }
 .table_info_2 th{
+    padding:8px;
+    background: #eee;
     font-weight: bold;
-    line-height: 30px;
-    color:#666;
-    background: #fff;
 }
 .table_info_2 td.title{
     text-align: right;
@@ -1162,10 +1166,14 @@ em, cite, th {
 }
 .table_info_2 td{
     background: #fff;
-    padding-left: 10px;
+    padding:5px;
 }
 .table_info_2 table{
     width: 100%;
+}
+table.t_1{
+    position: relative;
+    top:-1px;
 }
 .table_info_2 table td{
     text-align: center;
@@ -1245,25 +1253,23 @@ em, cite, th {
     background-color: #ccc;
     margin-bottom: 15px;
 }
-.list-note-2 table .head{
-    padding: 0 10px;
-    line-height: 25px;
-    font-weight: bold;
-}
-.list-note-2 table thead{
-    background: #666;
-    color: #fff;
+.list-note-2 table th{
+    padding: 8px;
+    width: 100px;
+    text-align: right;
+    border-bottom: 1px solid #999;
 }
 .list-note-2 table tbody td{
+    height: 30px;
     background: #fff;
-    line-height: 50px;
+    padding: 5px;
+    width: 15%;
 }
 .list-note-2 table td.title{
-    font-size: 16px;
+    padding-left: 5px;
+    font-size:16px;
     font-weight: bold;
-    line-height: 25px;
-    border-bottom: 1px solid #ccc;
-    text-indent: 5px;
+    border-bottom:1px solid #999;
 }
 
 
@@ -1344,5 +1350,16 @@ input.error{
 
 /** 物流样式列表 **/
 #logistics_form .row{
-    margin: 5px 0 5px 0;
+    margin: 15px 0;
+}
+
+#logistics_form .row input {
+    padding: 3px;
+    width: 500px;
+}
+
+#logistics_operate a{
+    background: #f90;
+    color: #fff;
+    padding: 5px;
 }
