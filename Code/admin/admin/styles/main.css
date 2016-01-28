@@ -306,7 +306,8 @@ td.micro-label {
 }
 
 input.button {
-    padding: 5px 10px;
+    height: 25px;
+    line-height: 25px;
     margin: 2px;
     border: 1px solid #2D5082;
     cursor: pointer;
@@ -1148,18 +1149,10 @@ em, cite, th {
     background: #ccc;
     width: 100%;
 }
-.table_info_2 table{
-    width: 100%;
-}
 .table_info_2 th{
     font-weight: bold;
     line-height: 30px;
     color:#666;
-    background: #fff;
-}
-.table_info_2 table td{
-    text-align: center;
-    line-height: 30px;
     background: #fff;
 }
 .table_info_2 td.title{
@@ -1168,6 +1161,15 @@ em, cite, th {
     padding: 5px 1em;
 }
 .table_info_2 td{
+    background: #fff;
+    padding-left: 10px;
+}
+.table_info_2 table{
+    width: 100%;
+}
+.table_info_2 table td{
+    text-align: center;
+    line-height: 30px;
     background: #fff;
 }
 /** table_info_3**/
@@ -1207,7 +1209,7 @@ em, cite, th {
 /**  **/
 .list-note table{
     width: 100%;
-    margin: 0 auto;
+    margin: 0 auto 10px auto;
     background-color: #ccc;
 }
 .list-note table thead td{
@@ -1261,6 +1263,7 @@ em, cite, th {
     font-weight: bold;
     line-height: 25px;
     border-bottom: 1px solid #ccc;
+    text-indent: 5px;
 }
 
 
