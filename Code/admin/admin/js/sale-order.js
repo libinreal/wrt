@@ -174,7 +174,7 @@ var SaleOrder = {
 								var edit = "<span id='goods_"+value.goods_id+"'>"+createLink("javascript:void(0)", "取消未处理", "SaleOrder.cancelSubOrderInit('"+obj.content.info.order_id+"', '"+value.goods_id+"')") + "</span>";
 								edit += createLink("demo_template.php?section=sale_order&act=split&order_id="+obj.content.info.order_id+"&goods_id="+value.goods_id, "拆单");
 							}
-							edit += createLink("demo_template.php?section=sale_order&act=suborder_detail&order_id="+obj.content.info.order_id, "子订单");
+							edit += createLink("demo_template.php?section=sale_order&act=suborder_list&id="+obj.content.info.order_id, "子订单列表");
 							row += createTd(edit);
 							continue;
 						}

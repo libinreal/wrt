@@ -1209,7 +1209,7 @@ em, cite, th {
 /**  **/
 .list-note table{
     width: 100%;
-    margin: 0 auto;
+    margin: 0 auto 10px auto;
     background-color: #ccc;
 }
 .list-note table thead td{
@@ -1263,6 +1263,7 @@ em, cite, th {
     font-weight: bold;
     line-height: 25px;
     border-bottom: 1px solid #ccc;
+    text-indent: 5px;
 }
 
 
