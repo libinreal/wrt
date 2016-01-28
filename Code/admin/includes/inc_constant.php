@@ -62,24 +62,24 @@ define('OS_ACCOUNT',                3); // 对账中 积分订单
 define('OS_SPLITING_PART',          6); // 部分分单 积分订单
 //define('OS_SPLITED',                5); // 已分单
 // 父订单状态
-define('OS_SUBMIT',                 -1);// 已提交
+define('OS_SUBMIT',                 0);// 已提交
 define('OS_UNCONFIRMED',            0); // 已确认
 define('OS_CONFIRMED',              1); // 处理中
-define('OS_ACCEPT',                 2); // 验收中
-define('OS_SPLITED',                3); // 对账中
+define('OS_ACCEPT',                 1); // 验收中
+define('OS_SPLITED',                1); // 对账中
 
-define('OS_COMPLETE',               4); // 完成
-define('OS_CANCELED',               5); // 取消
-define('OS_INVALID',                6); // 无效
+define('OS_COMPLETE',               2); // 完成
+define('OS_CANCELED',               3); // 取消
+define('OS_INVALID',                3); // 无效
 
 // 子订单状态
-define('OS_CHILD_ORDER',           -1); //保存本地  商城保存
+define('OS_CHILD_ORDER',           	0); //保存本地  商城保存
 define('COS_UNCONFIRMED',           0);//提交
 define('COS_CONFIRMED',              1); // erp返回合同数据。待支付 （查支付查1）
-define('COS_ACCEPT',                 2); // 已确认支付。（请求erp接口）
-define('COS_ACCOUNT',                3); // 待验收
-define('COS_COMPLETE',               4); // 确认验收，待对账
-define('COS_CANCELED',               5); // 完成
+define('COS_ACCEPT',                 1); // 已确认支付。（请求erp接口）
+define('COS_ACCOUNT',                1); // 待验收
+define('COS_COMPLETE',               1); // 确认验收，待对账
+define('COS_CANCELED',               9); // 完成
 
  // 父订单状态（二期）
 define('POS_SUBMIT',                 0);// 已下单
