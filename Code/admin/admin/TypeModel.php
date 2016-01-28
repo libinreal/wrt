@@ -102,7 +102,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$content = array_merge( C('bill_repay_type') );//
 					break;
 				case 'users':
-					$sql = 'SELECT `user_id`,`user_name`,`companyName` FROM ' . $GLOBALS['ecs']->table('users');
+					$sql = 'SELECT `user_id`,`user_name`,`companyName` FROM ' . $GLOBALS['ecs']->table('users') .
+						   ' WHERE `user_name` IS NOT NULL';
 					break;
 				case 'admin_users':
 					$sql = 'SELECT `user_id`,`user_name` FROM ' . $GLOBALS['ecs']->table('admin_user');
