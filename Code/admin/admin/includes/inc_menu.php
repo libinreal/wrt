@@ -106,4 +106,15 @@ $modules['15_bthPrice']['02_price_list'] = 'price_manage.php?act=list';
 $modules['16_applyCredit']['01_applyCredit_list'] = 'applyCredit_manage.php?act=list';
 $modules['16_applyCredit']['02_applyCredit_rlist'] = 'applyCredit_manage.php?act=recycle';
 
+//应收票据管理
+$modules['17_bill_manage']['01_bill_manage_insert'] = 'demo_template.php?section=bill_manage&act=insert';
+$modules['17_bill_manage']['02_bill_manage_list'] = 'demo_template.php?section=bill_manage&act=list';
+$modules['17_bill_manage']['03_bill_manage_generate'] = 'demo_template.php?section=bill_manage&act=generate';
+$modules['17_bill_manage']['04_bill_manage_order_list'] = 'demo_template.php?section=bill_manage&act=order_list';
+$modules['17_bill_manage']['05_bill_manage_repay_list'] = 'demo_template.php?section=bill_manage&act=repay_list';
+$modules['17_bill_manage']['06_bill_manage_user_list'] = 'demo_template.php?section=bill_manage&act=user_list';
+
+//销售订单管理
+$modules['18_sale_order']['01_sale_order_list'] = 'demo_template.php?section=sale_order&act=list';
+$modules['18_sale_order']['02_sale_order_suborder_all'] = 'demo_template.php?section=sale_order&act=suborder_all';
 ?>
