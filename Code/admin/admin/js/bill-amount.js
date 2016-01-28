@@ -199,6 +199,7 @@ var BillAmount = {
 				$('#message_area').html(createError(obj.message));
 			}else{
 				$('#message_area').html(createTip(obj.message));
+				redirectToUrl("demo_template.php?section=bill_manage&act=order_list");
 			}
 		}, "json");
 	},
