@@ -429,7 +429,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$sql = $sql .
 				   ' LEFT JOIN ' . $user_table . ' as usr ON odr.`user_id` = usr.`user_id` '.
 				   ' LEFT JOIN ' . $contract_table . ' as crt ON odr.`contract_sn` = crt.`contract_num` ' .
-				   $where_str .
+				   $where_str . 'ORDER BY odr.`add_time` DESC' .
 				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$orders = $GLOBALS['db']->getAll($sql);
 			
@@ -550,7 +550,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 							     $category_table . ' AS cat ON cat.`cat_id` = g.`cat_id` LEFT JOIN '.
 							     $order_info_table . ' AS odr ON odr.`order_id` = ogd.`order_id` LEFT JOIN '.
 							     $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn`' .
-							     ' WHERE ogd.`order_id` IN(' . $all_order_ids . ')';
+							     ' WHERE ogd.`order_id` IN(' . $all_order_ids . ')' . ' ORDER BY odr.`add_time` DESC';
 
 			$childer_orders = $GLOBALS['db']->getAll( $childer_order_sql );
 
@@ -656,7 +656,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$where_str = '';
 
 			if( isset( $where["like"] ) )
-			{
+				{
 				$like = $where["like"];
 				if ( isset( $like['user_name'] ) )//条件包含客户名的(先查users表，再根据结果中的user_id查找)
 				{
@@ -788,7 +788,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_str = ' ORDER BY odr.`add_time` DESC';
 			$limit_str = ' LIMIT ' . intval( $params['limit'] ) . ',' . intval( $params['offset'] );
 
-			$childer_order_sql = 'SELECT odr.`order_id`, odr.`order_sn`, odr.`add_time`, odr.`order_status`, IFNULL(crt.`contract_name`, \'\') AS `contract_name`, ogd.`goods_id`, ' .
+			$childer_order_sql = 'SELECT odr.`order_id`, odr.`order_sn`, odr.`add_time`, odr.`child_order_status`, odr.`order_status`, IFNULL(crt.`contract_name`, \'\') AS `contract_name`, ogd.`goods_id`, ' .
 							     'ogd.`goods_name`, ogd.`goods_price`, ogd.`goods_number`, cat.`cat_name` FROM ' .
 							     $order_goods_table . ' AS ogd LEFT JOIN ' .
 							     $goods_table . ' AS g ON g.`goods_id` = ogd.`goods_id` LEFT JOIN ' .
@@ -874,6 +874,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	        	"remain_number":80, //未拆单数量
 		 *	        	"goods_price":20, //单价
 		 *	        	"rate":0.008,//金融费率
+		 *	        	"total_price":10000,//发货总价
+		 *	        	"finance":200,//金融费用
+		 *	        	"split_number":1,//拆单数量
+		 *	        	"shipping_price_info":100/元/吨,//物流费用详细信息
+		 *	        	"shipping_price":100,//物流费用
 		 *	        	"payment":
 		 *	        	[
 		 *	        	{
@@ -908,6 +913,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$suppliers_table = $GLOBALS['ecs']->table('suppliers');
 
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$shipping_price_table = $GLOBALS['ecs']->table('shipping_price');
 
 			//商品详情
 			$good_sql = 'SELECT og.`goods_name`, og.`goods_price`, og.`goods_number`, og.`send_number`, og.`goods_sn`, s.`suppliers_name`, s.`suppliers_id`, ' .
@@ -935,7 +941,28 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$goods['attr'] = implode('/', $attr_arr);
 			}
 
+			//物流费用
+			$shipping_price_sql = 'SELECT ifnull( `shipping_fee`, \'\') AS `shipping_fee` FROM ' . $shipping_price_table . ' WHERE `goods_category_id` = ' .
+								  $goods['cat_id'] . ' AND `suppliers_id` = ' . $goods['suppliers_id'];
+			$shipping_price = $GLOBALS['db']->getRow( $shipping_price_sql );
+			$order['shipping_price_info'] = '';
+			$order['shipping_price'] = 0;
+			
+			if( !empty( $shipping_price ) ){
+
+				$m_arr = array();
+				if ( preg_match( '/[\d]+[\.]*[\d]*/', $shipping_price['shipping_fee'], $m_arr ) ){
+					$order['shipping_price'] = $m_arr[0];
+				}
+				$order['shipping_price_info'] = $shipping_price['shipping_fee'];
+			}
+			
+
+
 			$goods['remain_number'] = $goods['goods_number'] - $goods['send_number'];//未拆单
+			$order['split_number'] = $goods['remain_number'];//拆单数量
+			$order['finance'] = round( $goods['goods_price'] * $goods['split_number'] * $goods['rate'], 2 );//金融费
+			$order['total_price'] = round($order['finance'] + $order['shipping_price'] + $goods['goods_price'] * $order['split_number'], 2 );//发货总价
 
 			//订单详情
 			//该类商品的供应商列表

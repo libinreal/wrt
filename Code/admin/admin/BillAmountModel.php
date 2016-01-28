@@ -458,7 +458,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$result['info'] = $bill; 		
 			} elseif ( $type == 1) {//现金
-				$sql = 'SELECT `user_id`, `user_name` FROM ' . $GLOBALS['ecs']->table('users');
+				$sql = 'SELECT `user_id`, `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `user_name` IS NOT NULL';
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 
