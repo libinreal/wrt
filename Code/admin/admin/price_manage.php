@@ -37,7 +37,8 @@ $ApiList = array(
     'getExistBatch', 
     'priceList', 
     'singlePrice', 
-    'setPrice'
+    'setPrice', 
+	'deleteGoodsPrice'
 );
 /**
  * 加价管理API
@@ -703,6 +704,33 @@ class Price extends ManageModel
         make_json_result(true);
     }
     
+    
+    
+    /**
+     * 删除单个加价商品
+     * {
+     *      "command" : "deleteGoodsPrice",
+     *      "entity"  : "goods",
+     *      "parameters" : {
+     *          "goods_id" : "(int)",
+     *      }
+     * }
+     */
+    public function deleteGoodsPrice($entity, $parameters) 
+    {
+    	self::init($entity, 'goods');
+    	$goodsId = $parameters['goods_id'];
+    	if (!$goodsId) {
+    		failed_json('没有传参`goods_id`');
+    	}
+    	
+    	$sql = 'UPDATE '.$this->table.' SET price_num=0,price_rate=0,price_type=0,price_rule=0 WHERE goods_id='.$goodsId;
+    	$res = $this->db->query($sql);
+    	if ($res === false) {
+    		failed_json('改价失败');
+    	}
+    	make_json_result(true);
+    }
     
     
     /**
