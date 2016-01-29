@@ -13,6 +13,13 @@ $_LANG['09_service'] = '客服中心';
 $_LANG['10_members'] = '会员管理';
 $_LANG['11_priv_admin'] = '权限管理';
 $_LANG['12_stats'] = '报表统计';
+$_LANG['13_contract'] = '合同管理';
+$_LANG['14_credit'] = '授信管理';
+$_LANG['15_bthPrice'] = '采购价格管理';
+$_LANG['16_applyCredit'] = '平台授信管理';
+$_LANG['17_bill_manage'] = '应收票据管理';
+$_LANG['18_sale_order'] = '销售订单管理';
+
 
 //基建商城管理部分的权限
 $_LANG['goods_manage'] = '商品添加/编辑';
@@ -24,6 +31,7 @@ $_LANG['brand_recommend_manage'] = '品牌推荐';
 // 订单管理部分权限
 $_LANG['order_view'] = '订单处理';
 $_LANG['order_edit'] = '订单编辑';
+
 // 积分商城
 $_LANG['exchange_category_manage'] = '积分商城分类';
 $_LANG['exchange_goods_manage'] = '积分商城商品';
@@ -80,5 +88,34 @@ $_LANG['credit_evaluation_state'] = '信用池列表';
 $_LANG['credit_quota_add_state'] = '信用申请';
 $_LANG['purchase_quota_add_state'] = '采购管理';
 $_LANG['credit_intrinfo_manage'] = '信用记录管理';
+
+//合同管理
+$_LANG['contract_insert'] = '新增合同';
+$_LANG['contract_list'] = '合同列表';
+$_LANG['contract_supplier_add'] = '关联供应商、合同';
+$_LANG['contract_supplier_list'] = '供应商、合同列表';
+
+//授信管理
+$_LANG['credit_list'] = '授信单列表';
+
+//采购价格管理
+$_LANG['batch_price'] = '批量加价';
+$_LANG['price_list'] = '加价列表';
+
+//平台授信管理
+$_LANG['applyCredit_list'] = '平台授信列表';
+$_LANG['applyCredit_rlist'] = '平台授信回收站';
+
+//应收票据管理
+$_LANG['bill_manage_insert'] = '票据添加';
+$_LANG['bill_manage_list'] = '票据列表';
+$_LANG['bill_manage_generate'] = '现金额度生成单';
+$_LANG['bill_manage_order_list'] = '现金额度生成单列表';
+$_LANG['bill_manage_repay_list'] = '票据偿还单列表';
+$_LANG['bill_manage_user_list'] = '额度分配调整列表';
+
+//销售订单管理
+$_LANG['sale_order_list'] = '订单列表';
+$_LANG['sale_order_suborder_all'] = '子订单列表';
 
 ?>
