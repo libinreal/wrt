@@ -217,6 +217,13 @@
 			</tr>
 		</table>
 	</div>
+	<div style="text-align:center;padding-bottom:15px;">
+		<div id="handle-button">
+			<a class="button" href="javascript:void(0)">验签按钮</a>
+			<a class="button" href="javascript:void(0)">验签按钮</a>
+			<a class="button" href="javascript:void(0)">验签按钮</a>
+		</div>
+	</div>
 </script>
 
 <script src="../content/js/module/seajs/2.2.0/sea.js"></script>

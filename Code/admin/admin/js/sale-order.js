@@ -626,8 +626,8 @@ var SaleOrder = {
 					}
 				});
 				$.each(obj.content.info,function(key, value){
-					if($("span#"+key).length){
-						$("span#"+key).text(value);	
+					if($("#"+key).length){
+						$("#"+key).text(value);	
 					}
 				});
 				var row = "";

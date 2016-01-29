@@ -51,9 +51,8 @@ var Price = {
 			}
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		}
-		strJson = createJson("priceList", "goods", params);
-		that = this
-		console.log(strJson);
+		var strJson = createJson("priceList", "goods", params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -67,12 +66,12 @@ var Price = {
 				}else{
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
 					var row = "";
-					console.log(obj)
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=purchase_price_manage&act=single&id="+value.goods_id, "修改价格");
+								edit += createLink("javascript:void(0)", "删除", "Price.deleteGoodsPrice("+value.goods_id+")");
 								row += createTd(edit);
 								continue;
 							}
@@ -115,8 +114,8 @@ var Price = {
 							}
 						}
 						row += "</tr>";
-						$("#purchase_price_increase_list>tbody").html(row);
 					});
+					$("#purchase_price_increase_list>tbody").html(row);
 				}
 			}
 			$('#message_area').html('');
@@ -377,4 +376,24 @@ var Price = {
 			}
 		}, "json");
 	},
+
+	//删除批量加价中一条数据
+	deleteGoodsPrice: function(id){
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		var params = {"goods_id": id};
+		var strJson = createJson("deleteGoodsPrice", "goods", params);
+		var that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip('删除成功'));
+				that.getList();
+				return false;
+			}
+		}, "json");
+	}
 }
