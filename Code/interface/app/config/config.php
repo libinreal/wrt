@@ -43,5 +43,7 @@ return new \Phalcon\Config(array(
         	'pubdir' => __DIR__ . '/../../public/pics/',
         	'thumbdir' => __DIR__ . '/../../public/thumbs/',
 
-		 )
+		 ),
+
+        'adminpath' => __DIR__ . '/../../../admin/includes/inc_constant.php',//后台用到的常量
 ));

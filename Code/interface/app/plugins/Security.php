@@ -55,7 +55,8 @@ class Security extends Plugin
             		'ustatus',
             		'pay',
             		'check',
-            		'requestproc'
+            		'requestproc',
+                    'uchildstatus'
             	),
             	'project' => array(
             		'getlist',

@@ -20,6 +20,12 @@ try {
     include __DIR__ . "/../app/config/services.php";
 
     /**
+     * read inc_constant.php
+     */
+    define('IN_ECS', 1);
+    include $config['adminpath'];
+
+    /**
      * Handle the request
      */
     $application = new \Phalcon\Mvc\Application($di);

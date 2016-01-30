@@ -695,6 +695,67 @@ class OrderController extends ControllerBase
 	}
 
 	/**
+	 * 客户验签（发货 :1 -> 2 收货 5 -> 6）
+	 * @date 2016/01/30
+	 * @param string $value [description]
+	 */
+	public function uChildStatusAction()
+	{
+		$order = $this->cMyOrder();
+		if( !empty( $order ) ){
+			if( $order->childOrderStatus == SOS_CONFIRMED ){
+				$order->childOrderStatus = SOS_SEND_CC;//客户已验签(发货)
+			} else if( $order->childOrderStatus == SOS_SEND_PC2 ){
+				$order->childOrderStatus = SOS_ARR_CC;//客户已验签(到货)
+			} else {
+				return ResponseApi::send(null, Message::$_ERROR_LOGIC, "此订单当前不能验签");
+			}
+			
+			if(!$order->save()) {
+				foreach($order->getMessages() as $message) {
+					return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
+				}
+			}
+			return ResponseApi::send();
+
+		}else{
+			return ResponseApi::send(null, Message::$_ERROR_NOFOUND, "订单不存在");
+		}
+	}
+
+	/**
+	 * 验证是否是我的订单
+	 * @date 2016/01/30 
+	 * @return 
+	 */
+	private function cMyOrder()
+	{
+		$order_id = $this->request->get('oid', 'int');
+		$user_id = $this->get_user()->id;
+
+		$order = OrderInfo::findFirst( array( 
+					'id = ?1 AND userId = ?2',
+					'bind' => array(
+							1 => $order_id,
+							2 => $user_id
+							),
+					//'columns' => 'id, userId, childOrderStatus'
+						) );
+		if( $order ){
+			
+			$tArr = array('invFax', 'invTel', 'invBankName', 'invBankAccount', 'invBankAddress');
+			foreach( $tArr as $p ){
+				if( empty( $order->$p ) )
+					$order->$p = ' ';
+			}
+			return $order;
+		} else {
+			return array();
+		}
+
+	}
+
+	/**
 	 * the price after batch price
 	 * @param array $arr
 	 * @return number
