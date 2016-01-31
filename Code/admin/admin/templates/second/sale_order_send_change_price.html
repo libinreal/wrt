@@ -71,13 +71,13 @@
 					<td class="title">实际供应商：</td>
 					<td><select name="suppers_id" style="width:80px;"></select></td>
 					<td class="title">金融费用比率：</td>
-					<td><input type="text" name="financial_send_rate" name="financial_send_rate" data-rule-required="true" data-rule-number="true"></td>
+					<td><input type="text" id="financial_send_rate" name="financial_send_rate" data-rule-required="true" data-rule-number="true"></td>
 					<td class="title">物流费用：</td>
 					<td><input type="text" name="shipping_fee_send_buyer" id="shipping_fee_send_buyer" data-rule-required="true" data-rule-number="true"></td>
 				</tr>
 				<tr>
 					<td class="title">金融费用：</td>
-					<td><input type="text" name="financial_send" id="financial_send" data-rule-required="true" data-rule-number="true"></td>
+					<td><input type="text" name="financial_send" id="financial_send" data-rule-required="true" data-rule-number="true" readonly="readonly"></td>
 					<td class="title">发货总价：</td>
 					<td><input type="text" name="order_amount_send_buyer" id="order_amount_send_buyer" disabled="disabled"></td>
 					<td></td><td></td>
@@ -152,37 +152,52 @@
 <script type="text/javascript">
 SaleOrder.initPriceSend();
 $(document).ready(function(){
-	$('#goods_price_add').on('valuechange', function (e, previous) {
-		var goods_price_add = parseFloat($("#goods_price_add").val()) == 0 ? 0 : parseFloat($("#goods_price_add").val());
-		var shipping_fee_send_buyer = parseFloat($("#shipping_fee_send_buyer").val()) == 0 ? 0 : parseFloat($("#shipping_fee_send_buyer").val());
-		var financial_send = parseFloat($("#financial_send").val()) == 0 ? 0 : parseFloat($("#financial_send").val());
-		var goods_number = parseFloat($("#goods_number").val()) == 0 ? 0 : parseFloat($("#goods_number").val());
-		$("#order_amount_send_buyer").val(goods_price_add*goods_number + shipping_fee_send_buyer + financial_send);
+	// 客户价格-金融费用比率修改
+	$('#financial_send_rate').on('valuechange', function (e, previous) {
+		customerPriceChange();
 	});
+	// 客户价格-物流费用改价
 	$('#shipping_fee_send_buyer').on('valuechange', function (e, previous) {
-		var goods_price_add = parseFloat($("#goods_price_add").val()) == 0 ? 0 : parseFloat($("#goods_price_add").val());
-		var shipping_fee_send_buyer = parseFloat($("#shipping_fee_send_buyer").val()) == 0 ? 0 : parseFloat($("#shipping_fee_send_buyer").val());
-		var financial_send = parseFloat($("#financial_send").val()) == 0 ? 0 : parseFloat($("#financial_send").val());
-		var goods_number = parseFloat($("#goods_number").val()) == 0 ? 0 : parseFloat($("#goods_number").val());
-		$("#order_amount_send_buyer").val(goods_price_add*goods_number + shipping_fee_send_buyer + financial_send);
+		customerPriceChange();
 	});
+	// 供应商价格 - 物料单价修改
 	$('#goods_price').on('valuechange', function (e, previous) {
-		var goods_price = parseFloat($("#goods_price").val()) == 0 ? 0 : parseFloat($("#goods_price").val());
-		var goods_number = parseFloat($("#goods_number").val()) == 0 ? 0 : parseFloat($("#goods_number").val());
-		var shipping_fee_send_saler = parseFloat($("#shipping_fee_send_saler").val()) == 0 ? 0 : parseFloat($("#shipping_fee_send_saler").val());
-		var financial_send = parseFloat($("#financial_send").val()) == 0 ? 0 : parseFloat($("#financial_send").val());
-		var goods_number = parseFloat($("#goods_number").val()) == 0 ? 0 : parseFloat($("#goods_number").val());
-		$("#order_amount_send_saler").val(goods_price*goods_number + shipping_fee_send_saler + financial_send);
+		supplierPriceChange()
 	});
+	// 供应商价格 - 物流费用
 	$('#shipping_fee_send_saler').on('valuechange', function (e, previous) {
-		var goods_price = parseFloat($("#goods_price").val()) == 0 ? 0 : parseFloat($("#goods_price").val());
-		var goods_number = parseFloat($("#goods_number").val()) == 0 ? 0 : parseFloat($("#goods_number").val());
-		var shipping_fee_send_saler = parseFloat($("#shipping_fee_send_saler").val()) == 0 ? 0 : parseFloat($("#shipping_fee_send_saler").val());
-		var financial_send = parseFloat($("#financial_send").val()) == 0 ? 0 : parseFloat($("#financial_send").val());
-		var goods_number = parseFloat($("#goods_number").val()) == 0 ? 0 : parseFloat($("#goods_number").val());
-		$("#order_amount_send_saler").val(goods_price*goods_number + shipping_fee_send_saler + financial_send);
+		supplierPriceChange()
 	});
 });
+// 客户价格 - 价格更新
+function customerPriceChange(){
+	// 客户价格-金融费用比率
+	var financial_send_rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());
+	// 客户价格-物料单价
+	var goods_price_add = validateNumber(parseFloat($("#goods_price_add").val())) == 0 ? 0 : parseFloat($("#goods_price_add").val());
+	// 物料数量
+	var goods_number = validateNumber(parseFloat($("#goods_number").val())) == 0 ? 0 : parseFloat($("#goods_number").val());
+	// 客户价格-金融费用
+	var financial_send = financial_send_rate*goods_price_add*goods_number;
+	$("#financial_send").val(financial_send);
+	// 客户价格-物流费用
+	var shipping_fee_send_buyer = validateNumber(parseFloat($("#shipping_fee_send_buyer").val())) == 0 ? 0 : parseFloat($("#shipping_fee_send_buyer").val());
+	// 客户价格-发货总价
+	$("#order_amount_send_buyer").val(goods_price_add*goods_number + shipping_fee_send_buyer + financial_send);	
+}
+// 供应商价格 - 价格更新
+function supplierPriceChange(){
+	// 供应商价格 - 物料单价
+	var goods_price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
+	// 供应商价格 - 物料数量
+	var goods_number = validateNumber(parseFloat($("#goods_number").val())) == 0 ? 0 : parseFloat($("#goods_number").val());
+	// 供应商价格 - 物流费用
+	var shipping_fee_send_saler = validateNumber(parseFloat($("#shipping_fee_send_saler").val())) == 0 ? 0 : parseFloat($("#shipping_fee_send_saler").val());
+	// 客户价格-金融费用
+	var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
+	// 供应商价格 - 发货总价
+	$("#order_amount_send_saler").val(goods_price*goods_number + shipping_fee_send_saler + financial_send);
+}
 </script>
 	</body>
 </html>

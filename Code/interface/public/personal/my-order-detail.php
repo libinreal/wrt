@@ -219,9 +219,8 @@
 	</div>
 	<div style="text-align:center;padding-bottom:15px;">
 		<div id="handle-button">
-			<a class="button" href="javascript:void(0)">验签按钮</a>
-			<a class="button" href="javascript:void(0)">验签按钮</a>
-			<a class="button" href="javascript:void(0)">验签按钮</a>
+			<a class="button" href="order/uchildstatus?oid=<!--[= id]-->">到货验签</a>
+			<a class="button" href="javascript:history.back()">返回</a>
 		</div>
 	</div>
 </script>

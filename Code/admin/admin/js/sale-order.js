@@ -426,7 +426,6 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				console.log(obj)
 				$.each(obj.content.info, function(k, v){
 					if($("#"+k).length){
 						$("#"+k).text(v);
@@ -447,15 +446,17 @@ var SaleOrder = {
 				});
 				// 订单状态相应操作
 				var button = '';
-				$.each(obj.content.buttons, function(k, v){
-					if(v == "发货改价"){
-						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
-					}else if(v == "到货改价"){
-						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
-					}else{
-						button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
-					}
-				});
+				if(obj.content.order_status != 3){
+					$.each(obj.content.buttons, function(k, v){
+						if(v == "发货改价"){
+							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
+						}else if(v == "到货改价"){
+							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
+						}else{
+							button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
+						}
+					});
+				}
 				$("#handle_button>span").html(button);
 
 				// 物流信息

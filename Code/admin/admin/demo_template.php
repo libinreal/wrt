@@ -28,37 +28,6 @@ if($section == "credit_manage"){
 	}
 }
 
-if($section == "contract_manage"){
-	switch ($act) {
-		case 'list':
-			$smarty->display('second/contract_list.html');
-			break;
-
-		case 'supplier_list':
-			$smarty->display('second/contract_supplier_link_list.html');		
-			break;
-
-		case 'info':
-			$smarty->display('second/contract_edit.html');
-			break;
-
-		case 'view':
-			$smarty->display('second/contract_view.html');
-			break;
-
-		case 'bind':
-			$smarty->display('second/contract_supplier_link_set.html');
-			break;
-
-		case 'add':
-			$smarty->display('second/contract_insert.html');
-			break;
-		
-		default:
-			exit;
-			break;
-	}
-}
 
 if($section == "bill_manage"){
 	switch ($act) {
@@ -86,12 +55,20 @@ if($section == "bill_manage"){
 			$smarty->display('second/bill_edit.html');
 			break;
 
+		case 'view':
+			$smarty->display('second/bill_view.html');
+			break;
+
 		case 'generate':
 			$smarty->display('second/bill_purchase_cash.html');
 			break;
 
 		case 'generate_edit':
 			$smarty->display('second/bill_purchase_cash_edit.html');
+			break;
+
+		case 'generate_view':
+			$smarty->display('second/bill_purchase_cash_view.html');
 			break;
 
 		case 'generate_note':

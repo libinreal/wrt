@@ -78,9 +78,9 @@ var BillAmount = {
 							}
 							if(that.order_arr[i] == "operate"){
 								if(value.amount_type == 1 || value.amount_type == 2){
-									var edit = createLink("demo_template.php?section=bill_manage&act=generate_edit&log_id="+value.bill_amount_log_id, "详情");
+									var edit = "";
 								}else{
-									var edit = createWarn('无数据');
+									var edit = createLink("demo_template.php?section=bill_manage&act=generate_view&log_id="+value.bill_amount_log_id, "详情");
 								}
 								row += createTd(edit);
 								continue;
@@ -245,5 +245,47 @@ var BillAmount = {
 			}
 			$('#message_area').html('');
 		}, "json");
+	},
+
+	// 额度生成详情
+	getView: function(type){
+		var log_id = getQueryStringByName('log_id');
+		if(log_id == "" || !validateNumber(log_id)){
+			return false;
+		}
+		var params = {"type":type, "bill_amount_log_id": log_id};
+		strJson = createJson("editInit", this.entity, params);
+		$.post(this.url, strJson, function(obj){
+			console.log(obj)
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				// 初始化
+				var row = "";
+				$.each(obj.content.init.amount_type, function(k, v){
+					row += appendOption(k, v);
+				});
+				$("#amount_type").html(row);
+				var row = "";
+				$.each(obj.content.init.customer, function(k, v){
+					row += appendOption(v.user_id, v.user_name);
+				});
+				$("#user_id").html(row);
+				$.each(obj.content.info, function(k, v){
+					if($("select[name="+k+"]").length > 0){
+						$("select[name="+k+"]>option[value="+v+"]").attr("selected", "selected");
+					}
+					if($("input[name="+k+"]").length > 0){
+						$("input[name="+k+"]").val(v);
+					}
+					if($("textarea[name="+k+"]").length > 0){
+						$("textarea[name="+k+"]").text(v);
+					}
+				});
+				$("#operate_button").html(createButton('BillAmount.getUpdateAction()', '保存'));
+			}
+			$('#message_area').html('');
+		}, "json");		
 	}
 }

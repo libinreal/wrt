@@ -71,6 +71,7 @@ var Bill = {
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=bill_manage&act=info&id="+value.bill_id, "编辑");
+								edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "查看");
 								edit += createLink("demo_template.php?section=bill_manage&act=generate_note&bill_id="+value.bill_id, "生成票据采购额");
 								edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "还票");
 								row += createTd(edit);
@@ -177,6 +178,61 @@ var Bill = {
 						$("textarea[name="+key+"]").text(value);
 					}
 
+					if($("select[name="+key+"]").length){
+						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
+					}
+				});
+				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id);
+				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
+				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id);
+				TypeMode.getAdminUserBanksAccounts("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.receive_bank_id);
+			}
+			$('#message_area').html('');
+		},"json");
+	},
+
+	getView: function(){
+		var id = getQueryStringByName('id');
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		var params = {"bill_id":id};
+		strJson = createJson("editInit", this.entity, params);
+		var that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				// 初始化列表
+				TypeMode.getUsers("customer_id");
+				$.each(obj.content.init,function(key, value){
+					var row = "";
+					if(key == "payers"){
+						$.each(value, function(k, v){
+							row += appendOption(v.user_id, v.user_name)
+						});
+						$("select[name=pay_user_id]").append(row);
+					}else if(key == "receivers"){
+						$.each(value, function(k, v){
+							row += appendOption(v.user_id, v.user_name)
+						});
+						$("select[name=receive_user_id]").append(row);						
+					}else{
+						if($("select[name="+key+"]").length){
+							$.each(value, function(k, v){
+								row += appendOption(k, v)
+							});
+							$("select[name="+key+"]").append(row);
+						}
+					}
+				});
+				// 绑定数据
+				// 调用收付款列表
+				$.each(obj.content.info, function(key, value){
+					if($("#"+key).length){
+						$("#"+key).text(value)
+					}
 					if($("select[name="+key+"]").length){
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}
