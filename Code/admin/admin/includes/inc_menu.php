@@ -118,4 +118,9 @@ $modules['17_bill_manage']['06_bill_manage_user_list'] = 'demo_template.php?sect
 //销售订单管理
 $modules['18_sale_order']['01_sale_order_list'] = 'demo_template.php?section=sale_order&act=list';
 $modules['18_sale_order']['02_sale_order_suborder_all'] = 'demo_template.php?section=sale_order&act=suborder_all';
+
+//银行管理
+$modules['19_bank_manage']['01_bank_insert'] = 'demo_template.php?section=bank&act=insert';
+$modules['19_bank_manage']['02_bank_list'] = 'demo_template.php?section=bank&act=list';
+
 ?>
