@@ -238,7 +238,7 @@
 
 	function changeStatus(oid){
 		var xhReq = new XMLHttpRequest();
-		 xhReq.open("GET", "order/uchildstatus?oid="+oid, false);
+		 xhReq.open("GET", "http://"+window.location.host+"/order/uchildstatus?oid="+oid, false);
 		 xhReq.send(null);
 		 var serverResponse = xhReq.responseText;
 		 alert(serverResponse); // Shows "15"
