@@ -153,6 +153,21 @@ class Bank extends ManageModel
 			failed_json('传参错误');
 		}
 		
+		$where = '';
+		if ($flag) {
+			$where = ' AND bank_id!='.$bankId;
+		}
+		//查看银行编号是否存在
+		$this->selectSql(array(
+				'fields' => 'COUNT(*) AS num', 
+				'where'  => 'bank_num="'.$bankNum.'"'.$where
+		));
+		$result = $this->db->getOne($this->sql);
+		if ($result > 0) {
+			return failed_json('该银行编号已经存在');
+		}
+		
+		//修改或添加
 		if ($flag) {
 			$sql = 'UPDATE '.$this->table.' SET bank_name="'.$bankName.'",bank_num="'.$bankNum.'",bank_addr="'.$bankAddr.'",bank_tel="'.$bankTel.'",bank_fax="'.$bankTel.'" WHERE bank_id='.$bankId;
 		} else {
