@@ -51,11 +51,11 @@
 	<div class="order-progress gray-box clearfix">
 		<div class="order-progress-bg"></div>
 		<ul>
-			<li class="<!--[= $checkStatus(-1,orderStatus)]-->"><div><i>&nbsp;</i>订单提交</div></li>
-			<li class="<!--[= $checkStatus(1,orderStatus)]-->"><div><i>&nbsp;</i>订单确认</div></li>
-			<li class="<!--[= $checkStatus(2,orderStatus)]-->"><div><i>&nbsp;</i>物资验收</div></li>
-			<li class="<!--[= $checkStatus(3,orderStatus)]-->"><div><i>&nbsp;</i>订单对账</div></li>
-			<li class="<!--[= $checkStatus(4,orderStatus)]-->"><div><i>&nbsp;</i>订单完成</div></li>
+			<li class="<!--[= $checkStatus(0,childOrderStatus)]-->"><div><i>&nbsp;</i>订单提交</div></li>
+			<li class="<!--[= $checkStatus(1,childOrderStatus)]-->"><div><i>&nbsp;</i>订单确认</div></li>
+			<li class="<!--[= $checkStatus(6,childOrderStatus)]-->"><div><i>&nbsp;</i>物资验收</div></li>
+			<li class="<!--[= $checkStatus(8,childOrderStatus)]-->"><div><i>&nbsp;</i>订单对账</div></li>
+			<li class="<!--[= $checkStatus(9,childOrderStatus)]-->"><div><i>&nbsp;</i>订单完成</div></li>
 		</ul>
 		<div class="order-progress-statu clearfix">
 			<div class="order-progress-text">
@@ -67,7 +67,7 @@
 					</tr>
 					<tr>
 						<td>订单状态：</td>
-						<td><!--[= $getStatus(orderStatus)]--></td>
+						<td><!--[= $getStatus(childOrderStatus)]--></td>
 					</tr>
 					<tr>
 						<td>备<span class="e2"></span>注：</td>
@@ -220,8 +220,11 @@
 	<div style="text-align:center;padding-bottom:15px;">
 		<div id="handle-button">
 			<span>
-			<!--[if(orderStatus == '2'){]-->
+			<!--[if(childOrderStatus == 1){]-->
 				<a class="button" href="javascript:void(0)" onclick="changeOrderStatus(<!--[= id]-->)">到货验签</a>
+			<!--[}]-->
+			<!--[if(childOrderStatus == 5){]-->
+				<a class="button" href="javascript:void(0)" onclick="changeOrderStatus(<!--[= id]-->)">发货验签</a>
 			<!--[}]-->
 			</span>
 			<a class="button" href="javascript:history.back()">返回</a>
