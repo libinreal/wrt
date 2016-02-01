@@ -111,4 +111,6 @@ $purview['04_bill_manage_order_list'] = 'bill_manage_generate';
 $purview['05_bill_manage_repay_list'] = 'bill_manage_repay_list';
 $purview['06_bill_manage_user_list'] = 'bill_manage_user_list';
 
+$purview['01_bank_insert'] = 'bank_insert';
+$purview['02_bank_list'] = 'bank_list';
 ?>
