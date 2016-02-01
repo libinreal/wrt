@@ -38,6 +38,7 @@
                 <th>{$lang.bankFnum}</th>
                 <th>{$lang.remark}</th>
             </tr>
+            {if $recovery_history_list|@count neq 0}
             {foreach from=$recovery_history_list item=list}
             <tr>
                 <td align="center"><span>{$list.id}</span></td>
@@ -52,9 +53,10 @@
                 <td align="center"><span>{$list.bankFnum}</span></td>
                 <td align="center"><span>{$list.remark}</span></td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="11">{$lang.no_recovery_history}</td></tr>
             {/foreach}
+            {else}
+            <tr><td class="no-records" colspan="11">{$lang.no_recovery_history}</td></tr>
+            {/if}
             <tr>
                 <td align="right" nowrap="true" colspan="11">{include file="page.htm"}</td>
             </tr>

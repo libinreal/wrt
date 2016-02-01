@@ -31,6 +31,7 @@
                 <th><a href="javascript:listTable.sort('add_time'); ">{$lang.add_time}</a>{$sort_add_time}</th>
                 <th>{$lang.handler}</th>
             </tr>
+            {if $article_list|@count neq 0}
             {foreach from=$article_list item=list}
             <tr>
                 <td><span><input name="checkboxes[]" type="checkbox" value="{$list.article_id}" {if $list.cat_id <= 0 }disabled="true"{/if}/>{$list.article_id}</span></td>
@@ -55,9 +56,10 @@
                 </td>
 
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="10">{$lang.no_article}</td></tr>
             {/foreach}
+            {else}
+            <tr><td class="no-records" colspan="10">{$lang.no_article}</td></tr>
+            {/if}
             <tr>
                 <td align="right" nowrap="true" colspan="8">{include file="page.htm"}</td>
             </tr>
