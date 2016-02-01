@@ -55,7 +55,7 @@ $modules['06_credit']['03_purchase_quota_add']      = 'purchase_quota_add.php?ac
 $modules['06_credit']['04_credit_intrinfo']         = 'credit_intrinfo.php?act=edit&id=1';
 $modules['06_credit']['05_credit_recovery_history'] = 'recovery_history.php?act=list';
 $modules['06_credit']['06_bill_notice']             = 'bill_notice.php?act=list';
-$modules['06_credit']['07_contract']                = 'contract.php?act=list';
+// $modules['06_credit']['07_contract']                = 'contract.php?act=list';
 $modules['06_credit']['08_credit_class']            = 'credit_class.php?act=edit&id=2';
 
 

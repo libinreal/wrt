@@ -30,6 +30,7 @@
                 <th>{$lang.amount}</th>
                 <th>{$lang.createAt}</th>
             </tr>
+            {if $credit_analysis|@count neq 0 }
             {foreach from=$credit_analysis item=list}
             <tr>
                 <td style="text-align: center;">{$list.customNo}</td>
@@ -39,9 +40,11 @@
                 <td align="left"><span class="active-span">{$list.amount}</span></td>
                 <td style="text-align: center;">{$list.createAt}</td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
             {/foreach}
+
+            {else}
+            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+            {/if}
         </table>
         <table id="page-table" cellspacing="0">
             <tr>

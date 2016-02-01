@@ -21,6 +21,7 @@
                 <th><a href="javascript:listTable.sort('shop_price'); ">{$lang.shop_price}</a>{$sort_shop_price}</th>
                 <th>{$lang.handler}</th>
             <tr>
+             {if $goods_list|@count neq 0 }
                 {foreach from=$goods_list item=goods}
             <tr>
                 <td><input type="checkbox" name="checkboxes[]" value="{$goods.goods_id}" />{$goods.goods_id}</td>
@@ -31,9 +32,11 @@
                     <a href="javascript:;" onclick="listTable.remove({$goods.goods_id}, '{$lang.drop_goods_confirm}', 'drop_goods')">{$lang.drop}</a>
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
             {/foreach}
+
+            {else}
+            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+            {/if}
         </table>
         <!-- end goods list -->
 

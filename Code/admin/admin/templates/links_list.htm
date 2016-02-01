@@ -19,6 +19,7 @@
     <th>{$lang.handler}</th>
   </tr>
   <tr>
+  {if $links_list|@count neq 0}
   {foreach from=$links_list item=link}
   <tr>
     <td class="first-cell"><span onclick="listTable.edit(this, 'edit_link_name', {$link.id})">{$link.title|escape:html}</span></td>
@@ -31,9 +32,10 @@
     <a href="links.php?act=edit&id={$link.id}" title="{$lang.edit}"><img src="images/icon_edit.gif" border="0" height="16" width="16" /></a>&nbsp;
     <a href="javascript:;" onclick="listTable.remove({$link.id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a></span></td>
   </tr>
-  {foreachelse}
-    <tr><td class="no-records" colspan="10">{$lang.no_links}</td></tr>
   {/foreach}
+  {else}  
+    <tr><td class="no-records" colspan="10">{$lang.no_links}</td></tr>
+  {/if}
   <tr>
     <td align="right" nowrap="true" colspan="10">{include file="page.htm"}</td>
   </tr>

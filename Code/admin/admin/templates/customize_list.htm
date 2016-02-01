@@ -29,6 +29,7 @@
                 -->
                 <th>{$lang.handler}</th>
             </tr>
+            {if $customize_list|@count neq 0}
             {foreach from=$customize_list item=list}
             <tr>
                 <td align="center"><span>{$list.id}</span></td>
@@ -66,9 +67,10 @@
                     </span>
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="12">{$lang.no_customize}</td></tr>
             {/foreach}
+            {else}
+            <tr><td class="no-records" colspan="12">{$lang.no_customize}</td></tr>
+            {/if}
             <tr>
                 <td align="right" nowrap="true" colspan="12">{include file="page.htm"}</td>
             </tr>

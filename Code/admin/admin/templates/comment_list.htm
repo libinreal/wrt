@@ -29,6 +29,7 @@
     <th>{$lang.comment_flag}</th>
     <th>{$lang.handler}</th>
   </tr>
+  {if $comment_list|@count neq 0 }
   {foreach from=$comment_list item=comment}
   <tr>
     <td><input value="{$comment.comment_id}" name="checkboxes[]" type="checkbox">{$comment.comment_id}</td>
@@ -43,9 +44,11 @@
       <a href="javascript:" onclick="listTable.remove({$comment.comment_id}, '{$lang.drop_confirm}')">{$lang.remove}</a>
     </td>
   </tr>
-    {foreachelse}
-    <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
     {/foreach}
+
+    {else}
+    <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+    {/if}
   </table>
 
   <table cellpadding="4" cellspacing="0">

@@ -23,6 +23,7 @@
                 <th><a href="javascript:listTable.sort('sort_order'); ">{$lang.sort_order}</a>{$sort_sort_order}</th>
                 <th><a href="javascript:listTable.sort('goods_number'); ">{$lang.goods_number}</a>{$sort_goods_number}</th>
             <tr>
+            {if $goods_list|@count neq 0 }
                 {foreach from=$goods_list item=goods}
             <tr>
                 <td><input type="checkbox" name="checkboxes[]" value="{$goods.goods_id}" />{$goods.goods_id}</td>
@@ -35,9 +36,11 @@
                 <td align="center"><span>{$goods.sort_order}</span></td>
                 <td align="right"><span>{$goods.goods_number}</span></td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="8">{$lang.no_records}</td></tr>
             {/foreach}
+
+            {else}
+            <tr><td class="no-records" colspan="8">{$lang.no_records}</td></tr>
+            {/if}
         </table>
         <!-- end goods list -->
         <!-- 分页 -->
