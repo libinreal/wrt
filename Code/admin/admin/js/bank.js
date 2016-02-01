@@ -61,12 +61,13 @@ var Bank = {
 		if($("#bank_edit_form").valid() === false){
 			return false;
 		}
-		var form_data = $("#bill_edit_form").FormtoJson();
+		var form_data = $("#bank_edit_form").FormtoJson();
 		var params = {};
 		params.flag = 0;
 		params.params = form_data;
 		strJson = createJson("bankAdd", this.entity, params);
 		that = this
+		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));

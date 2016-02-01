@@ -140,7 +140,6 @@ var Bill = {
 				return false;
 			}else{
 				// 初始化列表
-				TypeMode.getUsers("customer_id");
 				$.each(obj.content.init,function(key, value){
 					var row = "";
 					if(key == "payers"){
@@ -177,14 +176,14 @@ var Bill = {
 					if($("textarea[name="+key+"]").length){
 						$("textarea[name="+key+"]").text(value);
 					}
-
 					if($("select[name="+key+"]").length){
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}
 				});
-				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id);
-				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
-				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id);
+				TypeMode.getUsers("customer_id", obj.content.info.customer_id);
+				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
+				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id, obj.content.info.pay_account);
+				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.pay_bank_id);
 				TypeMode.getAdminUserBanksAccounts("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.receive_bank_id);
 			}
 			$('#message_area').html('');
