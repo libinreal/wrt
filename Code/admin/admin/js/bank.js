@@ -35,7 +35,6 @@ var Bank = {
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=bank&act=edit&id="+value.bank_id, "编辑");
-								edit += createLink(value.bank_id, "删除");
 								row += createTd(edit);
 								continue;
 							}

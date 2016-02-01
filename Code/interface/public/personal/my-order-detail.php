@@ -219,9 +219,11 @@
 	</div>
 	<div style="text-align:center;padding-bottom:15px;">
 		<div id="handle-button">
-			<a class="button button-receive-check" href="#" data-id=<!--[= id]--> >到货验签</a>
+		<!--[if(childOrderStatus == 1){]-->
+			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">到货验签</a>
+		<!--[}]-->
 		<!--[if(childOrderStatus == 5){]-->
-			<a class="button button-send-check" href="#" data-id=<!--[= id]--> >发货验签</a>
+			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">发货验签</a>
 		<!--[}]-->
 			<a class="button" href="javascript:history.back()">返回</a>
 		</div>
@@ -233,6 +235,14 @@
 <script>
 	seajs.use('../content/js/personal/main');
 	seajs.use('../content/js/personal/my-order-detail');
+
+	function changeStatus(oid){
+		var xhReq = new XMLHttpRequest();
+		 xhReq.open("GET", "order/uchildstatus?oid="+oid, false);
+		 xhReq.send(null);
+		 var serverResponse = xhReq.responseText;
+		 alert(serverResponse); // Shows "15"
+	}
 </script>
 
 </body>

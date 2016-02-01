@@ -32,6 +32,11 @@ elseif ( $_REQUEST['act'] == 'contractEdit' )
     $smarty->display('second/contract_edit.html');
     exit;
 }
+elseif ( $_REQUEST['act'] == 'contractView' )
+{
+    $smarty->display('second/contract_view.html');
+    exit;
+}
 /**
  * 合同关联供应商设置
  */
