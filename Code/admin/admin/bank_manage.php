@@ -47,7 +47,7 @@ $ApiList = array(
 		'bankList', 
 		'bankDetail', 
 		'bankAdd', 
-		'deleteBank'
+		'deleteBank', 
 );
 
 /**
@@ -208,7 +208,10 @@ class Bank extends ManageModel
 			failed_json('删除失败');
 		}
 	}
+
+
 }
 $json = jsonAction($ApiList);
-$cont = Bank::getIns();
-$cont->run($json);
+$bank = Bank::getIns();
+$bank->run($json);
+
