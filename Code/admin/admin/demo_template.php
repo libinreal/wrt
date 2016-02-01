@@ -229,6 +229,26 @@ if($section == "self_credit"){
 	}
 }
 
+if($section == "bank"){
+	switch ($act) {
+		case 'edit':
+			$smarty->display('second/bank_edit.html');
+			break;
+
+		case 'list':
+			$smarty->display('second/bank_list.html');
+			break;
+
+		case 'insert':
+			$smarty->display('second/bank_insert.html');
+			break;
+		
+		default:
+			exit;
+			break;
+	}
+}
+
 if($section == "index_supplier"){
 	$smarty->display('index_suppliers.htm');
 }

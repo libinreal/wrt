@@ -221,10 +221,10 @@
 		<div id="handle-button">
 			<span>
 			<!--[if(childOrderStatus == 1){]-->
-				<a class="button" href="javascript:void(0)" onclick="changeOrderStatus(<!--[= id]-->)">到货验签</a>
+				<a class="button" href="javascript:void(0)" data-id=<!--[= id]--> id="handle-button-check">到货验签</a>
 			<!--[}]-->
 			<!--[if(childOrderStatus == 5){]-->
-				<a class="button" href="javascript:void(0)" onclick="changeOrderStatus(<!--[= id]-->)">发货验签</a>
+				<a class="button" href="javascript:void(0)" data-id=<!--[= id]--> id="handle-button-check">发货验签</a>
 			<!--[}]-->
 			</span>
 			<a class="button" href="javascript:history.back()">返回</a>

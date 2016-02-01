@@ -259,7 +259,9 @@ define(function(require) {
         });
     });
 
-    function changeOrderStatus(oid) {
+    // 
+    $('#handle-button-check').on('click', function(e) {
+        var oid = $("#handle-button-check").attr("data-id");
         var data = {"oid":oid};
         $.get("order/uchildstatus", data, function(object){
             if(object.error == -1){
@@ -270,5 +272,5 @@ define(function(require) {
                 return false;
             }
         });
-    }
+    });
 });
