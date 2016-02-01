@@ -220,10 +220,10 @@
 	<div style="text-align:center;padding-bottom:15px;">
 		<div id="handle-button">
 		<!--[if(childOrderStatus == 1){]-->
-			<a class="button" href="#" onclick="changeChildStatus(<!--[= id]-->)">到货验签</a>
+			<a class="button button-receive-check" href="#" data-id=<!--[= id]--> >到货验签</a>
 		<!--[}]-->
 		<!--[if(childOrderStatus == 5){]-->
-			<a class="button" href="#" onclick="changeChildStatus(<!--[= id]-->)">发货验签</a>
+			<a class="button button-send-check" href="#" data-id=<!--[= id]--> >发货验签</a>
 		<!--[}]-->
 			<a class="button" href="javascript:history.back()">返回</a>
 		</div>
@@ -235,18 +235,6 @@
 <script>
 	seajs.use('../content/js/personal/main');
 	seajs.use('../content/js/personal/my-order-detail');
-function changeChildStatus(oid){
-    var data = {"oid":oid};
-    $.get("order/uchildstatus", data, function(object){
-        if(object.error == -1){
-            console.log('更新失败');
-            return false;
-        }else{
-            location.reload();
-            return false;
-        }
-    });    	
-}
 </script>
 
 </body>
