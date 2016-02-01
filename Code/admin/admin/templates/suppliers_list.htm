@@ -19,6 +19,7 @@
                 <th>{$lang.suppliers_check}</th>
                 -->
             </tr>
+            {if $suppliers_list|@count neq 0 }
             {foreach from=$suppliers_list item=suppliers}
             <tr>
                 <td><input type="checkbox" name="checkboxes[]" value="{$suppliers.suppliers_id}" />
@@ -38,9 +39,10 @@
                 </td>
                 <!--<td align="center"><img src="images/{if $suppliers.is_check eq 1}yes{else}no{/if}.gif" onclick="listTable.toggle(this, 'is_check', {$suppliers.suppliers_id})" style="cursor:pointer;"/></td>-->
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="4">{$lang.no_records}</td></tr>
             {/foreach}
+            {else}
+            <tr><td class="no-records" colspan="4">{$lang.no_records}</td></tr>
+            {/if}
         </table>
         <table id="page-table" cellspacing="0">
             <tr>

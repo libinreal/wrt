@@ -27,6 +27,7 @@ $_LANG['remove_back'] = '商品删除/恢复';
 $_LANG['comment_priv'] = '用户评论管理';
 $_LANG['mall_goods_manage'] = '推荐商品';
 $_LANG['brand_recommend_manage'] = '品牌推荐';
+$_LANG['goods_shipping_set'] = '物流费用设置';
 
 // 订单管理部分权限
 $_LANG['order_view'] = '订单处理';
@@ -39,6 +40,7 @@ $_LANG['remove_exchange_back'] = '删除积分商品';
 $_LANG['exchange_attr_manage'] = '积分商城规格';
 $_LANG['exchange_order_view'] = '积分订单管理';
 $_LANG['exchange_delivery_view'] = '发货单管理';
+$_LANG['exchange_goods_add'] = '添加积分商品';
 
 // 基础数据维护
 $_LANG['cat_manage'] = '分类添加/编辑';

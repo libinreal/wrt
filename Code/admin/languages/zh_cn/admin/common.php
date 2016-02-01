@@ -216,6 +216,7 @@ $_LANG['08_goods_type'] = '商品类型';
 $_LANG['19_brand_recommend_list'] = '推荐品牌';
 $_LANG['20_brand_recommend_add'] = '添加推荐品牌';
 $_LANG['11_goods_trash'] = '商品回收站';
+$_LANG['21_goods_shipping_set'] = '物流费用设置';
 //$_LANG['09_attribute_list'] = '商品属性';
 //$_LANG['10_attribute_add'] = '添加属性';
 //$_LANG['12_batch_pic'] = '图片批量处理';
@@ -375,7 +376,7 @@ $_LANG['03_purchase_quota_add'] = '采购额度追加申请';
 $_LANG['04_credit_intrinfo'] = '信用池介绍';
 $_LANG['05_credit_recovery_history'] = '信用恢复历史';
 $_LANG['06_bill_notice'] = '票据到期提醒';
-$_LANG['07_contract'] = '合同数据';
+// $_LANG['07_contract'] = '合同数据'; //有bug
 $_LANG['08_credit_class'] = '信用等级介绍';
 
 $_LANG['engineering_bidding'] = '工程招标';

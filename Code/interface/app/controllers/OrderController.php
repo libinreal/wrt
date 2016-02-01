@@ -103,6 +103,7 @@ class OrderController extends ControllerBase
 				OrderInfo.payOrgcode payOrg,
 				OrderInfo.invType,
 				OrderInfo.invPayee,
+				OrderInfo.childOrderStatus,
 				OrderInfo.invContent');
 		$result = $builder->getQuery()->execute()->getFirst();
 		if(!is_object($result) || !$result) {

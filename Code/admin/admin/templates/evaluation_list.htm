@@ -38,6 +38,7 @@
                 <th>{$lang.evaluation_handler}</a></th>
                 <th>{$lang.handler}</th>
             </tr>
+            {if $evaluation_list|@count neq 0 }
             {foreach from=$evaluation_list item=list}
             <tr>
                 <td align="center"><span>{$list.id}</span></td>
@@ -88,9 +89,10 @@
                     </span>
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="13">{$lang.no_evaluation}</td></tr>
             {/foreach}
+            {else}
+            <tr><td class="no-records" colspan="13">{$lang.no_evaluation}</td></tr>
+            {/if}
             <tr>
                 <td align="right" nowrap="true" colspan="13">{include file="page.htm"}</td>
             </tr>

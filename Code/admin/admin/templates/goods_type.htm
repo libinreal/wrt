@@ -19,6 +19,7 @@
                 <!--<th>{$lang.goods_type_status}</th> -->
                 <th>{$lang.handler}</th>
             </tr>
+            {if $goods_type_arr|@count neq 0 }
             {foreach from=$goods_type_arr item=goods_type}
             <tr>
                 <td class="first-cell">{$goods_type.cat_name}</td>
@@ -33,9 +34,10 @@
                     -->
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
             {/foreach}
+            {else}
+            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+            {/if}
             <tr>
                 <td align="right" nowrap="true" colspan="6">
                     {include file="page.htm"}
