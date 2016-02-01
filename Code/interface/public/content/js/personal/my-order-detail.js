@@ -268,7 +268,7 @@ define(function(require) {
                 console.log('更新失败');
                 return false;
             }else{
-                $("#handle-button>span").html('')
+                location.reload();
                 return false;
             }
         });
