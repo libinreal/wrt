@@ -20,6 +20,7 @@ $_LANG['16_applyCredit'] = '平台授信管理';
 $_LANG['17_bill_manage'] = '应收票据管理';
 $_LANG['18_sale_order'] = '销售订单管理';
 $_LANG['19_bank_manage'] = '银行管理';
+$_LANG['20_bank_manage'] = '订单管理';
 
 
 //基建商城管理部分的权限
@@ -120,6 +121,9 @@ $_LANG['bill_manage_user_list'] = '额度分配调整列表';
 //销售订单管理
 $_LANG['sale_order_list'] = '订单列表';
 $_LANG['sale_order_suborder_all'] = '子订单列表';
+
+//订单管理
+$_LANG['supplier_order_list'] = '（供应商）订单列表';
 
 //银行管理
 $_LANG['bank_insert'] = '添加登记机构';
