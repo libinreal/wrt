@@ -274,6 +274,7 @@ define(function(require) {
             }
         });  
     });
+    
     $('#handle-button').on('click', '.button-send-check', function(e) {
         e.preventDefault();
         var oid = $(this).attr("data-id");
