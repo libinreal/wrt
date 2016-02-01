@@ -8,6 +8,7 @@ if (!defined('IN_ECS'))
 
 // 基建商城
 $modules['01_cat_and_goods']['01_goods_list']       = 'goods.php?act=list';         // 商品列表
+$modules['01_cat_and_goods']['21_goods_shipping_set'] = 'demo_template.php?section=supplier&act=goods_shipping_setting';
 $modules['01_cat_and_goods']['02_goods_add']        = 'goods.php?act=add';          // 添加商品
 $modules['01_cat_and_goods']['05_comment_manage']   = 'comment_manage.php?act=list';
 $modules['01_cat_and_goods']['11_goods_trash']      = 'goods.php?act=trash';        // 商品回收站
@@ -15,10 +16,10 @@ $modules['01_cat_and_goods']['12_mall_goods'] = 'mall_goods.php?act=list';
 $modules['01_cat_and_goods']['19_brand_recommend_list'] = 'brand_recommend.php?act=list';
 
 // 基建商城订单
-$modules['02_order']['02_order_list']               = 'order.php?act=list';
+/*$modules['02_order']['02_order_list']               = 'order.php?act=list';
 $modules['02_order']['03_order_query']              = 'order.php?act=order_query';
 $modules['02_order']['11_order_reminder']           = 'order.php?act=reminder';
-$modules['02_order']['03_recommendorder_list']           = 'recommendorder.php?act=list';
+$modules['02_order']['03_recommendorder_list']           = 'recommendorder.php?act=list';*/
 
 //积分商城管理
 $modules['03_exchange']['01_exchange_category'] = 'exchange_category.php?act=list';
@@ -54,7 +55,7 @@ $modules['06_credit']['03_purchase_quota_add']      = 'purchase_quota_add.php?ac
 $modules['06_credit']['04_credit_intrinfo']         = 'credit_intrinfo.php?act=edit&id=1';
 $modules['06_credit']['05_credit_recovery_history'] = 'recovery_history.php?act=list';
 $modules['06_credit']['06_bill_notice']             = 'bill_notice.php?act=list';
-$modules['06_credit']['07_contract']                = 'contract.php?act=list';
+// $modules['06_credit']['07_contract']                = 'contract.php?act=list';
 $modules['06_credit']['08_credit_class']            = 'credit_class.php?act=edit&id=2';
 
 

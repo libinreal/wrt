@@ -33,6 +33,7 @@
                 <th><a href="javascript:listTable.sort('createAt'); ">{$lang.createAt}</a>{$sort_createAt}</th>
                 <th>{$lang.handler}</th>
             </tr>
+            {if $recommends_list|@count neq 0}
             {foreach from=$recommends_list item=list}
             <tr>
                 <td align="center"><span><!--<input name="checkboxes[]" type="checkbox" value="{$list.id}" />-->{$list.id}</span></td>
@@ -45,9 +46,10 @@
       <a href="javascript:;" onclick="listTable.remove({$list.id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16"></a></span>
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="10">{$lang.no_recommend}</td></tr>
             {/foreach}
+            {else}
+            <tr><td class="no-records" colspan="10">{$lang.no_recommend}</td></tr>
+            {/if}
             <tr>
                 <td align="right" nowrap="true" colspan="8">{include file="page.htm"}</td>
             </tr>

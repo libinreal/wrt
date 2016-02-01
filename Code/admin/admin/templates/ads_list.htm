@@ -17,6 +17,7 @@
     <!--<th>{$lang.ads_stats}</th>-->
     <th>{$lang.handler}</th>
   </tr>
+  {if $ads_list|@count neq 0 }
   {foreach from=$ads_list item=list}
   <tr>
     <td align="left" class="first-cell">
@@ -35,9 +36,11 @@
       <a href="javascript:;" onclick="listTable.remove({$list.ad_id}, '{$lang.drop_confirm}')" title="{$lang.remove}"><img src="images/icon_drop.gif" border="0" height="16" width="16" /></a></span>
     </td>
   </tr>
-  {foreachelse}
-    <tr><td class="no-records" colspan="10">{$lang.no_ads}</td></tr>
   {/foreach}
+  {else}
+    <tr><td class="no-records" colspan="10">{$lang.no_ads}</td></tr>
+  }
+  {/if}
   <tr>
     <td align="right" nowrap="true" colspan="10">{include file="page.htm"}</td>
   </tr>

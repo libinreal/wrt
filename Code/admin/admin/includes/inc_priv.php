@@ -27,7 +27,7 @@ $purview['03_exchange_goods']       = array("exchange_goods_manage","remove_exch
 $purview['05_exchange_order_list']        = 'exchange_order_view';
 $purview['06_exchange_delivery_order']    = 'exchange_delivery_view';
 $purview['07_exchange_goods_trash'] = 'exchange_goods_manage';
-
+$purview['04_exchange_goods_add'] = 'exchange_goods_add';
 // 内容管理部分  广告 物融新闻 物融公告 帮助中心 客服
 $purview['ad_list']              = 'ad_manage';
 //物融新闻管理权限
@@ -91,5 +91,24 @@ $purview['report_sell']      = 'sale_general_stats';
 $purview['sale_list']		 = 'sale_list_info_stats';
 $purview['sales_analysis']   = 'credit_analysis_stats';
 
+$purview['01_contract_insert'] = 'contract_insert';
+$purview['02_contract_list'] = 'contract_list';
+$purview['05_contract_supplier_add'] = 'contract_supplier_add';
+$purview['06_contract_supplier_list'] = 'contract_supplier_list';
+
+$purview['01_credit_list'] = 'credit_list';
+
+$purview['01_batch_price'] = 'batch_price';
+$purview['02_price_list'] = 'price_list';
+
+$purview['01_applyCredit_list'] = 'applyCredit_list';
+$purview['02_applyCredit_rlist'] = 'applyCredit_rlist';
+
+$purview['01_bill_manage_insert'] = 'bill_manage_insert';
+$purview['02_bill_manage_list'] = 'bill_manage_list';
+$purview['03_bill_manage_generate'] = 'bill_manage_generate';
+$purview['04_bill_manage_order_list'] = 'bill_manage_generate';
+$purview['05_bill_manage_repay_list'] = 'bill_manage_repay_list';
+$purview['06_bill_manage_user_list'] = 'bill_manage_user_list';
 
 ?>

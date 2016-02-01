@@ -259,16 +259,34 @@ define(function(require) {
         });
     });
 
-    function changeOrderStatus(oid) {
+    //订单验签
+    $('#handle-button').on('click', '.button-receive-check', function(e) {
+        e.preventDefault();
+        var oid = $(this).attr("data-id");
         var data = {"oid":oid};
         $.get("order/uchildstatus", data, function(object){
             if(object.error == -1){
                 console.log('更新失败');
                 return false;
             }else{
-                $("#handle-button>span").html('')
+                location.reload();
                 return false;
             }
-        });
-    }
+        });  
+    });
+    
+    $('#handle-button').on('click', '.button-send-check', function(e) {
+        e.preventDefault();
+        var oid = $(this).attr("data-id");
+        var data = {"oid":oid};
+        $.get("order/uchildstatus", data, function(object){
+            if(object.error == -1){
+                console.log('更新失败');
+                return false;
+            }else{
+                location.reload();
+                return false;
+            }
+        });  
+    });
 });

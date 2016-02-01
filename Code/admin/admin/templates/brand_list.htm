@@ -22,6 +22,7 @@
                 -->
                 <th>{$lang.handler}</th>
             </tr>
+            {if $brand_list|@count neq 0 }
             {foreach from=$brand_list item=brand}
             <tr>
                 <td class="first-cell">
@@ -40,9 +41,10 @@
                     <a href="javascript:;" onclick="listTable.remove({$brand.brand_id}, '{$lang.drop_confirm}')" title="{$lang.edit}">{$lang.remove}</a>
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
             {/foreach}
+            {else}
+            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+            {/if}
             <tr>
                 <td align="right" nowrap="true" colspan="5">
                     {include file="page.htm"}

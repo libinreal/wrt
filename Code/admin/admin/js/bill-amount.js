@@ -80,7 +80,8 @@ var BillAmount = {
 								if(value.amount_type == 1 || value.amount_type == 2){
 									var edit = "";
 								}else{
-									var edit = createLink("demo_template.php?section=bill_manage&act=generate_view&log_id="+value.bill_amount_log_id, "详情");
+									var edit = "";
+								//	var edit = createLink("demo_template.php?section=bill_manage&act=generate_view&log_id="+value.bill_amount_log_id, "详情");
 								}
 								row += createTd(edit);
 								continue;

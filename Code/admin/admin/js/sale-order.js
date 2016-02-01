@@ -168,7 +168,7 @@ var SaleOrder = {
 					row += "<tr>";
 					for(var i=0;i<that.order_detail_arr.length;i++){
 						if(that.order_detail_arr[i] == "operate"){
-							if(value.remain_number == 0){
+							if(value.remain_number == 0 || obj.content.info.order_status == "订单取消"){
 								var edit = "";
 							}else{
 								var edit = "<span id='goods_"+value.goods_id+"'>"+createLink("javascript:void(0)", "取消未处理", "SaleOrder.cancelSubOrderInit('"+obj.content.info.order_id+"', '"+value.goods_id+"')") + "</span>";
@@ -314,6 +314,10 @@ var SaleOrder = {
 								row += createTd(edit);
 								continue;
 							}
+							if(that.suborder_arr[i] == "order_status"){
+								row += createTd(that.suborder_status[value["child_order_status"]]);
+								continue;
+							}
 							if(value[that.suborder_arr[i]] != null){
 								row += createTd(subString(value[that.suborder_arr[i]],10,true));
 							}else{
@@ -394,7 +398,7 @@ var SaleOrder = {
 								row += createTd(edit);
 								continue;
 							}
-							if(that.suborder_arr[i] == "child_order_status"){
+							if(that.suborder_arr[i] == "order_status"){
 								row += createTd(that.suborder_status[value["child_order_status"]]);
 								continue;
 							}

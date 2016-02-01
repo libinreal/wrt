@@ -31,6 +31,7 @@
                 {/if}
                 <th>{$lang.handler}</th>
             <tr>
+                {if $goods_list|@count neq 0 }
                 {foreach from=$goods_list item=goods}
             <tr>
                 <td><input type="checkbox" name="checkboxes[]" value="{$goods.goods_id}" />{$goods.goods_id}</td>
@@ -61,9 +62,11 @@
                     <a href="javascript:;" onclick="listTable.remove({$goods.goods_id}, '{$lang.trash_goods_confirm}')" title="{$lang.trash}"><img src="images/icon_trash.gif" width="16" height="16" border="0" /></a>
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
             {/foreach}
+
+            {else}
+            <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+            {/if}
         </table>
         <!-- end goods list -->
         <!-- 分页 -->

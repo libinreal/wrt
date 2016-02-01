@@ -71,7 +71,7 @@ var Bill = {
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=bill_manage&act=info&id="+value.bill_id, "编辑");
-								edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "查看");
+								edit += createLink("demo_template.php?section=bill_manage&act=view&id="+value.bill_id, "查看");
 								edit += createLink("demo_template.php?section=bill_manage&act=generate_note&bill_id="+value.bill_id, "生成票据采购额");
 								edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "还票");
 								row += createTd(edit);

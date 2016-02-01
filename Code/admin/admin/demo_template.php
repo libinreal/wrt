@@ -68,7 +68,7 @@ if($section == "bill_manage"){
 			break;
 
 		case 'generate_view':
-			$smarty->display('second/bill_purchase_cash_view.html');
+			$smarty->display('second/bill_purchase_note_view.html');
 			break;
 
 		case 'generate_note':
@@ -221,6 +221,26 @@ if($section == "self_credit"){
 
 		case 'recycle':
 			$smarty->display('second/self_credit_recycle.html');
+			break;
+		
+		default:
+			exit;
+			break;
+	}
+}
+
+if($section == "bank"){
+	switch ($act) {
+		case 'edit':
+			$smarty->display('second/bank_edit.html');
+			break;
+
+		case 'list':
+			$smarty->display('second/bank_list.html');
+			break;
+
+		case 'insert':
+			$smarty->display('second/bank_insert.html');
 			break;
 		
 		default:
