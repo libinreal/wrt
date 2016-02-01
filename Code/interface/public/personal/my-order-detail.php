@@ -219,7 +219,11 @@
 	</div>
 	<div style="text-align:center;padding-bottom:15px;">
 		<div id="handle-button">
-			<a class="button" href="order/uchildstatus?oid=<!--[= id]-->">到货验签</a>
+			<span>
+			<!--[if(orderStatus == '2'){]-->
+				<a class="button" href="javascript:void(0)" onclick="changeOrderStatus(<!--[= id]-->)">到货验签</a>
+			<!--[}]-->
+			</span>
 			<a class="button" href="javascript:history.back()">返回</a>
 		</div>
 	</div>

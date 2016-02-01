@@ -258,4 +258,17 @@ define(function(require) {
 
         });
     });
+
+    function changeOrderStatus(oid) {
+        var data = {"oid":oid};
+        $.get("order/uchildstatus", data, function(object){
+            if(object.error == -1){
+                console.log('更新失败');
+                return false;
+            }else{
+                $("#handle-button>span").html('')
+                return false;
+            }
+        });
+    }
 });
