@@ -261,6 +261,7 @@ define(function(require) {
 
     // 
     $('#handle-button').on('click', '.button-check', function(e) {
+        e.preventDefault();
         var oid = $("#handle-button-check").attr("data-id");
         var data = {"oid":oid};
         $.get("order/uchildstatus", data, function(object){
