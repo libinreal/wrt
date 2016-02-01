@@ -35,6 +35,7 @@
                 <th>{$lang.complaint_handler}</a></th>
                 <th>{$lang.handler}</th>
             </tr>
+            {if $complaint_list|@count neq 0 }
             {foreach from=$complaint_list item=list}
             <tr>
                 <td align="center"><span>{$list.id}</span></td>
@@ -57,9 +58,11 @@
                     </span>
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="10">{$lang.no_complaint}</td></tr>
             {/foreach}
+
+            {else}
+            <tr><td class="no-records" colspan="10">{$lang.no_complaint}</td></tr>
+            {/if}
             <tr>
                 <td align="right" nowrap="true" colspan="12">{include file="page.htm"}</td>
             </tr>

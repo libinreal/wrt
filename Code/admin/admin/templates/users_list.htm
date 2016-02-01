@@ -39,6 +39,7 @@
                 <th><a href="javascript:listTable.sort('reg_time'); ">{$lang.reg_date}</a>{$sort_reg_time}</th>
                 <th>{$lang.handler}</th>
             <tr>
+                {if $user_list|@count neq 0 }
                 {foreach from=$user_list item=user}
             <tr>
                 <td><input type="checkbox" name="checkboxes[]" value="{$user.user_id}" notice="{if $user.user_money ne 0}1{else}0{/if}"/>{$user.user_id}</td>
@@ -86,9 +87,11 @@
                     </a>
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="11">{$lang.no_records}</td></tr>
             {/foreach}
+
+            {else}
+            <tr><td class="no-records" colspan="11">{$lang.no_records}</td></tr>
+            {/if}
             <tr>
                 <td colspan="2">
                     <input type="hidden" name="act" value="batch_remove" />

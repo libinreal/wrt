@@ -24,6 +24,7 @@
       <th>{$lang.sell_price}</th>
       <th>{$lang.sell_date}</th>
     </tr>
+  {if $goods_sales_list|@count neq 0 }  
   {foreach from=$goods_sales_list item=list}
     <tr align="center">
       <td align="left"><a href="../goods.php?id={$list.goods_id}" target="_blank">{$list.goods_name}</a></td>
@@ -32,9 +33,11 @@
       <td align="right">{$list.sales_price}{$end_date}</td>
       <td>{$list.sales_time}</td>
     </tr>
-  {foreachelse}
-    <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
   {/foreach}
+
+  {else}
+    <tr><td class="no-records" colspan="10">{$lang.no_records}</td></tr>
+  {/if}
   </table>
   <table id="page-table" cellspacing="0">
   <tr>

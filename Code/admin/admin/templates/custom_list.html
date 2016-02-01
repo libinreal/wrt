@@ -27,6 +27,7 @@
             <th>{$lang.createAt}</th>
             <th>{$lang.handler}</th>
         </tr>
+        {if $custom|@count neq 0 }
         {foreach from=$custom item=list name=no}
         <tr>
             <td style="text-align: center;">{$list.proId}</td>
@@ -48,9 +49,10 @@
             <td style="text-align: center;">{$list.createAt}</td>
             <td style="text-align: center;"><a href="custom.php?act=info&id={$list.proId}">查看详情</a></td>
         </tr>
-        {foreachelse}
-        <tr><td class="no-records" colspan="12">{$lang.no_custom}</td></tr>
         {/foreach}
+        {else}
+        <tr><td class="no-records" colspan="12">{$lang.no_custom}</td></tr>
+        {/if}
         <tr>
             <td align="right" nowrap="true" colspan="12">{include file="page.htm"}</td>
         </tr>
