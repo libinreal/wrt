@@ -47,7 +47,7 @@
 						<td class="title">到期日：</td>
 						<td><input type="text" name="due_date" id="due_date" readonly></td>
 						<td class="title">付款期限：</td>
-						<td><input type="text" name="prompt_day"></td>
+						<td><input type="text" name="prompt_day" onfocus="changePromptDay()"></td>
 						<td class="title">出票人：</td>
 						<td><input type="text" name="drawer" data-rule-required="true"></td>
 					</tr>
@@ -180,6 +180,25 @@ function discountAmountChange(){
 	var discount_rate = validateNumber(parseFloat($("#discount_rate").val())) == 0 ? 0 : parseFloat($("#discount_rate").val());
 	var discount_amount = discount_rate*bill_amount/100;
 	$("#discount_amount").val(discount_amount);
+}
+function changePromptDay(){
+	var start = parseDate($('#issuing_date').val()) == '' ? 0 : parseDate($('#issuing_date').val());
+	var end = parseDate($('#due_date').val()) == '' ? 0 : parseDate($('#due_date').val());
+	if(start==0 || end==0){
+		return false;
+	}
+	if(start > end){
+		$("input[name=prompt_day]").val(0);
+	}else{
+		$("input[name=prompt_day]").val(daydiff(start, end));
+	}
+}
+function parseDate(str) {
+    var mdy = str.split('-')
+    return new Date(mdy[0], mdy[1]-1, mdy[2]);
+}
+function daydiff(first, second) {
+    return Math.round((second-first)/(1000*60*60*24));
 }
 </script>
 	</body>
