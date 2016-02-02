@@ -295,7 +295,7 @@ class Price extends ManageModel
      *                      "brand_id"        : "(int)", //为空则值是0
      *                      "suppliers_id"    : "(int)", //为空则值是0
      *                      "price_num"       : "(int)", //不能为空
-     *                      "price_rate"      : "(float)" //不能为空
+     *                      "price_rate"      : "(float)" //不能为空 与price_num不能同时为空
      *                  }, ...
      *              ]
      *      }
@@ -315,6 +315,13 @@ class Price extends ManageModel
         $params = $parameters['params'];
         if (!is_array($params) || empty($params)) {
             failed_json('传参错误');
+        }
+        
+        foreach ($params as $k=>$v) {
+        	if (!$v['price_num'] && !$v['price_rate']) {
+        		unset($params[$k]);
+        		return failed_json('加价规则里存在加价幅度和加价比例都为空的规则');
+        	}
         }
         
         $upData = array();  //update

@@ -145,6 +145,7 @@ $_LANG['16_applyCredit'] = '平台授信管理';
 $_LANG['17_bill_manage'] = '应收票据管理';
 $_LANG['18_sale_order'] = '销售订单管理';
 $_LANG['19_bank_manage'] = '银行管理';
+$_LANG['20_supplier_order'] = '订单管理';
 
 //合同管理
 $_LANG['01_contract_insert'] = '新增合同';
@@ -174,6 +175,9 @@ $_LANG['06_bill_manage_user_list'] = '额度分配调整列表';
 //销售订单管理
 $_LANG['01_sale_order_list'] = '订单列表';
 $_LANG['02_sale_order_suborder_all'] = '子订单列表';
+
+//订单管理
+$_LANG['01_supplier_order_list'] = '订单列表';
 
 //银行管理
 $_LANG['01_bank_insert'] = '添加登记机构';

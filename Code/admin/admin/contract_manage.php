@@ -149,7 +149,7 @@ class Contract extends ManageModel
     {
         self::init($entity, 'users');
         self::selectSql(array(
-            'fields' => array( 'user_id', 'companyName' ), 
+            'fields' => array( 'user_id', 'companyName', 'user_name' ), 
             'where'  => ' alias=0 ', 
             
         ));
@@ -360,6 +360,8 @@ class Contract extends ManageModel
      *              "attachment" : "(string)", 
      *              "remark" : "(string)", 
      *              "goods_type" : "1,2,23(array)", 
+     *              "user_id"   : "(int)", 
+     *              "user_name" : "(string)"
      *          }
      *      }
      * }

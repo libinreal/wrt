@@ -123,4 +123,6 @@ $modules['18_sale_order']['02_sale_order_suborder_all'] = 'demo_template.php?sec
 $modules['19_bank_manage']['01_bank_insert'] = 'demo_template.php?section=bank&act=insert';
 $modules['19_bank_manage']['02_bank_list'] = 'demo_template.php?section=bank&act=list';
 
+//采购订单管理
+$modules['20_supplier_order']['01_supplier_order_list'] = 'demo_template.php?section=supplier&act=order_list';
 ?>

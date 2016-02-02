@@ -85,7 +85,7 @@ class cls_image
         /* 如果目标目录不存在，则创建它 */
         if (!file_exists($dir))
         {
-            if (!make_dir($dir))
+            if (!make_dir($dir, 0777))
             {
                 /* 创建目录失败 */
                 $this->error_msg = sprintf($GLOBALS['_LANG']['directory_readonly'], $dir);
@@ -93,6 +93,14 @@ class cls_image
 
                 return false;
             }
+        } else {
+        	if (!chmod($dir, 0777)) 
+        	{
+        		$this->error_msg = sprintf($GLOBALS['_LANG']['directory_readonly'], $dir);
+        		$this->error_no  = ERR_DIRECTORY_READONLY;
+        		
+        		return false;
+        	}
         }
 
         if (empty($img_name))
@@ -100,7 +108,7 @@ class cls_image
             $img_name = $this->unique_name($dir);
             $img_name = $dir . $img_name . $this->get_filetype($upload['name']);
         }
-        
+        var_dump($this->check_img_type($upload['type']));die;
         if (!$this->check_img_type($upload['type']))
         {
             $this->error_msg = $GLOBALS['_LANG']['invalid_upload_image_type'];
