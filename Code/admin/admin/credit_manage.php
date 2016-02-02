@@ -72,7 +72,6 @@ class Credit extends ManageModel
             failed_json('没有传参`entity`，或者上传错误');
         }
         
-        print_r($entity);
         //限制上传格式
         $extension = pathinfo($_FILES[$entity]['name'], PATHINFO_EXTENSION);
         if ($extension != 'xml') {
@@ -84,6 +83,7 @@ class Credit extends ManageModel
         $upload = new cls_image();
         $fileName = date('YmdHis').'.xml';
         $res = $upload->upload_image($_FILES[$entity], 'credit', $fileName);
+        var_dump($res);
         die;
         if ($res === false) {
             failed_json('文件上传失败');
