@@ -493,7 +493,7 @@ class Price extends ManageModel
                 'price_type', 
                 'shop_price'
             ),  
-            'where'  => 'price_num!=0 and price_rate!=0 and price_rule!=0'.$where.' or price_type=1', 
+            'where'  => 'price_num!=0 or price_rate!=0 and price_rule!=0'.$where.' or price_type=1', 
             'extend' => 'ORDER BY goods_id ASC,sort_order DESC '.$limit
         ));
         $data = $this->db->getAll($this->sql);
@@ -505,7 +505,7 @@ class Price extends ManageModel
         if ($limit) {
             self::selectSql(array(
                 'fields' => 'COUNT(*) AS num',
-                'where'  => 'price_num!=0 and price_rate!=0 and price_rule!=0'.$where.' or price_type=1',
+                'where'  => 'price_num!=0 or price_rate!=0 and price_rule!=0'.$where.' or price_type=1',
             ));
             $total = $this->db->getOne($this->sql);
             if ($total === false) {

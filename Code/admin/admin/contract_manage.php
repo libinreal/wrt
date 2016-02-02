@@ -104,9 +104,10 @@ class Contract extends ManageModel
     public function catList($entity, $parameters) 
     {
         self::init($entity, 'goods_type');
+        $this->table = 'category';
         self::selectSql(array(
             'fields' => array( 'cat_id', 'cat_name' ), 
-            'where'  => ' enabled=1 ', 
+            'where'  => 'is_show=1', // enabled=1 ', 
             'extend' => ' ORDER BY cat_id ASC'
         ));
         
