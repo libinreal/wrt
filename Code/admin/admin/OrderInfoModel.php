@@ -1454,8 +1454,27 @@ require(dirname(__FILE__) . '/includes/init.php');
 				unset($order_info['order_amount_arr_buyer']);
 
 				//物流
-				$shipping = empty( $order_info['shipping_info'] ) ? array() : json_decode( $order_info['shipping_info'], true);
-				$shipping['log'] = empty( $order_info['shipping_log'] ) ? array() : json_decode( $order_info['shipping_log'], true);
+				// $shipping = empty( $order_info['shipping_info'] ) ? array() : json_decode( $order_info['shipping_info'], true);
+				// $shipping['log'] = empty( $order_info['shipping_log'] ) ? array() : json_decode( $order_info['shipping_log'], true);
+				if( empty( $order_info['shipping_info'] ) ){
+					$shipping = array();
+				}else{
+
+					$shipping = json_decode( $order_info['shipping_info'], true);
+					$shipping['company_name'] = urldecode( $shipping['company_name'] );
+				}
+
+				if( empty( $order_info['shipping_log'] ) ){
+					$shipping['log'] = array();
+				}else{
+
+					$shipping['log'] = json_decode( $order_info['shipping_log'], true);
+					if( !empty( $shipping['log'] ) ){
+						foreach( $shipping['log'] as &$l )
+							$l['content'] = urldecode( $l['content'] );
+					}
+				}				
+
 
 				$sale_status = C('sale_status');//销售订单状态,用于页面显示
 				$childer_order_status = C('childer_order_status');//验签状态
@@ -1812,13 +1831,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 			
-			$shipping_info['company_name'] = $company_name;
+			$shipping_info['company_name'] = urlencode($company_name);
 			$shipping_info['shipping_num'] = $shipping_num;
 			$shipping_info['tel'] = $tel;
 			$shipping_info['shipping_time'] = $shipping_time;
 
-			$shippinf_info_str = json_encode( $shipping_info, JSON_UNESCAPED_UNICODE );
-
+			$shippinf_info_str = json_encode( $shipping_info );
+			
 			$add_shipping_info_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_info` = \'' . $shippinf_info_str .
 									 '\' WHERE `order_id` = ' . $order_id; 
 			$add_shipping = $GLOBALS['db']->query( $add_shipping_info_sql );
@@ -1884,10 +1903,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}else{
 				$shipping_log = json_decode( $shipping_log_old['shipping_log'] );
 			}
-			$shipping_log_temp['content'] = $log;
+			$shipping_log_temp['content'] = urlencode( $log );
 			$shipping_log_temp['date'] = $shipping_date;
 			array_push( $shipping_log, $shipping_log_temp );
-			$shipping_log_str = json_encode( $shipping_log, JSON_UNESCAPED_UNICODE );
+
+			$shipping_log_str = json_encode( $shipping_log );	
 
 			$add_shipping_log_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_log` = \'' . $shipping_log_str .
 									 '\' WHERE `order_id` = ' . $order_id; 

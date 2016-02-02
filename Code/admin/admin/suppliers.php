@@ -3,7 +3,12 @@
 
 define('IN_ECS', true);
 require(dirname(__FILE__) . '/includes/init.php');
-define('SUPPLIERS_ACTION_LIST', 'delivery_view,back_view');
+//libin 2016-02-02
+$role_table = $GLOBALS['ecs']->table('role');
+$role_id = $GLOBALS['db']->getOne('SELECT `role_id` FROM ' . $role_table . ' WHERE `role_name` LIKE \'供%\'');
+$admin_user_table = $GLOBALS['ecs']->table('admin_user');
+$supppliers_action = $GLOBALS['db']->getOne('SELECT `action_list` FROM ' . $admin_user_table . ' WHERE `suppliers_id` <> 0 AND `role_id` = ' . $role_id);
+define('SUPPLIERS_ACTION_LIST', $supppliers_action);
 //-- 供货商列表
 if ($_REQUEST['act'] == 'list')
 {

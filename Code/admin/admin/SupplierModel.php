@@ -65,6 +65,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif($this->command == 'removeCategoryShipping'){
 				//
 				$this->removeCategoryShippingAction();			
+			}elseif($this->command == 'saveCategorShipping'){
+				//
+				$this->saveCategorShippingAction();			
+			}elseif($this->command == 'categoryShippingDetail'){
+				//
+				$this->categoryShippingDetailAction();			
 			}
 
 
@@ -615,12 +621,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$this->orderPrivilege( $order_info['suppers_id'] );
 
-			$shipping_info['company_name'] = $company_name;
+			$shipping_info['company_name'] = urlencode( $company_name );
 			$shipping_info['shipping_num'] = $shipping_num;
 			$shipping_info['tel'] = $tel;
 			$shipping_info['shipping_time'] = $shipping_time;
 
-			$shippinf_info_str = json_encode( $shipping_info, JSON_UNESCAPED_UNICODE );
+			$shippinf_info_str = json_encode( $shipping_info );
 
 			$add_shipping_info_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_info` = \'' . $shippinf_info_str .
 									 '\' WHERE `order_id` = ' . $order_id; 
@@ -692,10 +698,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}else{
 				$shipping_log = json_decode( $shipping_log_old['shipping_log'] );
 			}
-			$shipping_log_temp['content'] = $log;
+			$shipping_log_temp['content'] = urlencode( $log );
 			$shipping_log_temp['date'] = $shipping_date;
 			array_push( $shipping_log, $shipping_log_temp );
-			$shipping_log_str = json_encode( $shipping_log, JSON_UNESCAPED_UNICODE );
+			
+			$shipping_log_str = json_encode( $shipping_log );
 
 			$add_shipping_log_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_log` = \'' . $shipping_log_str .
 									 '\' WHERE `order_id` = ' . $order_id; 
@@ -975,10 +982,118 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 		}
 
+
+		/**
+		 * 接口名称：获取指定物料类别的物流费
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 请求方式：POST
+		 * 接口参数：
+		 *  {
+	     *      "entity": "shipping_price",
+	     *      "command": "categoryShippingDetail",
+	     *      "parameters": {
+	     *      	"params":{
+	     *      		"shipping_fee_id":10//`shipping_price` 的自增ID
+	     *      	}
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "物流费用查询成功",
+		 *	    "content": {
+		 *	    	"shipping_fee_id":1,//id
+		 *	     	"goods_category_id":1,//物料id
+		 *	     	"goods_category":"圆钢",//物料类别
+		 *	     	"shipping_fee":"300元/吨/公里",//物流费用
+		 *	     	"desc":"23123"//说明
+		 *	     	
+		 *	    }
+		 *	 }
+		 *	 
+		 * 
+		 */
+		public function categoryShippingDetailAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+
+			$suppliers_id = $this->getSuppliersId();
+
+			if( empty( $suppliers_id ) ){
+		    	make_json_response('', '-1', '管理员账号id有误');
+		    }
+
+			$shipping_price_table = $GLOBALS['ecs']->table('shipping_price');
+			$category_table = $GLOBALS['ecs']->table('category');
+
+			$shipping_price_sql = 'SELECT s.*, c.`` FROM ' . $shipping_price_table .
+								  ' AS s LEFT JOIN ' . $category_table . ' AS c ON c.`cat_id` = s.`goods_category_id` ' .
+								  ' WHERE s.`shipping_fee_id` = ' . $params['shipping_fee_id'];
+
+			$shipping_price = $GLOBALS['db']->getRow( $shipping_price_sql );
+			if( !empty( $shipping_price ) ){
+				make_json_response($shipping_price, '0', '物流费用查询成功');
+			}else{
+				make_json_response('', '-1', '物流费用查询失败');
+			}
+		}
+
+		/**
+		 * 接口名称：保存指定物料类别的物流费
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 接口地址：
+		 * 请求方式：POST
+		 * 接口参数：
+		 *  {
+	     *      "entity": "shipping_price",
+	     *      "command": "saveCategorShipping",
+	     *      "parameters": {
+	     *      	"params":{
+	     *      		"shipping_fee_id":10,//`shipping_price` 的自增ID
+	     *      		"goods_category_id":1,//物料id
+		 *	     	    "shipping_fee":"300元/吨/公里",//物流费用
+		 *	     	    "desc":"23123"//说明
+	     *      	}
+	     *      }
+	     *  }
+	     *  
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "物流费用编辑成功",
+		 *	    "content": {}
+		 *	 }
+		 *	 
+		 * 
+		 */
+		public function saveCategorShippingAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+				
+			$suppliers_id = $this->getSuppliersId();
+
+			if( empty( $suppliers_id ) ){
+		    	make_json_response('', '-1', '管理员账号id有误');
+		    }
+
+		    $shipping_price_table = $GLOBALS['ecs']->table('shipping_price');
+		    $shipping_price_sql = 'UPDATE ' . $shipping_price_table . ' SET `shipping_fee`  = \'' . trim( $params['shipping_fee'] ) .
+		    					  '\', `desc` = \'' . trim( $params['desc'] ) .
+		    					  '\' WHERE `shipping_fee_id` = ' . intval( $params['shipping_fee_id'] );
+		    $shipping_price = $GLOBALS['db']->query( $shipping_price_sql );
+		    if( $shipping_price ){
+		    	make_json_response('', '0', '物流费用编辑成功');
+		    }else{
+		    	make_json_response('', '-1', '物流费用编辑失败');
+		    }
+		}
+
 	}
 	$content = jsonAction( 
 				array( 'orderPage', 'orderDetail', 'updateChilderStatus', 'addShippingLog', 'addShippingInfo', 'initcategoryShipping',
-						'addCategoryShippingFee', 'removeCategoryShipping'
+						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail'
 			 	) 
 			);
 	$supplierModel = new SupplierModel($content);
