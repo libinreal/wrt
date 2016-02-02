@@ -220,10 +220,10 @@
 	<div style="text-align:center;padding-bottom:15px;">
 		<div id="handle-button">
 		<!--[if(childOrderStatus == 1){]-->
-			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">到货验签</a>
+			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">发货验签</a>
 		<!--[}]-->
 		<!--[if(childOrderStatus == 5){]-->
-			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">发货验签</a>
+			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">到货验签</a>
 		<!--[}]-->
 			<a class="button" href="javascript:history.back()">返回</a>
 		</div>

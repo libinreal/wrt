@@ -269,6 +269,7 @@ var Supplier = {
 					row += appendOption(v.cat_id, v.cat_name);
 				});
 				$("#cat").html(row);
+				$("#cat_id_edit").html(row);
 					
 				var row = "";
 				$.each(obj.content.data,function(key, value){
@@ -276,6 +277,7 @@ var Supplier = {
 					for(var i=0;i<that.shipping_order_arr.length;i++){
 						if(that.shipping_order_arr[i] == "operate"){
 							var edit = createButton("Supplier.removeShippingFee("+value.shipping_fee_id+", this)", "移除");
+							edit += createButton("Supplier.editShippingInit("+value.shipping_fee_id+")", "编辑");
 							row += createTd(edit);
 							continue;
 						}
@@ -292,6 +294,10 @@ var Supplier = {
 				return false;
 			}
 		}, "json");
+	},
+
+	editShippingInit: function(id){
+		popupLayer();
 	},
 
 	setShippingFee: function(){
@@ -339,7 +345,6 @@ var Supplier = {
 		strJson = createJson("removeCategoryShipping", this.entity, params);
 		var that = this;
 		$.post(this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;

@@ -153,7 +153,7 @@ var BillAmount = {
 				});
 				var bill_amount = parseFloat(obj.content.info.bill_amount);
 				var discount_rate = parseFloat($("#discount_rate").val());
-				$("#amount").val(bill_amount*discount_rate/100);
+				$("#amount").val(bill_amount*discount_rate);
 				$("#operate_button").html(createButton('BillAmount.getCreateAction()', '添加'));
 			}
 			$('#message_area').html('');

@@ -71,7 +71,7 @@ $(function () {
 	$('#discount_rate').on('valuechange', function (e, previous) {
 		var bill_amount = parseFloat($("#bill_amount").text());
 		var discount_rate = parseFloat($("#discount_rate").val());
-		$("#amount").val(bill_amount*discount_rate/100);
+		$("#amount").val(bill_amount*discount_rate);
 	})
 })
 </script>
