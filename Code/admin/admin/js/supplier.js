@@ -299,7 +299,7 @@ var Supplier = {
 	editShippingInit: function(id){
 		popupLayer();
 		var params = {"params":{"shipping_fee_id": id}};
-		strJson = createJson("categoryShippingDetail", this.entity, params);
+		strJson = createJson("categoryShippingDetail", "shipping_price", params);
 		var that = this;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -307,7 +307,7 @@ var Supplier = {
 				return false;
 			}else{
 				$('#message_area').html(createTip(obj.message));
-				$.each(obj.body.content, function(k, v){
+				$.each(obj.content, function(k, v){
 					if($("input[name="+k+"]").length){
 						$("input[name="+k+"]").val(v);
 					}
@@ -319,13 +319,29 @@ var Supplier = {
 		}, "json");
 	},
 
-	editShipping: function(id){
+	editShipping: function(){
 		if($("#logistics_form").valid == false){
 			return false;
 		}
+		// 表单值
+		var shipping_fee_id = $("#logistics_form input[name=shipping_fee_id]").val();
+		var shipping_fee = $("#logistics_form input[name=shipping_fee]").val();
+		var desc = $("#logistics_form input[name=desc]").val();
+		var cat_name = $("#logistics_form  #cat_id_edit option:selected").text();
+
+		var row = "";
+		row += createTd(cat_name);
+		row += createTd(shipping_fee);
+		row += createTd(desc);
+
+		var edit = createButton("Supplier.removeShippingFee("+shipping_fee_id+", this)", "移除");
+		edit += createButton("Supplier.editShippingInit("+shipping_fee_id+")", "编辑");
+		row += createTd(edit);
+		$("#list_"+shipping_fee_id).html(row);
+
 		var formData = $("#logistics_form").FormtoJson();
 		var params = {"params":formData};
-		var strJson = createJson("saveCategorShipping", this.entity, params);
+		var strJson = createJson("saveCategorShipping", "shipping_price", params);
 		var that = this;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -358,7 +374,7 @@ var Supplier = {
 		}
 		var row = "<tr>";
 		row += "<td>"+$("#cat>option:selected").text()+"</td>";
-		row += "<td>"+$("input[name=shipping_fee]").val()+"元/吨/公里</td>";
+		row += "<td>"+$("input[name=shipping_fee]").val()+"</td>";
 		row += "<td>"+$("input[name=desc]").val()+"</td>";
 		row += "<td></td>";
 		$("#main_list>tbody").prepend(row);
