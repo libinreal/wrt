@@ -89,7 +89,7 @@ class Credit extends ManageModel
         
         //load xml
         $registrationNum = '01234567890';
-        $path = '../data/credit/'.$fileName;
+        $path = '../'.$res;// '../data/credit/'.$fileName;
         @$xml = simplexml_load_file($path);
         if ($xml == false) {
             failed_json('文件格式错误');
