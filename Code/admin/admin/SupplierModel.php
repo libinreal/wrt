@@ -1027,7 +1027,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$shipping_price_table = $GLOBALS['ecs']->table('shipping_price');
 			$category_table = $GLOBALS['ecs']->table('category');
 
-			$shipping_price_sql = 'SELECT s.*, c.`` FROM ' . $shipping_price_table .
+			$shipping_price_sql = 'SELECT s.*, c.`cat_name` FROM ' . $shipping_price_table .
 								  ' AS s LEFT JOIN ' . $category_table . ' AS c ON c.`cat_id` = s.`goods_category_id` ' .
 								  ' WHERE s.`shipping_fee_id` = ' . $params['shipping_fee_id'];
 
@@ -1076,6 +1076,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			if( empty( $suppliers_id ) ){
 		    	make_json_response('', '-1', '管理员账号id有误');
+		    }
+
+		    if( empty( $params['shipping_fee'] ) ){
+		    	$params['shipping_fee'] = 0;
+		    }
+		    if( empty( $params['desc'] )){
+		    	$params['desc'] = '';
 		    }
 
 		    $shipping_price_table = $GLOBALS['ecs']->table('shipping_price');
