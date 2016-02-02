@@ -71,7 +71,8 @@ $ApiList = array(
     'contSupsList',
     'contInSups',
     'contToSup',
-    'uploadify'
+    'uploadify', 
+	'kidUser'
 );
 
 /***
@@ -151,11 +152,47 @@ class Contract extends ManageModel
         self::init($entity, 'users');
         self::selectSql(array(
             'fields' => array( 'user_id', 'companyName', 'user_name' ), 
-            'where'  => ' alias=0 ', 
+            'where'  => ' alias=0 AND parent_id=0', 
             
         ));
         $res = $this->db->getAll($this->sql);
         make_json_result($res);
+    }
+    
+    
+    
+    /**
+     * 子帐号列表
+     * {
+     *      "command" : "kidUser", 
+     *      "entity"  : "users", 
+     *      "parameters" : {
+     *      	"parent_id" : "(int)"
+     *      }
+     * }
+     */
+    public function kidUser($entity, $parameters) 
+    {
+    	self::init($entity, 'users');
+    	$parentId = $parameters['parent_id'];
+    	if (!$parentId) {
+    		failed_json('传参错误');
+    	}
+    	self::selectSql(array(
+    			'fields' => array( 'user_id', 'user_name' ),
+    			'where'  => ' alias=0 AND parent_id='.$parentId,
+    	
+    	));
+    	$res = $this->db->getAll($this->sql);
+    	if (empty($res)) {
+    		self::selectSql(array(
+    				'fields' => array( 'user_id', 'user_name' ),
+    				'where'  => ' alias=0 AND user_id='.$parentId,
+    				 
+    		));
+    		$res = $this->db->getAll($this->sql);
+    	}
+    	make_json_result($res);
     }
     
     
