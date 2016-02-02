@@ -108,7 +108,7 @@ class cls_image
             $img_name = $this->unique_name($dir);
             $img_name = $dir . $img_name . $this->get_filetype($upload['name']);
         }
-        
+        var_dump($this->check_img_type($upload['type']));die;
         if (!$this->check_img_type($upload['type']))
         {
             $this->error_msg = $GLOBALS['_LANG']['invalid_upload_image_type'];
