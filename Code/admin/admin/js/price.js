@@ -267,11 +267,11 @@ var Price = {
 		}else{
 			var arr = [];
 			$("#purchase_price_increase_table>tbody tr").each(function(index, elem){
-				if($(elem).find("input[name*='price_num']").val() != '' && $(elem).find("input[name*='price_rate']").val() != '') {
+				if($(elem).find("input[name*='price_num']").val() != '' || $(elem).find("input[name*='price_rate']").val() != '') {
 					if($(elem).find("input[name*='price_adjust_id']").val() != ''){
-						arr.push({"price_adjust_id":$(elem).find("input[name*='price_adjust_id']").val(),"cat_id":$(elem).find("input[name*='cat_id']").val(),"brand_id":$(elem).find("input[name*='brand_id']").val(),"suppliers_id":$(elem).find("input[name*='suppliers_id']").val(),"price_num":$(elem).find("input[name*='price_num']").val(),"price_rate":$(elem).find("input[name*='price_rate']").val()})
+						arr.push({"price_adjust_id":$(elem).find("input[name*='price_adjust_id']").val(),"cat_id":$(elem).find("input[name*='cat_id']").val(),"brand_id":$(elem).find("input[name*='brand_id']").val(),"suppliers_id":$(elem).find("input[name*='suppliers_id']").val(),"price_num":$(elem).find("input[name*='price_num']").val() == '' ? 0 : $(elem).find("input[name*='price_num']").val(),"price_rate":$(elem).find("input[name*='price_rate']").val() == '' ? 0 : $(elem).find("input[name*='price_rate']").val()})
 					}else{
-						arr.push({"cat_id":$(elem).find("input[name*='cat_id']").val(),"brand_id":$(elem).find("input[name*='brand_id']").val(),"suppliers_id":$(elem).find("input[name*='suppliers_id']").val(),"price_num":$(elem).find("input[name*='price_num']").val(),"price_rate":$(elem).find("input[name*='price_rate']").val()})
+						arr.push({"cat_id":$(elem).find("input[name*='cat_id']").val(),"brand_id":$(elem).find("input[name*='brand_id']").val(),"suppliers_id":$(elem).find("input[name*='suppliers_id']").val(),"price_num":$(elem).find("input[name*='price_num']").val() == '' ? 0 : $(elem).find("input[name*='price_num']").val(),"price_rate":$(elem).find("input[name*='price_rate']").val()  ? 0 : $(elem).find("input[name*='price_rate']").val()})
 					}
 				}
 			});

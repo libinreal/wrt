@@ -193,11 +193,19 @@ var popupLayer = function(){
 	$('#popupLayer').slideFadeToggle();
     $('#mask_layout').slideFadeToggle();
 }
-var appendOption = function(name, text, selected){
+var appendOption = function(name, text, selected, data){
     if(selected === 1){
-        var str = '<option value="'+name+'" selected="selected">'+text+'</option>';  
+        if(data){
+            var str = '<option value="'+name+'" selected="selected" data-val='+data+'>'+text+'</option>'; 
+        }else{
+            var str = '<option value="'+name+'" selected="selected">'+text+'</option>';            
+        }
     }else{
-        var str = '<option value="'+name+'">'+text+'</option>';
+        if(data){
+            var str = '<option value="'+name+'" data-val='+data+'>'+text+'</option>'; 
+        }else{
+            var str = '<option value="'+name+'">'+text+'</option>';
+        }
     }
 	return str;
 }
