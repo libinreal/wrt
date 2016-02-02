@@ -917,7 +917,9 @@ class Contract extends ManageModel
             'registration'       => $params['registration'], 
             'bank_id'            => $params['bank_id'], 
             'attachment'         => $params['attachment'], 
-            'remark'             => $params['remark']
+            'remark'             => $params['remark'], 
+            'user_id'            => $params['user_id'], 
+            'user_name'          => $params['user_name']
         );
         if ($type == 1) {
             $sql = "SELECT user_name FROM admin_user WHERE user_id=".$user_id;
