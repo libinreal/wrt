@@ -273,7 +273,7 @@ var Supplier = {
 					
 				var row = "";
 				$.each(obj.content.data,function(key, value){
-					row += "<tr>";
+					row += "<tr id='list_"+value.shipping_fee_id+"'>";
 					for(var i=0;i<that.shipping_order_arr.length;i++){
 						if(that.shipping_order_arr[i] == "operate"){
 							var edit = createButton("Supplier.removeShippingFee("+value.shipping_fee_id+", this)", "移除");
@@ -288,9 +288,9 @@ var Supplier = {
 						}
 					}
 					row += "</tr>";
-					$("#main_list>tbody").html(row);
-					$('#message_area').html(createTip(obj.message));
 				});
+				$("#main_list>tbody").html(row);
+				$('#message_area').html(createTip(obj.message));
 				return false;
 			}
 		}, "json");
@@ -298,6 +298,45 @@ var Supplier = {
 
 	editShippingInit: function(id){
 		popupLayer();
+		var params = {"params":{"shipping_fee_id": id}};
+		strJson = createJson("categoryShippingDetail", this.entity, params);
+		var that = this;
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+				$.each(obj.body.content, function(k, v){
+					if($("input[name="+k+"]").length){
+						$("input[name="+k+"]").val(v);
+					}
+					if($("select[name="+k+"]").length){
+						$("select[name="+k+"] option[value="+v+"]").attr("selected", "selected");
+					}
+				});
+			}
+		}, "json");
+	},
+
+	editShipping: function(id){
+		if($("#logistics_form").valid == false){
+			return false;
+		}
+		var formData = $("#logistics_form").FormtoJson();
+		var params = {"params":formData};
+		var strJson = createJson("saveCategorShipping", this.entity, params);
+		var that = this;
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+				popupLayer();
+				return false;
+			}
+		}, "json");
 	},
 
 	setShippingFee: function(){

@@ -185,7 +185,7 @@ var Contract = {
 					that.getOrgList(value);
 				}
 				if(key == "customer_id"){
-					that.getUserList(value);
+					that.getUserList(value, obj.content.data.user_id);
 				}
 				if(key == "contract_type"){
 					if(value == 1){
@@ -257,6 +257,7 @@ var Contract = {
 		form_data.attachment = $('#attachment_name').text();
 		var params = {"contract_id": id, "params":form_data};
 		var strJson = createJson("contUp", "contract", params);
+		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -416,21 +417,28 @@ var Contract = {
 		}, "json");
 	},
 
-	getUserList: function(customer_id){
+	getUserList: function(customer_id, user_id){
 		var params = {"params":{}};
-		strJson = createJson("userList", "users", params);
-		that = this;
+		var strJson = createJson("userList", "users", params);
+		var that = this;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
 				var row = '';
-				$("#user_name").val(obj.content[0].user_name);
+				if(customer_id){
+					if(user_id){
+						that.getKidUser(customer_id, user_id);	
+					}else{
+						that.getKidUser(customer_id);	
+					}
+				}else{
+					that.getKidUser(obj.content[0].user_id);
+				}
 				$.each(obj.content, function(k,v){
 					if(typeof(customer_id) !== 'undefined' && v.user_id == customer_id){
 						row += appendOption(v.user_id, v.companyName, 1, v.user_name);
-						$("#user_name").val(v.user_name);
 					}else{
 						row += appendOption(v.user_id, v.companyName, 0, v.user_name);
 					}
@@ -440,6 +448,32 @@ var Contract = {
 		}, "json");
 		$('#message_area').html('');
 	},
+
+	getKidUser: function(parent_id, user_id){
+		var params = {"parent_id":parent_id};
+		var strJson = createJson("kidUser", "users", params);
+		var that = this;
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				var row = '';
+				$("input[name=user_name]").val(obj.content[0].user_name);
+				$.each(obj.content, function(k,v){
+					if(typeof(user_id) !== 'undefined' && v.user_id == user_id){
+						row += appendOption(v.user_id, v.user_name, 1);
+						$("input[name=user_name]").val(v.user_name);
+					}else{
+						row += appendOption(v.user_id, v.user_name, 0);
+					}
+				});
+				$("select[name=user_id]").html(row);
+			}
+		}, "json");
+		$('#message_area').html('');
+	},
+
 	//下游客户的采购合同列表
 	getBuyCont: function(){
 		var customer_id = $("select[name=customer_id]").val();

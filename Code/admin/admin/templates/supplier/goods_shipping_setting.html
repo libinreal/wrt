@@ -61,14 +61,15 @@
 			<div class="clear"></div>
 			<hr>
 			<form id="logistics_form">
-				<div class="row"><label>物料类别：</label> <select id="cat_id_edit" name="cat_id"></select></div>
-				<div class="row"><label>物流费用：</label> <input type="text" name="shipping_num" data-rule-required="true" /> <span style="color:#f00;">*</span>&nbsp;<span style="color:#696969;">请输入物流费用</span></div>
-				<div class="row"><label>物流说明：</label> <input type="text" name="tel" data-rule-required="true" /></div>
+				<div class="row"><label>物料类别：</label> <select id="cat_id_edit" name="goods_category_id"></select></div>
+				<div class="row"><label>物流费用：</label> <input type="text" name="shipping_fee" data-rule-required="true" /> <span style="color:#f00;">*</span>&nbsp;<span style="color:#696969;">请输入物流费用</span></div>
+				<div class="row"><label>物流说明：</label> <input type="text" name="desc" data-rule-required="true" /></div>
 				<hr>
 				<div align="center">
-				<input type="button" class="button close" href="javascript:void(0)" onclick="SaleOrder.addShippingInfo()" value=" 提交 " /> 
-				<input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " />
+				<input type="button" class="button" href="javascript:void(0)" onclick="SaleOrder.addShippingInfo()" value=" 提交 " /> 
+				<input type="button" class="button" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " />
 				</div>
+				<input type="hidden" name="shipping_fee_id">
 			</form>
 			</div>			
 		</div>
