@@ -102,7 +102,11 @@ elseif ($_REQUEST['act'] == 'insert')
     $customerNo = empty($_POST['customerNo']) ? '' : trim($_POST['customerNo']);
     $customerAccount = empty($_POST['customerAccount']) ? '' : trim($_POST['customerAccount']);
     $privilege = $_POST['privilege'];
-    $privilege = implode(',',$privilege);
+    if( !empty( $privilege ) ){
+        $privilege = implode(',',$privilege);
+    }else{
+        $privilege = '';
+    }
 
     $customLevel = in_array($customLevel,array(0,1,2))? $customLevel : 0;
     $credit_rank = trim($_POST['credit_rank']);
@@ -127,12 +131,13 @@ elseif ($_REQUEST['act'] == 'insert')
         sys_msg($_LANG['contactsPhone_exists']);
         exit();
     }
-    $sql5 = "select * from ".$GLOBALS['ecs']->table('users')." where customNo='".$customNo."'";
+    //libin 2016-02-02 不对会员编码做重复检查
+    /*$sql5 = "select * from ".$GLOBALS['ecs']->table('users')." where customNo='".$customNo."'";
     $res = $GLOBALS['db']->getRow($sql5);
     if($res['customNo']==$customNo) {
         sys_msg($_LANG['customNo_exists']);
         exit();
-    }
+    }*/
     $sql = "INSERT INTO ".$GLOBALS['ecs']->table('users')."".
         "(user_name,password,email,sex,qq,weixin,companyName,companyAddress,officePhone,fax,position,projectName,projectBrief,contacts,contactsPhone,secondContacts,secondPhone,customNo,customLevel,reg_time,credit_rank,department,msn,customerNo,customerAccount,parent_id)".
         " VALUES('".$username."','".sha1($password)."','".$email."','".$sex."','".$qq."','".$weixin."','".$companyName."','".$companyAddress."','".$officePhone."','".$fax."','".$position."','".$projectName."','".$projectBrief."','".$contacts."','".$contactsPhone."','".$secondContacts."','".$secondPhone."','".$customNo."','".$customLevel."','".gmtime()."','".$credit_rank."','".$department."','".$privilege."','".$customerNo."','".$customerAccount."','".$parentId."')";
@@ -226,12 +231,13 @@ elseif ($_REQUEST['act'] == 'update')
         sys_msg($_LANG['contactsPhone_exists']);
         exit();
     }
-    $sql5 = "select * from ".$GLOBALS['ecs']->table('users')." where customNo='".$customNo."' and user_id!=".$userId."  ";
+    //libin 2016-02-02 编码重复暂不检查
+    /*$sql5 = "select * from ".$GLOBALS['ecs']->table('users')." where customNo='".$customNo."' and user_id!=".$userId."  ";
     $res = $GLOBALS['db']->getRow($sql5);
     if($res['customNo']==$customNo) {
         sys_msg($_LANG['customNo_exists']);
         exit();
-    }
+    }*/
     if(!empty($password)) {
         $sql = "UPDATE ".$GLOBALS['ecs'] -> table('users')." SET user_name='".$username."', password='".sha1($password)."',".
             " email='".$email."',sex='".$sex."',qq='".$qq."',weixin='".$weixin."',companyName='".$companyName."',".

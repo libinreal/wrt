@@ -1084,8 +1084,25 @@ require(dirname(__FILE__) . '/includes/init.php');
 		    if( empty( $params['desc'] )){
 		    	$params['desc'] = '';
 		    }
+		    if( empty( $params['goods_category_id'] )){
+		    	make_json_response('', '-1', '没有选择物料类别');
+		    }
 
 		    $shipping_price_table = $GLOBALS['ecs']->table('shipping_price');
+		    
+		    $old_sql = 'SELECT `shipping_fee_id` FROM ' . $shipping_price_table . ' WHERE `suppliers_id` = ' .
+		    		   $suppliers_id . ' AND `goods_category_id` = ' . $params['goods_category_id'];
+		    $old_id = $GLOBALS['db']->getOne( $old_sql );
+		    if( $old_id ){
+		    	if( $old_id != $params['shipping_fee_id'] ){
+		    		$clean_sql = 'DELETE FROM ' . $shipping_price_table . ' WHERE `shipping_fee_id` = ' . $old_id . ' LIMIT 1';
+		    		$clean = $GLOBALS['db']->query( $clean_sql );
+		    		if( !$clean ){
+		    			make_json_response('', '-1', '更新物流费用失败');
+		    		}
+		    	}
+		    }
+
 		    $shipping_price_sql = 'UPDATE ' . $shipping_price_table . ' SET `shipping_fee`  = \'' . trim( $params['shipping_fee'] ) .
 		    					  '\', `desc` = \'' . trim( $params['desc'] ) .
 		    					  '\' WHERE `shipping_fee_id` = ' . intval( $params['shipping_fee_id'] );
