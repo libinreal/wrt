@@ -108,6 +108,7 @@ class cls_image
             $img_name = $this->unique_name($dir);
             $img_name = $dir . $img_name . $this->get_filetype($upload['name']);
         }
+        var_dump($img_name, $this->check_img_type($upload['type']));
         
         if (!$this->check_img_type($upload['type']))
         {
@@ -118,6 +119,7 @@ class cls_image
 
         /* 允许上传的文件类型 */
         $allow_file_types = '|GIF|JPG|JEPG|PNG|BMP|SWF|PDF|XML|';
+        var_dump(check_file_type($upload['tmp_name'], $img_name, $allow_file_types));
         if (!check_file_type($upload['tmp_name'], $img_name, $allow_file_types))
         {
             $this->error_msg = $GLOBALS['_LANG']['invalid_upload_image_type'];
@@ -760,7 +762,8 @@ class cls_image
         {
             return false;
         }
-
+		var_dump(move_upload_file($upload['tmp_name'], $target));
+		die;
         if (!move_upload_file($upload['tmp_name'], $target))
         {
             return false;
