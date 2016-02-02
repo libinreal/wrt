@@ -52,7 +52,7 @@
 					<td><select name="suppliers" style="width:80px;" >
 					</select></td>
 					<td class="title">金融费用比率：</td>
-					<td><input type="text" id="rate" name="rate" data-rule-required="true" data-rule-number="true" readonly="readonly"></td>
+					<td><input type="text" id="rate" name="rate" data-rule-required="true" data-rule-number="true"></td>
 					<td class="title">物流费用：</td>
 					<td><input type="text" id="shipping_fee" name="shipping_fee" data-rule-required="true" data-rule-number="true"></td>
 				</tr>
@@ -90,14 +90,14 @@ $(document).ready(function(){
 		}else{
 			$('#message_area').html('');
 		}
-		var remain_number = parseFloat($("#remain_number").text());
-		var send_number = parseFloat($("#send_number").val());
+		var	remain_number = validateNumber(parseFloat($("#remain_number").text())) == 0 ? 0 : parseFloat($("#remain_number").text());
+		var	send_number = parseFloat($("#send_number").val());
 		if(send_number>remain_number){
 			$('#message_area').html(createError('拆分余数不足'));
 			return false;
 		}
-		var rate = parseFloat($("#rate").val());
-		var goods_price = parseFloat($("#goods_price").val());
+		var rate = validateNumber(parseFloat($("#rate").val())) == 0 ? 0 : parseFloat($("#rate").val());
+		var goods_price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
 		if(send_number <= 0 || goods_price <= 0){
 			return false;
 		}
@@ -126,6 +126,9 @@ $(document).ready(function(){
 		$("#total_amount").val(goods_price*send_number + shipping_fee + finance_fee);
 	});
 });
+function changeTotalAmount(){
+
+}
 </script>
 	</body>
 </html>

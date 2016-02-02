@@ -37,7 +37,7 @@
 				<thead>
 				<tr>
 					<th>物料类别</th>
-					<th>物流费用</th>
+					<th>物流费用(单位：元/吨/公里)</th>
 					<th>说明</th>
 					<th>操作</th>
 				</tr>
@@ -53,6 +53,26 @@
 		<div id="footer">
 			{$lang.copyright}
 		</div>
+
+		<!-- pop message -->
+		<div id="popupLayer" class="messagepop pop">
+			<div class="messagepop_bot">
+			<div class="messagepop_header"><h4>编辑物流费用</h4></div>
+			<div class="clear"></div>
+			<hr>
+			<form id="logistics_form">
+				<div class="row"><label>物料类别：</label> <select id="cat_id_edit" name="cat_id"></select></div>
+				<div class="row"><label>物流费用：</label> <input type="text" name="shipping_num" data-rule-required="true" /> <span style="color:#f00;">*</span>&nbsp;<span style="color:#696969;">请输入物流费用</span></div>
+				<div class="row"><label>物流说明：</label> <input type="text" name="tel" data-rule-required="true" /></div>
+				<hr>
+				<div align="center">
+				<input type="button" class="button close" href="javascript:void(0)" onclick="SaleOrder.addShippingInfo()" value=" 提交 " /> 
+				<input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " />
+				</div>
+			</form>
+			</div>			
+		</div>
+		<div id="mask_layout"></div>
 
 <script src="js/ajax.js" type="text/javascript" ></script>
 <script src="js/jquery.validate.js" type="text/javascript" ></script>
