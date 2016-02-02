@@ -70,7 +70,7 @@ var TypeMode = {
 		return false;
 	},
 
-	getUsers: function(select_id){
+	getUsers: function(select_id, check_id){
 		var strJson = createJson("users", "users", {});
 		that = this;
 		$.post(that.url, strJson, function(object){
@@ -80,7 +80,11 @@ var TypeMode = {
 			}else{
 				var row = "";
 				$.each(object.content, function(k, v){
-					row += appendOption(v.user_id, v.companyName);
+					if(check_id == v.user_id){
+						row += appendOption(v.user_id, v.companyName, 1);
+					}else{
+						row += appendOption(v.user_id, v.companyName);
+					}
 				})
 				$('#'+select_id).html(row);
 			}
@@ -124,7 +128,7 @@ var TypeMode = {
 		},"json");
 	},
 
-	getUserBanks: function(select_id, user_id){
+	getUserBanks: function(select_id, user_id, check_id){
 		if(user_id == ''){
 			return false;
 		}
@@ -138,7 +142,11 @@ var TypeMode = {
 			}else{
 				var row = appendOption("", "全部");
 				$.each(object.content, function(k, v){
-					row += appendOption(v.bank_id, v.bank_name);
+					if(v.bank_id == check_id){
+						row += appendOption(v.bank_id, v.bank_name, 1);
+					}else{
+						row += appendOption(v.bank_id, v.bank_name);
+					}
 				})
 				$("#"+select_id).html(row);
 			}
@@ -146,7 +154,7 @@ var TypeMode = {
 		},"json");
 	},
 
-	getUserBanksAccounts: function(select_id, user_id, bank_id){
+	getUserBanksAccounts: function(select_id, user_id, bank_id, check_id){
 		if(user_id == ''){
 			return false;
 		}
@@ -159,7 +167,11 @@ var TypeMode = {
 			}else{
 				var row = appendOption("", "全部");
 				$.each(object.content, function(k, v){
-					row += appendOption(v.account, v.account);
+					if(check_id == v.account){
+						row += appendOption(v.account, v.account, 1);
+					}else{
+						row += appendOption(v.account, v.account);
+					}
 				})
 				$('#'+select_id).html(row);
 			}
@@ -185,12 +197,12 @@ var TypeMode = {
 		},"json");
 	},
 
-	getAdminUserBanks: function(select_id, user_id){
+	getAdminUserBanks: function(select_id, user_id, check_id){
 		if(user_id == ''){
 			return false;
 		}
 		var strJson = createJson("admin_user_banks", "admin_user_banks", {"user_id":user_id});
-		that = this;
+		var that = this;
 		$.post(that.url, strJson, function(object){
 			if(object.error == -1){
 				$('#message_area').html(createError(object.message));
@@ -198,12 +210,16 @@ var TypeMode = {
 			}else{
 				var row = appendOption("", "选择银行");
 				$.each(object.content, function(k, v){
-					row += appendOption(k, v);
+					if(k == check_id){
+						row += appendOption(k, v, true);
+					}else{
+						row += appendOption(k, v);
+					}
 				})
 				$('#'+select_id).html(row);
 			}
 			$('#message_area').html('');
-		},"json");		
+		},"json");
 	},
 
 	getAdminUserBanksAccounts: function(select_id, user_id, bank_id){

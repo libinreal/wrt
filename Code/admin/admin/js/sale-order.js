@@ -171,8 +171,10 @@ var SaleOrder = {
 							if(value.remain_number == 0 || obj.content.info.order_status == "订单取消"){
 								var edit = "";
 							}else{
-								var edit = "<span id='goods_"+value.goods_id+"'>"+createLink("javascript:void(0)", "取消未处理", "SaleOrder.cancelSubOrderInit('"+obj.content.info.order_id+"', '"+value.goods_id+"')") + "</span>";
+								var edit = "<span id='goods_"+value.goods_id+"'>";
+								edit += createLink("javascript:void(0)", "取消未处理", "SaleOrder.cancelSubOrderInit('"+obj.content.info.order_id+"', '"+value.goods_id+"')");
 								edit += createLink("demo_template.php?section=sale_order&act=split&order_id="+obj.content.info.order_id+"&goods_id="+value.goods_id, "拆单");
+								edit += "</span>";
 							}
 							edit += createLink("demo_template.php?section=sale_order&act=suborder_list&id="+obj.content.info.order_id, "子订单列表");
 							row += createTd(edit);
@@ -315,7 +317,7 @@ var SaleOrder = {
 								continue;
 							}
 							if(that.suborder_arr[i] == "order_status"){
-								row += createTd(that.suborder_status[value["child_order_status"]]);
+								row += createTd(that.suborder_status[value["order_status"]]);
 								continue;
 							}
 							if(value[that.suborder_arr[i]] != null){
@@ -845,7 +847,7 @@ var SaleOrder = {
 				return false;
 			}else{
 				$('#message_area').html(createTip(obj.message));
-				$("#goods_"+order_id).text('');
+				$("#goods_"+goods_id).text('');
 			}
 		}, "json");
 		popupLayer();

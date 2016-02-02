@@ -33,17 +33,14 @@
 				<tr>
 					<td class="title">公司：</td><td>中交物融</td>
 					<td class="title">客户：</td>
-					<td><select name="customer_id" style="width:80px;">
+					<td><select name="customer_id" style="width:80px;" onchange="changeUsername()">
 					</select></td>
+					<td class="title">用户：</td>
+					<td><input type="text" id="user_name" name="user_name" readonly="readonly"></td>
 					<td class="title">合同类型：</td>
 					<td><select name="contract_type">
 						<option value="1">销售合同</option>
 						<option value="2">采购合同</option>
-					</select></td>
-					<td class="title">签署类型：</td>
-					<td><select name="contract_sign_type">
-						<option value="1">平台-&gt;银行</option>
-						<option value="2">银行-&gt;平台</option>
 					</select></td>
 				</tr>
 				<tr>
@@ -52,7 +49,11 @@
 					<td class="title">是否控制类型：</td>
 					<td>是<input type="radio" name="is_control" value="1">&nbsp;&nbsp;
 					否<input type="radio" name="is_control" value="0"></td>
-					<td class="title">物料类型：</td><td id="is_goods_type_visible"></td>
+					<td class="title">签署类型：</td>
+					<td><select name="contract_sign_type">
+						<option value="1">平台-&gt;银行</option>
+						<option value="2">银行-&gt;平台</option>
+					</select></td>
 				</tr>
 				<tr>
 					<td class="title">金融费率：</td>
@@ -60,7 +61,9 @@
 					<td class="title">登记机构：</td>
 					<td><select name="bank_id">
 					</select></td>
-					<td></td><td></td><td></td><td></td>
+					<td></td><td></td>
+
+					<td class="title">物料类型：</td><td id="is_goods_type_visible"></td>
 				</tr>
 				<tr>
 					<td class="title">备注</td>
@@ -132,6 +135,9 @@ $(document).ready(function(){
 	});
 });
 Contract.getEdit();
+function changeUsername(){
+	$("#user_name").val($("select[name=customer_id] option:selected").attr("data-val"));
+}
 </script>
 	</body>
 </html>

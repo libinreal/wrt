@@ -112,7 +112,6 @@ var Contract = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}
-			console.log(obj)
 			$.each(obj.content.data, function(key, value){
 				if(key == "bank_id"){
 					that.getOrgList(value);
@@ -224,7 +223,7 @@ var Contract = {
 					$("#filename>span").text(value);
 				}
 			});
-			$('#handle_button').html(createButton('redirectToUrl("demo_template.php?section=contract_manage&act=list")', '返回列表') + createButton('Contract.getUpdate()', '保存'));
+			$('#handle_button').html(createButton('redirectToUrl("contract_manage.php?act=contractList")', '返回列表') + createButton('Contract.getUpdate()', '保存'));
 			var str = "";
 			if(obj.content.cat.length <= 0){
 				var goods_type = false;
@@ -349,7 +348,7 @@ var Contract = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				redirectToUrl("demo_template.php?section=contract_manage&act=list");
+				redirectToUrl("contract_manage.php?act=contractList");
 			}
 		}, "json");
 	},
@@ -427,11 +426,13 @@ var Contract = {
 				return false;
 			}else{
 				var row = '';
+				$("#user_name").val(obj.content[0].user_name);
 				$.each(obj.content, function(k,v){
 					if(typeof(customer_id) !== 'undefined' && v.user_id == customer_id){
-						row += appendOption(v.user_id, v.companyName, 1);
+						row += appendOption(v.user_id, v.companyName, 1, v.user_name);
+						$("#user_name").val(v.user_name);
 					}else{
-						row += appendOption(v.user_id, v.companyName);
+						row += appendOption(v.user_id, v.companyName, 0, v.user_name);
 					}
 				});
 				$("select[name=customer_id]").append(row);
