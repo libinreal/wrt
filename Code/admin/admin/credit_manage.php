@@ -83,15 +83,13 @@ class Credit extends ManageModel
         $upload = new cls_image();
         $fileName = date('YmdHis').'.xml';
         $res = $upload->upload_image($_FILES[$entity], 'credit', $fileName);
-        var_dump($res);
-        die;
         if ($res === false) {
             failed_json('文件上传失败');
         }
         
         //load xml
         $registrationNum = '01234567890';
-        $path = '../data/credit/'.$fileName;
+        $path = '../'.$res;// '../data/credit/'.$fileName;
         @$xml = simplexml_load_file($path);
         if ($xml == false) {
             failed_json('文件格式错误');
