@@ -72,6 +72,8 @@ class Credit extends ManageModel
             failed_json('没有传参`entity`，或者上传错误');
         }
         
+        print_r($_FILES);
+        die;
         //限制上传格式
         $extension = pathinfo($_FILES[$entity]['name'], PATHINFO_EXTENSION);
         if ($extension != 'xml') {
