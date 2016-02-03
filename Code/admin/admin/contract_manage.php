@@ -93,7 +93,6 @@ class Contract extends ManageModel
     protected $db;
     protected $sql;
     
-    
     /**
      * 物料类型列表
      * {
@@ -106,14 +105,36 @@ class Contract extends ManageModel
     {
         self::init($entity, 'goods_type');
         $this->table = 'category';
-        self::selectSql(array(
-            'fields' => array( 'cat_id', 'cat_name' ), 
-            'where'  => 'is_show=1', // enabled=1 ', 
-            'extend' => ' ORDER BY cat_id ASC'
-        ));
         
-        $res = $this->db->getAll($this->sql);
-        make_json_result($res);
+        //物料类别层级显示
+        $data = $this->levelCat(0);
+        make_json_result($data);
+    }
+    
+    
+    
+    /**
+     * 层级显示物料类别
+     * @param int $parentId 父级id
+     */
+    private function levelCat($parentId) 
+    {
+    	$this->table = 'category';
+    	self::selectSql(array(
+    			'fields' => array( 'cat_id', 'cat_name' ),
+    			'where'  => 'parent_id='.$parentId,
+    			'extend' => ' ORDER BY cat_id ASC'
+    	));
+    	$result = $this->db->getAll($this->sql);
+    	$data = array();
+    	if($result){//如果有子类
+    		foreach ($result as $k=>$v){ //循环记录集
+    			$v['list'] = $this->levelCat($v['cat_id']); //调用函数，传入参数，继续查询下级
+    			$data[] = $v; //组合数组
+    		}
+    		return $data;
+    	}
+    	return 0;
     }
     
     

@@ -29,7 +29,7 @@ class ContractController extends ControllerBase
         	return ResponseApi::send('', -1, '合同不存在！');
         }
         
-        $condition = 'customer_id="'.$customerId.'"';
+        $condition = 'user_id="'.$customerId.'"';
         if ($forward || !$currentId) {
         	//上一页操作 或 第一页操作
         	if (!empty($condition)) $condition .= ' AND ';

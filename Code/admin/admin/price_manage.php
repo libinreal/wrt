@@ -75,7 +75,7 @@ class Price extends ManageModel
                 'brand_id', 
                 'brand_name'
             ), 
-            'where'  => 'is_show=1', 
+            'where'  => '', //is_show=1', 
             'extend' => 'ORDER BY brand_id ASC,sort_order DESC'
         ));
         $data = $this->db->getAll($this->sql);
@@ -208,7 +208,7 @@ class Price extends ManageModel
         
         //所有物料类型
         if ($catId) {
-            $this->table = 'goods_type';
+            $this->table = 'category';
             self::selectSql(array(
                 'fields' => 'cat_id,cat_name',
                 'where'  => 'cat_id in('.implode(',', $catId).')'
@@ -525,13 +525,13 @@ class Price extends ManageModel
         
         //获取物料类型名称
         if ($catId) {
-            $this->table = 'goods_type';
+            $this->table = 'category';
             self::selectSql(array(
                 'fields' => array(
                     'cat_id',
                     'cat_name',
                 ),
-                'where'  => 'enabled=1 and cat_id in('.implode(',', $catId).')'
+                'where'  => 'cat_id in('.implode(',', $catId).')'
             ));
             $catName = $this->db->getAll($this->sql);
             if ($catName === false) {
