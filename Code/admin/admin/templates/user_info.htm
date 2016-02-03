@@ -153,6 +153,7 @@
             				{/if}
             			{/foreach}
             		</select>
+                    <span class="require-field" id="field-parentId">*</span>
             	</td>
             </tr>
             <tr>
@@ -403,6 +404,11 @@
         }
         if($("#fax").val()=='') {
             $("#field-fax").html("办公传真必须填写");
+            return false;
+        }
+
+        if($("select[name='parent_id']").val() == '0') {
+            $("#field-parentId").html("必须选择总账号");
             return false;
         }
         var docRank = document.getElementById("rank");

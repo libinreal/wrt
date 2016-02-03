@@ -116,7 +116,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( isset($params['where']) )
 				$where = $params['where'];
 
-			$where_str = '';
+			$where_str = ' WHERE `parent_id` = 0';//过滤掉子账号
 
 			if( isset( $where["like"] ) )
 			{

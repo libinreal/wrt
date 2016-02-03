@@ -127,6 +127,7 @@ $_LANG['username_invalid'] = '无效的用户名';
 $_LANG['email_invalid'] = '无效的email地址';
 $_LANG['email_not_allow'] = '邮件不允许';
 $_LANG['contactsPhone_exists'] = '该手机号码已经被注册';
+$_LANG['parentId_empty'] = '请选择总账号';
 $_LANG['customNo_exists'] = '编码已经被占用';
 /* 地址列表 */
 $_LANG['address_list'] = '收货地址';
