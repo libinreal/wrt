@@ -8,7 +8,7 @@ var BillAmount = {
 		"modify_time",
 		"audit_time",
 		"audit_by",
-		"user_id",
+		"customer_name",
 		"amount",
 		"amount_type",
 		"bill_date",
@@ -138,7 +138,6 @@ var BillAmount = {
 		var params = {"bill_id":bill_id, "type": 0};
 		strJson = createJson("addInit", this.entity, params);
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
