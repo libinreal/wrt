@@ -31,7 +31,7 @@
 						<option value="1">美元</option>
 						</select></td>
 						<td class="title">票面金额：</td>
-						<td><input type="text" class="number" name="bill_amount" data-rule-required="true" data-rule-number="true"></td>
+						<td><input type="text" class="number" id="bill_amount" name="bill_amount" data-rule-required="true" data-rule-number="true"></td>
 					</tr>
 					<tr>
 						<td class="title">客户号：</td>
@@ -80,18 +80,18 @@
 						<td class="title">结算组织：</td>
 						<td><input type="text" name="balance" data-rule-required="true"></td>
 						<td class="title">票据折算比例：</td>
-						<td><input type="text" name="discount_rate" data-rule-required="true" data-rule-number="true"></td>
+						<td><input type="text" id="discount_rate" name="discount_rate" data-rule-required="true" data-rule-number="true"></td>
 						<td></td><td></td>
 					</tr>
 					<tr>
+						<td></td><td></td><td></td><td></td>
 						<td class="title">折后额度：</td>
-						<td><input type="text" class="number" name="discount_amount" data-rule-required="true" data-rule-number="true"></td>
+						<td><input type="text" class="number" id="discount_amount" name="discount_amount" data-rule-required="true" data-rule-number="true"></td>
 						<td class="title">带追索权：</td>
 						<td>
 						<label>是</label><input type="radio" name="is_recourse" value="1">
 						<label>否</label><input type="radio" name="is_recourse" value="0">
 						</td>
-						<td></td><td></td><td></td><td></td>
 					</tr>
 				</tbody>
 			</table>
@@ -163,8 +163,22 @@ $(document).ready(function(){
     $("#receive_bank_id").change(function(){
 		TypeMode.getAdminUserBanksAccounts("receive_account", $("#receive_user_id").val(), $(this).val());
 	});
+	// 票据折算比例修改
+	$('#discount_rate').on('valuechange', function (e, previous) {
+		discountAmountChange();
+	});
+	// 票面金额修改
+	$('#bill_amount').on('valuechange', function (e, previous) {
+		discountAmountChange();
+	});
 });
 Bill.getInitCreate();
+function discountAmountChange(){
+	var bill_amount = validateNumber(parseFloat($("#bill_amount").val())) == 0 ? 0 : parseFloat($("#bill_amount").val());
+	var discount_rate = validateNumber(parseFloat($("#discount_rate").val())) == 0 ? 0 : parseFloat($("#discount_rate").val());
+	var discount_amount = discount_rate*bill_amount/100;
+	$("#discount_amount").val(discount_amount);
+}
 function changePromptDay(){
 	var start = parseDate($('#issuing_date').val()) == '' ? 0 : parseDate($('#issuing_date').val());
 	var end = parseDate($('#due_date').val()) == '' ? 0 : parseDate($('#due_date').val());
