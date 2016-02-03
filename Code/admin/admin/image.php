@@ -23,7 +23,7 @@ if (/* !in_array($domain, $domainArr) || */ !isset($_GET['act']) || !isset($_SER
 //文件
 $fileName = $_GET['url'];
 
-if ($_GET['act'] == 'pdf') {
+if ($_GET['act'] == 'view') {
     
     //获取pdf信息
     $url = $host.'://'.$domain.'/data/contract/'.$fileName;

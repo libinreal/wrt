@@ -813,7 +813,7 @@ class GoodsController extends ControllerBase {
 		$customerId = $this->get_user()->id;
 		
 		$result = ContractModel::find(array(
-			'conditions' => 'customer_id = '.$customerId,
+			'conditions' => 'user_id = '.$customerId,
 			'columns' => 'contract_id, contract_name name, contract_num code'
 		));
 		$contract = array();

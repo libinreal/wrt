@@ -65,7 +65,7 @@ class ContractController extends ControllerBase
     	}
     	
     	$data = ContractModel::findFirst(array(
-    			'conditions' => 'contract_id='.$contractId.' AND customer_id='.$userId
+    			'conditions' => 'contract_id='.$contractId.' AND user_id='.$userId
     	));
     	if (!$data) {
     		return ResponseApi::send(null, -1, '该合同不存在！');

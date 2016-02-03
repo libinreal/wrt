@@ -106,8 +106,16 @@ class Contract extends ManageModel
         self::init($entity, 'goods_type');
         $this->table = 'category';
         
+        $this->table = 'category';
+        self::selectSql(array(
+        		'fields' => array( 'cat_id', 'cat_name', 'parent_id' ),
+        		//'where'  => 'parent_id='.$parentId,
+        		'extend' => ' ORDER BY cat_id ASC'
+        ));
+        $result = $this->db->getAll($this->sql);
+        
         //物料类别层级显示
-        $data = $this->levelCat(0);
+        $data = $this->levelCat(0, $result);
         make_json_result($data);
     }
     
@@ -116,26 +124,44 @@ class Contract extends ManageModel
     /**
      * 层级显示物料类别
      * @param int $parentId 父级id
+     * @param array $cateList
+     * @return 0|array
      */
-    private function levelCat($parentId) 
+    private function levelCat($parentId, $cateList) 
     {
-    	$this->table = 'category';
-    	self::selectSql(array(
-    			'fields' => array( 'cat_id', 'cat_name' ),
-    			'where'  => 'parent_id='.$parentId,
-    			'extend' => ' ORDER BY cat_id ASC'
-    	));
-    	$result = $this->db->getAll($this->sql);
-    	$data = array();
+    	$result = $this->getKidCates($parentId, $cateList);
+    	$data   = array();
     	if($result){//如果有子类
-    		foreach ($result as $k=>$v){ //循环记录集
-    			$v['list'] = $this->levelCat($v['cat_id']); //调用函数，传入参数，继续查询下级
+    		foreach ($result as $k=>$v){
+    			$v['list'] = $this->levelCat($v['cat_id'], $cateList); //调用函数，传入参数，继续查询下级
     			$data[] = $v; //组合数组
     		}
     		return $data;
     	}
     	return 0;
     }
+    
+    
+    /**
+     * 获取子集物料
+     * @param int $parentId
+     * @param array $result
+     * @return NULL|array
+     */
+    private function getKidCates($parentId, $result) 
+    {
+    	$data = array();$i = 0;
+    	if (!$result) return null;
+    	foreach ($result as $k=>$v) {
+    		if ($v['parent_id'] == $parentId) {
+    			$data[$i]['cat_id']   = $v['cat_id'];
+    			$data[$i]['cat_name'] = $v['cat_name'];
+    			$i++;
+    		}
+    	}
+    	return $data;
+    }
+    
     
     
     /**
@@ -870,12 +896,16 @@ class Contract extends ManageModel
         if ($file['extension'] != 'pdf') {
             failed_json('只允许上传pdf格式的文件！');
         }
+        
         //upload
         $upload = new cls_image();
         $fileName = date('YmdHis').'.pdf';
         $res = $upload->upload_image($_FILES[$entity], 'contract', $fileName);
         if ($res === false) {
-            failed_json('文件上传失败，可能因为服务器不允许上传太大的pdf文件！');
+        	//文件上传失败的原因可能是:
+        	//1、pdf文件太大，最大2m
+        	//2、不是正确的pdf文件
+            failed_json('文件上传失败');
         } else {
             make_json_result($fileName);
         }
