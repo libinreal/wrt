@@ -256,7 +256,7 @@ class Credit extends ManageModel
     			$sql .= ' WHEN '.$v['user_id'].' THEN "'.$v['companyName'].'" ';
     		}
     		$sql .= 'END WHERE user_id in('.implode(',', $userId).')';
-    		$result = true;//$this->db->query($sql);
+    		$result = $this->db->query($sql);
     		if ($result === false)
     			failed_json('更新用户资料失败');
     	}

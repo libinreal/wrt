@@ -812,8 +812,28 @@ class GoodsController extends ControllerBase {
 	public function getContractsAction() {
 		$customerId = $this->get_user()->id;
 		
+		//如果是总账号 会选择旗下的所有子帐号
+		$result = Users::find(array(
+				'conditions' => 'parent_id = '.$customerId.' or id='.$customerId,
+				'columns' => 'id'
+		));
+		$user = array();
+		if(is_object($result) && $result->count()) {
+			$user = $result->toArray();
+		}
+		
+		//所有用户id
+		$userId = array();
+		foreach ($user as $v) {
+			$userId[] = $v['id'];
+		}
+		if (!$userId) {
+			return ResponseApi::send(array());
+		}
+		
+		//查看总账号下的所有合同 包括子帐号
 		$result = ContractModel::find(array(
-			'conditions' => 'user_id = '.$customerId,
+			'conditions' => 'user_id in('.implode(',', $userId).')',
 			'columns' => 'contract_id, contract_name name, contract_num code'
 		));
 		$contract = array();

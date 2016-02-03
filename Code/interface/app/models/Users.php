@@ -461,6 +461,7 @@ class Users extends \PhpRudder\Mvc\ModelBase implements Auth
         	'inv_bank_address' => 'invBankAddress', 
         	'inv_tel' => 'invTel', 
         	'inv_fax' => 'invFax', 
+        	'bank_name' => 'bank_name'
         );
     }
 
