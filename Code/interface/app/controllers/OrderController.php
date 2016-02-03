@@ -763,6 +763,7 @@ class OrderController extends ControllerBase
 	 */
 	private function showShopPrice($arr, $value = 'vipPrice')
 	{
+		return $arr[$value];
 		if ($arr[$value] && $arr['price_num']) {
 			return $arr[$value] + $arr['price_num'];
 		} elseif ($arr[$value]) {

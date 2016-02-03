@@ -446,14 +446,27 @@ class Price extends ManageModel
         $params = $parameters['params'];
         $psWhere = $params['where'];
         
-        //where
+        //where筛选条件
         $catId = $psWhere['cat_id'];
         $brandId = $psWhere['brand_id'];
         $suppliersId = $psWhere['suppliers_id'];
         $attributes = $psWhere['attributes'];
         $where = '';
-        if ($catId) {
-            $where .= ' and cat_id='.$catId;
+        
+        //获取可筛选的所有物料类型
+        $this->table = 'category';
+        self::selectSql(array(
+        		'fields' => array( 'cat_id', 'parent_id' ),
+        		'extend' => ' ORDER BY cat_id ASC'
+        ));
+        $result = $this->db->getAll($this->sql);
+        $cateList = $this->levelCat($catId, $result);
+        array_push($cateList, $catId);
+        $cateList = array_unique($cateList);
+        
+        //筛选条件
+        if ($catId && $cateList) {
+            $where .= ' and cat_id in('.implode(',', $cateList).')';
         }
         if ($brandId) {
             $where .= ' and brand_id='.$brandId;
@@ -468,7 +481,6 @@ class Price extends ManageModel
             $useLimit = false;
         }
         
-        
         //page
         if ($useLimit && is_numeric($params['limit']) && is_numeric($params['offset'])) {
             $page = (intval($params['limit']) < 0) ? 0 : intval($params['limit']);
@@ -481,6 +493,7 @@ class Price extends ManageModel
         }
         
         //获取商品所有加价记录
+        $this->table = 'goods';
         self::selectSql(array(
             'fields' => array(
                 'goods_id', 
@@ -493,9 +506,10 @@ class Price extends ManageModel
                 'price_type', 
                 'shop_price'
             ),  
-            'where'  => 'price_num!=0 or price_rate!=0 and price_rule!=0'.$where.' or price_type=1', 
+            'where'  => '((price_num!=0 and price_rule!=0) or (price_type=1) or (price_rate!=0)) '.$where, 
             'extend' => 'ORDER BY goods_id ASC,sort_order DESC '.$limit
         ));
+        //echo $this->sql;die;
         $data = $this->db->getAll($this->sql);
         if ($data === false) {
             failed_json('获取列表失败');
@@ -505,7 +519,7 @@ class Price extends ManageModel
         if ($limit) {
             self::selectSql(array(
                 'fields' => 'COUNT(*) AS num',
-                'where'  => 'price_num!=0 or price_rate!=0 and price_rule!=0'.$where.' or price_type=1',
+                'where'  => '((price_num!=0 and price_rule!=0) or (price_type=1) or (price_rate!=0)) '.$where,
             ));
             $total = $this->db->getOne($this->sql);
             if ($total === false) {
@@ -609,6 +623,48 @@ class Price extends ManageModel
         
         
         make_json_result(array('total'=>$total, 'data'=>$data));
+    }
+    
+    
+    /**
+     * 所有下级物料类别
+     * @param int $parentId 父级id
+     * @param array $cateList
+     * @return 0|array
+     */
+    private function levelCat($parentId, $cateList)
+    {
+    	$tmpRes = $this->getKidCates($parentId, $cateList);
+    	$output = array();
+    	foreach ($tmpRes as $k => $v)
+    	{
+    		$output []= $v;
+    		if (!empty($tmpRes))
+    		{
+    			$output = array_merge($output, $this->levelCat($v, $cateList));
+    		}
+    	}
+    	return $output;
+    }
+    
+    
+    /**
+     * 获取子集物料
+     * @param int $parentId
+     * @param array $result
+     * @return NULL|array
+     */
+    private function getKidCates($parentId, $result)
+    {
+    	$data = array();$i = 0;
+    	if (!$result) return null;
+    	foreach ($result as $k=>$v) {
+    		if ($v['parent_id'] == $parentId) {
+    			$data[$i] = $v['cat_id'];
+    			$i++;
+    		}
+    	}
+    	return $data;
     }
     
     

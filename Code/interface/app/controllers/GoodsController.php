@@ -812,9 +812,34 @@ class GoodsController extends ControllerBase {
 	public function getContractsAction() {
 		$customerId = $this->get_user()->id;
 		
+		//如果是总账号 会选择旗下的所有子帐号
+		$result = Users::find(array(
+				'conditions' => 'parent_id = '.$customerId.' or id='.$customerId,
+				'columns' => 'id'
+		));
+		$user = array();
+		if(is_object($result) && $result->count()) {
+			$user = $result->toArray();
+		}
+		
+		//所有用户id
+		$userId = array();
+		foreach ($user as $v) {
+			$userId[] = $v['id'];
+		}
+		if (!$userId) {
+			return ResponseApi::send(array());
+		}
+		
+		//查看总账号下的所有合同 包括子帐号
 		$result = ContractModel::find(array(
+
 			'conditions' => 'userId = '.$customerId,//合同子帐号=当前登录用户
 			'columns' => 'id contract_id, name, num code'
+/*
+			'conditions' => 'user_id in('.implode(',', $userId).')',
+			'columns' => 'contract_id, contract_name name, contract_num code'
+*/
 		));
 		$contract = array();
 		if(is_object($result) && $result->count()) {
@@ -881,6 +906,7 @@ class GoodsController extends ControllerBase {
 			$buyGoods[$cartResult->goodsId] = $cartResult->nums;
 			$totalAmt += $cartResult->nums * $cartResult->price;
 		}
+		
 		//从金蝶接口得到采购额度
 		$api = new ApiController();
 		$cmt = $api->getCreAmt();	//得到采购额度 #bug#
@@ -1016,7 +1042,13 @@ class GoodsController extends ControllerBase {
 			$orderGoods->goodsId = $cartResult->goodsId;
 			$orderGoods->goodsSn = $cartResult->goodsSn;
 			$orderGoods->goodsName = $cartResult->goodsName;
-			$orderGoods->goodsPrice = $cartResult->price;
+			$price = 0;
+			if ($cartResult->price_num) {
+				$price = $cartResult->price + $cartResult->price_num;
+			} else {
+				$price = $cartResult->price * (1+($cartResult->price_rate/100));
+			}
+			$orderGoods->goodsPrice = $price;
 			$orderGoods->nums = $cartResult->nums;
 			//签名额外数据
 			$submitData['extraData'][] = implode(':', array(/* $orderGoods->goodsName, */ $orderGoods->goodsSn, $orderGoods->goodsPrice));

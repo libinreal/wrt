@@ -231,14 +231,14 @@ class Contract extends ManageModel
     	
     	));
     	$res = $this->db->getAll($this->sql);
-    	if (empty($res)) {
+    	/* if (empty($res)) {
     		self::selectSql(array(
     				'fields' => array( 'user_id', 'user_name' ),
     				'where'  => ' alias=0 AND user_id='.$parentId,
     				 
     		));
     		$res = $this->db->getAll($this->sql);
-    	}
+    	} */
     	make_json_result($res);
     }
     
