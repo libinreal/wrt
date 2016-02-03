@@ -9,8 +9,8 @@ var BillRepay = {
 		"audit_time",
 		"audit_by",
 		"currency_type",
-		"user_id",
-		"amount",
+		"customer_name",
+		"repay_amount",
 		"recover_date",
 		"operate"
 	],
@@ -64,7 +64,6 @@ var BillRepay = {
 					var row = "";
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";
-
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=bill_manage&act=repay_view&id="+value.bill_repay_log_id, "详情");
@@ -108,12 +107,11 @@ var BillRepay = {
 				$.each(obj.content.info, function(k, v){
 					if($("input[name="+k+"]").length > 0){
 						$("input[name="+k+"]").val(v);
-					}else if($("input#"+k).length > 0){
-						$("input#"+k).val(v);
 					}else{
 						$("#"+k).text(v);
 					}
 				});
+				$("input[name=repay_amount]").val(obj.content.info.need_repay);
 			}
 			$('#message_area').html('');
 		}, "json");
@@ -129,15 +127,16 @@ var BillRepay = {
 		}
 		var form_data = $("#bill_repay_form").FormtoJson();
 		strJson = createJson("create", this.entity, form_data);
-		that = this
-		console.log(strJson);
+		console.log(strJson)
+		var that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+				redirectToUrl("demo_template.php?section=bill_manage&act=list");
 			}
-			$('#message_area').html(createTip(obj.message));
 		}, "json");		
 	},
 
