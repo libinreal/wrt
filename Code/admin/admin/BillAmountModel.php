@@ -260,6 +260,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( empty( $data['user_id'] ) )
 				make_json_response('', '-100', '客户id错误');
 
+			if( $data['bill_id'] == '0' ){
+				$data['amount_rate'] = 1;//票据折算比例最大为1，现金额度默认为1
+			}
+
 			$dataKey = array_keys( $data );
 			$bill_amount_table = $GLOBALS['ecs']->table('bill_amount_log');
 			$sql = "INSERT INTO $bill_amount_table (";
@@ -284,7 +288,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( $createBill )
 			{
 				$users_table = $GLOBALS['ecs']->table('users');
-				if( $data['amount_type'] == 0 )//额度生成类型(0:商票,1:现金,2:承兑)
+				if( $data['bill_id'] != '0' && is_numeric( $data['bill_id'] ))//额度生成类型(0:商票,1:现金,2:承兑)
 					$users_sql = 'UPDATE ' . $users_table . ' SET `bill_amount_history` = `bill_amount_history` + ' . $data['amount'] .
 							',`bill_amount_valid` = `bill_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'];
 				else

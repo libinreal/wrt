@@ -139,6 +139,11 @@ elseif ($_REQUEST['act'] == 'insert')
         exit();
     }*/
 
+    if( !$parentId ){//请选择总账号
+        sys_msg($_LANG['parentId_empty']);
+        exit();
+    }
+
     $insert_data = array();
     $insert_data['user_name'] = $username;
     $insert_data['password'] = $password;
@@ -561,7 +566,7 @@ function user_list()
  */
 function parentList() 
 {
-	$sql = 'SELECT user_id,user_name FROM '.$GLOBALS['ecs']->table('users').' WHERE user_name!=""';
+	$sql = 'SELECT user_id,user_name FROM '.$GLOBALS['ecs']->table('users').' WHERE `user_name`!="" AND `parent_id` = 0';
 	$data = $GLOBALS['db']->getAll($sql);
 	return $data;
 }

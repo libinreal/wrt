@@ -144,7 +144,7 @@ var BillAmount = {
 			}else{
 				$.each(obj.content.info, function(k, v){
 					if(k == "discount_rate"){
-						$("#"+k).val(v);
+						$("#"+k).val(parseInt(v));
 					}else{
 						$("input[name="+k+"]").val(v);
 						$("#"+k).text(v);
@@ -152,7 +152,7 @@ var BillAmount = {
 				});
 				var bill_amount = parseFloat(obj.content.info.bill_amount);
 				var discount_rate = parseFloat($("#discount_rate").val());
-				$("#amount").val(bill_amount*discount_rate);
+				$("#amount").val(bill_amount*discount_rate/100);
 				$("#operate_button").html(createButton('BillAmount.getCreateAction()', '添加'));
 			}
 			$('#message_area').html('');

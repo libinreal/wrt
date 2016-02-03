@@ -152,16 +152,17 @@ var Contract = {
 				}
 			});
 			$('#handle_button').html(createButton('redirectToUrl("contract_manage.php?act=contractList")', '返回列表') + createButton('Contract.getUpdate()', '保存'));
-			var str = "";
+			var row = "";
 			if(obj.content.cat.length <= 0){
 				var goods_type = false;
+				$('#goods_type_list').html('<div style="text-align:center">'+createWarn('无物料类型')+'</div>');
 			}else{
-				var str = "<ul>";
+				var row = '<ul>';
 				for(var i=0; i<obj.content.cat.length; i++){
-					str += "<li>"+createCheckbox('goods_type', obj.content.cat[i].cat_id, obj.content.cat[i].cat_name, 1)+"</li>";
+					row += "<li>"+createCheckbox('goods_type', obj.content.cat[i].cat_id, obj.content.cat[i].cat_name, 1)+"</li>";
 				}
-				str += "</ul>";
-				$('#goods_type_list').html(str);
+				row += "</ul>";
+				$('#goods_type_list').html(row);
 			}
 			$('#message_area').html('');
 		}, "json");
@@ -224,16 +225,16 @@ var Contract = {
 				}
 			});
 			$('#handle_button').html(createButton('redirectToUrl("contract_manage.php?act=contractList")', '返回列表') + createButton('Contract.getUpdate()', '保存'));
-			var str = "";
+			var row = "";
 			if(obj.content.cat.length <= 0){
 				var goods_type = false;
 			}else{
-				var str = "<ul>";
+				var row = "<ul>";
 				for(var i=0; i<obj.content.cat.length; i++){
-					str += "<li>"+createCheckbox('goods_type', obj.content.cat[i].cat_id, obj.content.cat[i].cat_name, 1)+"</li>";
+					row += "<li>"+createCheckbox('goods_type', obj.content.cat[i].cat_id, obj.content.cat[i].cat_name, 1)+"</li>";
 				}
-				str += "</ul>";
-				$('#goods_type_list').html(str);
+				row += "</ul>";
+				$('#goods_type_list').html(row);
 				var goods_type = obj.content.cat;
 			}
 			that.getGoodsType(goods_type);
@@ -257,7 +258,6 @@ var Contract = {
 		form_data.attachment = $('#attachment_name').text();
 		var params = {"contract_id": id, "params":form_data};
 		var strJson = createJson("contUp", "contract", params);
-		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -297,7 +297,15 @@ var Contract = {
 
 	getGoodsType: function(goods_type_bind){
 		var params = {"params":{}};
-		strJson = createJson("catList", "goods_type", params);
+		var strJson = createJson("catList", "goods_type", params);
+		var goods_type_arr = [];
+		if(goods_type_bind){
+			$.each(goods_type_bind, function(k, v){
+				goods_type_arr.push(v.cat_id);
+			})
+		}else{
+			goods_type_arr = false;
+		}
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -306,26 +314,66 @@ var Contract = {
 				if(obj.content.length <= 0){
 					$('#goods_type_form').html(createWarn("无物料类型"));
 				}else{
-					var str = "<ul>";
-					for(var i=0; i<obj.content.length; i++){
-						if(goods_type_bind == false){
-							str += "<li>"+createCheckbox('goods_type', obj.content[i].cat_id, obj.content[i].cat_name, 0)+"</li>";
+					
+					var row = "<ul>";
+					$.each(obj.content, function(k,v){
+						if(goods_type_arr){
+							if(goods_type_arr.indexOf(v.cat_id) == -1){
+								row += "<li>"+createCheckbox('goods_type', v.cat_id, v.cat_name, 0)+"</li>";
+							}else{
+								row += "<li>"+createCheckbox('goods_type', v.cat_id, v.cat_name, 1)+"</li>";
+							}
 						}else{
-							var has_item = false;
-							$.each(goods_type_bind, function(k, v){
-								if(v.cat_id == obj.content[i].cat_id){
-									has_item = true;	
+							row += "<li>"+createCheckbox('goods_type', v.cat_id, v.cat_name, 0)+"</li>";
+						}
+						if(v.list.length == 0){
+							return;
+						}else{
+							$.each(v.list, function(k1, v1){
+								if(goods_type_arr){
+									if(goods_type_arr.indexOf(v1.cat_id) == -1){
+										row += "<li>"+createCheckbox('goods_type', v1.cat_id, v1.cat_name, 0)+"</li>";
+									}else{
+										row += "<li>"+createCheckbox('goods_type', v1.cat_id, v1.cat_name, 1)+"</li>";
+									}
+								}else{
+									row += "<li>"+createCheckbox('goods_type', v1.cat_id, v1.cat_name, 0)+"</li>";
+								}
+								if(v1.list.length == 0){
+									return;
+								}else{
+									$.each(v1.list, function(k2, v2){
+										if(goods_type_arr){
+											if(goods_type_arr.indexOf(v2.cat_id) == -1){
+												row += "<li>"+createCheckbox('goods_type', v2.cat_id, v2.cat_name, 0)+"</li>";
+											}else{
+												row += "<li>"+createCheckbox('goods_type', v2.cat_id, v2.cat_name, 1)+"</li>";
+											}
+										}else{
+											row += "<li>"+createCheckbox('goods_type', v2.cat_id, v2.cat_name, 0)+"</li>";
+										}
+										if(v1.list.length == 0){
+											return;
+										}else{
+											$.each(v2.list, function(k3, v3){
+												if(goods_type_arr){
+													if(goods_type_arr.indexOf(v3.cat_id) == -1){
+														row += "<li>"+createCheckbox('goods_type', v3.cat_id, v3.cat_name, 0)+"</li>";
+													}else{
+														row += "<li>"+createCheckbox('goods_type', v3.cat_id, v3.cat_name, 1)+"</li>";
+													}
+												}else{
+													row += "<li>"+createCheckbox('goods_type', v3.cat_id, v3.cat_name, 0)+"</li>";
+												}
+											});								
+										}
+									});								
 								}
 							});
-							if(has_item === true){
-								str += "<li>"+createCheckbox('goods_type', obj.content[i].cat_id, obj.content[i].cat_name, 1)+"</li>";
-							}else{
-								str += "<li>"+createCheckbox('goods_type', obj.content[i].cat_id, obj.content[i].cat_name, 0)+"</li>";
-							}
 						}
-					}
-					str += "</ul>";
-					$('#goods_type_list').html(str);
+					});
+					row += "</ul>";
+					$('#goods_type_list').html(row);
 				}
 			}
 			$('#message_area').html('');
@@ -355,10 +403,10 @@ var Contract = {
 	},
 
 	getContSupsList: function(search){
+		var condition = {};
 		if(typeof(search) === "undefined"){
 			serach = false;
 		}else{
-			var condition = {};
 			var customer_id = $('#search_form select[name=customer_id]').val();
 			var contract_id = $('#search_form select[name=contract_id]').val();
 			if(contract_id != ''){
@@ -377,10 +425,9 @@ var Contract = {
 			if(search == "search"){
 				this.limit = 0;
 			}
-			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		}
+		var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		strJson = createJson("contSupsList", "contract_suppliers", params);
-		console.log(strJson);
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
