@@ -813,8 +813,8 @@ class GoodsController extends ControllerBase {
 		$customerId = $this->get_user()->id;
 		
 		$result = ContractModel::find(array(
-			'conditions' => 'user_id = '.$customerId,
-			'columns' => 'contract_id, contract_name name, contract_num code'
+			'conditions' => 'userId = '.$customerId,//合同子帐号=当前登录用户
+			'columns' => 'id contract_id, name, num code'
 		));
 		$contract = array();
 		if(is_object($result) && $result->count()) {
@@ -893,6 +893,40 @@ class GoodsController extends ControllerBase {
 		if($cmt < $totalAmt) {
 			return ResponseApi::send(null, Message::$_ERROR_CREDITS, "您的采购额度不足，可取消重下单或追加申请额度后下单！");
 		}
+
+		//检查合同的现金额度 + 票据折后额度 >= 总额
+		$contract_info = ContractModel::findFirst( array( 
+					'num = ?1 AND userId = ?2',
+					'bind' => array(
+							1 => $contractSn,
+							2 => $userId
+							)
+					
+						) );
+		if( !$contract_info ){
+			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, "合同不存在！");
+		}
+
+		if( $contract_info->billValid + $contract_info->cashValid < $totalAmt ){
+			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, "您的合同可用采购额度不足，可取消重下单或追加申请额度后下单！");
+		}
+
+		//更新合同额度
+		if( $contract_info->cashValid >= $totalAmt ){
+			$contract_info->cashValid -= $totalAmt;
+		}else{
+			$contract_info->cashValid = 0;
+			$bill_red = $totalAmt - $contract_info->cashValid;
+			$contract_info->billValid -= $bill_red;
+		}
+
+		if(!$contract_info->save()) {
+			foreach($contract_info->getMessages() as $message) {
+				return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
+			}
+		}
+		
+
 		//得到所要购买商品的库存
 		$ids = implode(', ', array_keys($buyGoods));
 		$goodsObjs = Goods::find(array(

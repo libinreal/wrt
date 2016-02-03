@@ -127,7 +127,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$contract_table = $GLOBALS['ecs']->table('contract');
 
-			$where_str = ' WHERE `customer_id` = ' . $customer_id;
+			$where_str = ' WHERE `customer_id` = ' . $customer_id;//总帐号的所有合同
 			if( $type == 0 )//票据
 				$contract_sql = 'SELECT `bill_amount_history`, `bill_amount_valid`, `contract_id` FROM ' . $contract_table .
 				 				$where_str . ' ORDER BY `contract_id` ASC ';
