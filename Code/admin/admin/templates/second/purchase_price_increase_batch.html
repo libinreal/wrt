@@ -19,7 +19,7 @@
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
 			<labe>物料类别：</labe>
-			<select name="cat_id">
+			<select name="cat_id" onchange="check_cat_id(this)">
 				<option value="">全部</option>
 			</select>
 			&nbsp;
@@ -69,6 +69,10 @@ $(document).ready(function(){
 	Price.getExistBatch();
 });
 function addRow(elem){
+	if(!$("select[name=cat_id] option:selected").data("val")){
+		$('#message_area').html(createError("不能添加"));
+		return false;		
+	}
 	var cat_id = $("select[name=cat_id]>option:selected").val();
 	var brand_id = $("select[name=brand_id]>option:selected").val() == "" ? 0 : $("select[name=brand_id]>option:selected").val();
 	var suppliers_id = $("select[name=suppliers_id]>option:selected").val() == "" ? 0 : $("select[name=suppliers_id]>option:selected").val();
@@ -111,6 +115,13 @@ function removeRow(elem, id){
 	}
 	if(id){
 		Price.deleteSingleBatch(id);
+	}
+}
+function check_cat_id(handle){
+	if($("select[name=cat_id] option:selected").data("val")){
+		return true;
+	}else{
+		alert("不可以添加");
 	}
 }
 </script>

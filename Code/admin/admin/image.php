@@ -24,13 +24,16 @@ if (/* !in_array($domain, $domainArr) || */ !isset($_GET['act']) || !isset($_SER
 $fileName = $_GET['url'];
 
 if ($_GET['act'] == 'view') {
+	header("Content-type: application/pdf");
+	$dirName = '../data/contract/'.$fileName;
+	echo file_get_contents($dirName);
+	die;
     
     //获取pdf信息
     $url = $host.'://'.$domain.'/data/contract/'.$fileName;
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
     $data = curl_exec($ch);
     curl_close($ch);
     header("Content-type: application/pdf");

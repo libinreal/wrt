@@ -97,6 +97,7 @@ var BillRepay = {
 		strJson = createJson("addInit", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
