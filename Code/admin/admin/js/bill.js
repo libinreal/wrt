@@ -53,7 +53,6 @@ var Bill = {
 		strJson = createJson("page", this.entity, params);
 		var that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -73,7 +72,9 @@ var Bill = {
 								var edit = createLink("demo_template.php?section=bill_manage&act=info&id="+value.bill_id, "编辑");
 								edit += createLink("demo_template.php?section=bill_manage&act=view&id="+value.bill_id, "查看");
 								edit += createLink("demo_template.php?section=bill_manage&act=generate_note&bill_id="+value.bill_id, "生成票据采购额");
-								edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "还票");
+								if(obj.content.data[key].status == 0){
+									edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "还票");
+								}
 								row += createTd(edit);
 								continue;
 							}
