@@ -151,6 +151,27 @@ var Price = {
 				var row = '';
 				$.each(obj.content, function(k,v){
 					row += appendOption(v.cat_id, v.cat_name);
+					if(v.list.length == 0){
+						return;
+					}else{
+						$.each(v.list, function(k1, v1){
+							row += appendOption(v1.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;"+v1.cat_name);
+							if(v1.list.length == 0){
+								return;
+							}else{
+								$.each(v1.list, function(k2, v2){
+									row += appendOption(v2.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+v2.cat_name);
+									if(v1.list.length == 0){
+										return;
+									}else{
+										$.each(v2.list, function(k3, v3){
+											row += appendOption(v3.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+v3.cat_name);
+										});										
+									}
+								});								
+							}
+						});
+					}
 				});
 				$("select[name=cat_id]").append(row);
 			}
