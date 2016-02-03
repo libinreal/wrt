@@ -901,6 +901,7 @@ class GoodsController extends ControllerBase {
 			$buyGoods[$cartResult->goodsId] = $cartResult->nums;
 			$totalAmt += $cartResult->nums * $cartResult->price;
 		}
+		
 		//从金蝶接口得到采购额度
 		$api = new ApiController();
 		$cmt = $api->getCreAmt();	//得到采购额度 #bug#
@@ -1002,7 +1003,13 @@ class GoodsController extends ControllerBase {
 			$orderGoods->goodsId = $cartResult->goodsId;
 			$orderGoods->goodsSn = $cartResult->goodsSn;
 			$orderGoods->goodsName = $cartResult->goodsName;
-			$orderGoods->goodsPrice = $cartResult->price;
+			$price = 0;
+			if ($cartResult->price_num) {
+				$price = $cartResult->price + $cartResult->price_num;
+			} else {
+				$price = $cartResult->price * (1+($cartResult->price_rate/100));
+			}
+			$orderGoods->goodsPrice = $price;
 			$orderGoods->nums = $cartResult->nums;
 			//签名额外数据
 			$submitData['extraData'][] = implode(':', array(/* $orderGoods->goodsName, */ $orderGoods->goodsSn, $orderGoods->goodsPrice));
