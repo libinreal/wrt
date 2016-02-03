@@ -138,10 +138,57 @@ elseif ($_REQUEST['act'] == 'insert')
         sys_msg($_LANG['customNo_exists']);
         exit();
     }*/
-    $sql = "INSERT INTO ".$GLOBALS['ecs']->table('users')."".
+
+    $insert_data = array();
+    $insert_data['user_name'] = $username;
+    $insert_data['password'] = $password;
+    $insert_data['email'] = $email;
+    $insert_data['sex'] = $sex;
+    $insert_data['qq'] = $qq;
+    $insert_data['weixin'] = $weixin;
+    $insert_data['companyName'] = $companyName;
+    $insert_data['companyAddress'] = $companyAddress;
+    $insert_data['officePhone'] = $officePhone;
+    $insert_data['fax'] = $fax;
+    $insert_data['position'] = $position;
+    $insert_data['projectName'] = $projectName;
+    $insert_data['projectBrief'] = $projectBrief;
+    $insert_data['contacts'] = $contacts;
+    $insert_data['contactsPhone'] = $contactsPhone;
+    $insert_data['secondContacts'] = $secondContacts;
+    $insert_data['secondPhone'] = $secondPhone;
+    $insert_data['customNo'] = $customNo;
+    $insert_data['customLevel'] = $customLevel;
+    $insert_data['reg_time'] = gmtime();
+    $insert_data['credit_rank'] = $credit_rank;
+    $insert_data['department'] = $department;
+    $insert_data['customerNo'] = $customerNo;
+    $insert_data['customerAccount'] = $customerAccount;
+    $insert_data['parent_id'] = $parentId;
+
+    $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('users') .'(';
+    $insert_keys = array_keys( $insert_data );
+    foreach ($insert_keys as $v) {
+        $sql .= '`' . $v .'`,';
+    }
+    $sql = substr($sql, 0, -1) . ") VALUES(";
+
+    foreach ($insert_data as $v) {
+        if( is_null( $v ) )
+            $v = '';
+        if(is_string( $v ) )
+            $v = '\'' . $v . '\'';
+
+        $sql = $sql . $v . ',';
+    }
+    $sql = substr($sql, 0, -1) . ")";
+
+    /*
+    
+     $sql = "INSERT INTO ".$GLOBALS['ecs']->table('users')."".
         "(user_name,password,email,sex,qq,weixin,companyName,companyAddress,officePhone,fax,position,projectName,projectBrief,contacts,contactsPhone,secondContacts,secondPhone,customNo,customLevel,reg_time,credit_rank,department,msn,customerNo,customerAccount,parent_id)".
         " VALUES('".$username."','".sha1($password)."','".$email."','".$sex."','".$qq."','".$weixin."','".$companyName."','".$companyAddress."','".$officePhone."','".$fax."','".$position."','".$projectName."','".$projectBrief."','".$contacts."','".$contactsPhone."','".$secondContacts."','".$secondPhone."','".$customNo."','".$customLevel."','".gmtime()."','".$credit_rank."','".$department."','".$privilege."','".$customerNo."','".$customerAccount."','".$parentId."')";
-    //$GLOBALS['db']->query($sql);
+    */
     $res = $GLOBALS['db']->query($sql);
     if($res) {// 添加用户成功记录日志，如果是Vip下单会员还要发送短息通知对方
 

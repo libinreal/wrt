@@ -59,7 +59,7 @@ if(!defined('ADMIN_PATH'))
     define('ADMIN_PATH','admin');
 }
 define('ROOT_PATH', str_replace(ADMIN_PATH . '/includes/init.php', '', str_replace('\\', '/', __FILE__)));
-
+define('DEBUG_MODE', 8);
 if (defined('DEBUG_MODE') == false)
 {
     define('DEBUG_MODE', 0);

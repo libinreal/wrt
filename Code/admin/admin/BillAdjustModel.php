@@ -107,7 +107,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bill_table = $GLOBALS["ecs"]->table("bill");
 			$user_table = $GLOBALS["ecs"]->table("users");
 
-			$sql = 'SELECT `user_id`, `email`, `customNo` AS `custom_no`, `companyName` AS `customer_name`, `user_name`, `mobile_phone` AS `mobile` ' .
+			$sql = 'SELECT `user_id`, `email`, `customNo` AS `custom_no`, `companyName` AS `customer_name`, `user_name`, `contactsPhone` AS `mobile` ' .
 						  'FROM ' . $GLOBALS['ecs']->table('users') . ' AS usr';
 
 			$total_sql = 'SELECT COUNT(*) AS `total` FROM ' . $GLOBALS['ecs']->table('users') . ' AS usr'; 	

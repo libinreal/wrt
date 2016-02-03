@@ -454,13 +454,22 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$bill_table = $GLOBALS['ecs']->table( 'bill' );//票据表
 				$user_table = $GLOBALS['ecs']->table( 'users' );//用户表
 
-				$sql = 'SELECT a.`bill_num`, a.`discount_amount` AS `need_repay`, a.`customer_id` as `user_id`, ifnull(b.`companyName`, \'\') as `user_name`, a.`issuing_date`, a.`due_date`' .  
+				$sql = 'SELECT a.`bill_num`, a.`discount_amount`, a.`has_repay`, a.`customer_id` as `user_id`, ifnull(b.`companyName`, \'\') as `user_name`, a.`issuing_date`, a.`due_date`' .  
 						' FROM ' . $bill_table . ' as a LEFT JOIN ' . $user_table . ' as b on a.`customer_id` = b.`user_id` ' . 
 						' WHERE a.`bill_id` = ' . $bill_id;
+
 				$bill = $GLOBALS['db']->getRow( $sql );
 				if( empty( $bill ) )
 					make_json_response('', '-1', '票据未找到');
 
+				//票据偿还金额
+				$need_repay = $bill['discount_amount'] - $bill['has_repay'];
+				$need_repay = ( $need_repay < 0 ) ? 0 : $need_repay;
+
+				unset( $bill['has_repay'] );
+				unset( $bill['discount_amount'] );
+				$bill['need_repay'] = $need_repay;
+				
 				$content = array();
 				$content['info'] = $bill;
 				make_json_response( $content, '0', '偿还初始化成功');

@@ -452,13 +452,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$bill_table = $GLOBALS['ecs']->table( 'bill' );//票据表
 
 				$bill_id = $content['parameters']['bill_id'];
-				$sql = 'SELECT a.`bill_num`, a.`customer_id` as `user_id`, b.`user_name`, a.`bill_amount`, a.`discount_rate` FROM ' . $bill_table .
+				$sql = 'SELECT a.`bill_num`, a.`customer_id` as `user_id`, b.`companyName` AS `user_name`, a.`bill_amount`, a.`discount_rate` FROM ' . $bill_table .
 				 		' AS a left join ' . $user_table . ' AS b on a.`customer_id` = b.`user_id` WHERE a.`bill_id` = ' . $bill_id;
 				$bill = $GLOBALS['db']->getRow( $sql );
 
 				$result['info'] = $bill; 		
 			} elseif ( $type == 1) {//现金
-				$sql = 'SELECT `user_id`, `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `user_name` IS NOT NULL';
+				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `companyName` IS NOT NULL';
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 
