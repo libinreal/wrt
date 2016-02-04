@@ -18,6 +18,36 @@ if (!defined('IN_ECS'))
     die('Hacking attempt');
 }
 
+
+function getAttributesByCatId($catId) 
+{
+	if (!$catId) {
+		return false;
+	}
+	//根据cat_id 获取 code
+	$sql  = 'SELECT code FROM '.$GLOBALS['ecs']->table('category').' WHERE cat_id='.$catId;
+	$code = $GLOBALS['db']->getOne($sql);
+	if (!$code ) return false;
+	//根据code 获取 goods_type 表的 cat_id
+	$sql = 'SELECT cat_id FROM '.$GLOBALS['ecs']->table('goods_type').' WHERE code="'.$code.'"';
+	$catId = $GLOBALS['db']->getOne($sql);
+	if (!$catId) return null;
+	//根据cat_id 获取属性
+	$sql = 'SELECT attr_id,attr_name,attr_values FROM '.$GLOBALS['ecs']->table('attribute').' WHERE cat_id='.$catId.' ORDER BY sort_order DESC';
+	$attributes = $GLOBALS['db']->getAll($sql);
+	return $attributes;
+}
+
+
+function getCatIdByGoodsId($goodsId) 
+{
+	if (!$goodsId) return false;
+	$sql  = 'SELECT cat_id FROM '.$GLOBALS['ecs']->table('goods').' WHERE goods_id='.$goodsId;
+	$catId = $GLOBALS['db']->getOne($sql);
+	if (!$catId ) return false;
+	return $catId;
+}
+
 /**
  * 创建像这样的查询: "IN('a','b')";
  *
