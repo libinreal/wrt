@@ -64,6 +64,40 @@ require(dirname(__FILE__) . '/includes/init.php');
 		public function findAction(){
 			
 		}
+
+		/**
+		 * 是否可以生成票据采购额度
+		 * @param $bill_id array 票据id
+		 * @return [array] [key:bill_id value:false(不能生成)|true(可以生成)]
+		 */
+		private function checkCreateAmount( $bill_id ){
+			$bill_id_str = implode(',', $bill_id);
+
+			$bill_amount_table = $GLOBALS['ecs']->table('bill_amount_log');
+			$bill_amount_sql = 'SELECT `bill_id` FROM ' . $bill_amount_table . ' WHERE `bill_id` IN( ' . $bill_id_str . ')';
+			$bill_id_amount = $GLOBALS['db']->getAll( $bill_amount_sql );
+
+
+			if( empty( $bill_id_amount ) ){
+				$bill_id_amount = array();
+			}
+
+			$amount_arr = array();
+			foreach ($bill_id_amount as $amount) {
+				$amount_arr[] = $amount['bill_id'];
+			}
+
+			$bill_check = array();
+			foreach ($bill_id as $id) {
+				if( in_array( $id, $amount_arr ) ){
+					$bill_check[$id] = true;
+				}else{
+					$bill_check[$id] = false;
+				}
+			}
+			
+			return $bill_check;
+		}
 		
 		/**
 		 * 分页显示
@@ -103,6 +137,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "customer_id": 4 ,//往来单位ID
 		 *                  "customer_name": ,//往来单位
 		 *                  "status": 0 ,//还票状态 0:未偿还 1:已偿还
+		 *                  "used":false//false:可以生成额度 true:不能生成额度
 		 *           }
 		 *	         ],
 		 *	         "total":3
@@ -170,14 +205,25 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$sql = $sql . $where_str . " LIMIT " . $params['limit'].",".$params['offset'];
 			$bills = $GLOBALS['db']->getAll($sql);
-			
+			$bills = empty( $bills ) ? array() : $bills;
+
+			$bill_id_arr = array();
+			foreach($bills as $b){
+				$bill_id_arr[] = $b['bill_id'];
+			}
+
+			$bill_check = $this->checkCreateAmount( $bill_id_arr );
+			foreach ($bills as &$b) {
+				$b['used'] = $bill_check[ $b['bill_id'] ];
+			}
+
 			$total_sql = $total_sql . $where_str;
 			$resultTotal = $GLOBALS['db']->getRow($total_sql);
 
 			if( $resultTotal )
 			{
 				$content = array();
-				$content['data'] = $bills ? $bills : array();
+				$content['data'] = $bills;
 				$content['total'] = $resultTotal['total'];
 				make_json_response( $content, "0", "票据查询成功");
 			}
