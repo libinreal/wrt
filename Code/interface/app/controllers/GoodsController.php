@@ -941,8 +941,8 @@ class GoodsController extends ControllerBase {
 		if( $contract_info->cashValid >= $totalAmt ){
 			$contract_info->cashValid -= $totalAmt;
 		}else{
-			$contract_info->cashValid = 0;
 			$bill_red = $totalAmt - $contract_info->cashValid;
+			$contract_info->cashValid = 0;
 			$contract_info->billValid -= $bill_red;
 		}
 
