@@ -71,7 +71,7 @@
 					<td class="title">实际供应商：</td>
 					<td><select name="suppers_id" style="width:80px;"></select></td>
 					<td class="title">金融费用比率：</td>
-					<td><input type="text" id="financial_send_rate" name="financial_send_rate" data-rule-required="true" data-rule-number="true"></td>
+					<td><input type="text" class="number" id="financial_send_rate" name="financial_send_rate" data-rule-required="true">%</td>
 					<td class="title">物流费用：</td>
 					<td><input type="text" name="shipping_fee_send_buyer" id="shipping_fee_send_buyer" data-rule-required="true" data-rule-number="true"></td>
 				</tr>
@@ -178,7 +178,7 @@ function customerPriceChange(){
 	// 物料数量
 	var goods_number = validateNumber(parseFloat($("#goods_number").val())) == 0 ? 0 : parseFloat($("#goods_number").val());
 	// 客户价格-金融费用
-	var financial_send = financial_send_rate*goods_price_add*goods_number;
+	var financial_send = financial_send_rate*goods_price_add*goods_number/100;
 	$("#financial_send").val(financial_send);
 	// 客户价格-物流费用
 	var shipping_fee_send_buyer = validateNumber(parseFloat($("#shipping_fee_send_buyer").val())) == 0 ? 0 : parseFloat($("#shipping_fee_send_buyer").val());

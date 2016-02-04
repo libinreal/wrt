@@ -46,6 +46,9 @@ var Bill = {
 			}
 		}
 		if(search != false){
+			if(search == 'search'){
+				this.limit = 0;
+			}
 			var params = {"params":{"where":condition,"limit":this.limit, "offset":this.offset}};
 		}else{
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};

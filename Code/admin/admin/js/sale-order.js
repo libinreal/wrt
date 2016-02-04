@@ -302,7 +302,6 @@ var SaleOrder = {
 		strJson = createJson("childerList", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -322,7 +321,7 @@ var SaleOrder = {
 								continue;
 							}
 							if(that.suborder_arr[i] == "order_status"){
-								row += createTd(that.suborder_status[value["order_status"]]);
+								row += createTd(that.suborder_status[value["child_order_status"]]);
 								continue;
 							}
 							if(value[that.suborder_arr[i]] != null){
