@@ -146,6 +146,8 @@ $_LANG['17_bill_manage'] = '应收票据管理';
 $_LANG['18_sale_order'] = '销售订单管理';
 $_LANG['19_bank_manage'] = '银行管理';
 $_LANG['20_supplier_order'] = '采购订单管理';
+$_LANG['21_order_pay'] = '应付款管理';
+$_LANG['22_order_recipient'] = '应收款管理';
 
 //合同管理
 $_LANG['01_contract_insert'] = '新增合同';
@@ -182,6 +184,13 @@ $_LANG['01_supplier_order_list'] = '订单列表';
 //银行管理
 $_LANG['01_bank_insert'] = '添加登记机构';
 $_LANG['02_bank_list'] = '登记机构列表';
+
+//应付款管理
+$_LANG['01_order_pay_list'] = '应付单列表';
+
+//应收款管理
+$_LANG['01_order_recipient_comp'] = '已完成的订单';
+$_LANG['02_order_recipient_list'] = '应收单列表';
 
 // 积分商品管理
 $_LANG['01_exchange_category'] = "分类列表";
