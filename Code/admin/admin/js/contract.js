@@ -506,6 +506,11 @@ var Contract = {
 				return false;
 			}else{
 				var row = '';
+				if(obj.content.length == 0){
+					$("input[name=user_name]").val('');
+					$("select[name=user_id]").html('');
+					return false;
+				}
 				$("input[name=user_name]").val(obj.content[0].user_name);
 				$.each(obj.content, function(k,v){
 					if(typeof(user_id) !== 'undefined' && v.user_id == user_id){
