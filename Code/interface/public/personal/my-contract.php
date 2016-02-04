@@ -40,12 +40,12 @@
 
 <script id="contract-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<a href="my-contract-detail.html?contract_id=<!--[= list[i].contract_id]-->" class="clearfix">
-		<div class="contract-list-col c2"><!--[= list[i].contract_num || '--']--></div>
-		<div class="contract-list-col c3"><!--[= list[i].contract_name || '--']--></div>
-		<div class="contract-list-col c4"><!--[= list[i].contract_amount || '--']--></div>
-		<div class="contract-list-col c5"><!--[= $formatDate(list[i].start_time, 1) || '--']--></div>
-		<div class="contract-list-col c6"><!--[= $formatDate(list[i].end_time, 1) || '--']--></div>
+	<a href="my-contract-detail.html?contract_id=<!--[= list[i].id]-->" class="clearfix">
+		<div class="contract-list-col c2"><!--[= list[i].num || '--']--></div>
+		<div class="contract-list-col c3"><!--[= list[i].name || '--']--></div>
+		<div class="contract-list-col c4"><!--[= list[i].amount || '--']--></div>
+		<div class="contract-list-col c5"><!--[= $formatDate(list[i].startTime, 1) || '--']--></div>
+		<div class="contract-list-col c6"><!--[= $formatDate(list[i].endTime, 1) || '--']--></div>
 	</a>
     <!--[}]-->
 </script>

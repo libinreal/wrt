@@ -30,11 +30,11 @@
 			<span>合同信息</span>
 		</div>
 		<div class="info-border first">
-			<div><span class="distance">合同编号：<!--[= contract_num || '--']--></span><span class="distance">合同名称：<!--[= contract_name || '--']--></span><span class="distance">合同金额：<!--[= contract_amount || '--']--></span></div>
-			<div><span class="distance">合同状态：<!--[= contract_status || '--']--></span><span class="distance">合同类型：<!--[= contract_type || '--']--></span><span class="distance">合同签署类型：<!--[= contract_sign_type || '--']--></span></div>
-			<div><span class="distance">开始时间：<!--[= start_time || '--']--></span><span class="distance">结束时间：<!--[= end_time || '--']--></span></div>
-			<div><span class="distance">金融费率：<!--[= rate || '--']-->%</span><span class="distance">登记机构：<!--[= registration || '--']--></span></div>
-			<div><span class="distance">合同创建人：<!--[= create_by || '--']--></span><span class="distance">合同创建时间：<!--[= create_time || '--']--></span></div>
+			<div><span class="distance">合同编号：<!--[= num || '--']--></span><span class="distance">合同名称：<!--[= name || '--']--></span><span class="distance">合同金额：<!--[= amount || '--']--></span></div>
+			<div><span class="distance">合同状态：<!--[= status || '--']--></span><span class="distance">合同类型：<!--[= type || '--']--></span><span class="distance">合同签署类型：<!--[= signType || '--']--></span></div>
+			<div><span class="distance">开始时间：<!--[= startTime || '--']--></span><span class="distance">结束时间：<!--[= endTime || '--']--></span></div>
+			<div><span class="distance">金融费率：<!--[= rate || '--']-->%</span><span class="distance">登记机构：<!--[= reg || '--']--></span></div>
+			<div><span class="distance">合同创建人：<!--[= createBy || '--']--></span><span class="distance">合同创建时间：<!--[= createTime || '--']--></span></div>
 			<div><span class="distance">备注：<!--[= remark || '--']--></span></div>
 		</div>
 		

@@ -49,21 +49,21 @@ class ContractController extends ControllerBase
         }
         
         //总账号显示 总账号与子帐号的所有合同
-        $condition = 'user_id in('.implode(',', $userId).')';
+        $condition = 'userId in('.implode(',', $userId).')';
         
         if ($forward || !$currentId) {
         	//上一页操作 或 第一页操作
         	if (!empty($condition)) $condition .= ' AND ';
-        	$condition .= 'contract_id>"'.$currentId.'"';
+        	$condition .= 'id>"'.$currentId.'"';
         } else {
         	//下一页操作
         	if (!empty($condition)) $condition .= ' AND ';
-        	$condition .= 'contract_id<"'.$currentId.'"';
+        	$condition .= 'id<"'.$currentId.'"';
         }
         
         $data = ContractModel::query()
         		->where($condition)
-        		->order('contract_id DESC')
+        		->order('id DESC')
         		->limit($size)
         		->execute()
         		->toArray();
@@ -86,7 +86,7 @@ class ContractController extends ControllerBase
     	}
     	
     	$data = ContractModel::findFirst(array(
-    			'conditions' => 'contract_id='.$contractId.' AND user_id='.$userId
+    			'conditions' => 'id='.$contractId.' AND userId='.$userId
     	));
     	if (!$data) {
     		return ResponseApi::send(null, -1, '该合同不存在！');
@@ -96,16 +96,16 @@ class ContractController extends ControllerBase
     	$type = array('', '销售合同', '采购合同');
     	$signType = array('平台到银行', '银行到平台');
     	
-    	if ($data->end_time < time()) {
-    		$data->contract_status = '过期';
+    	if ($data->endTime < time()) {
+    		$data->status = '过期';
     	} else {
-    		$data->contract_status = $status[$data->contract_status];
+    		$data->status = $status[$data->status];
     	}
-    	$data->contract_type   = $type[$data->contract_type];
-    	$data->contract_sign_type = $signType[$data->contract_sign_type];
-    	$data->start_time = date('Y-m-d', $data->start_time);
-    	$data->end_time = date('Y-m-d', $data->end_time);
-    	$data->create_time = date('Y-m-d', $data->create_time);
+    	$data->type   = $type[$data->type];
+    	$data->signType = $signType[$data->signType];
+    	$data->startTime = date('Y-m-d', $data->startTime);
+    	$data->endTime = date('Y-m-d', $data->endTime);
+    	$data->createTime = date('Y-m-d', $data->createTime);
     	
     	return ResponseApi::send($data);
     }
