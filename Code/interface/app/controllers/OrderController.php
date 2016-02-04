@@ -23,7 +23,7 @@ class OrderController extends ControllerBase
 		$userId = $this->get_user()->id;
 		$criteria = OrderInfo::query();
 		$criteria->leftJoin('OrderInfo', 'OI.orderSn LIKE CONCAT(OrderInfo.orderSn, "-%")', 'OI');
-		$criteria->leftJoin('ContractModel', 'C.contract_num = OrderInfo.contractSn', 'C');
+		$criteria->leftJoin('ContractModel', 'C.num = OrderInfo.contractSn', 'C');
 		$criteria->where('OrderInfo.userId = :userId:', compact('userId'));
 		if (!$parentId) {
 			$criteria->andWhere('OrderInfo.parentOrderId = 0');
@@ -45,8 +45,8 @@ class OrderController extends ControllerBase
 		$criteria->limit($size);
 		$criteria->columns('DISTINCT OrderInfo.id,
 				OrderInfo.orderSn,
-				C.contract_num prjNo,
-				C.contract_name prjName,
+				C.num prjNo,
+				C.name prjName,
 				OrderInfo.status,
 				IF((OI.id > 0 OR OrderInfo.status >=2), 0, 1) allowCancel,
 				OrderInfo.createAt');
@@ -86,7 +86,7 @@ class OrderController extends ControllerBase
 		$orderDetail = array();
 		$builder = $this->modelsManager->createBuilder();
 		$builder->from('OrderInfo');
-		$builder->leftJoin('ContractModel', 'C.contract_num = OrderInfo.contractSn', 'C');
+		$builder->leftJoin('ContractModel', 'C.num = OrderInfo.contractSn', 'C');
 		$builder->where('OrderInfo.id = :id:', compact('id'));
 		$builder->columns('
 				OrderInfo.id,
@@ -94,8 +94,8 @@ class OrderController extends ControllerBase
 				OrderInfo.status orderStatus,
 				OrderInfo.createAt doTime,
 				OrderInfo.remark,
-				C.contract_num prjNo,
-				C.contract_name prjName,
+				C.num prjNo,
+				C.name prjName,
 				OrderInfo.isRemaind,
 				OrderInfo.name payer,
 				OrderInfo.address,
@@ -312,7 +312,7 @@ class OrderController extends ControllerBase
 		$builder = $this->modelsManager->createBuilder();
 		$builder->from('OrderInfo');
 		$builder->leftJoin('OrderGoods', 'OG.orderId = OrderInfo.id', 'OG');
-		$builder->leftJoin('ContractModel', 'C.contract_num = OrderInfo.contractSn', 'C');
+		$builder->leftJoin('ContractModel', 'C.num = OrderInfo.contractSn', 'C');
 		$builder->leftJoin('Goods', 'G.id = OG.goodsId', 'G');
 		$builder->leftJoin('Category', 'CAT.code=G.code', 'CAT');
 		$builder->leftJoin('GoodsAttr', 'A.goodsId=G.id', 'A');
@@ -324,8 +324,8 @@ class OrderController extends ControllerBase
 		$builder->columns('
 				OrderInfo.id,
 				OrderInfo.orderSn,
-				C.contract_num prjNo,
-				C.contract_name prjName,
+				C.num prjNo,
+				C.name prjName,
 				G.goodsSn goodsCode,
 				CONCAT("'.$this->get_url().'", G.thumb) thumb,
 				G.name goodsName,
@@ -402,7 +402,7 @@ class OrderController extends ControllerBase
 		$builder->from('OrderInfo');
 		$builder->leftJoin('OrderInfo', 'OI.id = OrderInfo.parentOrderId', 'OI');
 		$builder->leftJoin('OrderGoods', 'OG.orderId = OrderInfo.id', 'OG');
-		$builder->leftJoin('Contract', 'C.contract_num = OrderInfo.contractSn', 'C');
+		$builder->leftJoin('Contract', 'C.num = OrderInfo.contractSn', 'C');
 		$builder->leftJoin('Goods', 'G.id = OG.goodsId', 'G');
 		$builder->where('OrderInfo.id = ' . $id);
 		$builder->columns('OrderInfo.id,
@@ -410,8 +410,8 @@ class OrderController extends ControllerBase
 				OrderInfo.status orderStatus,
 				OrderInfo.createAt doTime,
 				OrderInfo.remark,
-				C.contract_num prjNo,
-				C.contract_name prjName,
+				C.num prjNo,
+				C.name prjName,
 				OI.isRemaind,
 				OI.id parentOrderId,
 				OrderInfo.name payer,
@@ -704,6 +704,39 @@ class OrderController extends ControllerBase
 	{
 		$order = $this->cMyOrder();
 		if( !empty( $order ) ){
+			$user = $this->get_user();
+			$userId = $user->id;
+
+			$contract_info = ContractModel::findFirst( array( 
+					'num = ?1 AND userId = ?2',
+					'bind' => array(
+							1 => $order->contractSn,
+							2 => $userId
+							)
+					
+						) );
+			if( !$contract_info ){
+				return ResponseApi::send(null, Message::$_ERROR_SYSTEM, "合同不存在！");
+			}
+
+			// $totalAmt =
+			//更新合同额度
+			if( $contract_info->cashValid >= $totalAmt ){
+				$contract_info->cashValid -= $totalAmt;
+			}else{
+				if( $contract_info->cashValid + $contract_info->billValid > $totalAmt ){
+					$bill_red = $totalAmt - $contract_info->cashValid;
+					$contract_info->cashValid = 0;
+					$contract_info->billValid -= $bill_red;
+				}
+			}
+
+			if(!$contract_info->save()) {
+				foreach($contract_info->getMessages() as $message) {
+					return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
+				}
+			}
+
 			if( $order->childOrderStatus == SOS_CONFIRMED ){
 				$order->childOrderStatus = SOS_SEND_CC;//客户已验签(发货)
 			} else if( $order->childOrderStatus == SOS_SEND_PC2 ){

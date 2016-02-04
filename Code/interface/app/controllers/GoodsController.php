@@ -936,23 +936,7 @@ class GoodsController extends ControllerBase {
 		if( $contract_info->billValid + $contract_info->cashValid < $totalAmt ){
 			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, "您的合同可用采购额度不足，可取消重下单或追加申请额度后下单！");
 		}
-
-		//更新合同额度
-		if( $contract_info->cashValid >= $totalAmt ){
-			$contract_info->cashValid -= $totalAmt;
-		}else{
-			$bill_red = $totalAmt - $contract_info->cashValid;
-			$contract_info->cashValid = 0;
-			$contract_info->billValid -= $bill_red;
-		}
-
-		if(!$contract_info->save()) {
-			foreach($contract_info->getMessages() as $message) {
-				return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
-			}
-		}
 		
-
 		//得到所要购买商品的库存
 		$ids = implode(', ', array_keys($buyGoods));
 		$goodsObjs = Goods::find(array(
