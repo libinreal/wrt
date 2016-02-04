@@ -85,8 +85,24 @@ class ContractController extends ControllerBase
     		return ResponseApi::send(null, -1, '合同不存在！');
     	}
     	
+    	//如果是总账号 会选择旗下的所有子帐号
+    	$result = Users::find(array(
+    			'conditions' => 'parent_id = '.$userId.' or id='.$userId,
+    			'columns' => 'id'
+    	));
+    	$user = array();
+    	if(is_object($result) && $result->count()) {
+    		$user = $result->toArray();
+    	}
+    	
+    	//所有用户id
+    	$userId = array();
+    	foreach ($user as $v) {
+    		$userId[] = $v['id'];
+    	}
+    	
     	$data = ContractModel::findFirst(array(
-    			'conditions' => 'id='.$contractId.' AND userId='.$userId
+    			'conditions' => 'id='.$contractId.' AND userId in('.implode(',', $userId).')'
     	));
     	if (!$data) {
     		return ResponseApi::send(null, -1, '该合同不存在！');
