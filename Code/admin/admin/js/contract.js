@@ -8,9 +8,9 @@ var Contract = {
 		'end_time',
 		'registration',
 		'contract_status',
-		'cash_amount_history',
+		'total_amount',
+		'total_amount_valid',
 		'bill_amount_valid',
-		'bill_amount_history',
 		'cash_amount_valid',
 		'operate'
 	],
@@ -74,6 +74,14 @@ var Contract = {
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
+							if(that.order_arr[i] == "total_amount"){
+								row += createTd(parseFloat(value.bill_amount_history) + parseFloat(value.cash_amount_history));
+								continue;	
+							}
+							if(that.order_arr[i] == "total_amount_valid"){
+								row += createTd(parseFloat(value.bill_amount_valid) + parseFloat(value.cash_amount_valid));
+								continue;								
+							}
 							$.each(value, function(k, v){
 								if(k == that.order_arr[i]){
 									if(v == null){
