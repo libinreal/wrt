@@ -499,7 +499,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *     		"attr":"1/2/3",//规格/型号/牌号
 		 *     		"goods_price":100,//单价
 		 *     		"goods_number":20,//数量
-		 *     		"order_status":0//客户未验签
+		 *     		"order_status":0,//客户未验签
+		 *     		"child_order_status":0//子订单状态
 		 *	    }
 		 *	    ]
 		 *	}
@@ -543,7 +544,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 
 
-			$childer_order_sql = 'SELECT odr.`order_id`, odr.`order_sn`, odr.`add_time`, odr.`order_status`, IFNULL(crt.`contract_name`, \'\') AS `contract_name`, ogd.`goods_id`, ' .
+			$childer_order_sql = 'SELECT odr.`order_id`, odr.`child_order_status`, odr.`order_sn`, odr.`add_time`, odr.`order_status`, IFNULL(crt.`contract_name`, \'\') AS `contract_name`, ogd.`goods_id`, ' .
 							     'ogd.`goods_name`, ogd.`goods_price`, ogd.`goods_number`, cat.`cat_name` FROM ' .
 							     $order_goods_table . ' AS ogd LEFT JOIN ' .
 							     $goods_table . ' AS g ON g.`goods_id` = ogd.`goods_id` LEFT JOIN ' .

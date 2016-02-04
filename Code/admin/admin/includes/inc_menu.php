@@ -125,4 +125,11 @@ $modules['19_bank_manage']['02_bank_list'] = 'demo_template.php?section=bank&act
 
 //采购订单管理
 $modules['20_supplier_order']['01_supplier_order_list'] = 'demo_template.php?section=supplier&act=order_list';
+
+//应付款管理
+$modules['21_order_pay']['01_order_pay_list'] = 'demo_template.php?section=payment&act=list';
+
+//应收款管理
+$modules['22_order_recipient']['01_order_recipient_comp'] = 'demo_template.php?section=supplier&act=recipient_complete';
+$modules['22_order_recipient']['02_order_recipient_list'] = 'demo_template.php?section=supplier&act=recipient_list';
 ?>

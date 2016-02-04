@@ -118,4 +118,9 @@ $purview['01_sale_order_list'] = 'sale_order_list';
 $purview['02_sale_order_suborder_all'] = 'sale_order_suborder_all';
 
 $purview['01_supplier_order_list'] = 'supplier_order_list';
+
+$purview['01_order_pay_list'] = 'order_pay_list';
+
+$purview['01_order_recipient_comp'] = 'order_recipient_comp';
+$purview['02_order_recipient_list'] = 'order_recipient_list';
 ?>
