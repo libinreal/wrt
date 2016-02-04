@@ -71,7 +71,9 @@ var Bill = {
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=bill_manage&act=info&id="+value.bill_id, "编辑");
 								edit += createLink("demo_template.php?section=bill_manage&act=view&id="+value.bill_id, "查看");
-								edit += createLink("demo_template.php?section=bill_manage&act=generate_note&bill_id="+value.bill_id, "生成票据采购额");
+								if(value.used == false){
+									edit += createLink("demo_template.php?section=bill_manage&act=generate_note&bill_id="+value.bill_id, "生成票据采购额");
+								}
 								if(obj.content.data[key].status == 0){
 									edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "还票");
 								}

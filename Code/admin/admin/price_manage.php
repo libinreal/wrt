@@ -117,6 +117,41 @@ class Price extends ManageModel
         $catId = $parameters['cat_id'];
         if (!($catId > 0)) failed_json('没有传参`cat_id`');
     
+        $data = getAttributesByCatId($catId);
+        if ($data === false) {
+        	return failed_json('获取列表失败');
+        }
+        if (empty($data)) {
+        	return make_json_result(array());
+        }
+        foreach ($data as $k=>$v) {
+        	if (!$v['attr_values']) {
+        		$data[$k]['attr_values'] = array();
+        	} else {
+        		$values = explode("\r\n", $v['attr_values']);
+        		$data[$k]['attr_values'] = $values != false ? $values : array();
+        	}
+        }
+        make_json_result($data);
+        die;
+        //根据cat_id 获取code
+        $this->table = 'category';
+        self::selectSql(array(
+        		'fields' => 'code', 
+        		'where'  => 'cat_id='.$catId
+        ));
+        $code = $this->db->getOne($this->sql);
+        
+        //根据code 获取 goods_type 表的cat_id
+        $this->table = 'goods_type';
+        self::selectSql(array(
+        		'fields' => 'cat_id', 
+        		'where'  => 'code="'.$code.'"'
+        ));
+        $catId = $this->db->getOne($this->sql);
+        
+        //根据cat_id 获取属性
+        $this->table = 'attribute';
         self::selectSql(array(
             'fields' => array(
                 'attr_id',
