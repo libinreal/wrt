@@ -52,7 +52,7 @@
 					<td><select name="suppliers" style="width:80px;" >
 					</select></td>
 					<td class="title">金融费用比率：</td>
-					<td><input type="text" id="rate" name="rate" data-rule-required="true" data-rule-number="true"></td>
+					<td><input type="text" class="number" id="rate" name="rate" data-rule-required="true">%</td>
 					<td class="title">物流费用：</td>
 					<td><input type="text" id="shipping_fee" name="shipping_fee" data-rule-required="true" data-rule-number="true"></td>
 				</tr>
@@ -96,38 +96,33 @@ $(document).ready(function(){
 			$('#message_area').html(createError('拆分余数不足'));
 			return false;
 		}
-		var rate = validateNumber(parseFloat($("#rate").val())) == 0 ? 0 : parseFloat($("#rate").val());
-		var goods_price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
-		if(send_number <= 0 || goods_price <= 0){
-			return false;
-		}
-		$("#finance_fee").val(goods_price*send_number*rate);
+		changeFinanceFee();
+		changeTotalAmount();
 	});
 	$('#goods_price').on('valuechange', function (e, previous) {
-		if($(this).val()===""||!validateNumber($(this).val())){
-			$('#message_area').html(createError('请输入数字'));
-			return false;
-		}else{
-			$('#message_area').html('');
-		}
-		var rate = parseFloat($("#rate").val());
-		var goods_price = parseFloat($("#goods_price").val());
-		var send_number = parseFloat($("#send_number").val());
-		if(send_number <= 0 || send_number == ''){
-			send_number = 0;
-		}
-		$("#finance_fee").val(goods_price*send_number*rate);
+		changeFinanceFee();
+		changeTotalAmount();
+	});
+	$('#rate').on('valuechange', function (e, previous) {
+		changeFinanceFee();
+		changeTotalAmount();
 	});
 	$('#shipping_fee').on('valuechange', function (e, previous) {
-		var goods_price = parseFloat($("#goods_price").val()) == 0 ? 0 : parseFloat($("#goods_price").val());
-		var send_number = parseFloat($("#send_number").val()) == 0 ? 0 : parseFloat($("#send_number").val());
-		var shipping_fee = parseFloat($("#shipping_fee").val()) == 0 ? 0 : parseFloat($("#shipping_fee").val());
-		var finance_fee = parseFloat($("#finance_fee").val()) == 0 ? 0 : parseFloat($("#finance_fee").val());
-		$("#total_amount").val(goods_price*send_number + shipping_fee + finance_fee);
+		changeTotalAmount();
 	});
 });
+function changeFinanceFee(){
+	var	send_number = validateNumber(parseFloat($("#send_number").val())) == 0 ? 0 : parseFloat($("#send_number").val());
+	var rate = validateNumber(parseFloat($("#rate").val())) == 0 ? 0 : parseFloat($("#rate").val());
+	var goods_price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
+	$("#finance_fee").val(goods_price*send_number*rate/100);
+}
 function changeTotalAmount(){
-
+	var goods_price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
+	var send_number = validateNumber(parseFloat($("#send_number").val())) == 0 ? 0 : parseFloat($("#send_number").val());
+	var shipping_fee = validateNumber(parseFloat($("#shipping_fee").val())) == 0 ? 0 : parseFloat($("#shipping_fee").val());
+	var finance_fee = validateNumber(parseFloat($("#finance_fee").val())) == 0 ? 0 : parseFloat($("#finance_fee").val());
+	$("#total_amount").val(goods_price*send_number + shipping_fee + finance_fee);	
 }
 </script>
 	</body>

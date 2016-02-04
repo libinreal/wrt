@@ -241,7 +241,7 @@ var subString = function(str, len, hasDot)
     return newStr; 
 }
 var validateNumber = function(str){
-    return /^\d+$/.test(str);
+    return !isNaN(str);
 }
 
 var isNumeric = function( obj ) {

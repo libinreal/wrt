@@ -226,7 +226,12 @@ var SaleOrder = {
 						$("#"+k).text(v);
 					}
 					if($("input[name="+k+"]").length>0){
-						$("input[name="+k+"]").val(v);
+						if(k == "rate"){
+							$("input[name="+k+"]").val(parseFloat(v));
+						}else{
+							$("input[name="+k+"]").val(v);	
+						}
+						
 					}
 					if(k == "payment"){
 						var row = "";
