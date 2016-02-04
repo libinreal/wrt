@@ -214,6 +214,23 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response("", "-1", "额度生成单查询失败");
 			}
 		}
+
+		/**
+		 * 是否可以生成票据采购额度
+		 * @param $bill_id int 票据id
+		 * @return [bool] [false 不能生成采购额度 true 可以生成采购额度]
+		 */
+		private function checkCreate( $bill_id ){
+			$bill_amount_table = $GLOBALS['ecs']->table('bill_amount_log');
+			$bill_amount_sql = 'SELECT `bill_id` FROM ' . $bill_amount_table . ' WHERE `bill_id` = ' . $bill_id;
+			$bill_id = $GLOBALS['db']->getOne( $bill_amount_sql );
+
+			if( intval( $bill_id ) != 0  ){
+				return false;
+			}else{
+				return true;
+			}
+		}
 		
 		/**
 		 * 创建
@@ -240,13 +257,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	}
 		 */
 		public	function createAction(){
+			$content = $this->content;
+			$params = $content['parameters'];
+
+			if( !$this->checkCreate( intval( $params['bill_id'] ) ) )
+				make_json_response('', '-1', '票据不能重复生成采购额度');
 			/* 获得当前管理员数据信息 */
 		    $sql = "SELECT user_id, user_name ".
 		           "FROM " .$GLOBALS['ecs']->table('admin_user'). " WHERE user_id = '".$_SESSION['admin_id']."'";
 		    $create_by = $GLOBALS['db']->getRow($sql);
-
-			$content = $this->content;
-			$params = $content['parameters'];
 
 			$data['amount_type'] = intval( $params['amount_type'] );
 			$data['amount_rate'] = round( $params['amount_rate'], 4 );
@@ -456,6 +475,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$bill_table = $GLOBALS['ecs']->table( 'bill' );//票据表
 
 				$bill_id = $content['parameters']['bill_id'];
+
+				if( !$this->checkCreate( intval( $bill_id ) ) )
+					make_json_response('', '-1', '票据不能重复生成采购额度');
+
 				$sql = 'SELECT a.`bill_num`, a.`customer_id` as `user_id`, b.`companyName` AS `user_name`, a.`bill_amount`, a.`discount_rate` FROM ' . $bill_table .
 				 		' AS a left join ' . $user_table . ' AS b on a.`customer_id` = b.`user_id` WHERE a.`bill_id` = ' . $bill_id;
 				$bill = $GLOBALS['db']->getRow( $sql );
