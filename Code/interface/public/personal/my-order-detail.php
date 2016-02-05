@@ -222,7 +222,7 @@
 		<!--[if(childOrderStatus == 1){]-->
 			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">发货验签</a>
 		<!--[}]-->
-		<!--[if(childOrderStatus == 5){]-->
+		<!--[if(childOrderStatus == 6){]-->
 			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">到货验签</a>
 		<!--[}]-->
 			<a class="button" href="javascript:history.back()">返回</a>

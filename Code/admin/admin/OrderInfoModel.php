@@ -1145,7 +1145,7 @@ require(dirname(__FILE__) . '/includes/init.php');
             $childer_order['order_amount_arr_saler'] = $childer_order['order_amount'] - $finance;
 
 			unset( $childer_order['order_id'] );
-			var_dump($childer_order);exit;
+			
 			$childer_order_sql = 'INSERT INTO ' . $order_info_table .'(';
 			$childer_order_keys = array_keys( $childer_order );
 			// print_r( $childer_order_keys );exit;
@@ -1534,7 +1534,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_ARR_PC2://平台已验签(到货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC2];
-						$buttons = array('取消验签', '撤销订单');
+						$buttons = array();
 						break;
 					case SOS_CANCEL://验签已取消
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CANCEL];
@@ -1601,7 +1601,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 
 			//检查订单状态
-			$order_info_sql = 'SELECT odr.`child_order_status`, odr.`suppers_id`, odr.`parent_order_id`, og.`goods_id`, og.`goods_number` FROM ' . $order_info_table .
+			$order_info_sql = 'SELECT odr.`child_order_status`, odr.`suppers_id`, odr.`parent_order_id`, odr.`order_amount_send_buyer`, odr.`order_amount_arr_buyer`, og.`goods_id`, og.`goods_number` FROM ' . $order_info_table .
 							  ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id` ' .
 					 		  ' WHERE odr.`order_id` = ' . $order_id;
 			$order_status = $GLOBALS['db']->getRow( $order_info_sql );
@@ -1645,7 +1645,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case '取消验签':
 					
-					if( $order_status['child_order_status'] == SOS_SEND_CC ){
+					if( $order_status['child_order_status'] == SOS_SEND_CC ){//客户已验签
+
+						//判断是否额度回滚( 默认回滚到现金 )
+						if( $order_status['child_order_status'] >= SOS_SEND_CC ){//客户已验签
+
+							if( $order_status['child_order_status'] < SOS_ARR_CC ){//发货
+								$return_amount = $order_status['order_amount_send_buyer'];
+							} else {
+								$return_amount = $order_status['order_amount_arr_buyer'];
+							}
+
+							$update_contract_sql = ' UPDATE ' . $GLOBALS['ecs']->table('contract') . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $return_amount;
+							$GLOBALS['db']->query( $update_contract_sql );//商城库存回滚
+						}
 						
 						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED);
 
@@ -1676,10 +1689,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}elseif( $order_status['child_order_status'] == SOS_ARR_SC ){
 
 						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC);
-					
-					}elseif( $order_status['child_order_status'] == SOS_ARR_PC2 ){
-
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_SC);
 					
 					}else{
 
@@ -1727,7 +1736,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}					
 					break;
 				case '撤销订单'://更改子订单状态 恢复主订单商品对应子订单的数量 判断是否可以取消主订单
-					if( $order_status['child_order_status'] == SOS_CANCEL ){//已经为撤销状态 不做处理
+					if( $order_status['child_order_status'] == SOS_CANCEL || $order_status['child_order_status'] == SOS_ARR_PC2){//已经为撤销、完成的状态 不做处理
 						break;
 					}
 
@@ -1749,6 +1758,24 @@ require(dirname(__FILE__) . '/includes/init.php');
 					//主订单是否可以取消(验证全部子订单的状态)
 					$all_childer_status_sql = 'SELECT `child_order_status` FROM ' . $order_info_table . ' WHERE `parent_order_id` = ' . $order_status['parent_order_id'];
 					$all_childer_status = $GLOBALS['db']->getAll( $all_childer_status_sql );
+
+					//商城库存回滚
+					$update_goods_sql = 'UPDATE ' . $GLOBALS['ecs']->table('goods') . ' SET `goods_number` = `goods_number` + ' . $order_status['goods_number'] .
+										' WHERE `goods_id` = ' . $order_status['goods_id'];
+					$GLOBALS['db']->query( $update_goods_sql );
+
+					//判断是否额度回滚( 默认回滚到现金 )
+					if( $order_status['child_order_status'] >= SOS_SEND_CC ){//客户已验签
+
+						if( $order_status['child_order_status'] < SOS_ARR_CC ){//发货
+							$return_amount = $order_status['order_amount_send_buyer'];
+						} else {
+							$return_amount = $order_status['order_amount_arr_buyer'];
+						}
+
+						$update_contract_sql = ' UPDATE ' . $GLOBALS['ecs']->table('contract') . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $return_amount;
+						$GLOBALS['db']->query( $update_contract_sql );//商城库存回滚
+					}
 
 					$cancel = true;
 					foreach ($all_childer_status as $c) {
