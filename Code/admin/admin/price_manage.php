@@ -400,11 +400,13 @@ class Price extends ManageModel
         
         //匹配修改符合批量加价条件的商品加价规则
         if ($upData && $goods) {
+        	//匹配4级加价规则
         	$this->batchGoods($upData, $goods);
         }
         
         //匹配添加符合批量加价条件的商品加价规则
         if ($inData && $goods && is_array($data)) {
+        	//匹配4级加价规则
         	$this->batchGoods($data, $goods);
         }
         
