@@ -222,7 +222,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 							   $order_goods_table . //物料编码 名称 下单数 已拆 未拆 供应商
 							   ' AS og LEFT JOIN '. $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' . 
-							   ' WHERE `order_id` = ' . $order_id;
+							   ' WHERE `order_id` = ' . $order_id . ' AND sp.`suppliers_name` IS NOT NULL';
 			$order_goods_arr = $GLOBALS['db']->getAll($order_goods_sql);
 
 			$order_info['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
@@ -922,7 +922,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						' AS og LEFT JOIN ' . $goods_table . ' AS g ON g.`goods_id` = og.`goods_id` LEFT JOIN ' . $suppliers_table .
 						' AS s ON s.`suppliers_id` = g.`suppliers_id` ' . ' LEFT JOIN ' . $order_info_table .' AS o ON o.`order_id` = og.`order_id` ' .
 						' LEFT JOIN ' . $contract_table . ' AS c ON c.`contract_num` = o.`contract_sn` ' .
-						' WHERE og.`goods_id` = ' . $goods_id . ' AND og.`order_id` = ' . $order_id;
+						' WHERE og.`goods_id` = ' . $goods_id . ' AND og.`order_id` = ' . $order_id . ' AND s.`suppliers_id` IS NOT NULL';
 			$goods = $GLOBALS['db']->getRow( $good_sql );
 
 			if( empty( $goods ) )
@@ -969,7 +969,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//该类商品的供应商列表
 			$suppliers_sql = 'SELECT s.`suppliers_id`, s.`suppliers_name` FROM ' . $goods_table .
 							 ' AS g LEFT JOIN ' . $suppliers_table . ' AS s ON g.`suppliers_id` = s.`suppliers_id`' .
-							 ' WHERE g.`cat_id` = ' . $goods['cat_id'] . ' GROUP BY s.`suppliers_id`';
+							 ' WHERE g.`cat_id` = ' . $goods['cat_id'] .
+							 ' AND s.`suppliers_id` IS NOT NULL GROUP BY s.`suppliers_id`';
 			$suppliers = $GLOBALS['db']->getAll( $suppliers_sql );
 			if( empty( $suppliers ) )
 				$suppliers = array();
@@ -2187,7 +2188,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//该类商品的供应商列表
 			$suppliers_sql = 'SELECT s.`suppliers_id`, s.`suppliers_name` FROM ' . $goods_table .
 							 ' AS g LEFT JOIN ' . $suppliers_table . ' AS s ON g.`suppliers_id` = s.`suppliers_id`' .
-							 ' WHERE g.`cat_id` = ' . $order_info['cat_id'] . ' GROUP BY s.`suppliers_id`';
+							 ' WHERE g.`cat_id` = ' . $order_info['cat_id'] .
+							 ' AND s.`suppliers_name` IS NOT NULL' . ' GROUP BY s.`suppliers_id`';//供应商名字不为空
 			$suppliers = $GLOBALS['db']->getAll( $suppliers_sql );
 
 			if( empty( $suppliers ) )
@@ -2213,7 +2215,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//历史报价
 			$price_log_table = $GLOBALS['ecs']->table( 'price_log' );
 			$price_log_sql = 'SELECT p.*, og.`goods_sn` FROM ' . $price_log_table . ' AS p LEFT JOIN ' .
-						     $order_goods_table . ' AS og ON og.`order_id` = p.`order_id` ORDER BY `total` ASC';
+						     $order_goods_table . ' AS og ON og.`order_id` = p.`order_id` WHERE p.`order_id` = ' .
+						     $order_id . ' ORDER BY `total` ASC';
 			$price_log_arr = $GLOBALS['db']->getAll( $price_log_sql );
 
 			$content = array();
@@ -2259,7 +2262,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 */
 		public function updatePriceSendAction()
 		{
-			exit;
 			$content = $this->content;
 			$params = $content['parameters']['params'];
 
@@ -2545,7 +2547,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//该类商品的供应商列表
 			$suppliers_sql = 'SELECT s.`suppliers_id`, s.`suppliers_name` FROM ' . $goods_table .
 							 ' AS g LEFT JOIN ' . $suppliers_table . ' AS s ON g.`suppliers_id` = s.`suppliers_id`' .
-							 ' WHERE g.`cat_id` = ' . $order_info['cat_id'] . ' GROUP BY s.`suppliers_id`';
+							 ' WHERE g.`cat_id` = ' . $order_info['cat_id'] .
+							 ' AND s.`suppliers_name` IS NOT NULL' . ' GROUP BY s.`suppliers_id`';
 			$suppliers = $GLOBALS['db']->getAll( $suppliers_sql );
 
 			if( empty( $suppliers ) )
