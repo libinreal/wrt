@@ -1601,7 +1601,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 
 			//检查订单状态
-			$order_info_sql = 'SELECT odr.`child_order_status`, odr.`parent_order_id`, og.`goods_id`, og.`goods_number` FROM ' . $order_info_table .
+			$order_info_sql = 'SELECT odr.`child_order_status`, odr.`suppers_id`, odr.`parent_order_id`, og.`goods_id`, og.`goods_number` FROM ' . $order_info_table .
 							  ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id` ' .
 					 		  ' WHERE odr.`order_id` = ' . $order_id;
 			$order_status = $GLOBALS['db']->getRow( $order_info_sql );
@@ -1695,9 +1695,21 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					break;
 				case '采购下单':
+
+					if( !$order_status['suppers_id'] ){
+						make_json_response('', '-1', '未分配供应商，不能推单');
+					}
+
 					if(  $order_status['child_order_status'] == SOS_SEND_PC ){
 						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP);
 					}
+
+					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
+
+					if( $childer_order_update )
+						make_json_response('', '0', '采购下单 成功');
+					else
+						make_json_response('', '-1', '采购下单 失败');
 					break;
 				case '到货验签':
 					if( $order_status['child_order_status'] == SOS_ARR_CC || $order_status['child_order_status'] == SOS_ARR_SC ){
@@ -1776,6 +1788,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case SOS_SEND_PC:
 					$msg = sprintf($msg, '平台已验签(发货)');
+					break;
+				case SOS_SEND_PP:
+					$msg = sprintf($msg, '平台已推单(发货)');
 					break;
 				case SOS_SEND_SC:
 					$msg = sprintf($msg, '供应商已验签(发货)');
