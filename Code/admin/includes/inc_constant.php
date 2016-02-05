@@ -82,23 +82,27 @@ define('COS_COMPLETE',               1); // 确认验收，待对账
 define('COS_CANCELED',               9); // 完成
 
  // 父订单状态（二期）
-define('POS_SUBMIT',                 0);// 已下单
+define('POS_SUBMIT',                 0);// 已提交
 define('POS_HANDLE',                 1); // 处理中
-define('POS_COMPLETE',               2); // 已完成
-define('POS_CANCEL',                 3); // 订单取消
+define('POS_CONFIRM', 				 1);//确认中
+define('POS_CHECK', 				 2);//验收中
+define('POS_BALANCE', 				 3);//对账中
+define('POS_COMPLETE',               4); // 已完成
+define('POS_CANCEL',                 5); // 订单取消
 
 //子订单状态（二期）
 define('SOS_UNCONFIRMED', 			 0);//未确认
 define('SOS_CONFIRMED', 			 1);//已确认
 define('SOS_SEND_CC', 			     2);//客户已验签(发货)
 define('SOS_SEND_PC', 			     3);//平台已验签(发货)
-define('SOS_SEND_SC', 			     4);//供应商已验签(发货)
-define('SOS_SEND_PC2', 			     5);//平台已验签(发货)
+define('SOS_SEND_PP', 			     4);//平台已推单(发货)
+define('SOS_SEND_SC', 			     5);//供应商已验签(发货)
+define('SOS_SEND_PC2', 			     6);//平台已验签(发货)
 
-define('SOS_ARR_CC', 			     6);//客户已验签(到货)
-define('SOS_ARR_PC', 			     7);//平台已验签(到货)
-define('SOS_ARR_SC', 			     8);//供应商已验签(到货)
-define('SOS_ARR_PC2', 			     9);//平台已验签(到货)
+define('SOS_ARR_CC', 			     7);//客户已验签(到货)
+define('SOS_ARR_PC', 			     8);//平台已验签(到货)
+define('SOS_ARR_SC', 			     9);//供应商已验签(到货)
+define('SOS_ARR_PC2', 			     10);//平台已验签(到货)
 
 define('SOS_CANCEL', 			     11);//订单已撤销
 

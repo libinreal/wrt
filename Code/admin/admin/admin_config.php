@@ -24,8 +24,15 @@ $admin_config = array(
     'order_status' => array(
                         POS_SUBMIT => '已下单',
                         POS_HANDLE => '处理中',
+                        /* 前台  */
+                        POS_CONFIRM => '确认中',
+                        POS_CHECK => '验收中',
+                        POS_BALANCE => '对账中',
+                        /* 前台  */
                         POS_COMPLETE => '已完成',
                         POS_CANCEL => '订单取消'
+
+
                         ),//大订单状态
 
     'childer_order_status' => array( 
@@ -33,6 +40,7 @@ $admin_config = array(
                                 SOS_CONFIRMED => '已确认',
                                 SOS_SEND_CC => '客户已验签(发货)',
                                 SOS_SEND_PC => '平台已验签(发货)',
+                                SOS_SEND_PP => '平台已推单(发货)',
                                 SOS_SEND_SC => '供应商已验签(发货)', 
                                 SOS_SEND_PC2 => '平台已验签(发货)',
                                 SOS_ARR_CC => '客户已验签(到货)',

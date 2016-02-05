@@ -1033,6 +1033,11 @@ class GoodsController extends ControllerBase {
 				$price = $cartResult->price * (1+($cartResult->price_rate/100));
 			}
 			$orderGoods->goodsPrice = $price;
+
+			$orderGoods->goodsPriceAdd = $price;
+			$orderGoods->contractNums = $cartResult->nums;
+			$orderGoods->contractPrice = $price;
+
 			$orderGoods->nums = $cartResult->nums;
 			//签名额外数据
 			$submitData['extraData'][] = implode(':', array(/* $orderGoods->goodsName, */ $orderGoods->goodsSn, $orderGoods->goodsPrice));

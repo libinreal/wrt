@@ -1039,7 +1039,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$send_number = ( double )( $content['parameters']['send_number'] );
 			$goods_price = ( double )( $content['parameters']['goods_price'] );
 			$shipping_fee = ( double )( $content['parameters']['shipping_fee'] );
-			$finance_rate = ( double )( $content['parameters']['financial_send_rate'] );
+			$finance_rate = ( double )( $content['parameters']['financial_send_rate'] / 100);
 			$finance = ( double )( $content['parameters']['financial_send'] );
 			$pay_id = $content['parameters']['pay_id'];
 
@@ -1075,7 +1075,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			if( empty( $finance_rate ) ){
-				$finance_rate = $finance / ( $send_number * $goods_price );
+				$finance_rate = $finance / ( $send_number * $goods_price ) / 100;
 			}
 
 			//主订单信息
@@ -1128,8 +1128,8 @@ require(dirname(__FILE__) . '/includes/init.php');
             $childer_order['invoice_no'] = '';
             $childer_order['money_paid'] = 0;
 
-            $childer_order['financial_send_rate'] = $finance_rate;
-            $childer_order['financial_arr_rate'] = $finance_rate;
+            $childer_order['financial_send_rate'] = $finance_rate * 100;
+            $childer_order['financial_arr_rate'] = $finance_rate * 100;
             $childer_order['financial_send'] = $finance;
             $childer_order['financial_arr'] = $finance;
 
@@ -1144,7 +1144,7 @@ require(dirname(__FILE__) . '/includes/init.php');
             $childer_order['order_amount_arr_saler'] = $childer_order['order_amount'] - $finance;
 
 			unset( $childer_order['order_id'] );
-
+			var_dump($childer_order);exit;
 			$childer_order_sql = 'INSERT INTO ' . $order_info_table .'(';
 			$childer_order_keys = array_keys( $childer_order );
 			// print_r( $childer_order_keys );exit;
@@ -1498,8 +1498,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_SEND_PC://平台已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC];
-						$buttons = array('取消验签', '撤销订单');
+						$buttons = array('取消验签', '采购下单', '撤销订单');
 						break;
+					case SOS_SEND_PP://平台已推单(发货)
+						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['check_status'] = $childer_order_status[SOS_SEND_PP];
+						$buttons = array('发货验签');
+						break;	
 					case SOS_SEND_SC://供应商已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_SC];
@@ -1621,9 +1626,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					break;
 				case '发货验签':
-					if( $order_status['child_order_status'] == SOS_SEND_CC || $order_status['child_order_status'] == SOS_SEND_SC ){
+					if( $order_status['child_order_status'] == SOS_SEND_CC || $order_status['child_order_status'] == SOS_SEND_PP || $order_status['child_order_status'] == SOS_SEND_SC ){
 						if( $order_status['child_order_status'] == SOS_SEND_CC )//SOS_SEND_CC	
 							$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC);
+						else if( $order_status['child_order_status'] == SOS_SEND_PP )//SOS_SEND_CC	
+							$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_SC);	
 						else//SOS_SEND_SC
 							$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC2);
 
@@ -1645,9 +1652,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_CC);
 
-					}elseif( $order_status['child_order_status'] == SOS_SEND_SC ){
+					}elseif( $order_status['child_order_status'] == SOS_SEND_PP ){
 
 						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC);
+
+					}elseif( $order_status['child_order_status'] == SOS_SEND_SC ){
+
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP);
 						
 					}elseif( $order_status['child_order_status'] == SOS_SEND_PC2 ){
 
@@ -1681,6 +1692,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 					else
 						make_json_response('', '-1', '取消验签 失败');
 
+					break;
+				case '采购下单':
+					if(  $order_status['child_order_status'] == SOS_SEND_PC ){
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP);
+					}
 					break;
 				case '到货验签':
 					if( $order_status['child_order_status'] == SOS_ARR_CC || $order_status['child_order_status'] == SOS_ARR_SC ){
@@ -2076,6 +2092,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC];
 		
 						break;
+					case SOS_SEND_PP://平台已推单(发货)
+						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['check_status'] = $childer_order_status[SOS_SEND_PP];
+						break;
+						
 					case SOS_SEND_SC://供应商已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_SC];
@@ -2238,6 +2259,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 */
 		public function updatePriceSendAction()
 		{
+			exit;
 			$content = $this->content;
 			$params = $content['parameters']['params'];
 
@@ -2276,7 +2298,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$shipping_fee_send_buyer = ( double )( $params['shipping_fee_send_buyer'] );//销售信息.发货物流费用
 			$financial_send = $params['financial_send'] ? (double)($params['financial_send']) : 0;//销售信息.发货金融费
-			$financial_send_rate = ( double )( $params['financial_send_rate'] );//销售信息.发货金融费
+			$financial_send_rate = ( double )( $params['financial_send_rate'] / 100 );//销售信息.发货金融费
 
 			if( empty( $financial_send ) ){
 				$financial_send = $goods_price_add * $goods_number * $financial_send_rate;
@@ -2734,7 +2756,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$shipping_fee_arr_buyer = ( double )( $params['shipping_fee_arr_buyer'] );//销售信息.发货物流费用
 			$financial_arr = $params['financial_arr'] ? (double)($params['financial_arr']) : 0;//销售信息.发货金融费
-			$financial_arr_rate = ( double )( $params['financial_arr_rate'] );//销售信息.发货金融费
+			$financial_arr_rate = ( double )( $params['financial_arr_rate'] / 100 );//销售信息.发货金融费
 
 			if( empty( $financial_arr ) ){
 				$financial_arr = $goods_price_add * $goods_number_arrival * $financial_arr_rate;

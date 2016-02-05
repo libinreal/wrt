@@ -14,8 +14,10 @@ var SaleOrder = {
 	order_status: {
 		"0":"已下单",
 		"1":"<span style='color:#00f;'>处理中</span>",
-		"2":"<span style='color:#999;'>已完成</span>",
-		"3":"<span style='color:#999;'>订单取消</span>"
+		"2":"<span style='color:#00f;'>处理中</span>",
+		"3":"<span style='color:#00f;'>处理中</span>",
+		"4":"<span style='color:#999;'>已完成</span>",
+		"5":"<span style='color:#999;'>订单取消</span>"
 	},
 	suborder_status: {},
 	order_detail_arr: [
@@ -226,12 +228,7 @@ var SaleOrder = {
 						$("#"+k).text(v);
 					}
 					if($("input[name="+k+"]").length>0){
-						if(k == "rate"){
-							$("input[name="+k+"]").val(parseFloat(v));
-						}else{
-							$("input[name="+k+"]").val(v);	
-						}
-						
+						$("input[name="+k+"]").val(v);
 					}
 					if(k == "payment"){
 						var row = "";
@@ -279,6 +276,8 @@ var SaleOrder = {
 		var form_data = $("#split_form").FormtoJson();
 		form_data.order_id = order_id;
 		form_data.goods_id = goods_id;
+		form_data.financial_send_rate = form_data.rate;
+	    form_data.financial_send = form_data.finance_fee;
 		strJson = createJson("split", this.entity, form_data);
 		that = this
 		$.post(this.url, strJson, function(obj){
@@ -302,6 +301,7 @@ var SaleOrder = {
 		strJson = createJson("childerList", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
+			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -321,7 +321,7 @@ var SaleOrder = {
 								continue;
 							}
 							if(that.suborder_arr[i] == "order_status"){
-								row += createTd(that.suborder_status[value["child_order_status"]]);
+								row += createTd(that.suborder_status[value["order_status"]]);
 								continue;
 							}
 							if(value[that.suborder_arr[i]] != null){

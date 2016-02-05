@@ -84,7 +84,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * @param suppers_id int 订单关联的供应商id
 		 * @return [type] [description]
 		 */
-		private function orderPrivilege( $suppers_id = '' )
+		private function orderPrivilege( $suppers_id = '', $child_order_status = 0 )
 		{
 			//验证是否有权限
 			$admin_sql = "SELECT `user_id`, `user_name`, `suppliers_id` ".
@@ -93,6 +93,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 	    	if( empty( $admin_user['suppliers_id'] ) || $admin_user['suppliers_id'] != $suppers_id ){
 	    		make_json_response('', '-1', '权限不足，无法执行该操作');
+	    	}
+
+	    	if ( $child_order_status < SOS_SEND_PP ){//未推单
+	    		make_json_response('', '-1', '无法执行该操作');
 	    	}
 		}
 
@@ -165,19 +169,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$suppliers_id = $this->getSuppliersId();
 
 		    if( empty( $suppliers_id ) ){
-		    	make_json_response('', '-1', '管理员账号id有误');
+		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
 		    }
 
 			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, og.`goods_number`, og.`goods_price`,' .
 				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status` ' .
 				   ' FROM ' . $order_table .
 				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
-				   ' WHERE odr.`suppers_id` = ' . $suppliers_id;
+				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP;//订单为已推给当前登录的供应商
 
 			$total_sql = 'SELECT COUNT(*) AS `total`' .
 				   		 ' FROM ' . $order_table .
 				   		 ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
-				   		 ' WHERE odr.`suppers_id` = ' . $suppliers_id;	
+				   		 ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP;
 		
 			$where = array();	
 			if( isset($params['where']) )
@@ -378,7 +382,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( empty( $order_info ) ){
 				make_json_response('', '-1', '订单查询失败');
 			}else{
-				$this->orderPrivilege( $order_info['suppers_id'] );
+				$this->orderPrivilege( $order_info['suppers_id'], $order_info['child_order_status'] );
 				//规格、型号、材质
 				$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $order_info['goods_id'];
 				$goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
@@ -491,7 +495,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '订单不存在');
 			}
 
-	    	$this->orderPrivilege( $order_status['suppers_id'] );	
+	    	$this->orderPrivilege( $order_status['suppers_id'], $order_status['child_order_status'] );	
 
 			//子订单状态更改
 			$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d' . ' WHERE `order_id` = ' . $order_id;
@@ -616,10 +620,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 			
-			$order_info_sql = 'SELECT `suppers_id` FROM ' . $order_info_table . ' WHERE `order_id` = ' . $order_id;
+			$order_info_sql = 'SELECT `suppers_id`, `child_order_status` FROM ' . $order_info_table . ' WHERE `order_id` = ' . $order_id;
 			$order_info = $GLOBALS['db']->getRow( $order_info_sql );
 
-			$this->orderPrivilege( $order_info['suppers_id'] );
+			$this->orderPrivilege( $order_info['suppers_id'], $order_info['child_order_status'] );
 
 			$shipping_info['company_name'] = urlencode( $company_name );
 			$shipping_info['shipping_num'] = $shipping_num;
@@ -681,14 +685,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$shipping_date = date('Y-m-d H:i:s');
 			}
 
-			$order_info_sql = 'SELECT `suppers_id`,`shipping_log` FROM ' . $order_info_table . ' WHERE `order_id` = ' . $order_id;
+			$order_info_sql = 'SELECT `suppers_id`,`shipping_log`, `child_order_status` FROM ' . $order_info_table . ' WHERE `order_id` = ' . $order_id;
 			$order_info = $GLOBALS['db']->getRow( $order_info_sql );
 
 			if( empty( $order_info ) ){
 				make_json_response('', '-1', '订单不存在');
 			}
 
-			$this->orderPrivilege( $order_info['suppers_id'] );
+			$this->orderPrivilege( $order_info['suppers_id'], $order_info['child_order_status'] );
 
 			$shipping_log_old = array();
 			$shipping_log_old['shipping_log'] = $order_info['shipping_log'];

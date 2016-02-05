@@ -103,6 +103,9 @@ class OrderController extends ControllerBase
 				OrderInfo.payOrgcode payOrg,
 				OrderInfo.invType,
 				OrderInfo.invPayee,
+				OrderInfo.orderAmount,
+				OrderInfo.orderAmountSendBuyer,
+				OrderInfo.orderAmountArrBuyer,
 				OrderInfo.childOrderStatus,
 				OrderInfo.invContent');
 		$result = $builder->getQuery()->execute()->getFirst();
@@ -123,7 +126,7 @@ class OrderController extends ControllerBase
 		$result = $orderInfo->getReadConnection()->query($sqlStatement);
 		$result->setFetchMode(PDO::FETCH_ASSOC);
 		$goodsList = array();
-		if(!$result->numRows()) {
+		if(!$result->numRows()) {//这是子订单 或未拆分的订单
 			$sqlStatement = 'SELECT
 				order_goods.goods_id goodsId,
 			    order_goods.goods_sn goodsCode,
@@ -133,11 +136,11 @@ class OrderController extends ControllerBase
 				goods.price_rate, 
 			    category.measure_unit goodsUnit,
 			    order_goods.goods_number orderNums,
-			    order_goods.goods_price changePrice,
-			    IF(1, 0, 0) AS contractNums,
-			    IF(1, 0, 0) AS checkNums,
-			    IF(1, 0, 0) AS contractPrice,
-			    IF(1, 0, 0) AS checkPrice
+			    order_goods.goods_price_add changePrice,
+			    order_goods.contract_number contractNums,
+			    order_goods.contract_price contractPrice,
+			    IFNULL(order_goods.check_number, 0) checkNums,
+			    IFNULL(order_goods.check_price, 0) checkPrice
 			FROM
 			    order_goods
 			        LEFT JOIN
@@ -172,13 +175,25 @@ class OrderController extends ControllerBase
 				if(!preg_match('/^http:\/\//', $r['thumb'])) {
 					$r['thumb'] = $this->get_url() . $r['thumb'];
 				}
-				$ordersum += $r['orderNums'] * $r['changePrice'];
+				// $ordersum += $r['orderNums'] * $r['changePrice'];
 				$contractsum += $r["contractNums"] * $r['contractPrice'];
 				$checksum += $r['checkNums'] * $r['checkPrice'];
 				$goodsList[] = $r;
 			}
+
+			//libin 2016-02-04
+			if( preg_match( '/-/', $order['orderSn'] ) ){
+				if( $order['childOrderStatus'] <= SOS_SEND_PC2 )
+					$ordersum = $order['orderAmountSendBuyer'];
+				else
+					$ordersum = $order['orderAmountArrBuyer'];
+			} else {
+				$ordersum = $order['orderAmount'];
+			}
 			$orderDetail = array_merge($orderDetail, $order, compact('goodsList', 'ordersum', 'contractsum', 'checksum'));
-		} else {
+		} else {//主订单
+			//order_goods.goods_price_add 改价后的单价  order_goods.goods_price 供应商报价\
+			
 			$sqlStatement = 'SELECT
 					order_goods.goods_id goodsId,
 				    order_goods.goods_sn goodsCode,
@@ -206,7 +221,7 @@ class OrderController extends ControllerBase
 					order_info.parent_order_id = ' . $id;
 			$subResult = $orderInfo->getReadConnection()->fetchAll($sqlStatementSub, PDO::FETCH_ASSOC);
 			$ordersum = $contractsum = $checksum = 0;
-			foreach($orderResult as $orderR) {
+			foreach($orderResult as $orderK=>$orderR) {
 				if(!preg_match('/^http:\/\//', $orderR['thumb'])) {
 					$orderR['thumb'] = $this->get_url() . $orderR['thumb'];
 				}
@@ -231,22 +246,28 @@ class OrderController extends ControllerBase
 				$orderR['orderNums'] = 0;
 				array_map(function($subR) use ($goodsId, &$contractsum, &$checksum, &$contractNums, &$checksum, &$contractTotal, &$checkTotal, &$orderR) {
 					$contractsum += $subR['contract_number'] * $subR['contract_price'];
-					$checksum += $subR['check_number'] * $subR['check_price'];
+					$checksum += $subR['goods_number_arrival'] * $subR['check_price'];
 					if($subR['goods_id'] != $goodsId) {
 						return;
 					}
 					$contractNums += $subR['contract_number'];
-					$checksum += $subR['check_number'];
+					$checksum += $subR['goods_number_arrival'];
 					$contractTotal += $subR['contract_number'] * $subR['contract_price'];
-					$checkTotal += $subR['check_number'] * $subR['check_price'];
+					$checkTotal += $subR['goods_number_arrival'] * $subR['check_price'];
 					if($subR['goods_id'] == $orderR['goodsId']) {
-						$orderR['orderNums'] += $subR['check_number'];
+						$orderR['orderNums'] += $subR['goods_number_arrival'];
+
+						/** 改价 子>>>>主 **/ 
+						if( intval( $subR['goods_price_add'] ) != 0 ){
+							$orderR['changePrice'] = $subR['goods_price_add'];
+						}
 					}
+
 				}, $subResult);
+				
 				$contractPrice = $contractNums ? $contractTotal / $contractNums : 0;
 				$checkPrice = $checkNums ? $checkTotal / $checkNums : 0;
 				$goodsList[] = array_merge($orderR, compact('contractNums', 'checkNums', 'contractPrice', 'checkPrice'));
-				// $ordersum += $orderR['orderNums'] * $orderR['changePrice']; //TODO 20150923 对账总价
 			}
 			$ordersum = 0;
 			//获取所有子订单
@@ -255,10 +276,20 @@ class OrderController extends ControllerBase
 					'conditions' => 'parentOrderId = '.$id,
 			))->toArray();
 			$tmpArr = array_map('current', $subOrder);
+			/*
 			$ordersum = OrderGoods::sum(array(
 					'column' => 'checkPrice * checkNums',
 					'conditions' => 'orderId in ('.implode(', ', $tmpArr).')',
 			));
+			*/
+			/** @ordersum [商品总额+物流费+金融费] */
+			array_map(function($subR) use (&$ordersum) {
+				if( $subR['child_order_status'] <= SOS_SEND_PC2 )
+					$ordersum += $subR['order_amount_send_buyer'];
+				else
+					$ordersum += $subR['order_amount_arr_buyer'];
+			}, $subResult);
+
 			$orderDetail = array_merge($orderDetail, $order, compact('goodsList', 'ordersum', 'contractsum', 'checksum'));
 		}
         $orderSn = $orderDetail['orderSn'];
@@ -468,12 +499,15 @@ class OrderController extends ControllerBase
 		$criteria->where('OrderInfo.id = :id:', compact('id'));
 		$criteria->columns('
 				OI.id,
+				OG.goodsId,
+				OI.status,
 				OG.nums,
 				OI.status
 				');
 		$result = $criteria->execute();
 		$nums = $subNums = 0;
 		$subOrder = array();
+
 		if(is_object($result) && $result->count()) {
 			foreach($result as $r) {
 				if($r->id == $id) {
@@ -483,6 +517,9 @@ class OrderController extends ControllerBase
 					$subOrder[] = $r->status;
 				}
 			}
+			$orders = $result->toArray();
+		}else{
+			return false;
 		}
 		if($nums != $subNums && $subNums) {
 			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, '不能更改订单状态');
@@ -490,35 +527,37 @@ class OrderController extends ControllerBase
 		$flag = 0;
 		$order = OrderInfo::findFirst($id);
 		$parentStatus = $order->status;
-		if(!$subOrder) {
-			if($status != 5 || $parentStatus >= 5 || ($parentStatus != 0 && $parentStatus != -1)) {
+		if( count($orders) == 1 ){
+			if($status != POS_CANCEL || $parentStatus >= POS_CANCEL || $parentStatus != POS_SUBMIT) {
 				$flag = 1;
 			}
 		} else {
-	        array_map(function($subStatus) use (&$flag, $status, $parentStatus) {
-	        	switch ($status) {
-	        		case 2 :
-						if($subStatus < 2) {
+
+			array_map(function($subStatus) use (&$flag, $status, $parentStatus) {
+				switch ($status) {
+					case POS_CHECK :
+						if($subStatus < SOS_SEND_CC) {
 							$flag = 1;
 						}
-	        			break;
-	        		case 3:
-						if($subStatus < 4) {
+						break;
+					case POS_BALANCE:
+						if($subStatus < SOS_ARR_PC2) {
 							$flag = 1;
 						}
-	        			break;
-	        		case 4 :
-	        			if($subStatus < 4 || $parentStatus != 3) {
-							$flag = 1;
-	        			}
-	        			break;
-	        		case 5 :
-						if($subStatus > 0) {
+						break;
+					case POS_COMPLETE :
+						if($subStatus < SOS_ARR_PC2 || $parentStatus != POS_BALANCE) {
 							$flag = 1;
 						}
-	        			break;
-	        	}
-	        }, $subOrder);
+						break;
+					case POS_CANCEL :
+						if($subStatus > POS_SUBMIT) {
+							$flag = 1;
+						}
+						break;
+				}
+			}, $subOrder);
+
 		}
 
 		if($flag) {
@@ -528,11 +567,36 @@ class OrderController extends ControllerBase
 			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, '不能更改订单状态');
 		}
 		$order->status = $status;
+
+		/** @var tArr [必填字段] */
+		$tArr = array('invFax', 'invTel', 'invBankName', 'invBankAccount', 'invBankAddress');
+		foreach( $tArr as $p ){
+			if( empty( $order->$p ) )
+				$order->$p = ' ';
+		}
+
 		if(!$order->save()) {
 			foreach($order->getMessages() as $message) {
 				return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
 			}
 		}
+
+		//库存回滚
+		foreach ($orders as $o) {
+
+			$goods = Goods::findFirst( $o['goodsId'] );
+			if( $goods ){
+				$goods->storeNum += $o['nums'];
+
+				if(!$goods->save()) {
+					foreach($goods->getMessage() as $message) {
+						return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
+					}
+
+				}
+			}
+		}
+
 		return ResponseApi::send();
 	}
 
@@ -550,51 +614,71 @@ class OrderController extends ControllerBase
 		$criteria->columns('
 				OI.id,
 				OG.nums,
-				OI.status
+				OG.goodsId,
+				OI.status,
+				OI.childOrderStatus
 				');
+		//需要判断是否有子订单
+		//。。。
+		
 		$result = $criteria->execute();
 		$nums = $subNums = 0;
 		$subOrder = array();
+		//结果是否为空
 		if(is_object($result) && $result->count()) {
 			foreach($result as $r) {
 				if($r->id == $id) {
 					$nums += $r->nums;
 				} else {
 					$subNums += $r->nums;
-					$subOrder[] = $r->status;
+					$subOrder[] = $r->childOrderStatus;
 				}
 			}
-		}
-		if($nums != $subNums && $subNums) {
+		}else{
 			return false;
 		}
+
 		$flag = 0;
 		$order = OrderInfo::findFirst($id);
 		$parentStatus = $order->status;
-		if(!$subOrder) {
-			if($status != 5 || $parentStatus >= 5 || $parentStatus != 0) {
+		
+		if(empty($subOrder)){
+			if($status != POS_CANCEL || $parentStatus >= POS_CANCEL || $parentStatus != POS_SUBMIT) {
 				$flag = 1;
+			}else{
+				//库存回滚
+				$goods = Goods::findFirst( $result->goodsId );
+				if( $goods ){
+					$goods->storeNum += $result->nums;
+
+					if(!$goods->save()) {
+						foreach($goods->getMessage() as $message) {
+							return false;
+						}
+
+					}
+				}
 			}
 		} else {
 			array_map(function($subStatus) use (&$flag, $status, $parentStatus) {
 				switch ($status) {
-					case 2 :
-						if($subStatus < 2) {
+					case POS_CHECK :
+						if($subStatus < SOS_SEND_CC) {
 							$flag = 1;
 						}
 						break;
-					case 3:
-						if($subStatus < 4) {
+					case POS_BALANCE:
+						if($subStatus < SOS_ARR_PC2) {
 							$flag = 1;
 						}
 						break;
-					case 4 :
-						if($subStatus < 4 || $parentStatus != 3) {
+					case POS_COMPLETE :
+						if($subStatus < SOS_ARR_PC2 || $parentStatus != POS_BALANCE) {
 							$flag = 1;
 						}
 						break;
-					case 5 :
-						if($subStatus > 0) {
+					case POS_CANCEL :
+						if($subStatus > POS_SUBMIT) {
 							$flag = 1;
 						}
 						break;
@@ -609,6 +693,14 @@ class OrderController extends ControllerBase
 			return false;
 		}
 		$order->status = $status;
+
+		/** @var tArr [必填字段] */
+		$tArr = array('invFax', 'invTel', 'invBankName', 'invBankAccount', 'invBankAddress');
+		foreach( $tArr as $p ){
+			if( empty( $order->$p ) )
+				$order->$p = ' ';
+		}
+
 		if(!$order->save()) {
 			foreach($order->getMessage() as $message) {
 				return false;
@@ -719,27 +811,46 @@ class OrderController extends ControllerBase
 				return ResponseApi::send(null, Message::$_ERROR_SYSTEM, "合同不存在！");
 			}
 
-			// $totalAmt =
-			//更新合同额度
-			if( $contract_info->cashValid >= $totalAmt ){
-				$contract_info->cashValid -= $totalAmt;
-			}else{
-				if( $contract_info->cashValid + $contract_info->billValid > $totalAmt ){
-					$bill_red = $totalAmt - $contract_info->cashValid;
-					$contract_info->cashValid = 0;
-					$contract_info->billValid -= $bill_red;
-				}
-			}
-
-			if(!$contract_info->save()) {
-				foreach($contract_info->getMessages() as $message) {
-					return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
-				}
+			if( $order->childOrderStatus < SOS_ARR_CC ){//发货阶段
+				$totalAmt = $order->orderAmountSendBuyer;//改价后的总金额（商品总价+金融+物流）
+			}else{//到货阶段 
+				$totalAmt = $order->orderAmountArrBuyer;//改价后的总金额（商品总价+金融+物流）
 			}
 
 			if( $order->childOrderStatus == SOS_CONFIRMED ){
+
+				//发货阶段扣除订单关联的合同额度
+				if( $contract_info->cashValid >= $totalAmt ){
+					$contract_info->cashValid -= $totalAmt;
+				}else{
+					if( $contract_info->cashValid + $contract_info->billValid > $totalAmt ){//现金+票据>总金额，优先扣除现金额度
+						$bill_red = $totalAmt - $contract_info->cashValid;
+						$contract_info->cashValid = 0;
+						$contract_info->billValid -= $bill_red;
+					}else{//现金为负，优先扣除票据，让现金额度为负
+						$cash_red = $totalAmt - $contract_info->billValid;
+						$contract_info->billValid = 0;
+						$contract_info->cashValid -= $cash_red;
+
+						//现金额度小于-10000
+						if( $contract_info->cashValid < -10000 ){
+							return ResponseApi::send(null, Message::$_ERROR_LOGIC, "合同额度超过负1W无法验签");
+						}
+					}
+				}
+
+				if(!$contract_info->save()) {
+					foreach($contract_info->getMessages() as $message) {
+						return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
+					}
+				}
+
 				$order->childOrderStatus = SOS_SEND_CC;//客户已验签(发货)
 			} else if( $order->childOrderStatus == SOS_SEND_PC2 ){
+
+				//合同额度 多退少补
+				//。。。。
+				
 				$order->childOrderStatus = SOS_ARR_CC;//客户已验签(到货)
 			} else {
 				return ResponseApi::send(null, Message::$_ERROR_LOGIC, "此订单当前不能验签");
