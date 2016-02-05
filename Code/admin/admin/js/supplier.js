@@ -118,6 +118,15 @@ var Supplier = {
 					}
 				});
 
+				// 订单状态相应操作
+				var button = '';
+				if(obj.content.order_status != 3){
+					$.each(obj.content.buttons, function(k, v){
+						button += '<input type="button" class="button" onclick="Supplier.updateChilderStatus(this)" value="'+v+'" >';
+					});
+				}
+				$("#handle_button>span").html(button);
+
 				// 物流信息
 				var count = 0;
 				var k;
@@ -235,7 +244,7 @@ var Supplier = {
 		if(order_id===""||!validateNumber(order_id)){
 			return false;
 		}
-		var button = $(handle).text();
+		var button = $(handle).val();
 		var params = {"params":{"order_id":order_id, "button": button}};
 		strJson = createJson("updateChilderStatus", this.entity, params);
 		that = this

@@ -30,7 +30,8 @@ define('ROOT_PATH', str_replace('api', '', str_replace('\\', '/', dirname(__FILE
 
 /* 初始化设置 */
 @ini_set('memory_limit',          '16M');
-@ini_set('session.cache_expire',  180);
+@ini_set('session.cache_expire',  86400);
+@ini_set('session.gc_maxlifetime',  86400);
 @ini_set('session.use_trans_sid', 0);
 @ini_set('session.use_cookies',   1);
 @ini_set('session.auto_start',    0);
