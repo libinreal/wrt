@@ -499,7 +499,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 				}
 
-				unset( $order_info['child_order_status'] );
+				
 
 				if( !empty( $order_info['best_time'] ) ){
 					$order_info['best_time'] = date('Y-m-d H:i:s', $order_info['best_time']);
@@ -508,12 +508,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 				}
 
 				$buttons = array();
-				if( $order_info['child_order_status'] == SOS_SEND_PC ){
+				if( $order_info['child_order_status'] == SOS_SEND_PP ){
 					$buttons = array('发货验签');
 				}else if( $order_info['child_order_status'] == SOS_ARR_PC ){
 					$buttons = array('到货验签');
 				}
-
+				unset( $order_info['child_order_status'] );
 			}
 
 			$content = array();
@@ -577,7 +577,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$buttons = trim($params['button']);
 			switch ( $buttons ) {
 				case '发货验签':
-					if( $order_status['child_order_status'] == SOS_SEND_PC ){
+					if( $order_status['child_order_status'] == SOS_SEND_PP ){
 						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_SC);
 
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
@@ -622,6 +622,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 				case SOS_SEND_PC:
 					$msg = sprintf($msg, '平台已验签(发货)');
 					break;
+				case SOS_SEND_PP:
+					$msg = sprintf($msg, '平台已推单(发货)');
+					break;	
 				case SOS_SEND_SC:
 					$msg = sprintf($msg, '供应商已验签(发货)');
 					break;
