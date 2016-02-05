@@ -1145,7 +1145,7 @@ require(dirname(__FILE__) . '/includes/init.php');
             $childer_order['order_amount_arr_saler'] = $childer_order['order_amount'] - $finance;
 
 			unset( $childer_order['order_id'] );
-			var_dump($childer_order);exit;
+			
 			$childer_order_sql = 'INSERT INTO ' . $order_info_table .'(';
 			$childer_order_keys = array_keys( $childer_order );
 			// print_r( $childer_order_keys );exit;
