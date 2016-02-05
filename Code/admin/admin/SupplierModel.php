@@ -71,6 +71,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif($this->command == 'categoryShippingDetail'){
 				//
 				$this->categoryShippingDetailAction();			
+			}elseif ($this->command == 'create'){
+				//生成支付单信息
+				$this->createOrderPayAction();
 			}
 
 
@@ -258,14 +261,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					$v['order_status'] = '';
 					//订单状态转换
-					foreach ($childer_map as $pk => $pv) {
-						foreach ($pv as $s) {
-							if( $s == $v['child_order_status'] ){
-								$v['order_status'] = $purchase_status[ $pk ];
-								break 2;
+					if (!empty($childer_map)) {
+						foreach ($childer_map as $pk => $pv) {
+							foreach ($pv as $s) {
+								if( $s == $v['child_order_status'] ){
+									$v['order_status'] = $purchase_status[ $pk ];
+									break 2;
+								}
 							}
 						}
 					}
+					
 
 					//规格、型号、材质
 					$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $v['goods_id'];
@@ -293,6 +299,74 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response("", "-1", "订单查询失败");
 			}
 		}
+		
+		/**
+		 * 生成应付单/应收单数据。根据订单ID查询出来基础数据，然后把基础数据以json格式存入到 OrderPay 表
+		 *  接口地址：http://admin.zjgit.dev/admin/SupplierModel.php
+		 *  传入参数格式(主键id在parameters下级)：
+		 *  {
+		 *	    "command": "insert",
+		 *	    "entity": "OrderPay",
+		 *	    "parameters": {
+		 *	        "order_id":"1,2,3"
+		 *	    }
+		 *	}
+		 */
+		public function createOrderPayAction(){
+// 			print_r($_SESSION);die;
+			$content = $this->content;
+			$params = $content['parameters']['order_id'];
+			
+			if (!empty($params)) {
+				$order_ids = explode(',',$params);
+			}
+// 			print_r($order_ids);die;
+			$order_total = 0;
+			foreach ($order_ids as $value){
+				$order_info = $this->getOrderBaseInfo($value);
+				$order_goods['goods_sn'] = $order_info['goods_sn'];//物料编码
+				$order_goods['goods_name'] = $order_info['goods_name'];//物料名称
+				$order_goods['goods_number'] = $order_info['goods_number'];//数量
+				$order_goods['goods_price'] = $order_info['goods_price']; //单价
+				$order_goods['shipping_fee_arr_saler'] = $order_info['shipping_fee_arr_saler'];//物流费用
+				$order_goods['financial_arr'] = $order_info['financial_arr'];//金融费用
+				$order_goods['total'] = $order_info['goods_number'] * $order_info['goods_price'] + $order_info['shipping_fee_arr_saler'] + $order_info['financial_arr'];
+				
+				$order_total += $order_goods['total'];
+				$json_goods[] = $order_goods;
+			}
+			$data['count'] = count($json_goods);
+			$data['order_total'] = $order_total;
+			$data['goods_json'] = json_encode($json_goods);
+			$data['suppliers_id'] = $_SESSION['suppliers_id'];
+			$data['suppliers_name'] = '';
+		}
+		
+/* 		public function insertOrderPayAction($data = array()){
+			$sql = 'INSERT INTO order_pay (user_id,suppliers_id,order_id_str,order_sn_str,order_total,suppliers_name,goods_json) VALUES (1,.",".$data['suppliers_id'].",".'2,3','a-b,c-d',$data['order_total'],$data['suppliers_name'],$data['goods_json'] ) ";
+						
+		} */
+		
+		/**
+		 * 获取订单商品基本信息
+		 * @param unknown $order_id
+		 */
+		public function getOrderBaseInfo($order_id){
+			$suppliers_id = $this->getSuppliersId();
+// 			print_r($suppliers_id);die;
+			$order_table = $GLOBALS['ecs']->table('order_info');
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, odr.`financial_arr`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, og.`goods_number`, og.`goods_price`,' .
+					' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status` ' .
+					' FROM ' . $order_table .
+					' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
+					' WHERE odr.`suppers_id` = ' . $suppliers_id. ' AND og.order_id = '.$order_id;
+			$order_goods = $GLOBALS['db']->getrow($sql);
+// 			print_r($sql);die;
+			return $order_goods;
+		}
+		
+		
 		
 		/**
 		 * 接口名称：订单详情
@@ -1121,7 +1195,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	}
 	$content = jsonAction( 
 				array( 'orderPage', 'orderDetail', 'updateChilderStatus', 'addShippingLog', 'addShippingInfo', 'initcategoryShipping',
-						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail'
+						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail','createOrderPay'
 			 	) 
 			);
 	$supplierModel = new SupplierModel($content);
