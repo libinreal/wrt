@@ -818,7 +818,6 @@ class OrderController extends ControllerBase
 			}
 
 			if( $order->childOrderStatus == SOS_CONFIRMED ){
-
 				//发货阶段扣除订单关联的合同额度
 				if( $contract_info->cashValid >= $totalAmt ){
 					$contract_info->cashValid -= $totalAmt;
@@ -838,6 +837,7 @@ class OrderController extends ControllerBase
 						}
 					}
 				}
+
 
 				if(!$contract_info->save()) {
 					foreach($contract_info->getMessages() as $message) {

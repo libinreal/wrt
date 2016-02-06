@@ -179,7 +179,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status` ' .
 				   ' FROM ' . $order_table .
 				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
-				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP;//订单为已推给当前登录的供应商
+				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP .
+				   ' ORDER BY odr.`add_time` DESC';//订单为已推给当前登录的供应商
 
 			$total_sql = 'SELECT COUNT(*) AS `total`' .
 				   		 ' FROM ' . $order_table .

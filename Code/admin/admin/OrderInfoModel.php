@@ -1484,7 +1484,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_UNCONFIRMED://未确认
 						$order_info['order_status'] = $sale_status[SALE_ORDER_UNCONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_UNCONFIRMED];
-						$buttons = array('确认', '撤销订单');
+						$buttons = array('发货改价', '确认', '撤销订单');
 						break;
 					case SOS_CONFIRMED://已确认
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
@@ -1494,42 +1494,42 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_SEND_CC://客户已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_CC];
-						$buttons = array('发货验签', '取消验签', '撤销订单');
+						$buttons = array('发货验签', '取消验签');
 						break;
 					case SOS_SEND_PC://平台已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC];
-						$buttons = array('取消验签', '采购下单', '撤销订单');
+						$buttons = array('采购下单');//'取消验签',
 						break;
 					case SOS_SEND_PP://平台已推单(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PP];
-						$buttons = array('发货验签');
+						$buttons = array('发货改价');//采购价格修改
 						break;	
 					case SOS_SEND_SC://供应商已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_SC];
-						$buttons = array('发货验签', '取消验签', '撤销订单');
+						$buttons = array('发货验签', '取消验签');
 						break;
 					case SOS_SEND_PC2://平台已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC2];
-						$buttons = array('取消验签', '到货改价', '撤销订单');
+						$buttons = array('取消验签', '到货改价');
 						break;
 					case SOS_ARR_CC://客户已验签(到货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_UNRECEIVE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
-						$buttons = array('到货验签','取消验签', '撤销订单');
+						$buttons = array('到货改价', '到货验签');
 						break;
 					case SOS_ARR_PC://平台已验签(到货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC];
-						$buttons = array('取消验签', '撤销订单');
+						$buttons = array('到货改价');
 						break;
 					case SOS_ARR_SC://供应商已验签(到货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_SC];
-						$buttons = array('到货验签', '取消验签', '撤销订单');
+						$buttons = array('到货验签', '到货改价');
 						break;
 					case SOS_ARR_PC2://平台已验签(到货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
@@ -1646,54 +1646,34 @@ require(dirname(__FILE__) . '/includes/init.php');
 				case '取消验签':
 					
 					if( $order_status['child_order_status'] == SOS_SEND_CC ){//客户已验签
-
-						//判断是否额度回滚( 默认回滚到现金 )
-						if( $order_status['child_order_status'] >= SOS_SEND_CC ){//客户已验签
-
-							if( $order_status['child_order_status'] < SOS_ARR_CC ){//发货
-								$return_amount = $order_status['order_amount_send_buyer'];
-							} else {
-								$return_amount = $order_status['order_amount_arr_buyer'];
-							}
-
-							$update_contract_sql = ' UPDATE ' . $GLOBALS['ecs']->table('contract') . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $return_amount;
-							$GLOBALS['db']->query( $update_contract_sql );//商城库存回滚
-						}
 						
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_UNCONFIRMED);
 
-					}elseif( $order_status['child_order_status'] == SOS_SEND_PC ){
+					}/*elseif( $order_status['child_order_status'] == SOS_SEND_PC ){
 
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_CC);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_UNCONFIRMED);
 
 					}elseif( $order_status['child_order_status'] == SOS_SEND_PP ){
 
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_UNCONFIRMED);
 
-					}elseif( $order_status['child_order_status'] == SOS_SEND_SC ){
+					}*/elseif( $order_status['child_order_status'] == SOS_SEND_SC ){
 
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_UNCONFIRMED);
 						
 					}elseif( $order_status['child_order_status'] == SOS_SEND_PC2 ){
 
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_SC);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_UNCONFIRMED);
 
-					}elseif( $order_status['child_order_status'] == SOS_ARR_CC ){
-
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC2);
-					
-					}elseif( $order_status['child_order_status'] == SOS_ARR_PC ){
-
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_CC);
-					
-					}elseif( $order_status['child_order_status'] == SOS_ARR_SC ){
-
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC);
-					
 					}else{
 
 						break;
 					}
+
+					//额度回滚到现金
+					$return_amount = $order_status['order_amount_send_buyer'];
+					$update_contract_sql = ' UPDATE ' . $GLOBALS['ecs']->table('contract') . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $return_amount;
+					$GLOBALS['db']->query( $update_contract_sql );
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
@@ -1736,7 +1716,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}					
 					break;
 				case '撤销订单'://更改子订单状态 恢复主订单商品对应子订单的数量 判断是否可以取消主订单
-					if( $order_status['child_order_status'] == SOS_CANCEL || $order_status['child_order_status'] == SOS_ARR_PC2){//已经为撤销、完成的状态 不做处理
+					if( $order_status['child_order_status'] >= SOS_SEND_CC ){//已验签的 无法取消订单
 						break;
 					}
 
@@ -2330,8 +2310,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '订单不存在');
 			}
 
-			if( $order_status['child_order_status'] >= SOS_SEND_CC ){//客户已验签(发货)
-				make_json_response('', '-1', '订单状态为客户已验签(发货)，无法改价');
+			if( $order_status['child_order_status'] > SOS_SEND_PC ){//平台已验签(发货)
+				make_json_response('', '-1', '发货验签完毕，无法修改到货改价');
 			}
 
 			$goods_number = $order_status['goods_number'];
@@ -2459,6 +2439,35 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '发货改价失败');
 			}
 
+		}
+
+		
+	   	/**
+		 * 接口名称: 修改采购价格
+		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "initPriceArr",
+	     *      "parameters": {
+	     *          "params": {
+	     *          	"order_id":142//订单ID
+	     *          	""
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+	     *  	"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "到货改价信息获取成功",
+		 *	    "content": {}
+		 *	      	
+	     *  }
+		 */
+		public function updatePurchasePrice()
+		{
+			// $
 		}
 
 		/**
@@ -2779,8 +2788,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '订单不存在');
 			}
 
-			if( $order_status['child_order_status'] >= SOS_ARR_CC ){//客户已验签(到货)
-				make_json_response('', '-1', '订单状态为客户已验签(到货)，无法改价');
+			if( $order_status['child_order_status'] < SOS_SEND_PC2 ){//未发货
+				make_json_response('', '-1', '尚未进行发货验签，无法到货改价');
+			}
+
+			if( $order_status['child_order_status'] >= SOS_ARR_PC2 ){//到货验签（平台验签完）
+				make_json_response('', '-1', '到货验签完毕，无法到货改价');
 			}
 
 			$goods_number = $order_status['goods_number'];
