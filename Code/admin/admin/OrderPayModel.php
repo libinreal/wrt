@@ -18,7 +18,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		exit;
 	}
 	
-	class OrderInfoModel {
+	class OrderPayModel {
 	
 		//$_POST
 		protected $content = false;
@@ -222,5 +222,5 @@ require(dirname(__FILE__) . '/includes/init.php');
 	}
 	
 	$content = jsonAction();
-	$orderModel = new OrderInfoModel($content);
+	$orderModel = new OrderPayModel($content);
 	$orderModel->run();

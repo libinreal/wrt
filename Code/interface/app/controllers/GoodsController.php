@@ -1032,7 +1032,7 @@ class GoodsController extends ControllerBase {
 			} else {
 				$price = $cartResult->price * (1+($cartResult->price_rate/100));
 			}
-			$orderGoods->goodsPrice = $price;
+			$orderGoods->goodsPrice = $cartResult->price;//供应商报价
 
 			$orderGoods->goodsPriceAdd = $price;
 			$orderGoods->contractNums = $cartResult->nums;

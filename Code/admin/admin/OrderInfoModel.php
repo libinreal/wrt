@@ -2311,7 +2311,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			if( $order_status['child_order_status'] > SOS_SEND_PC ){//平台已验签(发货)
-				make_json_response('', '-1', '发货验签完毕，无法修改到货改价');
+				make_json_response('', '-1', '发货验签完毕，无法发货改价');
 			}
 
 			$goods_number = $order_status['goods_number'];
