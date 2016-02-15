@@ -464,6 +464,7 @@ class Price extends ManageModel
      *                  "cat_id"       : "(int)", 
      *                  "brand_id"     : "(int)", 
      *                  "suppliers_id" : "(int)", 
+     *                  "type"         : "(int)", //加价方式筛选 0全部 1批量 2单个加价
      *                  "attributes"   : [
      *                      {
      *                          "attr_id"     : "(int)", 
@@ -480,6 +481,7 @@ class Price extends ManageModel
     public function priceList($entity, $parameters) 
     {
         self::init($entity, 'goods');
+        parent::checkParams(array('limit', 'offset'));
         $params = $parameters['params'];
         $psWhere = $params['where'];
         
@@ -487,6 +489,7 @@ class Price extends ManageModel
         $catId = $psWhere['cat_id'];
         $brandId = $psWhere['brand_id'];
         $suppliersId = $psWhere['suppliers_id'];
+        $type = $psWhere['type'];
         $attributes = $psWhere['attributes'];
         $where = '';
         
@@ -503,14 +506,21 @@ class Price extends ManageModel
         
         //筛选条件
         if ($catId && $cateList) {
-            $where .= ' and cat_id in('.implode(',', $cateList).')';
+            $where .= ' AND cat_id in('.implode(',', $cateList).')';
         }
         if ($brandId) {
-            $where .= ' and brand_id='.$brandId;
+            $where .= ' AND brand_id='.$brandId;
         }
         if ($suppliersId) {
-            $where .= ' and suppliers_id='.$suppliersId;
+            $where .= ' AND suppliers_id='.$suppliersId;
         }
+        
+        if ($type == 1) {
+        	$where .= ' AND price_type=0 AND price_num!=0 AND price_rate!=0 AND price_rule!=0';
+        } elseif ($type == 2) {
+        	$where .= ' AND price_type=1';
+        }
+        
         
         //当传值属性筛选时，不用mysql limit
         $useLimit = true;

@@ -2,6 +2,8 @@
 class ManageModel 
 {
     protected static $_instance;
+	protected $params;
+	protected $diff;
     
     protected function __construct() {}
     protected function __clone() {}
@@ -16,12 +18,41 @@ class ManageModel
     
     public function run($json) 
     {
-        $command = $json['command'];
-        $entity = $json['entity'];
-        $parameters = $json['parameters'];
+        $command      = $json['command'];
+        $entity       = $json['entity'];
+        $parameters   = $json['parameters'];
+        $this->params = $parameters;
         static::$command($entity, $parameters);
     }
     
+    
+    /**
+     * 检查传参
+     * @param array $has
+     * @desc  just check a part of parameters,params.not check where,another part of params
+     */
+    protected function checkParams($has) 
+    {
+    	$request = array();
+    	$params  = $this->params;
+    	foreach ($params as $k=>$v) {
+    		if ($k != 'params') {
+    			array_push($request, $k);
+    		} elseif ($k == 'params' && is_array($v) && $v) {
+    			foreach ($v as $pk=>$pv) {
+    				if ($pk != 'where') {
+    					array_push($request, $pk);
+    				}
+    			}
+    		}
+    	}
+    	
+    	$diff = array_diff($has, $request);
+    	$this->diff = $diff;
+    	if ($diff) {
+    		return failed_json('传参错误');
+    	}
+    }
     
     
     /**

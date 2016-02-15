@@ -83,7 +83,21 @@ class ApplyCreditController extends ControllerBase
 			return ResponseApi::send(null, -1, 'login please');
 		}
 		
-		$condition = 'status!=4';
+		//总账号登录，显示总账号及其子帐号的申请授信信息
+		$result = Users::find(array(
+				'conditions' => 'parent_id = '.$userId.' or id='.$userId,
+				'columns' => 'id'
+		));
+		$user = array();
+		if(is_object($result) && $result->count()) {
+			$user = $result->toArray();
+		}
+		$userId = array();
+		foreach ($user as $v) {
+			$userId[] = $v['id'];
+		}
+		
+		$condition = 'status!=4 AND user_id IN ('.implode(',', $userId).')';
 		if ($forward or !$applyId) {
 			if (!empty($condition)) $condition .= ' AND ';
 			$condition .= 'apply_id>'.$applyId;
@@ -102,7 +116,7 @@ class ApplyCreditController extends ControllerBase
 			return ResponseApi::send(null, -1, 'error:select false');
 		}
 		$userId = array();
-		$status = array('审核中', '审核通过', '审批通过', '审批失败');
+		$status = array('审核中', '审批中', '审批通过', '审批失败');
 		foreach ($data as $k=>$v) {
 			$userId[] = $v['user_id'];
 			$data[$k]['create_date'] = substr($v['create_date'], 0, 10);
@@ -151,6 +165,16 @@ class ApplyCreditController extends ControllerBase
 			return ResponseApi::send(null, -1, 'wrong parameter `status` value');
 		}
 		
+		//查看当前用户是否为总账号
+		$users = Users::findFirst(array(
+				'conditions' => 'id='.$userId, 
+				'columns'    => 'parent_id'
+		))->toArray();
+		if ($users['parent_id'] == 0) {
+			$status = 1;
+		}
+		
+		//申请
 		$applyCredit = new CreditModel();
 		$result = $applyCredit->create(array(
 				'user_id' => $userId, 
@@ -210,8 +234,8 @@ class ApplyCreditController extends ControllerBase
 		}
 		
 		$contract = ContractModel::findFirst(array(
-				'conditions' => 'contract_id='.$applyCredit['contract_id'], 
-				'columns'    => 'contract_id,contract_name'
+				'conditions' => 'id='.$applyCredit['contract_id'], 
+				'columns'    => 'id AS contract_id,name AS contract_name'
 		))->toArray();
 		if ($contract === false) {
 			return ResponseApi::send(null, -1, 'error:select contract false');
@@ -228,9 +252,11 @@ class ApplyCreditController extends ControllerBase
 		if ($result === false) {
 			return ResponseApi::send(null, -1, 'error:wrong data');
 		}
-		$status = array('审核中', '审核通过', '审批通过', '审批失败');
+		$action = ($result['status'] == 0) ? 1 : 0;
+		$status = array('审核中', '审批中', '审批通过', '审批失败');
 		$result['create_date'] = substr($result['create_date'], 0, 10);
 		$result['status'] = $status[$result['status']];
+		$result['action'] = $action;
 		return ResponseApi::send($result);
 	}
 	
@@ -242,8 +268,9 @@ class ApplyCreditController extends ControllerBase
 		$userId = $this->get_user()->id;
 		
 		$data = ContractModel::query()
-				->where('customer_id='.$userId)
-				->columns('contract_id,contract_name')
+				->where('userId='.$userId)
+				->orWhere('customerId='.$userId)
+				->columns('id AS contract_id,name AS contract_name')
 				->execute()
 				->toArray();
 		if ($data === false) {

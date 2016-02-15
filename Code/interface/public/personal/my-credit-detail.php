@@ -34,7 +34,7 @@
 			<span>自有授信申请信息</span>
 		</div>
 		<div class="info-border first">
-			<div class="info-head clearfix"><span class="women">收货人信息</span><span>中交物融大宗物流配送</span></div>
+			<div class="info-head clearfix"></div>
 			<div><span class="women">申请人：<!--[= account || '--']--></span><span>申请时间：<!--[= create_date || '--']--></span></div>
 			<div><span class="women">用途：<!--[= contract_name || '--']--></span><span>申请额度：<!--[= apply_amount || '--']--></span></div>
 			<div><span class="women">所属单位：<!--[= companyName || '--']--></span><span>审批额度：<!--[= check_amount || '--']--></span></div>
@@ -47,6 +47,10 @@
 		<div class="info-border">
 			<div class="info-head">申请附件</div>
 			<div><span><img src="/public/apply_attachment/<!--[= img || '--']-->" /></span></div>
+		</div>
+		<div class="info-border">
+			<button class="info-head" style="display:none;cursor:pointer;" id="checkApply">审核通过</button>
+			<div></div>
 		</div>
 	</div>
 	

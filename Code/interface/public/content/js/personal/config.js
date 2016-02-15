@@ -32,8 +32,9 @@ define(function(require, exports, module) {
     config.creditList     = config.server + '/applyCredit/creditList';//自有授信列表
     config.getCreditDetail= config.server + '/applyCredit/creditSingle';//自有授信详情
     config.CreditAdd      = config.server + '/applyCredit/creditAdd';//申请自有授信
-    config.CreditContract = config.server + '/applyCredit/contractList';//申请自有授信
+    config.CreditContract = config.server + '/applyCredit/contractList';//申请自有授信用途列表
     config.applyAttachment= config.server + '/applyCredit/uploadAttach';//上传申请附件
+    config.checkApply     = config.server + '/applyCredit/updateStatus';//审核自有授信
 
     config.getlist = config.server + '/order/getlist';//我的订单-列表
     config.getdetail = config.server + '/order/getdetail';//我的订单-详情

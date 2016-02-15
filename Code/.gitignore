@@ -22,3 +22,4 @@ interface/.project
 interface/.settings/
 interface/.swp
 interface/app/cache/
+interface/public/apply_attachment/

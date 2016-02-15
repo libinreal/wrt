@@ -104,12 +104,11 @@ class Contract extends ManageModel
     public function catList($entity, $parameters) 
     {
         self::init($entity, 'goods_type');
-        $this->table = 'category';
-        
+
+        //获取所有物料
         $this->table = 'category';
         self::selectSql(array(
         		'fields' => array( 'cat_id', 'cat_name', 'parent_id' ),
-        		//'where'  => 'parent_id='.$parentId,
         		'extend' => ' ORDER BY cat_id ASC'
         ));
         $result = $this->db->getAll($this->sql);
@@ -191,19 +190,42 @@ class Contract extends ManageModel
      * {
      *      "command" : "userList", 
      *      "entity"  : "users", 
-     *      "parameters" : {}
+     *      "parameters" : {
+     *      	"type" : "int" //0销售合同 1采购合同
+     *      }
      * }
      */
     public function userList($entity, $parameters) 
     {
         self::init($entity, 'users');
-        self::selectSql(array(
-            'fields' => array( 'user_id', 'companyName', 'user_name' ), 
-            'where'  => ' alias=0 AND parent_id=0', 
-            
-        ));
-        $res = $this->db->getAll($this->sql);
-        make_json_result($res);
+        $type = intval($parameters['type']);
+        if (!$type) {
+        	//销售合同客户列表
+        	self::selectSql(array(
+        			'fields' => array( 'user_id', 'companyName', 'user_name' ),
+        			'where'  => ' alias=0 AND parent_id=0'
+        	));
+        	$res = $this->db->getAll($this->sql);
+        	return make_json_result($res);
+        }
+        elseif ($type == 1) {
+        	//采购合同客户列表---供应商列表
+        	//搜索供应商先从admin_user表里查找再到suppliers里查询信息
+	        $this->table = 'admin_user';
+	        self::selectSql(array(
+	            'as'     => 'a', 
+	            'fields' => array(
+	                's.suppliers_id', 
+	                's.suppliers_name'
+	            ), 
+	            'join'   => 'LEFT JOIN suppliers AS s on a.suppliers_id=s.suppliers_id', 
+	            'where'  => 'a.role_id=2 and a.suppliers_id<>0 and s.is_check=1', 
+	            'extend' => ' ORDER BY s.suppliers_id ASC'
+	        ));
+	        $res = $this->db->getAll($this->sql);
+	        return make_json_result($res);
+        }
+        return make_json_result('传参`type`错误');
     }
     
     
@@ -221,16 +243,17 @@ class Contract extends ManageModel
     public function kidUser($entity, $parameters) 
     {
     	self::init($entity, 'users');
+    	parent::checkParams(array('parent_id'));
     	$parentId = $parameters['parent_id'];
-    	if (!$parentId) {
-    		failed_json('传参错误');
-    	}
+    	
+    	//查找子帐号
     	self::selectSql(array(
     			'fields' => array( 'user_id', 'user_name' ),
-    			'where'  => ' alias=0 AND parent_id='.$parentId,
-    	
+    			'where'  => 'alias=0 AND parent_id='.$parentId
     	));
     	$res = $this->db->getAll($this->sql);
+    	
+    	//如果没有子帐号，返回此账号信息
     	/* if (empty($res)) {
     		self::selectSql(array(
     				'fields' => array( 'user_id', 'user_name' ),
@@ -239,6 +262,7 @@ class Contract extends ManageModel
     		));
     		$res = $this->db->getAll($this->sql);
     	} */
+    	
     	make_json_result($res);
     }
     
@@ -256,33 +280,30 @@ class Contract extends ManageModel
     public function singleCont($entity, $parameters) 
     {
         self::init($entity, 'contract');
-        
+        parent::checkParams(array('contract_id'));
         $contractId = $parameters['contract_id'];
-        if ( !$contractId ) failed_json('没有传参`contract_id`');
         
-        //获取数据
+        //获取合同信息
         self::selectSql(array(
-            'fields' => 'c.*,u.companyName', 
+            'fields' => 'c.*,FROM_UNIXTIME(c.start_time,"%Y-%m-%d") AS start_time,FROM_UNIXTIME(c.end_time,"%Y-%m-%d") AS end_time,u.companyName', 
             'as'     => 'c', 
             'join'   => 'LEFT JOIN users AS u on c.customer_id=u.user_id', 
-            'where'  => ' contract_id='.$contractId
+            'where'  => 'contract_id='.$contractId
         ));
         $res = $this->db->getRow($this->sql);
         
-        $res['start_time'] = date('Y-m-d H:i:d', $res['start_time']);
-        $res['end_time'] = date('Y-m-d H:i:d', $res['end_time']);
-        
+        //合同下的物料信息
         $this->table = 'contract_category';
         self::selectSql(array(
             'fields' => array(
                 'c.contract_id', 
-                'g.cat_id', 
-                'g.cat_name'
+                'a.cat_id', 
+                'a.cat_name'
             ), 
-            'as'     => 'cc', 
-            'join'   => 'LEFT JOIN contract AS c on cc.contract_id=c.contract_id'
-                        .' LEFT JOIN goods_type AS g on cc.category_id=g.cat_id', 
-            'where'  => 'cc.contract_id='.$contractId
+            'as'     => 'ca', 
+            'join'   => 'LEFT JOIN contract AS c on ca.contract_id=c.contract_id'
+                        .' LEFT JOIN category AS a on ca.category_id=a.cat_id', 
+            'where'  => 'ca.contract_id='.$contractId
         ));
         $cat = $this->db->getAll($this->sql);
         
@@ -406,8 +427,8 @@ class Contract extends ManageModel
                 }
             }
             
-            $res[$k]['start_time'] = date('Y-m-d H:i:s', $v['start_time']);
-            $res[$k]['end_time'] = date('Y-m-d H:i:s', $v['end_time']);
+            $res[$k]['start_time'] = date('Y-m-d', $v['start_time']);
+            $res[$k]['end_time'] = date('Y-m-d', $v['end_time']);
         }
         
         self::selectSql(array(
@@ -617,6 +638,7 @@ class Contract extends ManageModel
             $where .= ' and s.region_id='.$region_id;
         }
         
+        //搜索供应商先从admin_user表里查找再到suppliers里查询信息
         $this->table = 'admin_user';
         self::selectSql(array(
             'as'     => 'a', 
@@ -682,7 +704,7 @@ class Contract extends ManageModel
                 'contract_id', 
                 'contract_name'
             ), 
-            'where' => 'contract_type=2 '.$where, 
+            'where' => 'contract_type=1 '.$where, //销售合同
         ));
         $res = $this->db->getAll($this->sql);
         make_json_result($res);

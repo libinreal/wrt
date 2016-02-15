@@ -333,7 +333,7 @@ class ApplyCredit extends ManageModel
 	 *		"apply_id"     : "(int)",
 	 * 		"check_remark" : "(string)",
 	 *		"check_amount" : "(string)",
-	 *		"status"       : "(int)" //1 yes 2 no
+	 *		"status"       : "(int)" //1 yes 0 no
 	 * }
 	 */
 	private function passApplyCredit($params) 
@@ -342,7 +342,7 @@ class ApplyCredit extends ManageModel
 		$remark  = $params['check_remark'];
 		$amount  = $params['check_amount'];
 		$status  = $params['status'];
-		if (!$applyId or !$amount or !$status) 
+		if (!$applyId or !$amount) 
 			failed_json('传参错误');
 		
 		$status = ($status == 1) ? 2 : 3;

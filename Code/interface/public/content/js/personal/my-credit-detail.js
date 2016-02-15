@@ -1,4 +1,4 @@
-define(function(require) {
+define(function(require, exports) {
 	var $ = require('jquery'),
 	    config = require('./config'),
 	    Ajax = require('../base/ajax'),
@@ -18,5 +18,28 @@ define(function(require) {
         if (response.code != 0) {
             return;
         }
+        if (response.body.action) {
+        	$('#checkApply').show();
+        }
     });
+	
+	//审核通过
+	$('#checkApply').on('click', function (){
+		checkApply();
+	});
+	
+	function checkApply (){
+		Ajax.custom({
+            url: config.checkApply,
+            data: {
+                id: applyId,
+            }
+        }, function(response) {
+            if (response.code != 0) {
+                Tools.showToast('审核失败');
+                return;
+            }
+            
+        });
+	}
 });
