@@ -48,8 +48,8 @@
 			<div class="info-head">申请附件</div>
 			<div><span><img src="/public/apply_attachment/<!--[= img || '--']-->" /></span></div>
 		</div>
-		<div class="info-border">
-			<button class="info-head" style="display:none;cursor:pointer;" id="checkApply">审核通过</button>
+		<div class="info-border last-div">
+			
 			<div></div>
 		</div>
 	</div>
@@ -61,6 +61,7 @@
 <script>
 	seajs.use('../content/js/personal/main');
 	seajs.use('../content/js/personal/my-credit-detail');
+
 </script>
 
 </body>

@@ -19,27 +19,27 @@ define(function(require, exports) {
             return;
         }
         if (response.body.action) {
-        	$('#checkApply').show();
+        	$('.last-div').append('<a class="button" href="javascript:void(0);" id="checkApply">审核通过</a><div></div>');
         }
     });
 	
 	//审核通过
-	$('#checkApply').on('click', function (){
-		checkApply();
-	});
-	
-	function checkApply (){
+	$('#zj-detail').on('click', '#checkApply', function (){
 		Ajax.custom({
             url: config.checkApply,
             data: {
-                id: applyId,
+            	apply_id: applyId,
             }
         }, function(response) {
             if (response.code != 0) {
-                Tools.showToast('审核失败');
+                Tools.showAlert('审核失败');
                 return;
             }
+            Tools.showAlert('审核成功', '', function (){
+            	location.reload();
+            });
             
         });
-	}
+	});
+	
 });

@@ -252,6 +252,7 @@ class ApplyCreditController extends ControllerBase
 		if ($result === false) {
 			return ResponseApi::send(null, -1, 'error:wrong data');
 		}
+		
 		$action = ($result['status'] == 0) ? 1 : 0;
 		$status = array('审核中', '审批中', '审批通过', '审批失败');
 		$result['create_date'] = substr($result['create_date'], 0, 10);
