@@ -292,6 +292,10 @@ class Contract extends ManageModel
         ));
         $res = $this->db->getRow($this->sql);
         
+        if ($res['end_time'] < date('Y-m-d')) {
+        	$res['contract_status'] = 2;
+        }
+        
         //合同下的物料信息
         $this->table = 'contract_category';
         self::selectSql(array(
