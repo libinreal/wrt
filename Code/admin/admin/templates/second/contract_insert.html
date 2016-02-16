@@ -25,8 +25,8 @@
 						<td class="title">合同金额：</td><td><input type="text" name="contract_amount" data-rule-required="true" data-rule-number="true"></td>
 						<td class="title">合同状态：</td>
 						<td><select name="contract_status">
-							<option value="1">生效</option>
-							<option value="0">过期</option>
+							<option value="0">作废</option>
+							<option value="1" selected="selected">生效</option>
 						</select></td>
 					</tr>
 					<tr>
@@ -35,12 +35,12 @@
 						<td><select name="customer_id" style="width:80px;" onchange="changeUsername()" data-rule-required="true">
 						</select></td>
 						<td class="title">子账号：</td>
-						<td>
+						<td id="user_id_display">
 							<select id="user_id" name="user_id" data-rule-required="true"></select>
 							<input type="hidden" name="user_name" data-rule-required="true">
 						</td>
 						<td class="title">合同类型：</td>
-						<td><select name="contract_type">
+						<td><select name="contract_type" onchange="changeUser()">
 							<option value="1">销售合同</option>
 							<option value="2">采购合同</option>
 						</select></td>
@@ -142,7 +142,23 @@ Contract.getGoodsType(false);
 Contract.getUserList();
 Contract.getOrgList();
 function changeUsername(){
-	Contract.getKidUser($("select[name=customer_id] option:selected").val())
+	var type = $("select[name=contract_type] option:selected").val();
+	if(type == 1){
+		return false;
+	}
+	Contract.getKidUser($("select[name=customer_id] option:selected").val());
+}
+function changeUser(){
+	var type = $("select[name=contract_type] option:selected").val();
+	if(type == 1){
+		Contract.getUserList(false, false, 1);
+		$("#user_id").css("display","none");
+		$('#is_rate_visible').css("display", "none")
+	}else{
+		Contract.getUserList();
+		$("#user_id").css("display","block");
+		$('#is_rate_visible').css("display", "block")
+	}
 }
 </script>
 	</body>

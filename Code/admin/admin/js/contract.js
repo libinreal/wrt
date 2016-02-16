@@ -185,6 +185,7 @@ var Contract = {
 		var strJson = createJson("singleCont", "contract", params);
 		var that = this;
 		$.post(this.url, strJson, function(obj){
+			console.log(obj.content)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -194,7 +195,14 @@ var Contract = {
 					that.getOrgList(value);
 				}
 				if(key == "customer_id"){
-					that.getUserList(value, obj.content.data.user_id);
+					if(obj.content.data.contract_type == 1){
+						that.getUserList(value, obj.content.data.user_id);
+					}else if(obj.content.data.contract_type == 2){
+						that.getUserList(value, false, 1);
+						$("#user_id").attr("disabled","disabled");
+						$("input[name=user_name]").attr("disabled","disabled");
+						$("#user_id").css("display","none");
+					}
 				}
 				if(key == "contract_type"){
 					if(value == 1){
@@ -472,8 +480,12 @@ var Contract = {
 		}, "json");
 	},
 
-	getUserList: function(customer_id, user_id){
-		var params = {"params":{}};
+	getUserList: function(customer_id, user_id, type){
+		if(type){
+			var params = {"type": type};
+		}else{
+			var params = {};
+		}
 		var strJson = createJson("userList", "users", params);
 		var that = this;
 		$.post(this.url, strJson, function(obj){
@@ -482,23 +494,31 @@ var Contract = {
 				return false;
 			}else{
 				var row = '';
-				if(customer_id){
-					if(user_id){
-						that.getKidUser(customer_id, user_id);	
+				if(!type){
+					if(customer_id){
+						if(user_id){
+							that.getKidUser(customer_id, user_id);	
+						}else{
+							that.getKidUser(customer_id);	
+						}
 					}else{
-						that.getKidUser(customer_id);	
+						that.getKidUser(obj.content[0].user_id);
 					}
-				}else{
-					that.getKidUser(obj.content[0].user_id);
 				}
 				$.each(obj.content, function(k,v){
 					if(typeof(customer_id) !== 'undefined' && v.user_id == customer_id){
 						row += appendOption(v.user_id, v.companyName, 1, v.user_name);
+					}else if(typeof(customer_id) !== 'undefined' && v.suppliers_id == customer_id){
+						row += appendOption(v.suppliers_id, v.suppliers_name, 1);
 					}else{
-						row += appendOption(v.user_id, v.companyName, 0, v.user_name);
+						if(type){
+							row += appendOption(v.suppliers_id, v.suppliers_name, 0);
+						}else{
+							row += appendOption(v.user_id, v.companyName, 0, v.user_name);
+						}
 					}
 				});
-				$("select[name=customer_id]").append(row);
+				$("select[name=customer_id]").html(row);
 			}
 		}, "json");
 		$('#message_area').html('');
