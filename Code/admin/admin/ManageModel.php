@@ -3,7 +3,6 @@ class ManageModel
 {
     protected static $_instance;
 	protected $params;
-	protected $diff;
     
     protected function __construct() {}
     protected function __clone() {}
@@ -48,10 +47,10 @@ class ManageModel
     	}
     	
     	$diff = array_diff($has, $request);
-    	$this->diff = $diff;
     	if ($diff) {
     		return failed_json('传参错误');
     	}
+    	return $params;
     }
     
     

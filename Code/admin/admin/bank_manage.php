@@ -81,7 +81,8 @@ class Bank extends ManageModel
 	{
 		self::init($entity, 'bank');
 		self::selectSql(array(
-				'fields' => '*'
+				'fields' => '*', 
+				'extend' => 'ORDER BY create_time DESC'
 		));
 		$res = $this->db->getAll($this->sql);
 		make_json_result($res);
@@ -137,34 +138,41 @@ class Bank extends ManageModel
 	public function bankAdd($entity, $parameters) 
 	{
 		self::init($entity, 'bank');
+		parent::checkParams(array(
+				'flag', 
+				'bank_name', 
+				'bank_num', 
+				'bank_addr', 
+				'bank_tel', 
+				'bank_fax'
+		));
+		$params   = $parameters['params'];
+		
 		$bankId = intval($parameters['bank_id']);
 		$flag   = intval($parameters['flag']);
-		if (!$bankId && $flag) {
-			failed_json('传参错误');
-		}
-		$params   = $parameters['params'];
 		$bankName = $params['bank_name'];
 		$bankNum  = $params['bank_num'];
 		$bankAddr = $params['bank_addr'];
 		$bankTel  = $params['bank_tel'];
 		$bankFax  = $params['bank_fax'];
 		
-		if (!$bankName || !$bankNum || !$bankAddr || !$bankTel ||!$bankFax) {
-			failed_json('传参错误');
-		}
-		
 		$where = '';
-		if ($flag) {
-			$where = ' AND bank_id!='.$bankId;
+		//修改登记机构
+		if ($flag && !$bankId) {
+			return failed_json('没有传参`bank_id`');
+		} elseif ($flag && $bankId) {
+			$where .= ' AND bank_id!='.$bankId;
 		}
-		//查看银行编号是否存在
+		$where .= ' OR bank_name="'.$bankName.'"';
+		
+		//银行编号、银行名称是否重复
 		$this->selectSql(array(
 				'fields' => 'COUNT(*) AS num', 
 				'where'  => 'bank_num="'.$bankNum.'"'.$where
 		));
 		$result = $this->db->getOne($this->sql);
 		if ($result > 0) {
-			return failed_json('该银行编号已经存在');
+			return failed_json('该银行编号或名称已经存在');
 		}
 		
 		//修改或添加

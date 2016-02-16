@@ -701,7 +701,7 @@ class Contract extends ManageModel
         if ($cutomerId < 0) make_json_result(array());
         
         if ($cutomerId > 0) {
-            $where = ' and customer_id='.$cutomerId;
+            $where = ' AND customer_id='.$cutomerId;
         }
         self::selectSql(array(
             'fields' => array(
@@ -710,6 +710,7 @@ class Contract extends ManageModel
             ), 
             'where' => 'contract_type=1 '.$where, //销售合同
         ));
+        
         $res = $this->db->getAll($this->sql);
         make_json_result($res);
     }
@@ -800,7 +801,7 @@ class Contract extends ManageModel
         self::init($entity, 'contract_suppliers');
         
         $params = $parameters['params'];
-        $where = '';
+        $where = 'c.contract_type=1';
         
         $customerId = intval($params['where']['customer_id']);
         $contractId = intval($params['where']['contract_id']);
@@ -818,6 +819,7 @@ class Contract extends ManageModel
             if (!empty($where)) $where .= ' and ';
             $where .= 's.region_id='.$regionId;
         }
+        
         
         //page
         if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
