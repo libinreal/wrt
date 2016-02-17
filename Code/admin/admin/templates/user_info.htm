@@ -153,7 +153,9 @@
             				{/if}
             			{/foreach}
             		</select>
+                    {if $form_action eq "insert"}
                     <span class="require-field" id="field-parentId">*</span>
+                    {/if}
             	</td>
             </tr>
             <tr>
@@ -380,6 +382,13 @@
             }
         }
         {/literal}
+        {else}
+        {literal}
+        if($("select[name='parent_id']").val() == '0') {
+            $("#field-parentId").html("必须选择总账号");
+            return false;
+        }
+        {/literal}
         {/if}
         {literal}
         if($("#companyName").val()=='') {
@@ -407,10 +416,6 @@
             return false;
         }
 
-        if($("select[name='parent_id']").val() == '0') {
-            $("#field-parentId").html("必须选择总账号");
-            return false;
-        }
         var docRank = document.getElementById("rank");
         var objIndex = docRank.options.selectedIndex;
         var objVal = docRank.options[objIndex].value;
