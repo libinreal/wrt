@@ -522,7 +522,7 @@ function user_list()
             $ex_where .= " AND customNo>=".$customNo." AND customNo< ".$customNoMax."";
         }
         if ($filter['company']) {
-            $ex_where .= " AND compangName like '%".$filter['company']."%' ";
+            $ex_where .= " AND companyName like '%".$filter['company']."%' ";
         }
         $filter['record_count'] = $GLOBALS['db']->getOne("SELECT COUNT(*) FROM " . $GLOBALS['ecs']->table('users') . $ex_where);
 

@@ -347,11 +347,34 @@ class ApplyCredit extends ManageModel
 		
 		$status = ($status == 1) ? 2 : 3;
 		
+		//审批
 		$fields = 'check_amount="'.$amount.'",check_remark="'.$remark.'",status="'.$status.'"';
 		$sql = 'UPDATE '.$this->table.' SET '.$fields.' WHERE apply_id='.$applyId;
 		$result = $this->db->query($sql);
-		if ($result === false) 
+		if ($result === false) {
+			$this->db->rollback();
 			failed_json('审批失败');
+		}
+		
+		/* //获取合同id
+		$this->selectSql(array(
+				'fields' => 'contract_id', 
+				'where'  => 'apply_id='.$applyId
+		));
+		$contractId = $this->db->getOne($this->sql);
+		if (!$contractId) {
+			failed_json('获取合同失败');
+		}
+		
+		//增加合同的现金额度
+		$this->table = 'contract';
+		$sql = 'UPDATE '.$this->table.' SET cash_amount_valid=cash_amount_valid+'.$amount.' WHERE contract_id='.$contractId;
+		$result = $this->db->query($sql);
+		if ($result === false) {
+			failed_json('设置额度失败');
+		}
+		 */
+		
 		make_json_result($result);
 	}
 }
