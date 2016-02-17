@@ -809,6 +809,7 @@ class Contract extends ManageModel
         
         //where
         if ($customerId > 0) {
+        	if (!empty($where)) $where .= ' and ';
             $where .= 'c.customer_id='.$customerId;
         }
         if ($contractId > 0) {
