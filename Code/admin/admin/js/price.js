@@ -27,6 +27,7 @@ var Price = {
 			var cat_id = $('#search_form select[name=cat_id]').val();
 			var brand_id = $('#search_form select[name=brand_id]').val();
 			var suppliers_id = $('#search_form select[name=suppliers_id]').val();
+			var type = $('#search_form select[name=type]').val();
 			if(cat_id != ''){
 				condition.cat_id = cat_id;
 			}
@@ -36,6 +37,7 @@ var Price = {
 			if(suppliers_id != ''){
 				condition.suppliers_id = suppliers_id;
 			}
+			condition.type = type;
 			if(search == "search"){
 				this.current_page = 1;
 				this.limit = 0;

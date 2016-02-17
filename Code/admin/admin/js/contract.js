@@ -94,7 +94,9 @@ var Contract = {
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink(that.url+"?act=contractView&id="+value.contract_id, "查看");
 								edit += createLink(that.url+"?act=contractEdit&id="+value.contract_id, "编辑");
-								edit += createLink(that.url+"?act=supplierSet&id="+value.contract_id, "绑定供应商");
+								if(value.contract_type == "销售合同"){
+									edit += createLink(that.url+"?act=supplierSet&id="+value.contract_id, "绑定供应商");
+								}
 								row += createTd(edit);
 							}
 						}
@@ -114,6 +116,7 @@ var Contract = {
 		}
 		var params = {"contract_id": id, "params":{}};
 		var strJson = createJson("singleCont", "contract", params);
+		var user_id;
 		var that = this;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -124,14 +127,16 @@ var Contract = {
 				if(key == "bank_id"){
 					that.getOrgList(value);
 				}
-				if(key == "customer_id"){
-					that.getUserList(value);
+				if(key == "user_id"){
+					user_id = value;
 				}
 				if(key == "contract_type"){
 					if(value == 1){
 						$("td#rate").html(obj.content.data.rate)
+						that.getUserList(obj.content.data.customer_id, obj.content.data.user_id);
 					}else if(value == 2){
 						$("#rate").html(createWarn("费率不可用"))
+						$(".user_id_display").css("display","none");
 					}
 				}
 				if($("td#"+key).length && key != "rate"){
