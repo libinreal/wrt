@@ -203,7 +203,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$where_str .= " WHERE `due_date` <= '" . $where['due_date2'] . "'";
 			}
 
-			$sql = $sql . $where_str . " LIMIT " . $params['limit'].",".$params['offset'];
+			$sql = $sql . $where_str . " ORDER BY `bill_id` DESC". " LIMIT " . $params['limit'].",".$params['offset'];
 			$bills = $GLOBALS['db']->getAll($sql);
 			$bills = empty( $bills ) ? array() : $bills;
 
