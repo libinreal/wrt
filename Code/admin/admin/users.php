@@ -146,7 +146,7 @@ elseif ($_REQUEST['act'] == 'insert')
 
     $insert_data = array();
     $insert_data['user_name'] = $username;
-    $insert_data['password'] = $password;
+    $insert_data['password'] = sha1($password);
     $insert_data['email'] = $email;
     $insert_data['sex'] = $sex;
     $insert_data['qq'] = $qq;

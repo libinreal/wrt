@@ -15,22 +15,10 @@
 			<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 		</div>
 		<form class="form order-form" id="order-form" action="">
-			<div class="order-no number-o2">订单号：123565656</div>
+			<div class="order-no number-o2">确认订单</div>
 			<div class="order clearfix" style='background:#fff;padding-bottom:22px'>
-				<div class="form-detail">
-					<div class="number-o2-msg">收货人信息：</div>
-					<div class="form-item" style="padding-bottom:0;padding-top:10px">
-						<div class="form-label">收&nbsp;&nbsp;货&nbsp;&nbsp;人：</div>
-						<div class="form-value number-o2-name">test</div>
-					</div>
-					<div class="form-item" style="padding-bottom:0">
-						<div class="form-label">收货地址：</div>
-						<div class="form-value number-o2-name">雁塔区长安路</div>
-					</div>
-					<div class="form-item" style="padding-bottom:10px;border-bottom:1px solid #dadada">
-						<div class="form-label">手&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机：</div>
-						<div class="form-value number-o2-name">13123230001</div>
-					</div>
+				<div class="form-detail" id="shipping-detail">
+					
 				</div>
 				<div class="form-value form-radio-group" style="line-height:50px">
 					<div class="number-o2-time">
@@ -52,7 +40,7 @@
 			</div>
 			<div class="order form-item">
 				<div class="order-no">
-					<span>订单号：045612356566</span>支付方式
+					支付方式
 				</div>
 				<ul class="bank-info form-radio-group payfor-msg clearfix" style="padding: 0;">
 					<li>
@@ -122,6 +110,21 @@
 </div><!--//section-->
 <?php include '../com/footer.php';?>
 
+<script id="zj-shipping-detail" type="text/html">
+	<div class="number-o2-msg">收货人信息：</div>
+	<div class="form-item" style="padding-bottom:0;padding-top:10px">
+		<div class="form-label">收&nbsp;&nbsp;货&nbsp;&nbsp;人：</div>
+		<div class="form-value number-o2-name"><!--[= list.name ]--></div>
+	</div>
+	<div class="form-item" style="padding-bottom:0">
+		<div class="form-label">收货地址：</div>
+		<div class="form-value number-o2-name"><!--[= list.address ]--></div>
+	</div>
+	<div class="form-item" style="padding-bottom:10px;border-bottom:1px solid #dadada">
+		<div class="form-label">手&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;机：</div>
+		<div class="form-value number-o2-name"><!--[= list.phone ]--></div>
+	</div>
+</script>
 <script id="zj-cart-tmpl" type="text/html">
 	<!--[for(i = 0; i < list.length; i++){]-->
 	<li class="clearfix" id="goods-<!--[= list[i].goodsId]-->">

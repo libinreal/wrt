@@ -12,6 +12,22 @@ define(function(require) {
         hasGodds = false;//购物车是否有商品
 
     $('input[name="addressId"]').val(addressId);
+    
+    //获取收货地址
+    Ajax.custom({
+    	url  : config.oneAddress, 
+    	data : {
+    		id  : addressId
+    	}
+    }, function (response){
+    	if (response.code != 0) {
+            return;
+        }
+    	var result = template.render('zj-shipping-detail', {
+            'list': response.body || []
+        });
+        $('#shipping-detail').html(result);
+    });
 
     //获取购物车数据
     Ajax.custom({

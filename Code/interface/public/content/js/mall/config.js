@@ -15,6 +15,9 @@ define(function(require, exports, module) {
     config.addCommon = config.server + '/goods/addCommon';
     config.addCart = config.server + '/goods/addCart';
     config.goodsCartList = config.server + '/goods/getcartList';
+    
+    config.oneAddress = config.server + '/address/detail'; //获取收货地址
+    
 
     config.favoritesSave = config.server + '/favorites/save';
     config.favoritesDelete = config.server + '/favorites/delete';
