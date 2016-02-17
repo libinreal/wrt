@@ -37,8 +37,11 @@
 					<td>中交物融</td>
 					<td class="title">客户：</td>
 					<td><select name="customer_id" style="width:200px;" disabled></select></td>
-					<td class="title">子账号：</td>
-					<td></td>
+					<td class="title"><span class="user_id_display">子账号：</span></td>
+					<td>
+						<select id="user_id" class="user_id_display" name="user_id" disabled></select>
+						<input type="hidden" name="user_name" data-rule-required="true">
+					</td>
 					<td class="title">合同类型：</td>
 					<td><select name="contract_type" disabled>
 						<option value="1">销售合同</option>
