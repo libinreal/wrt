@@ -145,6 +145,7 @@
             	<td>
             		<select name="parent_id">
             			<option value="0">请选择</option>
+                        {if $form_action == "insert" || $user.parent_id != "0"}
             			{foreach from=$parents item=v}
             				{if $user.parent_id eq $v.user_id}
             					<option value="{$v.user_id}" selected="seleced">{$v.user_name}</option>
@@ -152,8 +153,9 @@
             					<option value="{$v.user_id}">{$v.user_name}</option>
             				{/if}
             			{/foreach}
+                        {/if}
             		</select>
-                    {if $form_action eq "insert"}
+                    {if $form_action == "insert" || $user.parent_id != "0"}
                     <span class="require-field" id="field-parentId">*</span>
                     {/if}
             	</td>
@@ -382,7 +384,8 @@
             }
         }
         {/literal}
-        {else}
+        {/if}
+        {if $form_action == "insert" || $user.parent_id != "0"}
         {literal}
         if($("select[name='parent_id']").val() == '0') {
             $("#field-parentId").html("必须选择总账号");
