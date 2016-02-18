@@ -47,7 +47,7 @@ $purview['03_brand_list']       = 'brand_manage';//厂商权限
 $purview['01_shop_config']      = 'shop_config';// 积分设置
 $purview['05_area_list']        = 'area_manage';//地区管理
 $purview['suppliers_list']      = 'suppliers_manage'; // 供货商
-
+$purview['21_goods_shipping_set'] = 'goods_shipping_set';//物流费用设置
 //信用池管理
 $purview['01_credit_evaluation']  = "credit_evaluation_state";
 $purview['02_credit_quota_add']   = "credit_quota_add_state";

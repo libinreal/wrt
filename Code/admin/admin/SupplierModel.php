@@ -990,8 +990,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		public function initcategoryShippingAction()
 		{
 			$suppliers_id = $this->getSuppliersId();
-
-			if( empty( $suppliers_id ) ){
+			
+			if( empty( $suppliers_id ) || $_SESSION['action_list'] != 'all' ){
 		    	make_json_response('', '-1', '管理员账号id有误');
 		    }
 		    
