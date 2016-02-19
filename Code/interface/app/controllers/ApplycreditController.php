@@ -2,7 +2,7 @@
 use PhpRudder\Mvc\ControllerBase;
 use PhpRudder\Http\ResponseApi;
 
-class ApplyCreditController extends ControllerBase 
+class ApplycreditController extends ControllerBase 
 {
 	public function indexAction() 
 	{
