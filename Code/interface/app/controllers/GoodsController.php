@@ -1034,10 +1034,14 @@ class GoodsController extends ControllerBase {
 			}
 			$orderGoods->goodsPrice = $cartResult->price;//供应商报价
 
-			$orderGoods->goodsPriceSendBuyer = $price;
+			$orderGoods->goodsPriceSendBuyer = $price;//销售价格
 			$orderGoods->goodsNumberSendBuyer = $cartResult->nums;
+
+			$orderGoods->goodsPriceSendSaler = $cartResult->price;//供应商报价
+			$orderGoods->goodsNumberSendSaler = $cartResult->nums;
+
 			$orderGoods->contractNums = $cartResult->nums;
-			$orderGoods->contractPrice = $price;
+			$orderGoods->contractPrice = $price;//销售价格
 
 			$orderGoods->nums = $cartResult->nums;
 			//签名额外数据

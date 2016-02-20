@@ -1114,6 +1114,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			//*****************金融费计算 END **************
 
+
+			//***************** 获取供应商报价 BEGIN *************
+			$cat_sql = 'SELECT `cat_id` FROM ' . $goods_table . ' WHERE `goods_id` = ' . $goods_id;
+			$cat_id = $GLOBALS['db']->getOne( $cat_sql );
+			$goods_price_send_saler = $this->_getSuppliersPrice($suppliers_id, $goods_id, $cat_id);
+			//***************** 获取供应商报价 END *************
+
 			//创建子订单序列号
 			$childer_sn_sql = 'SELECT `order_sn` FROM ' . $order_info_table . ' WHERE `parent_order_sn` = \'' .
 					      $parent_order['order_sn'] . '\' ORDER BY `order_id` DESC';
@@ -1147,7 +1154,7 @@ require(dirname(__FILE__) . '/includes/init.php');
             $childer_order['shipping_fee'] = $shipping_fee;
 
             $childer_order['shipping_fee_send_buyer'] = $shipping_fee;
-            $childer_order['shipping_fee_send_saler'] = 0;
+            $childer_order['shipping_fee_send_saler'] = $shipping_fee;
             $childer_order['shipping_fee_arr_buyer'] = 0;
             $childer_order['shipping_fee_arr_saler'] = 0;
 
@@ -1165,7 +1172,18 @@ require(dirname(__FILE__) . '/includes/init.php');
             $childer_order['order_amount'] = $send_number * $goods_price + $shipping_fee + $finance;
 
             $childer_order['order_amount_send_buyer'] = $childer_order['order_amount'];
-            $childer_order['order_amount_send_saler'] = $childer_order['order_amount'] - $finance;
+
+            //***************采购发货信息 BEGIN***************
+			if( $goods_price_send_saler ){//供应商选择，更新单价、金额
+				$order_good['goods_price_send_saler'] = $goods_price_send_saler;
+			}else{
+				$goods_price_send_saler = $order_good['goods_price_send_saler'];
+			}
+
+			$order_amount_send_saler = $goods_price_send_saler * $send_number + $shipping_fee;
+			$childer_order['order_amount_send_saler'] = $order_amount_send_saler;
+			//***************采购发货信息 END***************
+				
             $childer_order['order_amount_arr_buyer'] = 0;
             $childer_order['order_amount_arr_saler'] = 0;
 
@@ -1191,6 +1209,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			// $GLOBALS['db']->query("START TRANSACTION");//开启事务
 			$createOrder = $GLOBALS['db']->query($childer_order_sql);
+			$new_order_id = $GLOBALS['db']->insert_id();
 
 			if( $createOrder ){
 				//子订单商品
@@ -1206,7 +1225,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				// $order_good['check_price'] = $goods_price;
 				$order_good['check_number'] = $send_number;
 				$order_good['goods_number_send_buyer'] = $send_number;//发货数量
-				$order_good['goods_price_send_buyer'] = $goods_price;//发货单价
+				$order_good['goods_price_send_buyer'] = $goods_price;//发货单价						       		
 
 				$order_good_keys = array_keys( $order_good );
 				$order_good_sql = 'INSERT INTO ' . $order_goods_table .'(';
@@ -2321,7 +2340,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
 
 			//检查订单状态
-			$order_info_sql = 'SELECT o.`child_order_status`, og.`goods_number`, og.`goods_name`, g.`goods_id`, g.`price_num`, g.`price_rate` FROM ' . $order_info_table .
+			$order_info_sql = 'SELECT o.`child_order_status`, og.`goods_name`, g.`goods_id`, g.`price_num`, g.`price_rate` FROM ' . $order_info_table .
 							  ' AS o LEFT JOIN ' . $order_goods_table . ' AS og ON o.`order_id` = og.`order_id` ' .
 							  ' LEFT JOIN ' . $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 					 		  ' WHERE o.`order_id` = ' . $order_id;
@@ -2334,25 +2353,22 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '发货验签完毕，无法发货改价');
 			}
 
-			$goods_number = $order_status['goods_number'];
+			$goods_number_send_buyer = $params['goods_number_send_buyer'];
+			$goods_price_send_buyer = (double)( $params['goods_price_send_buyer'] );
+			$goods_number_send_saler = $params['goods_number_send_saler'];
+			$goods_price_send_saler = (double)( $params['goods_price_send_saler'] );
 
-			$goods_price_add = (double)( $params['goods_price_add'] );//销售信息.加价后物料价格
-			$goods_price = (double)( $params['goods_price'] );//供货信息.物料价格
 			$suppers_id = intval( $params['suppers_id'] );//销售信息.供货商id
 
 			$shipping_fee_send_buyer = ( double )( $params['shipping_fee_send_buyer'] );//销售信息.发货物流费用
 			$financial_send = $params['financial_send'] ? (double)($params['financial_send']) : 0;//销售信息.发货金融费
 			$financial_send_rate = ( double )( $params['financial_send_rate'] / 100 );//销售信息.发货金融费
 
-			if( empty( $financial_send ) ){
-				$financial_send = $goods_price_add * $goods_number * $financial_send_rate;
-			}
-
 			$shipping_fee_send_saler = (double)( $params['shipping_fee_send_saler'] );//供货信息.发货物流费
 			$pay_id = intval( $params['pay_id'] );//支付方式id
 
-			$order_amount_send_buyer = $goods_price_add * $goods_number + $financial_send + $shipping_fee_send_buyer;
-			$order_amount_send_saler = $goods_price * $goods_number + $shipping_fee_send_saler;
+			$order_amount_send_buyer = (double)( $params['order_amount_send_buyer'] );
+			$order_amount_send_saler = (double)( $params['order_amount_send_saler'] );
 
 			$order_info = array();
 			$order_info['suppers_id'] = $suppers_id;
@@ -2381,9 +2397,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$order_goods = array();
 
-				$order_goods['goods_number'] = $goods_number;
-				$order_goods['goods_price'] = $goods_price;
-				$order_goods['goods_price_add'] = $goods_price_add;
+				$order_goods['goods_number_send_buyer'] = $goods_number_send_buyer;
+				$order_goods['goods_number_send_saler'] = $goods_number_send_saler;
+
+				$order_goods['goods_price_send_buyer'] = $goods_price_send_buyer;
+				$order_goods['goods_price_send_saler'] = $goods_price_send_saler;
 
 				foreach ($order_goods as $cn => $cv) {
 					$order_goods_update_sql .= '`' . $cn . '` = ' . $cv . ',';
@@ -2421,8 +2439,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$supplier_name = empty( $supplier ) ? '' : $supplier['suppliers_name'];
 
 					$price_log['suppliers_name'] = $supplier_name;
-					$price_log['suppliers_price'] = $goods_price;
-					$price_log['actual_price'] = $goods_price_add;
+					$price_log['suppliers_price'] = $goods_price_send_saler;
+					$price_log['actual_price'] = $goods_price_send_buyer;
 
 					$price_log['shipping_fee'] = $shipping_fee_send_buyer;
 					$price_log['financial'] = $financial_send;
@@ -2954,6 +2972,37 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			make_json_response($content, '0', '获取客户物料价格成功');
 					 		  
+		}
+
+		/**
+		 * @param $suppliers_id
+		 * @param $goods_id
+		 * @param $cat_id
+		 * 
+		 * @return $price 供应商报价
+		 */
+		private function _getSuppliersPrice($suppliers_id = 0 , $goods_id = 0, $cat_id = 0)
+		{
+
+			$goods_table = $GLOBALS['ecs']->table('goods');//物料
+			//检查订单状态
+			$goods_price_sql = 'SELECT `shop_price`, `goods_id` FROM ' . $goods_table . ' WHERE `suppliers_id` = ' .
+								$suppliers_id . ' AND `cat_id` = ' . $cat_id;
+			$goods_price = $GLOBALS['db']->getAll( $goods_price_sql );
+
+			if( empty( $goods_price ) ){
+				return 0;
+			}else{
+
+				foreach ($goods_price as $gp) {
+					if($gp['goods_id'] == $goods_id ){
+						return $gp['shop_price'];
+					}
+				}
+
+				return $goods_price[0]['shop_price'];
+
+			}
 		}
 
 		/**

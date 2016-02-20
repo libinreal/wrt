@@ -135,8 +135,10 @@ class OrderController extends ControllerBase
 				goods.price_num, 
 				goods.price_rate, 
 			    category.measure_unit goodsUnit,
-			    order_goods.goods_number orderNums,
-			    order_goods.goods_price_add changePrice,
+			    order_goods.goods_number_send_buyer orderNums,
+			    order_goods.goods_number_arr_buyer orderNumsArr,
+			    order_goods.goods_price_send_buyer changePrice,
+			    order_goods.goods_price_arr_buyer changePriceArr,
 			    order_goods.contract_number contractNums,
 			    order_goods.contract_price contractPrice,
 			    IFNULL(order_goods.check_number, 0) checkNums,
@@ -175,15 +177,27 @@ class OrderController extends ControllerBase
 				if(!preg_match('/^http:\/\//', $r['thumb'])) {
 					$r['thumb'] = $this->get_url() . $r['thumb'];
 				}
-				// $ordersum += $r['orderNums'] * $r['changePrice'];
+
+				//libin 2016-02-04
+				if( preg_match( '/-/', $order['orderSn'] ) ){//物料单价
+					if( $order['childOrderStatus'] >= SOS_ARR_CC ){
+						$r['changePrice'] = $r['changePriceArr'];
+						$r['orderNums'] = $r['orderNumsArr'];
+					}
+				}
+
+				$r['checkPrice'] = $r['contractPrice'];//验收单价 = 原始价格
+				
 				$contractsum += $r["contractNums"] * $r['contractPrice'];
 				$checksum += $r['checkNums'] * $r['checkPrice'];
+
+
 				$goodsList[] = $r;
 			}
 
 			//libin 2016-02-04
 			if( preg_match( '/-/', $order['orderSn'] ) ){
-				if( $order['childOrderStatus'] <= SOS_SEND_PC2 )
+				if( $order['childOrderStatus'] < SOS_ARR_CC )
 					$ordersum = $order['orderAmountSendBuyer'];
 				else
 					$ordersum = $order['orderAmountArrBuyer'];
@@ -203,7 +217,7 @@ class OrderController extends ControllerBase
 					goods.price_rate, 
 				    category.measure_unit goodsUnit,
 				    order_goods.goods_number orderNums,
-				    order_goods.goods_price changePrice
+				    order_goods.contract_price changePrice
 				FROM
 					order_info
 				LEFT JOIN order_goods ON order_goods.order_id = order_info.order_id
@@ -221,6 +235,7 @@ class OrderController extends ControllerBase
 					order_info.parent_order_id = ' . $id;
 			$subResult = $orderInfo->getReadConnection()->fetchAll($sqlStatementSub, PDO::FETCH_ASSOC);
 			$ordersum = $contractsum = $checksum = 0;
+
 			foreach($orderResult as $orderK=>$orderR) {
 				if(!preg_match('/^http:\/\//', $orderR['thumb'])) {
 					$orderR['thumb'] = $this->get_url() . $orderR['thumb'];
@@ -242,53 +257,21 @@ class OrderController extends ControllerBase
 				$result->setFetchMode(PDO::FETCH_ASSOC);
 				$attr = $result->fetchAll();
 				$orderR['attr'] = $attr;
-				$contractNums = $checkNums = $contractTotal = $checkTotal = 0;
-				$orderR['orderNums'] = 0;
-				array_map(function($subR) use ($goodsId, &$contractsum, &$checksum, &$contractNums, &$checksum, &$contractTotal, &$checkTotal, &$orderR) {
-					$contractsum += $subR['contract_number'] * $subR['contract_price'];
-					$checksum += $subR['goods_number_arrival'] * $subR['check_price'];
-					if($subR['goods_id'] != $goodsId) {
-						return;
-					}
-					$contractNums += $subR['contract_number'];
-					$checksum += $subR['goods_number_arrival'];
-					$contractTotal += $subR['contract_number'] * $subR['contract_price'];
-					$checkTotal += $subR['goods_number_arrival'] * $subR['check_price'];
-					if($subR['goods_id'] == $orderR['goodsId']) {
-						$orderR['orderNums'] += $subR['goods_number_arrival'];
-
-						/** 改价 子>>>>主 **/ 
-						if( intval( $subR['goods_price_add'] ) != 0 ){
-							$orderR['changePrice'] = $subR['goods_price_add'];
-						}
-					}
-
-				}, $subResult);
+				$contractNums = $checkNums = $orderR['orderNums'];
+				$contractTotal = $checkTotal = $contractsum = $checksum = $orderR['orderNums'] * $orderR['changePrice'];
+				// $orderR['orderNums'] = 0;
 				
 				$contractPrice = $contractNums ? $contractTotal / $contractNums : 0;
 				$checkPrice = $checkNums ? $checkTotal / $checkNums : 0;
 				$goodsList[] = array_merge($orderR, compact('contractNums', 'checkNums', 'contractPrice', 'checkPrice'));
 			}
-			$ordersum = 0;
+			$ordersum = $contractsum;
 			//获取所有子订单
 			$subOrder = OrderInfo::find(array(
 					'columns' => 'id',
 					'conditions' => 'parentOrderId = '.$id,
 			))->toArray();
 			$tmpArr = array_map('current', $subOrder);
-			/*
-			$ordersum = OrderGoods::sum(array(
-					'column' => 'checkPrice * checkNums',
-					'conditions' => 'orderId in ('.implode(', ', $tmpArr).')',
-			));
-			*/
-			/** @ordersum [商品总额+物流费+金融费] */
-			array_map(function($subR) use (&$ordersum) {
-				if( $subR['child_order_status'] <= SOS_SEND_PC2 )
-					$ordersum += $subR['order_amount_send_buyer'];
-				else
-					$ordersum += $subR['order_amount_arr_buyer'];
-			}, $subResult);
 
 			$orderDetail = array_merge($orderDetail, $order, compact('goodsList', 'ordersum', 'contractsum', 'checksum'));
 		}
