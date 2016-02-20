@@ -189,6 +189,22 @@ if($section == "purchase_order"){
 	}
 }
 
+if($section == "purchase_order_manage"){
+	switch ($act) {
+		case 'list':
+			$smarty->display('second/purchase_order_list.html');
+			break;
+
+		case 'detail':
+			$smarty->display('second/purchase_order_detail.html');		
+			break;
+		
+		default:
+			exit;
+			break;
+	}
+}
+
 if($section == "payment"){
 	switch ($act) {
 		case 'list':

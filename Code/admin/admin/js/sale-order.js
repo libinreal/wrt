@@ -13,9 +13,9 @@ var SaleOrder = {
 	],
 	order_status: {
 		"0":"已下单",
-		"1":"<span style='color:#00f;'>处理中</span>",
-		"2":"<span style='color:#00f;'>处理中</span>",
-		"3":"<span style='color:#00f;'>处理中</span>",
+		"1":"<span style='color:#00f;'>确认中</span>",
+		"2":"<span style='color:#00f;'>验收中</span>",
+		"3":"<span style='color:#00f;'>对账中</span>",
 		"4":"<span style='color:#999;'>已完成</span>",
 		"5":"<span style='color:#999;'>订单取消</span>"
 	},
@@ -111,7 +111,7 @@ var SaleOrder = {
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								if(value.is_cancel == "yes" && value.order_status != 3){
+								if(value.is_cancel == "yes" && value.order_status != 3 && value.order_status != 5){
 									var edit = "<span id='cancel_"+value.order_id+"'>"+createLink("javascript:void(0)", "取消", "SaleOrder.cancelOrderInit('"+value.order_id+"','"+value.order_sn+"')")+"</span>";
 								}else{
 									var edit = '';
@@ -299,7 +299,7 @@ var SaleOrder = {
 		}
 		var params = {"order_id":id};
 		strJson = createJson("childerList", this.entity, params);
-		that = this
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			console.log(obj)
 			if(obj.error == -1){
@@ -321,7 +321,7 @@ var SaleOrder = {
 								continue;
 							}
 							if(that.suborder_arr[i] == "order_status"){
-								row += createTd(that.suborder_status[value["order_status"]]);
+								row += createTd(that.suborder_status[value["child_order_status"]]);
 								continue;
 							}
 							if(value[that.suborder_arr[i]] != null){
@@ -381,9 +381,7 @@ var SaleOrder = {
 		}
 		var strJson = createJson("searchChilderList", this.entity, params);
 		var that = this
-		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -855,5 +853,45 @@ var SaleOrder = {
 			}
 		}, "json");
 		popupLayer();
+	},
+
+	getFinaceFee: function(price, number, rate, contract_sn, func){
+		var params = {"params":{"price":price, "number":number, "rate":rate, "contract_sn":contract_sn}};
+		var strJson = createJson("getFinaceFee", this.entity, params);
+		var that = this
+		var finance = 0;
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				finance = obj.content.finance;
+			}
+		}, "json").done(function(){
+			if(func){
+				window[func](finance);
+			}
+		});
+	},
+
+	getSuppliersPrice: function(){
+		var suppliers_id = $("select[name=suppers_id] option:selected").val();
+		var cat_id = $("input[name=cat_id]").val();
+		var goods_id = $("input[name=goods_id]").val();
+		var params = {"params":{"suppliers_id":suppliers_id, "cat_id":cat_id, "goods_id":goods_id}};
+		var strJson = createJson("getSuppliersPrice", this.entity, params);
+		console.log(strJson);
+		var that = this
+		var finance = 0;
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$("#goods_price_send_saler").val(obj.content.goods_price);
+			}
+		}, "json").done(function(){
+			supplierPriceChange();
+		});
 	}
 }

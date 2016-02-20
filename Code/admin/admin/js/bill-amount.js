@@ -34,6 +34,7 @@ var BillAmount = {
 			var user_name = $('#search_form input[name=user_name]').val();
 			var due_date1 = $('#search_form input[name=due_date1]').val();
 			var due_date2 = $('#search_form input[name=due_date2]').val();
+			var amount_type = $('#search_form select[name=amount_type] option:selected').val();
 			if(user_name != ''){
 				condition.like = {"user_name":user_name};
 			}
@@ -42,6 +43,9 @@ var BillAmount = {
 			}
 			if(due_date2 != ''){
 				condition.due_date2 = due_date2;
+			}
+			if(amount_type != ''){
+				condition.amount_type = amount_type;
 			}
 		}
 		if(search != false){
@@ -81,7 +85,7 @@ var BillAmount = {
 									var edit = "";
 								}else{
 									var edit = "";
-								//	var edit = createLink("demo_template.php?section=bill_manage&act=generate_view&log_id="+value.bill_amount_log_id, "详情");
+									var edit = createLink("demo_template.php?section=bill_manage&act=generate_view&log_id="+value.bill_amount_log_id, "详情");
 								}
 								row += createTd(edit);
 								continue;

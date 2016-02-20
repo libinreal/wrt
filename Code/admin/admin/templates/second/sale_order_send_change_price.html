@@ -63,13 +63,15 @@
 				<tr>
 					<td class="title"></td><td></td>
 					<td class="title">物料单价：</td>
-					<td><input type="text" name="goods_price_add" id="goods_price_add" disabled="disabled"></td>
+					<td><input type="text" name="goods_price_send_buyer" id="goods_price_send_buyer"></td>
 					<td class="title">物料数量：</td>
-					<td><input type="text" name="goods_number" id="goods_number" disabled="disabled"></td>
+					<td><input type="text" name="goods_number_send_buyer" id="goods_number_send_buyer"></td>
 				</tr>
 				<tr>
 					<td class="title">实际供应商：</td>
-					<td><select name="suppers_id" style="width:80px;"></select></td>
+					<td><select name="suppers_id" style="width:80px;" onchange="SaleOrder.getSuppliersPrice()">
+						<option value="">选择供应商</option>
+					</select></td>
 					<td class="title">金融费用比率：</td>
 					<td><input type="text" class="number" id="financial_send_rate" name="financial_send_rate" data-rule-required="true">%</td>
 					<td class="title">物流费用：</td>
@@ -77,9 +79,9 @@
 				</tr>
 				<tr>
 					<td class="title">金融费用：</td>
-					<td><input type="text" name="financial_send" id="financial_send" data-rule-required="true" data-rule-number="true" readonly="readonly"></td>
+					<td><input type="text" name="financial_send" id="financial_send" data-rule-required="true" data-rule-number="true"></td>
 					<td class="title">发货总价：</td>
-					<td><input type="text" name="order_amount_send_buyer" id="order_amount_send_buyer" disabled="disabled"></td>
+					<td><input type="text" name="order_amount_send_buyer" id="order_amount_send_buyer"></td>
 					<td></td><td></td>
 				</tr>
 			</tbody>
@@ -94,9 +96,9 @@
 			<tbody>
 				<tr>
 					<td class="title">物料单价：</td>
-					<td><input type="text" name="goods_price" id="goods_price" data-rule-required="true" data-rule-number="true"></td>
+					<td><input type="text" name="goods_price_send_saler" id="goods_price_send_saler" data-rule-required="true" data-rule-number="true"></td>
 					<td class="title">物料数量：</td>
-					<td><input type="text" name="goods_number" id="goods_number" disabled="disabled"></td>
+					<td><input type="text" name="goods_number_send_saler" id="goods_number_send_saler"></td>
 					<td class="title">物流费用：</td>
 					<td><input type="text" name="shipping_fee_send_saler" id="shipping_fee_send_saler" data-rule-required="true" data-rule-number="true"></td>
 				</tr>
@@ -104,7 +106,7 @@
 					<td class="title">付款方式：</td>
 					<td><select name="pay_id" style="width:80px;"></select></td>
 					<td class="title">发货总价：</td>
-					<td><input type="text" name="order_amount_send_saler" id="order_amount_send_saler" disabled="disabled"></td>
+					<td><input type="text" name="order_amount_send_saler" id="order_amount_send_saler"></td>
 					<td></td><td></td>
 				</tr>
 			</tbody>
@@ -116,6 +118,8 @@
 		<div align="center">
 			<input type="button" class="button" value=" 保存 " onclick="SaleOrder.updatePriceSend()"> 
 			<input type="button" class="button" value=" 取消 " onclick="javascript:history.back()">
+			<input type="hidden" name="cat_id">
+			<input type="hidden" name="goods_id">
 		</div>
 		<div>&nbsp;</div>
 		<div class="list-div" id="listDiv">
@@ -152,16 +156,40 @@
 <script type="text/javascript">
 SaleOrder.initPriceSend();
 $(document).ready(function(){
+	// 客户价格-物料单价修改
+	$('#goods_price_send_buyer').on('valuechange', function (e, previous) {
+		var price = validateNumber(parseFloat($("#goods_price_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_send_buyer").val());
+		var number = validateNumber(parseFloat($("#goods_number_send_saler").val())) == 0 ? 0 : parseFloat($("#goods_number_send_saler").val());
+		var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());;
+		var contract_sn = $("#contract_sn").text();
+		SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
+	});
+	// 客户价格-物料数量修改
+	$('#goods_number_send_buyer').on('valuechange', function (e, previous) {
+		var price = validateNumber(parseFloat($("#goods_price_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_send_buyer").val());
+		var number = validateNumber(parseFloat($("#goods_number_send_saler").val())) == 0 ? 0 : parseFloat($("#goods_number_send_saler").val());
+		var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());;
+		var contract_sn = $("#contract_sn").text();
+		SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
+	});
 	// 客户价格-金融费用比率修改
 	$('#financial_send_rate').on('valuechange', function (e, previous) {
-		customerPriceChange();
+		var price = validateNumber(parseFloat($("#goods_price_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_send_buyer").val());
+		var number = validateNumber(parseFloat($("#goods_number_send_saler").val())) == 0 ? 0 : parseFloat($("#goods_number_send_saler").val());
+		var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());;
+		var contract_sn = $("#contract_sn").text();
+		SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
 	});
 	// 客户价格-物流费用改价
 	$('#shipping_fee_send_buyer').on('valuechange', function (e, previous) {
 		customerPriceChange();
 	});
 	// 供应商价格 - 物料单价修改
-	$('#goods_price').on('valuechange', function (e, previous) {
+	$('#goods_price_send_saler').on('valuechange', function (e, previous) {
+		supplierPriceChange()
+	});
+	// 供应商价格 - 物料数量修改
+	$('#goods_number_send_saler').on('valuechange', function (e, previous) {
 		supplierPriceChange()
 	});
 	// 供应商价格 - 物流费用
@@ -170,33 +198,32 @@ $(document).ready(function(){
 	});
 });
 // 客户价格 - 价格更新
-function customerPriceChange(){
+function customerPriceChange(finance){
+	console.log()
 	// 客户价格-金融费用比率
 	var financial_send_rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());
 	// 客户价格-物料单价
-	var goods_price_add = validateNumber(parseFloat($("#goods_price_add").val())) == 0 ? 0 : parseFloat($("#goods_price_add").val());
+	var goods_price_send_buyer = validateNumber(parseFloat($("#goods_price_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_send_buyer").val());
 	// 物料数量
-	var goods_number = validateNumber(parseFloat($("#goods_number").val())) == 0 ? 0 : parseFloat($("#goods_number").val());
+	var goods_number_send_saler = validateNumber(parseFloat($("#goods_number_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_send_buyer").val());
 	// 客户价格-金融费用
-	var financial_send = financial_send_rate*goods_price_add*goods_number/100;
-	$("#financial_send").val(financial_send);
+	var financial_send = finance;
+	$("#financial_send").val(finance);
 	// 客户价格-物流费用
 	var shipping_fee_send_buyer = validateNumber(parseFloat($("#shipping_fee_send_buyer").val())) == 0 ? 0 : parseFloat($("#shipping_fee_send_buyer").val());
 	// 客户价格-发货总价
-	$("#order_amount_send_buyer").val(goods_price_add*goods_number + shipping_fee_send_buyer + financial_send);	
+	$("#order_amount_send_buyer").val(goods_price_send_buyer*goods_number_send_saler + shipping_fee_send_buyer + financial_send);	
 }
 // 供应商价格 - 价格更新
 function supplierPriceChange(){
 	// 供应商价格 - 物料单价
-	var goods_price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
+	var goods_price_send_saler = validateNumber(parseFloat($("#goods_price_send_saler").val())) == 0 ? 0 : parseFloat($("#goods_price_send_saler").val());
 	// 供应商价格 - 物料数量
-	var goods_number = validateNumber(parseFloat($("#goods_number").val())) == 0 ? 0 : parseFloat($("#goods_number").val());
+	var goods_number_send_saler = validateNumber(parseFloat($("#goods_number_send_saler").val())) == 0 ? 0 : parseFloat($("#goods_number_send_saler").val());
 	// 供应商价格 - 物流费用
 	var shipping_fee_send_saler = validateNumber(parseFloat($("#shipping_fee_send_saler").val())) == 0 ? 0 : parseFloat($("#shipping_fee_send_saler").val());
-	// 客户价格-金融费用
-	var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
 	// 供应商价格 - 发货总价
-	$("#order_amount_send_saler").val(goods_price*goods_number + shipping_fee_send_saler + financial_send);
+	$("#order_amount_send_saler").val(goods_price_send_saler*goods_number_send_saler + shipping_fee_send_saler);
 }
 </script>
 	</body>

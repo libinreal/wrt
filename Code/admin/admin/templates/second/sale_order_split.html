@@ -70,6 +70,7 @@
 		</div>
 		<div align="center" id="handle_button">
 			<input type="button" class="button" value=" 取消 " onclick="history.back()">
+			<input type="hidden" name="contract_sn">
 		</div>
 		
 		<!-- 底部 -->
@@ -97,31 +98,30 @@ $(document).ready(function(){
 			return false;
 		}
 		changeFinanceFee();
-		changeTotalAmount();
 	});
 	$('#goods_price').on('valuechange', function (e, previous) {
 		changeFinanceFee();
-		changeTotalAmount();
 	});
 	$('#rate').on('valuechange', function (e, previous) {
 		changeFinanceFee();
-		changeTotalAmount();
 	});
 	$('#shipping_fee').on('valuechange', function (e, previous) {
 		changeTotalAmount();
 	});
 });
 function changeFinanceFee(){
-	var	send_number = validateNumber(parseFloat($("#send_number").val())) == 0 ? 0 : parseFloat($("#send_number").val());
-	var rate = validateNumber(parseFloat($("#rate").val())) == 0 ? 0 : parseFloat($("#rate").val());
-	var goods_price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
-	$("#finance_fee").val(goods_price*send_number*rate/100);
+	var price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
+	var number = validateNumber(parseFloat($("#send_number").val())) == 0 ? 0 : parseFloat($("#send_number").val());
+	var rate = validateNumber(parseFloat($("#rate").val())) == 0 ? 0 : parseFloat($("#rate").val());;
+	var contract_sn = $("input[name=contract_sn]").val();
+	SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'changeTotalAmount');
 }
-function changeTotalAmount(){
+function changeTotalAmount(finance){
 	var goods_price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
 	var send_number = validateNumber(parseFloat($("#send_number").val())) == 0 ? 0 : parseFloat($("#send_number").val());
 	var shipping_fee = validateNumber(parseFloat($("#shipping_fee").val())) == 0 ? 0 : parseFloat($("#shipping_fee").val());
-	var finance_fee = validateNumber(parseFloat($("#finance_fee").val())) == 0 ? 0 : parseFloat($("#finance_fee").val());
+	var finance_fee = finance;
+	$("#finance_fee").val(finance);
 	$("#total_amount").val(goods_price*send_number + shipping_fee + finance_fee);	
 }
 </script>

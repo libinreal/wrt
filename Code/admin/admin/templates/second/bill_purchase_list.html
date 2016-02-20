@@ -25,6 +25,14 @@
 			&nbsp;至&nbsp;
 			<input type="text" id="due_date2" name="due_date2" readonly>
 			&nbsp;
+			<labe>类型：</labe>
+			<select name="amount_type">
+				<option value="">全部</option>
+				<option value="0">商票</option>
+				<option value="1">现金</option>
+				<option value="2">承兑</option>
+			</select>			
+			&nbsp;
 			<input type="button" class="button" value="搜索" onclick="BillAmount.getList('search')" />
 		</div>
 		</form>
