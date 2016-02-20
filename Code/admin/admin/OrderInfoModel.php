@@ -920,6 +920,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//商品详情
 			$good_sql = 'SELECT og.`goods_name`, og.`goods_price_send_buyer` as `goods_price`, og.`goods_number`, og.`send_number`, og.`goods_sn`, s.`suppliers_name`, s.`suppliers_id`, ' .
+						' o.`contract_sn`, ' .
 						' IFNULL(c.rate,0.00) AS `rate`, g.`cat_id` FROM ' . $order_goods_table . 
 						' AS og LEFT JOIN ' . $goods_table . ' AS g ON g.`goods_id` = og.`goods_id` LEFT JOIN ' . $suppliers_table .
 						' AS s ON s.`suppliers_id` = g.`suppliers_id` ' . ' LEFT JOIN ' . $order_info_table .' AS o ON o.`order_id` = og.`order_id` ' .
@@ -960,13 +961,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order['shipping_price_info'] = $shipping_price['shipping_fee'];
 			}
 			
-
-
 			$goods['remain_number'] = $goods['goods_number'] - $goods['send_number'];//未拆单
 			$order['split_number'] = $goods['remain_number'];//拆单数量
 			$order['finance'] = round( $goods['goods_price'] * $goods['split_number'] * $goods['rate'], 2 );//金融费
 			$order['total_price'] = round($order['finance'] + $order['shipping_price'] + $goods['goods_price'] * $order['split_number'], 2 );//发货总价
-
+			$order['contract_sn'] = strval( $goods['contract_sn'] );
 			//订单详情
 			//该类商品的供应商列表
 			$suppliers_sql = 'SELECT s.`suppliers_id`, s.`suppliers_name` FROM ' . $goods_table .
