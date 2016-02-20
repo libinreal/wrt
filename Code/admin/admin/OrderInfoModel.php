@@ -1775,7 +1775,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$msg = sprintf($msg, $childer_order_status[SOS_SEND_CC]);
 					break;
 				case SOS_SEND_PC:
-					$msg = sprintf($msg, $childer_order_status[SOS_SEND_PC];
+					$msg = sprintf($msg, $childer_order_status[SOS_SEND_PC]);
 					break;
 				case SOS_SEND_PP:
 					$msg = sprintf($msg, $childer_order_status[SOS_SEND_PP]);
@@ -1791,7 +1791,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$msg = sprintf($msg, $childer_order_status[SOS_ARR_CC]);
 					break;
 				case SOS_ARR_PC:
-					$msg = sprintf($msg, , $childer_order_status[SOS_ARR_PC]);
+					$msg = sprintf($msg, $childer_order_status[SOS_ARR_PC]);
 					break;		
 				case SOS_ARR_SC:
 					$msg = sprintf($msg, $childer_order_status[SOS_ARR_SC]);
