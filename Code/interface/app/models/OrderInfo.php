@@ -587,7 +587,9 @@ class OrderInfo extends \PhpRudder\Mvc\ModelBase
         	'order_amount_send_buyer' => 'orderAmountSendBuyer', 
         	'order_amount_send_saler' => 'orderAmountSendSaler', 
         	'order_amount_arr_buyer'  => 'orderAmountArrBuyer', 
-        	'order_amount_arr_saler'  => 'orderAmountArrSaler'
+            'order_amount_arr_saler'  => 'orderAmountArrSaler',
+            'bill_used'  => 'billUsed',
+        	'cash_used'  => 'cashUsed',
         );
     }
 

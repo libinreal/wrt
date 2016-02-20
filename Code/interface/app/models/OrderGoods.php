@@ -163,8 +163,14 @@ class OrderGoods extends \PhpRudder\Mvc\ModelBase
             'check_number' => 'checkNums', //验收数
             'cat_code' => 'cat_code',
             'wcode' => 'wcode', 
-        	'goods_number_arrival' => 'goodsNumberArrival', 
-        	'goods_price_add'      => 'goodsPriceAdd'
+        	'goods_number_send_buyer' => 'goodsNumberSendBuyer', 
+            'goods_number_send_saler'      => 'goodsNumberSendSaler',
+            'goods_number_arr_buyer'      => 'goodsNumberArrBuyer',
+            'goods_number_arr_saler'      => 'goodsNumberArrSaler',
+            'goods_price_send_buyer'      => 'goodsPriceSendBuyer',
+            'goods_price_send_saler'      => 'goodsPriceSendSaler',
+            'goods_price_arr_buyer'      => 'goodsPriceArrBuyer',
+        	'goods_price_arr_saler'      => 'goodsPriceArrSaler'
         );
     }
 

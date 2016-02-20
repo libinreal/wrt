@@ -821,11 +821,18 @@ class OrderController extends ControllerBase
 				//发货阶段扣除订单关联的合同额度
 				if( $contract_info->cashValid >= $totalAmt ){
 					$contract_info->cashValid -= $totalAmt;
+
+					$order->cashUsed = $totalAmt;//订单使用的现金总额
+
 				}else{
 					if( $contract_info->cashValid + $contract_info->billValid > $totalAmt ){//现金+票据>总金额，优先扣除现金额度
 						$bill_red = $totalAmt - $contract_info->cashValid;
 						$contract_info->cashValid = 0;
 						$contract_info->billValid -= $bill_red;
+
+						$order->cashUsed = $contract_info->cashValid;//订单使用的现金总额
+						$order->billUsed = $bill_red;//订单使用的票据总额
+
 					}else{//现金为负，优先扣除票据，让现金额度为负
 						$cash_red = $totalAmt - $contract_info->billValid;
 						$contract_info->billValid = 0;
@@ -835,6 +842,9 @@ class OrderController extends ControllerBase
 						if( $contract_info->cashValid < -10000 ){
 							return ResponseApi::send(null, Message::$_ERROR_LOGIC, "合同额度超过负1W无法验签");
 						}
+
+						$order->cashUsed = $cash_red;//订单使用的现金总额
+						$order->billUsed = $contract_info->billValid;//订单使用的票据总额
 					}
 				}
 

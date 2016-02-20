@@ -325,8 +325,6 @@ elseif ($_REQUEST['act'] == 'batch_remove')
     /* 检查权限 */
     admin_priv('users_drop');
 
-    var_dump($_POST['checkboxes']);
-
     if (isset($_POST['checkboxes']))
     {
         $userIds = implode(',',$_POST['checkboxes']);
