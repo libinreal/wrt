@@ -1024,7 +1024,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *      	"shipping_fee_send_saler":120,//物流费用
 	     *      	"financial_send_rate":0.0001,//金融费率
 	     *      	"financial_send":20,//金融费用
-	     *      	"pay_id":1//支付方式
+	     *      	"pay_id":1,//支付方式
+	     *      	"suppliers_id":1//供应商id
 	     *      }
 	     *  }
 	     * 返回数据格式如下 :
@@ -1042,7 +1043,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$send_number = ( double )( $content['parameters']['send_number'] );
 			$goods_price = ( double )( $content['parameters']['goods_price'] );
 			$shipping_fee = ( double )( $content['parameters']['shipping_fee'] );
-			$finance_rate = ( double )( $content['parameters']['financial_send_rate'] / 100);
+			$finance_rate = ( double )( $content['parameters']['financial_send_rate'] / 100);//金融费率
+			$suppliers_id = intval( $content['parameters']['suppliers'] );//供应商id
 			$finance_manual = $finance = ( double )( $content['parameters']['financial_send'] );
 			$pay_id = $content['parameters']['pay_id'];
 
@@ -1084,8 +1086,27 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			
 			//*****************金融费计算 BEGIN **************
+			$contract_sn = $parent_order['contract_sn'];
 			if( empty( $finance) ){
-				$finance = $send_number * $goods_price ;
+				$contract_sql = 'SELECT `bill_amount_valid`,`cash_amount_valid` FROM ' . $contract_table .' WHERE `contract_num` = \'' .
+						  $contract_sn . '\' LIMIT 1';
+				$contract_amount = $GLOBALS['db']->getRow( $contract_sql );//合同额度查询
+
+				$finance = 0;
+
+				if( !empty( $contract_amount ) ){
+					$goods_total_price = $goods_price * $send_number;
+					if( $goods_total_price <= $contract_amount['cash_amount_valid'] )
+					{
+						$finance = 0;
+
+					}else{
+						$goods_total_price -= $contract_amount['cash_amount_valid'];
+						$finance = round( ( $goods_total_price * $finance_rate ) / 100 , 2);
+					}
+					
+				}
+
 			}
 
 			if( empty( $finance_rate ) ){
@@ -1135,11 +1156,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 
             $childer_order['financial_send_rate'] = $finance_rate * 100;
             $childer_order['financial_arr_rate'] = 0;
-            $childer_order['financial_send'] = $finance_manual;
+            $childer_order['financial_send'] = $finance_manual;//只保存手动更改的金融费
             $childer_order['financial_arr'] = 0;
 
 
-
+            $childer_order['suppers_id'] = $suppliers_id;
             $childer_order['child_order_status'] = SOS_UNCONFIRMED;//子订单状态-未确认
             $childer_order['order_amount'] = $send_number * $goods_price + $shipping_fee + $finance;
 
@@ -2911,11 +2932,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//检查订单状态
 			$goods_price_sql = 'SELECT `shop_price`, `goods_id` FROM ' . $goods_table . ' WHERE `suppliers_id` = ' .
 								$suppliers_id . ' AND `cat_id` = ' . $cat_id;
-			$goods_price = $GLOBALS['db']->query( $goods_price_sql );
+			$goods_price = $GLOBALS['db']->getAll( $goods_price_sql );
 
 			$content = array();
 			if( empty( $goods_price ) ){
 				$content['goods_price'] = 0;
+				make_json_response($content, '-1', '订单不存在');
 			}else{
 
 				$content['goods_price'] = $goods_price[0]['shop_price'];	
@@ -2930,7 +2952,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			}
 
-			make_json_response($content, '-1', '订单不存在');
+			make_json_response($content, '0', '获取客户物料价格成功');
 					 		  
 		}
 
