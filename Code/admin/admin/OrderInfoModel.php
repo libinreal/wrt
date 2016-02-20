@@ -1309,7 +1309,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *          	"goods_number_arr_saler":90,//采购信息.到货数量 = 实际到货数量
 		 *	        	"goods_price_arr_saler":20, //采购信息.到货单价 = 采购信息.发货单价
 		 *	        	"shipping_fee_arr_saler":120,//采购信息.到货物流费
-		 *	        	"suppliers_name":100,//采购信息.到货付款方式
+		 *	        	"suppliers_name":100,//供应商
 		 *	        	"order_amount_arr_saler":1800,//采购信息.到货总金额 = 物流费 + 金融费 + 单价 * 数量
 		 *
 		 *	        },
@@ -1471,12 +1471,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 				}
 
 				//供应商
-				$suppliers_sql = 'SELECT `suppliers_name` FROM ' . $suppliers_table .
-								 'WHERE `suppliers_id` = ' . $order_info['suppers_id'] . ' LIMIT 1';
-				unset( $order_info['suppers_id'] );
-				$suppliers = $GLOBALS['db']->getOne( $suppliers_sql );
-				$suppliers_name = empty( $suppliers ) ? '' : $suppliers;
-				
+				$suppliers_name = '';
+				if( $order_info['suppers_id'] ){
+					$suppliers_sql = 'SELECT `suppliers_name` FROM ' . $suppliers_table .
+									 'WHERE `suppliers_id` = ' . $order_info['suppers_id'] . ' LIMIT 1';
+					unset( $order_info['suppers_id'] );
+					$suppliers = $GLOBALS['db']->getOne( $suppliers_sql );
+					$suppliers_name = empty( $suppliers ) ? '' : $suppliers;
+				}	
 				$order_info['suppliers_name'] = $suppliers_name;
 				
 
@@ -2000,7 +2002,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    	{
 		 *	    		"order_id":142,
 		 *	    	 	"goods_price_send_buyer":100,//客户价格.物料单价 goods_price_add
-		 *	    	  	"goods_number_send_buyer":100,//客户价格|供应商价格.物料数量
+		 *	    	  	"goods_number_send_buyer":100,//客户价格.物料数量
 		 *	    	   	"suppers_id"://客户价格.实际供应商列表
 		 *	    	    [
 		 *	    	    {
@@ -2014,15 +2016,16 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *      	    "order_amount_send_buyer":200,//客户价格.发货总价
 		 *      	
 		 *	    	 	"goods_price_send_saler":100,//供应商价格.物料单价
-		 *	    	  	"shipping_fee_send_saler":82//供应商价格.物流费用
+		 *	    	 	"goods_price_send_saler":100,//供应商价格.物料数量
+		 *	    	  	"shipping_fee_send_saler":82,//供应商价格.物流费用
+		 *	    	  	"order_amount_send_saler":82//供应商价格.发货总价
 		 *	    	   	"pay_id"://支付方式列表
 		 *	    	    [
 		 *	    	    {
 		 *	    		   "id":1,
 		 *	    		   "name":"现金"
 		 *	    	    }
-		 *	    	    ],
-		 *	    	    "order_amount_send_saler":200//供应商价格.发货总价
+		 *	    	    ]
 		 *	    	 },
 		 *	    	 "price_log":
 		 *	    	 {
@@ -2066,11 +2069,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$suppliers_table = $GLOBALS['ecs']->table('suppliers');
 
 			//子订单+商品信息
-			$order_sql = 'SELECT og.`goods_id`, og.`goods_number_send_buyer`, og.`goods_number_send_buyer`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`, o.`suppers_id`, ' .
+			$order_sql = 'SELECT og.`goods_id`, og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`, o.`suppers_id`, ' .
 						 ' g.`price_num`, g.`price_rate`, g.`cat_id`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
 						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
-						 ' o.`shipping_fee_send_buyer`, o.`financial_send`, o.`financial_send_rate`, o.`shipping_fee_send_saler` ' .
+						 ' o.`shipping_fee_send_buyer`, o.`financial_send`, o.`financial_send_rate`, o.`order_amount_send_buyer`,' .
+						 ' o.`shipping_fee_send_saler`, o.`order_amount_send_saler` ' .
 						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' . 
 						 $order_goods_table . ' AS og ON og.`order_id` = o.`order_id` LEFT JOIN ' .
 						 $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
@@ -2079,7 +2083,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						 ' LEFT JOIN ' . $contract_table . ' AS c ON c.`contract_num` = o.`contract_sn` ' .
 						 'WHERE o.`order_id` = ' . $order_id;
 			$order_info = $GLOBALS['db']->getRow( $order_sql );
-			var_dump($order_info);exit;
+
 			if( empty( $order_info ) ){
 				make_json_response('', '-1', '订单查询失败');
 			}
