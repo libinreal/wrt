@@ -85,6 +85,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'removeGoods'){
 				//
 				$this->removeGoodsAction();
+			}elseif( $this->command == 'getFinaceFee'){
+				$this->getFinaceFeeAction();
 			}
 		}
 		
@@ -2934,6 +2936,74 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 
 		/**
+		 * 接口名称: 获取改价后的金融费用
+		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "getFinaceFee",
+	     *      "parameters": {
+	     *          "params": {
+	     *          	"price":101,//商品价格
+	     *          	"number":1,//商品数量
+	     *          	"rate":1,//金融费比率
+	     *          	"contract_sn":"ht20"//合同编号
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+	     * 		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "获取金融费成功",
+		 *	    "content": 
+		 *	    {
+		 *	    	"finace":21//金融费
+		 *	    }  	
+	     *  }
+		 */
+		public function getFinaceFeeAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+
+			$price = (double)( $params['price'] );
+			$number = intval( $params['number'] );
+			$contract_sn = strval( $params['contract_sn'] );
+
+			$rate = (double)( $params['rate'] );
+
+			$contract_table = $GLOBALS['ecs']->table('contract');
+
+			$amount_sql = 'SELECT `bill_amount_valid`,`cash_amount_valid` FROM ' . $contract_table .' WHERE `contract_num` = \'' .
+						  $contract_sn . '\' LIMIT 1';
+			$amount = $GLOBALS['db']->getRow( $amount_sql );
+
+			$content = array();
+			$finance = 0;
+
+			if( empty( $amount ) ){
+				$content['finance'] = $finance;
+				make_json_response( $content, '-1', '合同编号错误' );
+
+			}else{
+				$total = $price * $number;
+				if( $total <= $amount['cash_amount_valid'] )
+				{
+					$finance = 0;
+
+				}else{
+					$total -= $amount['cash_amount_valid'];
+					$finance = round( ( $total * $rate ) / 100 , 2);
+				}
+				
+			}
+
+			$content['finance'] = $finance;
+			make_json_response( $content, '0', '获取金融费成功' );
+		}
+
+		/**
 		 * 接口名称:取消主订单
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
 		 * 请求方法：POST
@@ -3043,7 +3113,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	}
 	$content = jsonAction( array( "splitInit", "split", "childerList", "childerDetail", "addShippingInfo", "addShippingLog",
 								 "initPriceSend", "updatePriceSend", "initPriceArr", "updatePriceArr", "updateChilderStatus",
-								 "getSuppliersPrice", "searchChilderList", "cancelOrder", "removeGoods"
+								 "getSuppliersPrice", "searchChilderList", "cancelOrder", "removeGoods", "getFinaceFee"
 						 ) );
 	$orderModel = new OrderInfoModel($content);
 	$orderModel->run();
