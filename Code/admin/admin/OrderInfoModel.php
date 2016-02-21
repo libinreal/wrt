@@ -2057,7 +2057,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *      	    "order_amount_send_buyer":200,//客户价格.发货总价
 		 *      	
 		 *	    	 	"goods_price_send_saler":100,//供应商价格.物料单价
-		 *	    	 	"goods_price_send_saler":100,//供应商价格.物料数量
+		 *	    	 	"goods_number_send_saler":100,//供应商价格.物料数量
 		 *	    	  	"shipping_fee_send_saler":82,//供应商价格.物流费用
 		 *	    	  	"order_amount_send_saler":82//供应商价格.发货总价
 		 *	    	   	"pay_id"://支付方式列表
@@ -2110,8 +2110,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$suppliers_table = $GLOBALS['ecs']->table('suppliers');
 
 			//子订单+商品信息
-			$order_sql = 'SELECT og.`goods_id`, og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`, o.`suppers_id`, ' .
-						 ' g.`price_num`, g.`price_rate`, g.`cat_id`, ' .
+			$order_sql = 'SELECT og.`goods_id`, og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`,' .
+						 ' o.`suppers_id`, g.`cat_id`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
 						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
 						 ' o.`shipping_fee_send_buyer`, o.`financial_send`, o.`financial_send_rate`, o.`order_amount_send_buyer`,' .
@@ -2235,7 +2235,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			unset( $order_info['inv_payee'] );
 
 			//总额计算
-			if( empty( $order_info['price_num'] ) ){
+			/*if( empty( $order_info['price_num'] ) ){
 				$order_info['price_num'] = ($order_info['price_rate'] / 100 ) * $order_info['shop_price'];
 			}
 
@@ -2245,7 +2245,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			$order_info['order_amount_send_buyer'] = $order_info['goods_number'] * $order_info['goods_price_add'] + $order_info['shipping_fee_send_buyer'] + $order_info['financial_send'];//客户价格.发货总价
 			$order_info['order_amount_send_saler'] = $order_info['goods_number'] * $order_info['goods_price'] + $order_info['shipping_fee_send_saler'];//供应商价格.发货总价
-
+			*/
 			//该类商品的供应商列表
 			$suppliers_sql = 'SELECT s.`suppliers_id`, s.`suppliers_name` FROM ' . $goods_table .
 							 ' AS g LEFT JOIN ' . $suppliers_table . ' AS s ON g.`suppliers_id` = s.`suppliers_id`' .
@@ -2265,13 +2265,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			$order_info['pay_id'] = $pay_id;
 			$order_info['order_id'] = $order_id;
-
-			unset($order_info['price_num']);
-			unset($order_info['price_rate']);
-			unset($order_info['shop_price']);
-
-			// unset($order_info['cat_id']);//获取供应商原始报价
-			// unset($order_info['goods_id']);//获取供应商原始报价
 
 			//历史报价
 			$price_log_table = $GLOBALS['ecs']->table( 'price_log' );
@@ -2301,13 +2294,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *      "parameters": {
 	     *          "params": {
 	     *          	"order_id":101,//订单ID
-	     *           	"goods_price_add": 20200,//客户价格.物料单价
-		 *		        "goods_price": "20000.00",//供应商价格.物料单价
+	     *           	"goods_price_send_buyer": 20200,//客户价格.物料单价
+	     *           	"goods_number_send_buyer": 20200,//客户价格.物料数量
+	     *           	"order_amount_send_buyer": 20200,//客户价格.发货总价
+		 *		        "goods_price_send_saler": "20000.00",//供应商价格.物料单价
+		 *		        "goods_number_send_saler": "20000.00",//供应商价格.物料数量
+		 *		        "shipping_fee_send_saler": "20000.00",//供应商价格.物流费用
+		 *		        "order_amount_send_saler": "20000.00",//供应商价格.发货总价
 		 *		        "suppers_id":1,//客户价格.实际供应商id
 		 *		        "shipping_fee_send_buyer": "999.99",//客户价格.物流费用
 		 *		        "financial_send": "0.00",//客户价格.金融费用
 		 *		        "financial_send_rate": "0.00",//客户价格.金融费率 (小数数字)
-		 *		        "shipping_fee_send_saler": "0.00",//供应商价格.物流费用
 		 *		        "pay_id":0//支付方式id
 	     * 
 	     *          }
@@ -2372,7 +2369,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$order_info = array();
 			$order_info['suppers_id'] = $suppers_id;
-			$order_info['financial_send_rate'] = $financial_send_rate;
+			$order_info['financial_send_rate'] = (double)( $params['financial_send_rate'] );
 
 			$order_info['financial_send'] = $financial_send;
 			$order_info['shipping_fee_send_buyer'] = $shipping_fee_send_buyer;
@@ -2479,35 +2476,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 		}
 
-		
-	   	/**
-		 * 接口名称: 修改采购价格
-		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
-		 * 请求方法：POST
-		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
-	     *  {
-	     *      "entity": "order_info",
-	     *      "command": "initPriceArr",
-	     *      "parameters": {
-	     *          "params": {
-	     *          	"order_id":142//订单ID
-	     *          	""
-	     *          }
-	     *      }
-	     *  }
-	     * 返回数据格式如下 :
-	     *  {
-	     *  	"error": "0",("0": 成功 ,"-1": 失败)
-		 *	    "message": "到货改价信息获取成功",
-		 *	    "content": {}
-		 *	      	
-	     *  }
-		 */
-		public function updatePurchasePrice()
-		{
-			// $
-		}
-
 		/**
 		 * 接口名称: 到货改价表单数据
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
@@ -2553,9 +2521,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    	"form":
 		 *	    	{
 		 *	    		"order_id":142,
-		 *	    	 	"goods_price_add":100,//客户价格.物料单价
-		 *	    	  	"goods_number_arrival":100,//客户价格.物料数量
-		 *	    	   	"goods_number":100,//供应商价格.物料数量
+		 *	    	 	"goods_price_arr_buyer":100,//客户价格.物料单价 goods_price_add
+		 *	    	  	"goods_number_arr_buyer":100,//客户价格.物料数量
 		 *	    	    "suppers_id"://客户价格.实际供应商列表
 		 *	    	    [
 		 *	    	    {
@@ -2563,21 +2530,22 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    		   "suppliers_name":"天津天佑"//供应商名字
 		 *	    	    }
 		 *	    	    ],
-		 *	    	    "financial_arr_rate":0.0001,//客户价格.金融费率 (小数数字)
+		 *	    	    "financial_arr_rate":0.0001,//客户价格.金融费率 (数字)
 		 *	    	    "shipping_fee_arr_buyer":82,//客户价格.物流费用
 		 *	    	    "financial_arr":1,//客户价格.金融费用
-		 *      	   	"order_amount_arr_buyer":200,//客户价格.到货总价
+		 *      	    "order_amount_arr_buyer":200,//客户价格.发货总价
 		 *      	
-		 *	    	 	"goods_price":100,//供应商价格.物料单价
-		 *	    	  	"shipping_fee_arr_saler":82//供应商价格.物流费用
+		 *	    	 	"goods_price_arr_saler":100,//供应商价格.物料单价
+		 *	    	 	"goods_number_arr_saler":100,//供应商价格.物料数量
+		 *	    	  	"shipping_fee_arr_saler":82,//供应商价格.物流费用
+		 *	    	  	"order_amount_arr_saler":82//供应商价格.发货总价
 		 *	    	   	"pay_id"://支付方式列表
 		 *	    	    [
 		 *	    	    {
 		 *	    		   "id":1,
 		 *	    		   "name":"现金"
 		 *	    	    }
-		 *	    	    ],
-		 *	    	    "order_amount_arr_saler":200//供应商价格.到货总价
+		 *	    	    ]
 		 *	    	}
 		 *	    }  	
 	     *  }
@@ -2604,8 +2572,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$user_table = $GLOBALS['ecs']->table('users');
 
 			//子订单+商品信息
-			$order_sql = 'SELECT og.`goods_id`, og.`goods_price_add`, og.`goods_number`, og.`goods_price`, og.`goods_number_arrival`, o.`suppers_id`, ' .
-						 ' g.`price_num`, g.`price_rate`, g.`shop_price`, g.`cat_id`, ' .
+			$order_sql = 'SELECT og.`goods_id`, og.`goods_price_arr_buyer`, og.`goods_number_arr_buyer`, og.`goods_price_arr_saler`, og.`goods_number_arr_saler`,' .
+						 ' o.`suppers_id`, g.`cat_id`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
 						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
 						 ' o.`shipping_fee_arr_buyer`, o.`financial_arr`, o.`financial_arr_rate`, o.`shipping_fee_arr_saler` ' .
@@ -2622,7 +2590,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			//总额计算
-			if( empty( $order_info['price_num'] ) ){
+			/*if( empty( $order_info['price_num'] ) ){
 				$order_info['price_num'] = ($order_info['price_rate'] / 100 ) * $order_info['shop_price'];
 			}
 
@@ -2632,7 +2600,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			$order_info['order_amount_arr_buyer'] = $order_info['goods_number_arrival'] * $order_info['goods_price_add'] + $order_info['shipping_fee_arr_buyer'] + $order_info['financial_arr'];//客户价格.发货总价
 			$order_info['order_amount_arr_saler'] = $order_info['goods_number'] * $order_info['goods_price'] + $order_info['shipping_fee_arr_saler'];//供应商价格.发货总价
-
+			*/
 			//该类商品的供应商列表
 			$suppliers_sql = 'SELECT s.`suppliers_id`, s.`suppliers_name` FROM ' . $goods_table .
 							 ' AS g LEFT JOIN ' . $suppliers_table . ' AS s ON g.`suppliers_id` = s.`suppliers_id`' .
@@ -2753,13 +2721,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info['pay_id'] = $pay_id;
 			$order_info['order_id'] = $order_id;
 
-			unset($order_info['price_num']);
-			unset($order_info['price_rate']);
-			unset($order_info['shop_price']);
-
-			unset($order_info['cat_id']);
-			unset($order_info['goods_id']);
-
 			$content = array();
 			$content['info'] = $info;
 			$content['invoice'] = $invoice;
@@ -2780,12 +2741,18 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *      "parameters": {
 	     *          "params": {
 	     *	    	    "order_id":142,
-		 *	    	    "goods_number_arrival":100,//客户价格.物料数量
-		 *	    	    "suppers_id":1,//客户价格.实际供应商列表
-		 *	    	    "financial_arr_rate":0.0001,//客户价格.金融费率 (小数数字)
-		 *	    	    "shipping_fee_arr_buyer":82,//客户价格.物流费用
-		 *	    	    "financial_arr":1,//客户价格.金融费用
-		 *	    	    "shipping_fee_arr_saler":82//供应商价格.物流费用
+		*          	"order_id":101,//订单ID
+	     *           	"goods_price_arr_buyer": 20200,//客户价格.物料单价
+	     *           	"goods_number_arr_buyer": 20200,//客户价格.物料数量
+	     *           	"order_amount_arr_buyer": 20200,//客户价格.发货总价
+		 *		        "goods_price_arr_saler": "20000.00",//供应商价格.物料单价
+		 *		        "goods_number_arr_saler": "20000.00",//供应商价格.物料数量
+		 *		        "shipping_fee_arr_saler": "20000.00",//供应商价格.物流费用
+		 *		        "order_amount_arr_saler": "20000.00",//供应商价格.发货总价
+		 *		        "suppers_id":1,//客户价格.实际供应商id
+		 *		        "shipping_fee_arr_buyer": "999.99",//客户价格.物流费用
+		 *		        "financial_arr": "0.00",//客户价格.金融费用
+		 *		        "financial_arr_rate": "0.00",//客户价格.金融费率 (小数数字)
 		 *	    	    "pay_id":0//支付方式id
 		 *	    	
 	     *           }
@@ -2817,7 +2784,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
 
 			//检查订单状态
-			$order_info_sql = 'SELECT o.`child_order_status`, og.`goods_number`, og.`goods_price`, og.`goods_price_add`, g.`shop_price`, g.`price_num`, g.`price_rate` FROM ' .
+			$order_info_sql = 'SELECT o.`child_order_status` FROM ' .
 				 			  $order_info_table . ' AS o LEFT JOIN ' . $order_goods_table . ' AS og ON o.`order_id` = og.`order_id` ' .
 				 			  ' LEFT JOIN ' . $goods_table . ' AS g ON g.`goods_id` = og.`goods_id` ' .
 					 		  ' WHERE o.`order_id` = ' . $order_id;
@@ -2834,39 +2801,26 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '到货验签完毕，无法到货改价');
 			}
 
-			$goods_number = $order_status['goods_number'];
-			$goods_number_arrival = intval( $params['goods_number_arrival'] );
-			$goods_price = $order_status['goods_price'];//供货信息.物料价格
+			$goods_number_arr_buyer = $params['goods_number_arr_buyer'];
+			$goods_price_arr_buyer = (double)( $params['goods_price_arr_buyer'] );
+			$goods_number_arr_saler = $params['goods_number_arr_saler'];
+			$goods_price_arr_saler = (double)( $params['goods_price_arr_saler'] );
 
-			$shop_price = $order_status['shop_price'];
-			$price_num = $order_status['price_num'];
-			$price_rate = $order_status['price_rate'];
-
-			if( empty( $price_num ) ){
-				$price_num = $shop_price * ( double ) ( $price_rate / 100 );
-			}
-				
-			$goods_price_add = $goods_price + $price_num;//销售信息.加价后物料价格
-			
 			$suppers_id = intval( $params['suppers_id'] );//销售信息.供货商id
 
 			$shipping_fee_arr_buyer = ( double )( $params['shipping_fee_arr_buyer'] );//销售信息.发货物流费用
 			$financial_arr = $params['financial_arr'] ? (double)($params['financial_arr']) : 0;//销售信息.发货金融费
 			$financial_arr_rate = ( double )( $params['financial_arr_rate'] / 100 );//销售信息.发货金融费
 
-			if( empty( $financial_arr ) ){
-				$financial_arr = $goods_price_add * $goods_number_arrival * $financial_arr_rate;
-			}
-
 			$shipping_fee_arr_saler = (double)( $params['shipping_fee_arr_saler'] );//供货信息.发货物流费
 			$pay_id = intval( $params['pay_id'] );//支付方式id
 
-			$order_amount_arr_buyer = $goods_price_add * $goods_number_arrival + $financial_arr + $shipping_fee_arr_buyer;
-			$order_amount_arr_saler = $goods_price * $goods_number + $shipping_fee_arr_saler;
+			$order_amount_arr_buyer = (double)( $params['order_amount_arr_buyer'] );
+			$order_amount_arr_saler = (double)( $params['order_amount_arr_saler'] );
 
 			$order_info = array();
 			$order_info['suppers_id'] = $suppers_id;
-			$order_info['financial_arr_rate'] = $financial_arr_rate;
+			$order_info['financial_arr_rate'] = (double)( $params['financial_arr_rate'] );
 
 			$order_info['financial_arr'] = $financial_arr;
 			$order_info['shipping_fee_arr_buyer'] = $shipping_fee_arr_buyer;
@@ -2901,18 +2855,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_goods_update = $GLOBALS['db']->query( $order_goods_update_sql );
 
 				if ( $order_goods_update ) {
-					make_json_response('', '0', '发货改价成功');
+					make_json_response('', '0', '到货改价成功');
 				}else{
-					make_json_response('', '-1', '发货改价失败');
+					make_json_response('', '-1', '到货改价失败');
 				}
 			}else{
-				make_json_response('', '-1', '发货改价失败');
+				make_json_response('', '-1', '到货改价失败');
 			}	
 			
 		}
 
 		/**
-		 * 接口名称: 获取供应商物料单价
+		 * 接口名称: 获取供应商
+		 * 物料单价
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
