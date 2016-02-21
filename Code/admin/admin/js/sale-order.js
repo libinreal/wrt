@@ -241,7 +241,11 @@ var SaleOrder = {
 						var row = "";
 						if(k == "suppliers"){
 							$.each(v, function(k1, v1){
-								row += appendOption(v1.suppliers_id, v1.suppliers_name);
+								if(v1.suppliers_id == obj.content.good.suppliers_id){
+									row += appendOption(v1.suppliers_id, v1.suppliers_name, 1);
+								}else{
+									row += appendOption(v1.suppliers_id, v1.suppliers_name);
+								}
 							});
 						}
 						$("select[name="+k+"]").html(row);
@@ -625,10 +629,20 @@ var SaleOrder = {
 				$.each(obj.content.form,function(key, value){
 					var row = "";
 					if($("select[name='"+key+"']").length>0){
-						$.each(value, function(k, v){
-							row += appendOption(v[key_arr[key].id], v[key_arr[key].name])
-						});
-						$("select[name='"+key+"']").append(row);		
+						if(key == "suppers_id"){
+							$.each(value, function(k, v){
+								if(v[key_arr[key].id] == obj.content.form.default_suppliers_id){
+									row += appendOption(v[key_arr[key].id], v[key_arr[key].name], 1);
+								}else{
+									row += appendOption(v[key_arr[key].id], v[key_arr[key].name]);		
+								}
+							});
+						}else{
+							$.each(value, function(k, v){
+								row += appendOption(v[key_arr[key].id], v[key_arr[key].name]);
+							});
+						}
+						$("select[name='"+key+"']").append(row);	
 					}
 					if($("input[name="+key+"]").length){
 						$("input[name="+key+"]").val(value);

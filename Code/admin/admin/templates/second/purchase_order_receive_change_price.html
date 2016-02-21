@@ -16,46 +16,37 @@
 		</h1>
 		<div id="message_area"></div>
 		<div class="list-note-2">
-			<table>
+			<table cellpadding="0" cellspacing="1">
 				<tbody>
-				<tr><td class="title">订单资料</td></tr>
+				<tr><td class="title" colspan="20">订单资料</td></tr>
 				<tr>
-					<td colspan="20">
-					<span class="head">订单编号：</span><span class="info" id="order_sn"></span>
-					<span class="head">公司名称：</span><span class="info" id="user_name"></span>
-					<span class="head">合同名称：</span><span class="info" id="contract_name"></span>
-					<span class="head">合同号：</span><span class="info" id="contract_sn"></span>
-					</td>
+					<th>订单编号：</th><td id="order_sn"></td>
+					<th>合同名称：</th><td id="contract_name"></td>
+					<th>合同号：</th><td id="contract_sn"></td>
 				</tr>
 				<tr>
-					<td colspan="20">
-					<span class="head">下单人：</span><span class="info" id=""></span>
-					<span class="head">下单时间：</span><span class="info" id="add_time"></span>
-					<span class="head">订单状态：</span><span class="info" id="order_status"></span>
-					</td>
+					<th>下单人：</th><td id="user_name"></td>
+					<th>下单时间：</th><td id="add_time"></td>
+					<th>订单状态：</th><td id="check_status"></td>
 				</tr>
 				</tbody>
 			</table>
 		</div>
 		<div class="list-note-2">
-			<table cellpadding="3" cellspacing="1" id="bill_purchase_assign_list">
+			<table cellpadding="0" cellspacing="1" id="bill_purchase_assign_list">
 				<tbody>
-				<tr><td class="title">开票资料</td></tr>
+				<tr><td class="title" colspan="20">开票资料</td></tr>
 				<tr>
-					<td colspan="20">
-					<span class="head">发票类型：</span><span class="info" id="inv_type"></span>
-					<span class="head">发票抬头：</span><span class="info" id="inv_payee"></span>
-					<span class="head">内容：</span><span class="info" id=""></span>
-					<span class="head">备注：</span><span class="info" id=""></span>
-					</td>
+					<th>发票类型：</th><td id="inv_type"></td>
+					<th>发票抬头：</th><td id="inv_payee"></td>
+					<th>内容：</th><td id=""></td>
+					<th>备注：</th><td id=""></td>
 				</tr>
 				<tr>
-					<td colspan="20">
-					<span class="head">收货人：</span><span class="info" id="consignee"></span>
-					<span class="head">收货地址：</span><span class="info" id="address"></span>
-					<span class="head">手机号码：</span><span class="info" id="mobile"></span>
-					<span class="head">地址标签：</span><span class="info" id="sign_building"></span>
-					</td>
+					<th>收货人：</th><td id="consignee"></td>
+					<th>收货地址：</th><td id="address"></td>
+					<th>手机号码：</th><td id="mobile"></td>
+					<th>地址标签：</th><td id="sign_building"></td>
 				</tr>
 				</tbody>
 			</table>
@@ -71,18 +62,18 @@
 			<tbody>
 				<tr>
 					<td class="title">物料单价：</td>
-					<td><input type="text" name="goods_price"></td>
+					<td><input type="text" name="goods_price_arr_saler" id="goods_price_arr_saler"></td>
 					<td class="title">物料数量：</td>
-					<td><input type="text" name="goods_number"></td>
+					<td><input type="text" name="goods_number_arr_saler" id="goods_number_arr_saler"></td>
 					<td class="title">物流费用：</td>
-					<td><input type="text" name="shipping_fee_arr_saler" data-rule-required="true" data-rule-number="true"></td>
+					<td><input type="text" name="shipping_fee_arr_saler" id="shipping_fee_arr_saler" data-rule-required="true" data-rule-number="true"></td>
 				</tr>
 				<tr>
 					<td class="title">付款方式：</td>
 					<td><select name="pay_id" style="width:80px;">
 					</select></td>
 					<td class="title">发货总价：</td>
-					<td><input type="text" name="order_amount_arr_saler"></td>
+					<td><input type="text" name="order_amount_arr_saler" id="order_amount_arr_saler"></td>
 					<td></td><td></td>
 				</tr>
 			</tbody>
@@ -94,28 +85,6 @@
 		<div align="center">
 			<input type="button" class="button" value=" 保存 " onclick="PurchaseOrder.updatePriceArr();"> 
 			<input type="button" class="button" value=" 取消 " onclick="javascript:history.back()">
-		</div>
-		<div>&nbsp;</div>
-		<div class="list-div" id="listDiv">
-			<h2>历史报价</h2>
-			<table cellpadding="3" cellspacing="1" id="price_log_list">
-				<thead>
-				<tr>
-					<th>物料代码</th>
-					<th>物料名称</th>
-					<th>规格/型号/材质</th>
-					<th>供应商</th>
-					<th>供应商报价</th>
-					<th>实际单价</th>
-					<th>物流费用</th>
-					<th>金融费用</th>
-					<th>总金额</th>
-					<th>支付方式</th>
-					<th>报价日期</th>
-				</tr>
-				</thead>
-				<tbody></tbody>
-			</table>
 		</div>
 		
 		<!-- 底部 -->
@@ -130,28 +99,28 @@
 PurchaseOrder.initPriceArr();
 $(document).ready(function(){
 	// 供应商价格 - 物料单价修改
-	$('#goods_price_send_saler').on('valuechange', function (e, previous) {
+	$('#goods_price_arr_saler').on('valuechange', function (e, previous) {
 		supplierPriceChange()
 	});
 	// 供应商价格 - 物料数量修改
-	$('#goods_number_send_saler').on('valuechange', function (e, previous) {
+	$('#goods_number_arr_saler').on('valuechange', function (e, previous) {
 		supplierPriceChange()
 	});
 	// 供应商价格 - 物流费用
-	$('#shipping_fee_send_saler').on('valuechange', function (e, previous) {
+	$('#shipping_fee_arr_saler').on('valuechange', function (e, previous) {
 		supplierPriceChange()
 	});
 });
 // 供应商价格 - 价格更新
 function supplierPriceChange(){
 	// 供应商价格 - 物料单价
-	var goods_price_send_saler = validateNumber(parseFloat($("#goods_price_send_saler").val())) == 0 ? 0 : parseFloat($("#goods_price_send_saler").val());
+	var goods_price_arr_saler = validateNumber(parseFloat($("#goods_price_arr_saler").val())) == 0 ? 0 : parseFloat($("#goods_price_arr_saler").val());
 	// 供应商价格 - 物料数量
-	var goods_number_send_saler = validateNumber(parseFloat($("#goods_number_send_saler").val())) == 0 ? 0 : parseFloat($("#goods_number_send_saler").val());
+	var goods_number_arr_saler = validateNumber(parseFloat($("#goods_number_arr_saler").val())) == 0 ? 0 : parseFloat($("#goods_number_arr_saler").val());
 	// 供应商价格 - 物流费用
-	var shipping_fee_send_saler = validateNumber(parseFloat($("#shipping_fee_send_saler").val())) == 0 ? 0 : parseFloat($("#shipping_fee_send_saler").val());
+	var shipping_fee_arr_saler = validateNumber(parseFloat($("#shipping_fee_arr_saler").val())) == 0 ? 0 : parseFloat($("#shipping_fee_arr_saler").val());
 	// 供应商价格 - 发货总价
-	$("#order_amount_send_saler").val(goods_price_send_saler*goods_number_send_saler + shipping_fee_send_saler);
+	$("#order_amount_arr_saler").val(goods_price_arr_saler*goods_number_arr_saler + shipping_fee_arr_saler);
 }
 </script>
 	</body>

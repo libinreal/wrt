@@ -23,12 +23,12 @@
 					<th>订单编号：</th><td id="order_sn"></td>
 					<th>合同号：</th><td id="contract_sn"></td>
 					<th>合同名称：</th><td id="contract_name"></td>
-					<th>订单状态：</th><td id="check_status"></td>
+					<th>订单状态：</th><td id="order_status"></td>
 				</tr>
 				<tr>
 					<th>下单人：</th><td id="user_name"></td>
 					<th>拆单时间：</th><td id="add_time"></td>
-					<th>公司名称：</th><td id="user_name"></td>
+					<th>公司名称：</th><td id="company_name"></td>
 					<th>验签状态：</th><td id="check_status"></td>
 				</tr>
 				</tbody>
@@ -69,14 +69,14 @@
 						<th>发货单价</th>
 						<th>发货数量</th>
 						<th>物流费用</th>
-						<th>付款方式</th>
+						<th>供应商名称</th>
 						<th>总金额</th>
 					</tr>
 				    <tr>
 				    	<td id="goods_price_send_saler">a</td>
 				    	<td id="goods_number_send_saler">a</td>
 				    	<td id="shipping_fee_send_saler">a</td>
-				    	<td id="payment_send">a</td>
+				    	<td class="suppliers_name">无</td>
 				    	<td id="order_amount_send_saler">a</td>
 				    </tr>
 				    <tr>
@@ -84,14 +84,14 @@
 				    	<th>到货单价</th>
 				    	<th>到货数量</th>
 				    	<th>物流费用</th>
-				    	<th>付款方式</th>
+				    	<th>供应商名称</th>
 				    	<th>总金额</th>
 				    </tr>
 				    <tr>
 				    	<td id="goods_price_arr_saler">a</td>
 				    	<td id="goods_number_arr_saler">a</td>
 				    	<td id="shipping_fee_arr_saler">a</td>
-				    	<td id="payment_arr">a</td>
+				    	<td class="suppliers_name">无</td>
 				    	<td id="order_amount_arr_saler">a</td>
 				    </tr>
 				</table>
@@ -127,7 +127,7 @@
 <script type="text/javascript">
 TypeMode.getOrderStatus('order_status');
 TypeMode.getChilderOrderStatus('child_order_status');
-PurchaseOrder.getSubOrderDetail();
+PurchaseOrder.getOrderDetail();
 </script>
 	</body>
 </html>

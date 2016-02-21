@@ -1,0 +1,27 @@
+<div class="messagepop_bot">
+<div class="messagepop_header"><h4>新增物流</h4></div>
+<div class="clear"></div>
+<hr>
+<form id="logistics_form">
+	<div class="row"><label>物流公司：</label> <input type="text" name="company_name" data-rule-required="true" /> <span style="color:#f00;">*</span>&nbsp;<span style="color:#696969;">请输入物流公司名称</span></div>
+	<div class="row"><label>物流单号：</label> <input type="text" name="shipping_num" data-rule-required="true" /> <span style="color:#f00;">*</span>&nbsp;<span style="color:#696969;">请输入物流单号</span></div>
+	<div class="row"><label>联系电话：</label> <input type="text" name="tel" data-rule-required="true" /> <span style="color:#f00;">*</span>&nbsp;<span style="color:#696969;">请输联系电话</span></div>
+	<div class="row"><label>发货时间：</label> <input type="text" id="shipping_time" name="shipping_time" data-rule-required="true" readonly="readonly" /></div>
+	<input type="hidden" name="order_id" />
+	<hr>
+	<div align="center">
+	<input type="button" class="button close" href="javascript:void(0)" onclick="PurchaseOrder.addShippingInfo()" value=" 提交 " /> 
+	<input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " />
+	</div>
+</form>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	laydate({
+        elem: '#shipping_time'
+    });
+	$("#logistics_form").validate({
+		errorPlacement: function(error, element) {}
+	});
+});
+</script>
