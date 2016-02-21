@@ -175,7 +175,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
 		    }
 
-			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, og.`goods_number`, og.`goods_price`,' .
+			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
+				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
 				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status` ' .
 				   ' FROM ' . $order_table .
 				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
@@ -256,8 +257,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 					//物流费
 					if( $v['child_order_status'] <= SOS_SEND_PC2){
 						$v['shipping_fee'] = $v['shipping_fee_send_saler'];//发货
+						$v['goods_price'] = $v['goods_price_send_saler'];//发货
+						$v['goods_number'] = $v['goods_number_send_saler'];//发货
 					}else{
 						$v['shipping_fee'] = $v['shipping_fee_arr_saler'];//到货
+						$v['goods_number'] = $v['goods_number_arr_saler'];//到货
+						$v['goods_price'] = $v['goods_price_arr_saler'];//到货
 					}
 
 					$v['order_status'] = '';
