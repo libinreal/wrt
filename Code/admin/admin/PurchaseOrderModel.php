@@ -1134,7 +1134,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '订单不存在');
 			}
 
-			if( $order_status['child_order_status'] > SOS_SEND_PC ){//平台已验签(发货)
+			if( $order_status['child_order_status'] >= SOS_SEND_SC ){//平台已验签(发货)
 				make_json_response('', '-1', '发货验签完毕，无法发货改价');
 			}
 
@@ -1249,6 +1249,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 		}
+
 
 
 	}

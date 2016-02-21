@@ -224,9 +224,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 							   $order_goods_table . //物料编码 名称 下单数 已拆 未拆 供应商
 							   ' AS og LEFT JOIN '. $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' . 
-							   ' WHERE `order_id` = ' . $order_id . ' AND sp.`suppliers_name` IS NOT NULL';
+							   ' WHERE og.`order_id` = ' . $order_id . ' AND sp.`suppliers_name` IS NOT NULL';
 			$order_goods_arr = $GLOBALS['db']->getAll($order_goods_sql);
-
+			
 			$order_info['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
 
 			if( !empty( $order_goods_arr ) ){
@@ -1440,7 +1440,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 							   $order_goods_table . //物料编码 名称 下单数 供应商
 							   ' AS og LEFT JOIN '. $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' . 
-							   ' WHERE `order_id` = ' . $order_id;
+							   ' WHERE og.`order_id` = ' . $order_id;
 			$order_good = $GLOBALS['db']->getRow($order_goods_sql);
 
 			$order_info['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
