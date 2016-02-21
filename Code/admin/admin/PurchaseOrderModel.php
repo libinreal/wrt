@@ -127,6 +127,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			{
 				$like = $where["like"];
 				if( isset( $like["order_sn"] ) ){
+					$temp_order_sn = array();
+					$like["order_sn"] = preg_match( '(\d+-?\d*)'  , $like['order_sn'], $temp_order_sn );
+					$like["order_sn"] = $temp_order_sn[0];
 					$order_sn_sql =  'SELECT `order_id` FROM ' . $order_table . ' WHERE `order_sn` like \'%' . $like['order_sn'] . '%\' ORDER BY `order_id` ASC';
 					$order_sn_arr = $GLOBALS['db']->getAll( $order_sn_sql );
 
@@ -213,9 +216,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//过滤原始订单
 			if( $where_str ){
-				$where_str .= ' AND odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` >= ' . SOS_SEND_PP;
+				$where_str .= ' AND odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` >= ' . SOS_SEND_PP  . ' AND odr.`child_order_status` <= ' . SOS_ARR_PC2;
 			}else{
-				$where_str .= ' WHERE odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` >= ' . SOS_SEND_PP;
+				$where_str .= ' WHERE odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` >= ' . SOS_SEND_PP . ' AND odr.`child_order_status` <= ' . SOS_ARR_PC2;
 			}
 
 			$sql = $sql .

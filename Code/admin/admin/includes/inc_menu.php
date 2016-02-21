@@ -124,7 +124,7 @@ $modules['19_bank_manage']['01_bank_insert'] = 'demo_template.php?section=bank&a
 $modules['19_bank_manage']['02_bank_list'] = 'demo_template.php?section=bank&act=list';
 
 //采购订单管理
-$modules['20_supplier_order']['01_supplier_order_list'] = 'demo_template.php?section=supplier&act=order_list';
+$modules['20_supplier_order']['01_supplier_order_list'] = 'demo_template.php?section=purchase_order_manage&act=list';
 
 //应付款管理
 $modules['21_order_pay']['01_order_pay_list'] = 'demo_template.php?section=payment&act=list';

@@ -24,7 +24,6 @@ $_LANG['20_supplier_order'] = '采购订单管理';
 $_LANG['21_order_pay'] = '应付款管理';
 $_LANG['22_order_recipient'] = '应收款管理';
 
-
 //基建商城管理部分的权限
 $_LANG['goods_manage'] = '商品添加/编辑';
 $_LANG['remove_back'] = '商品删除/恢复';
@@ -121,11 +120,11 @@ $_LANG['bill_manage_repay_list'] = '票据偿还单列表';
 $_LANG['bill_manage_user_list'] = '额度分配调整列表';
 
 //销售订单管理
-$_LANG['sale_order_list'] = '订单列表';
+$_LANG['sale_order_list'] = '（销售订单）订单列表';
 $_LANG['sale_order_suborder_all'] = '子订单列表';
 
 //订单管理
-$_LANG['supplier_order_list'] = '（供应商）订单列表';
+$_LANG['supplier_order_list'] = '（采购订单）订单列表';
 
 //应付款管理
 $_LANG['order_pay_list'] = '应付单列表';

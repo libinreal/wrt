@@ -178,7 +178,7 @@ $_LANG['06_bill_manage_user_list'] = '额度分配调整列表';
 $_LANG['01_sale_order_list'] = '订单列表';
 $_LANG['02_sale_order_suborder_all'] = '子订单列表';
 
-//订单管理
+//采购订单管理
 $_LANG['01_supplier_order_list'] = '订单列表';
 
 //银行管理
