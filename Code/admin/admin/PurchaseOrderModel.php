@@ -1252,6 +1252,128 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 
 
+		/**
+		 * 接口名称: 到货改价保存
+		 * 接口地址：http://admin.zj.dev/admin/PurchaseOrderModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
+		 * {
+	     *      "entity": "order_info",
+	     *      "command": "updatePriceArr",
+	     *      "parameters": {
+	     *          "params": {
+	     *	    	    "order_id":142,
+		 *          	"order_id":101,//订单ID
+		 *		        "goods_price_arr_saler": "20000.00",//供应商价格.物料单价
+		 *		        "goods_number_arr_saler": "20000.00",//供应商价格.物料数量
+		 *		        "shipping_fee_arr_saler": "20000.00",//供应商价格.物流费用
+		 *		        "order_amount_arr_saler": "20000.00",//供应商价格.发货总价
+		 *	    	    "pay_id":0//支付方式id
+		 *	    	
+	     *           }
+	     *      }
+	     *  }
+		 * 返回数据格式如下 :
+		 * 	{
+		 * 		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "到货改价成功",
+		 *	    "content": {}
+		 *	}
+		 */
+		public function updatePriceArrAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+
+			if( !isset( $params['order_id'] ) ){
+				make_json_response('', '-1', '订单ID错误');
+			}
+			if( !isset( $params['suppers_id'] ) ){
+				make_json_response('', '-1', '请选择供应商');
+			}
+			$order_id = intval( $params['order_id'] );
+
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$contract_table = $GLOBALS['ecs']->table('contract');//合同
+			$goods_table = $GLOBALS['ecs']->table('goods');//物料
+
+			$category_table = $GLOBALS['ecs']->table('category');//物料类别
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//物料属性
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
+
+			//检查订单状态
+			$order_info_sql = 'SELECT o.`child_order_status` FROM ' .
+				 			  $order_info_table . ' AS o LEFT JOIN ' . $order_goods_table . ' AS og ON o.`order_id` = og.`order_id` ' .
+				 			  ' LEFT JOIN ' . $goods_table . ' AS g ON g.`goods_id` = og.`goods_id` ' .
+					 		  ' WHERE o.`order_id` = ' . $order_id;
+			$order_status = $GLOBALS['db']->getRow( $order_info_sql );
+			if( !$order_status ){
+				make_json_response('', '-1', '订单不存在');
+			}
+
+			if( $order_status['child_order_status'] < SOS_SEND_PP ){//未发货
+				make_json_response('', '-1', '尚未进行采购下单，无法到货改价');
+			}
+
+			if( $order_status['child_order_status'] >= SOS_ARR_PC2 ){//到货验签（平台验签完）
+				make_json_response('', '-1', '到货验签完毕，无法到货改价');
+			}
+
+			$goods_number_arr_saler = $params['goods_number_arr_saler'];
+			$goods_price_arr_saler = (double)( $params['goods_price_arr_saler'] );
+
+			$suppers_id = intval( $params['suppers_id'] );//销售信息.供货商id
+
+			$shipping_fee_arr_saler = (double)( $params['shipping_fee_arr_saler'] );//供货信息.发货物流费
+			$pay_id = intval( $params['pay_id'] );//支付方式id
+
+			$order_amount_arr_saler = (double)( $params['order_amount_arr_saler'] );
+
+			$order_info = array();
+			$order_info['suppers_id'] = $suppers_id;
+			$order_info['shipping_fee_arr_saler'] = $shipping_fee_arr_saler;
+			$order_info['order_amount_arr_saler'] = $order_amount_arr_saler;
+			$order_info['pay_id'] = $pay_id;
+
+			$order_info_update_sql = 'UPDATE ' . $order_info_table .' SET ';
+
+			foreach ($order_info as $cn => $cv) {
+				$order_info_update_sql .= '`' . $cn . '` = ' . $cv . ',';
+			}
+
+			$order_info_update_sql = substr( $order_info_update_sql, 0, -1 );
+			$order_info_update_sql .= ' WHERE `order_id` = ' . $order_id . ' LIMIT 1';
+			$order_info_update = $GLOBALS['db']->query( $order_info_update_sql );// update `order_info`
+
+			if( $order_info_update ) {// update `order_goods`
+				$order_goods_update_sql = 'UPDATE ' . $order_goods_table . ' SET ';
+
+				$order_goods = array();
+				$order_goods['goods_number_arr_saler'] = $goods_number_arr_saler;
+				$order_goods['goods_price_arr_saler'] = $goods_price_arr_saler;
+
+				foreach ($order_goods as $cn => $cv) {
+					$order_goods_update_sql .= '`' . $cn . '` = ' . $cv . ',';
+				}
+
+				$order_goods_update_sql = substr( $order_goods_update_sql, 0, -1 );
+				$order_goods_update_sql .= ' WHERE `order_id` = ' . $order_id . ' LIMIT 1';
+				$order_goods_update = $GLOBALS['db']->query( $order_goods_update_sql );
+
+				if ( $order_goods_update ) {
+					make_json_response('', '0', '到货改价成功');
+				}else{
+					make_json_response('', '-1', '到货改价失败');
+				}
+			}else{
+				make_json_response('', '-1', '到货改价失败');
+			}	
+			
+		}
+
+
+		
+
 
 	}
 
