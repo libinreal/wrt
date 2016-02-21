@@ -106,7 +106,8 @@ $(document).ready(function(){
 		changeFinanceFee();
 	});
 	$('#shipping_fee').on('valuechange', function (e, previous) {
-		changeTotalAmount();
+		var finance = validateNumber(parseFloat($("#finance_fee").val())) == 0 ? 0 : parseFloat($("#finance_fee").val());
+		changeTotalAmount(finance);
 	});
 });
 function changeFinanceFee(){
