@@ -68,12 +68,14 @@ $admin_config = array(
 
     'purchase_to_childer_map' => array(
                                 PURCHASE_ORDER_UNCONFIRMED =>array(
+                                   
+                                ),
+                                PURCHASE_ORDER_CONFIRMED => array(
                                     SOS_UNCONFIRMED,
                                     SOS_CONFIRMED,
                                     SOS_SEND_CC,
-                                    SOS_SEND_PC 
-                                ),
-                                PURCHASE_ORDER_CONFIRMED => array(
+                                    SOS_SEND_PC, 
+                                    SOS_SEND_PP,
                                     SOS_SEND_SC,
                                     SOS_SEND_PC2,
                                     SOS_ARR_CC,
