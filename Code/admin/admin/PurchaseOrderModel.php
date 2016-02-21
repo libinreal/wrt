@@ -620,6 +620,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    		   "suppliers_name":"天津天佑"//供应商名字
 		 *	    	    }
 		 *	    	    ],
+		 *	    	    "default_suppliers_id":1,//供应商id
 		 *	    	 	"goods_price_send_saler":100,//供应商价格.物料单价
 		 *	    	 	"goods_number_send_saler":100,//供应商价格.物料数量
 		 *	    	  	"shipping_fee_send_saler":82,//供应商价格.物流费用
@@ -675,10 +676,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//子订单+商品信息
 			$order_sql = 'SELECT og.`goods_id`, og.`goods_number_send_saler`, og.`goods_price_send_saler`,' .
-						 ' o.`suppers_id`, g.`cat_id`, ' .
+						 ' o.`suppers_id` as `default_suppliers_id`, g.`cat_id`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
 						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
-						 ' o.`financial_send`, o.`financial_send_rate`,' .
 						 ' o.`shipping_fee_send_saler`, o.`order_amount_send_saler` ' .
 						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' . 
 						 $order_goods_table . ' AS og ON og.`order_id` = o.`order_id` LEFT JOIN ' .
@@ -836,12 +836,247 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 
 
+		/**
+		 * 接口名称: 到货改价表单数据
+		 * 接口地址：http://admin.zj.dev/admin/PurchaseOrderModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "initPriceArr",
+	     *      "parameters": {
+	     *          "params": {
+	     *          	"order_id":142//订单ID
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+	     *  	"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "到货改价信息获取成功",
+		 *	    "content": 
+		 *	    {
+		 *	    	"info":
+		 *	        { 	
+		 *	        	"order_status":"",//订单状态 0 '未确认', 1 '已确认', 2 '待收货', 3 '已完成', 4 '订单取消'
+		 *	        	"order_sn":"os122311",//订单编号
+		 *	        	"user_id":1,//下单人id 
+		 *	        	"user_name":"王x",//下单人
+		 *	        	"add_time":"2015-01-01:11",//拆单时间
+		 *	        	"contract_sn":"10000",//合同号
+		 *	        	"contract_name":"钢材销售",//合同名称
+		 *	        	"company_name":"中铁一局",//公司名称
+		 *          	"check_status":"",//验签状态
+		 * 
+		 *	        	"consignee":"aa",//收货人
+		 *	        	"address":"xx地址",//收货地址
+		 *	        	"mobile":"13011111111",//手机号码
+		 *	        	"sign_building":"xx桥"//地址标签
+		 *	        },
+		 *	        "invoice"://发票
+		 *	        {
+		 *	        	"inv_type":0,//发票类型 0 增值税专用 1 普通发票
+		 *	        	"inv_payee":"xx公司",//发票抬头
+		 *	        },
+		 *	    	"form":
+		 *	    	{
+		 *	    		"order_id":142,
+		 *	    	    "suppers_id"://客户价格.实际供应商列表
+		 *	    	    [
+		 *	    	    {
+		 *	    		   "suppliers_id":1,//供应商id
+		 *	    		   "suppliers_name":"天津天佑"//供应商名字
+		 *	    	    }
+		 *	    	    ],
+		 *      	    "default_suppliers_id":1,//供应商id
+		 *	    	 	"goods_price_arr_saler":100,//供应商价格.物料单价
+		 *	    	 	"goods_number_arr_saler":100,//供应商价格.物料数量
+		 *	    	  	"shipping_fee_arr_saler":82,//供应商价格.物流费用
+		 *	    	  	"order_amount_arr_saler":82//供应商价格.发货总价
+		 *	    	   	"pay_id"://支付方式列表
+		 *	    	    [
+		 *	    	    {
+		 *	    		   "id":1,
+		 *	    		   "name":"现金"
+		 *	    	    }
+		 *	    	    ]
+		 *	    	}
+		 *	    }  	
+	     *  }
+		 */
+		public function initPriceArrAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
 
-		
+			if( !isset( $params['order_id'] ) ){
+				make_json_response('', '-1', '订单ID错误');
+			}
+			$order_id = intval( $params['order_id'] );
+
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$contract_table = $GLOBALS['ecs']->table('contract');//合同
+			$goods_table = $GLOBALS['ecs']->table('goods');//物料
+
+			$category_table = $GLOBALS['ecs']->table('category');//物料类别
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//物料属性
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
+
+			$suppliers_table = $GLOBALS['ecs']->table('suppliers');
+			$user_table = $GLOBALS['ecs']->table('users');
+
+			//子订单+商品信息
+			$order_sql = 'SELECT og.`goods_id`, og.`goods_price_arr_saler`, og.`goods_number_arr_saler`,' .
+						 ' o.`order_amount_arr_saler`,o.`suppers_id` as `default_suppliers_id`, g.`cat_id`, ' .
+						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
+						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
+						 ' o.`shipping_fee_arr_saler` ' .
+						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' . 
+						 $order_goods_table . ' AS og ON og.`order_id` = o.`order_id` LEFT JOIN ' .
+						 $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
+						 ' LEFT JOIN ' . $user_table . ' AS u ON u.`user_id` = o.`user_id` ' .
+						 ' LEFT JOIN ' . $contract_table . ' AS c ON c.`contract_num` = o.`contract_sn` ' .
+						 'WHERE o.`order_id` = ' . $order_id;
+			$order_info = $GLOBALS['db']->getRow( $order_sql );
+
+			if( empty( $order_info ) ){
+				make_json_response('', '-1', '订单查询失败');
+			}
+
+			
+			//该类商品的供应商列表
+			$suppliers_sql = 'SELECT s.`suppliers_id`, s.`suppliers_name` FROM ' . $goods_table .
+							 ' AS g LEFT JOIN ' . $suppliers_table . ' AS s ON g.`suppliers_id` = s.`suppliers_id`' .
+							 ' WHERE g.`cat_id` = ' . $order_info['cat_id'] .
+							 ' AND s.`suppliers_name` IS NOT NULL' . ' GROUP BY s.`suppliers_id`';
+			$suppliers = $GLOBALS['db']->getAll( $suppliers_sql );
+
+			if( empty( $suppliers ) )
+				$suppliers = array();
+			$order_info['suppers_id'] = $suppliers;
+
+			//订单详情
+			$purchase_status = C('purchase_status');//销售订单状态,用于页面显示
+			$childer_order_status = C('childer_order_status');//验签状态
+			$order_info['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
+			switch ( $order_info['child_order_status'] ) {
+					case SOS_UNCONFIRMED://未确认
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_UNCONFIRMED];
+						$order_info['check_status'] = $childer_order_status[SOS_UNCONFIRMED];
+			
+						break;
+					case SOS_CONFIRMED://已确认
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_CONFIRMED];
+						$order_info['check_status'] = $childer_order_status[SOS_CONFIRMED];
+			
+						break;
+					case SOS_SEND_CC://客户已验签(发货)
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_CONFIRMED];
+						$order_info['check_status'] = $childer_order_status[SOS_SEND_CC];
+			
+						break;
+					case SOS_SEND_PC://平台已验签(发货)
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_CONFIRMED];
+						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC];
+			
+						break;
+					case SOS_SEND_SC://供应商已验签(发货)
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_CONFIRMED];
+						$order_info['check_status'] = $childer_order_status[SOS_SEND_SC];
+			
+						break;
+					case SOS_SEND_PC2://平台已验签(发货)
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_CONFIRMED];
+						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC2];
+			
+						break;
+					case SOS_ARR_CC://客户已验签(到货)
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_UNCOMPLETE];
+						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
+			
+						break;
+					case SOS_ARR_PC://平台已验签(到货)
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_UNCOMPLETE];
+						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC];
+			
+						break;
+					case SOS_ARR_SC://供应商已验签(到货)
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_UNCOMPLETE];
+						$order_info['check_status'] = $childer_order_status[SOS_ARR_SC];
+			
+						break;
+					case SOS_ARR_PC2://平台已验签(到货)
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_COMPLETE];
+						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC2];
+			
+						break;
+					case SOS_CANCEL://订单已取消
+						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_CANCEL];
+						$order_info['check_status'] = $childer_order_status[SOS_CANCEL];
+			
+						break;
+					
+					default://未命名状态
+						$order_info['order_status'] = '未知';
+						$order_info['check_status'] = '未知';
+						break;
+			}
+
+			$invoice = $info = array();
+			$info['order_status'] = $order_info['order_status'];
+			$info['order_sn'] = $order_info['order_sn'];
+			$info['user_name'] = $order_info['user_name'];
+			$info['company_name'] = $order_info['company_name'];
+			$info['add_time'] = $order_info['add_time'];
+			$info['contract_sn'] = $order_info['contract_sn'];
+			$info['contract_name'] = $order_info['contract_name'];
+			$info['check_status'] = $order_info['check_status'];
+			$info['consignee'] = $order_info['consignee'];
+			$info['address'] = $order_info['address'];
+			$info['mobile'] = $order_info['mobile'];
+			$info['sign_building'] = $order_info['sign_building'];
+
+			unset( $order_info['order_status'] );
+			unset( $order_info['order_sn'] );
+			unset( $order_info['user_name'] );
+			unset( $order_info['company_name'] );
+			unset( $order_info['add_time'] );
+			unset( $order_info['contract_sn'] );
+			unset( $order_info['contract_name'] );
+			unset( $order_info['check_status'] );
+			unset( $order_info['consignee'] );
+			unset( $order_info['address'] );
+			unset( $order_info['mobile'] );
+			unset( $order_info['sign_building'] );
+
+			$invoice['inv_type'] = $order_info['inv_type'];
+			$invoice['inv_payee'] = $order_info['inv_payee'];
+
+			unset( $order_info['inv_type'] );
+			unset( $order_info['inv_payee'] );
+
+			//支付方式
+			$pay_id = array();
+			$pay_cfg = C('payment');
+			foreach ($pay_cfg as $i => $v) {
+				$pay_id[] = array('id' => $i, 'name' => $v );
+			}
+			$order_info['pay_id'] = $pay_id;
+			$order_info['order_id'] = $order_id;
+
+			$content = array();
+			$content['info'] = $info;
+			$content['invoice'] = $invoice;
+			$content['form'] = $order_info;
+
+			make_json_response($content, '0', '到货改价初始化成功');	
+
+		}
+
 
 	}
 
-$content = jsonAction( array( "initPriceSend", "childerDetail", "initPriceSend", "updatePriceSend", "initPriceArr", "updatePriceArr", "updateChilderStatus",
+$content = jsonAction( array( "childerDetail", "initPriceSend", "updatePriceSend", "initPriceArr", "updatePriceArr", "updateChilderStatus",
 							 
 					 ) );
 $orderModel = new PurchaseOrderModel($content);
