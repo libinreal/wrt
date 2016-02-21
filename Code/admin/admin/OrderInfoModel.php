@@ -1607,6 +1607,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 					//************************** 采购到货中 END **************************
 					
 					default://未命名状态
+						$cs = $order_info['child_order_status'];
+						$order_info['order_status'] = $sale_status[SALE_ORDER_UNCONFIRMED];
+						$order_info['check_status'] = $childer_order_status[$cs];
 						$buttons = array();
 						break;
 				}
