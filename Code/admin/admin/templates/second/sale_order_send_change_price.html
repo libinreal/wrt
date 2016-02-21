@@ -162,7 +162,12 @@ $(document).ready(function(){
 		var number = validateNumber(parseFloat($("#goods_number_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_send_buyer").val());
 		var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());;
 		var contract_sn = $("#contract_sn").text();
-		SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
+		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
+		if(financial_send == 0){
+			SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
+		}else{
+			customerPriceChange(financial_send);
+		}
 	});
 	// 客户价格-物料数量修改
 	$('#goods_number_send_buyer').on('valuechange', function (e, previous) {
@@ -170,7 +175,12 @@ $(document).ready(function(){
 		var number = validateNumber(parseFloat($("#goods_number_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_send_buyer").val());
 		var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());;
 		var contract_sn = $("#contract_sn").text();
-		SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
+		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
+		if(financial_send == 0){
+			SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
+		}else{
+			customerPriceChange(financial_send);
+		}
 	});
 	// 客户价格-金融费用比率修改
 	$('#financial_send_rate').on('valuechange', function (e, previous) {
@@ -178,7 +188,12 @@ $(document).ready(function(){
 		var number = validateNumber(parseFloat($("#goods_number_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_send_buyer").val());
 		var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());;
 		var contract_sn = $("#contract_sn").text();
-		SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
+		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
+		if(financial_send == 0){
+			SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
+		}else{
+			customerPriceChange(financial_send);
+		}
 	});
 	// 客户价格-物流费用改价
 	$('#shipping_fee_send_buyer').on('valuechange', function (e, previous) {
@@ -213,7 +228,6 @@ function customerPriceChange(finance){
 	var goods_number_send_buyer = validateNumber(parseFloat($("#goods_number_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_send_buyer").val());
 	// 客户价格-金融费用
 	var financial_send = finance;
-	$("#financial_send").val(finance);
 	// 客户价格-物流费用
 	var shipping_fee_send_buyer = validateNumber(parseFloat($("#shipping_fee_send_buyer").val())) == 0 ? 0 : parseFloat($("#shipping_fee_send_buyer").val());
 	// 客户价格-发货总价
