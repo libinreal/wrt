@@ -732,7 +732,7 @@ var SaleOrder = {
 					"pay_id":{id:"id",name:"name"},
 					"suppers_id":{id:"suppliers_id",name:"suppliers_name"}
 				}
-				$.each(obj.content,function(key, value){
+				$.each(obj.content.form,function(key, value){
 					var row = "";
 					if($("select[name='"+key+"']").length>0){
 						$.each(value, function(k, v){
@@ -742,6 +742,14 @@ var SaleOrder = {
 					}
 					if($("input[name="+key+"]").length){
 						$("input[name="+key+"]").val(value);
+					}
+					if($("textarea[name="+key+"]").length){
+						$("textarea[name="+key+"]").text(value);
+					}
+				});
+				$.each(obj.content.info,function(key, value){
+					if($("#"+key).length){
+						$("#"+key).text(value);	
 					}
 				});
 
@@ -756,7 +764,7 @@ var SaleOrder = {
 		}
 		var formData = $("#change_price_form").FormtoJson();
 		var params = {"params":formData};
-		strJson = createJson("updatePriceSend", this.entity, params);
+		strJson = createJson("updatePriceArr", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -877,7 +885,7 @@ var SaleOrder = {
 		});
 	},
 
-	getSuppliersPrice: function(){
+	getSuppliersPrice: function(price_id){
 		var suppliers_id = $("select[name=suppers_id] option:selected").val();
 		var cat_id = $("input[name=cat_id]").val();
 		var goods_id = $("input[name=goods_id]").val();
@@ -891,7 +899,7 @@ var SaleOrder = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				$("#goods_price_send_saler").val(obj.content.goods_price);
+				$("#"+price_id).val(obj.content.goods_price);
 			}
 		}, "json").done(function(){
 			supplierPriceChange();
