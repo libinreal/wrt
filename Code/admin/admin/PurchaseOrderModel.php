@@ -82,15 +82,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	        {
 		 *	        		"order_id":1, //订单ID
 		 *                  "order_sn":2 ,//订单号
-		 *                  "customer_name": 'xxx' ,//客户名称
-		 *                  "customer_id": "ad11223", //客户号
-		 *                  "contract_sn": "2015-12-12" ,//合同号
-		 *                  "contract_name": "薛某" ,//销售合同名称
+		 *                  "goods_name": 'xxx' ,//商品名称
+		 *                  "goods_sn": "ad11223", //商品编号
+		 *                  "attr": "2015-12-12" ,//规格属性
+		 *                  "price": "薛某" ,//单价
+		 *                  "number": "薛某" ,//数量
+		 *                  "shipping": "薛某" ,//物流
 		 *                  "add_time": "2015-12-12 16:41:00" ,  //下单时间
-		 *                  "best_time": "2015-12-12 16:41:00" ,//希望到货时间
-		 *                  "goods_amount": 200,//下单金额
-		 *                  "status": 0 ,//订单状态
-		 *                  "is_cancel":"yes"//是否可以取消("yes":可以取消 "no"：不能取消)
+		 *                  "status": 0 //订单状态
 		 *           }
 		 *	         ],
 		 *	         "total":3
@@ -101,11 +100,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$params = $content['parameters']['params'];
 			
 			$contract_table = $GLOBALS["ecs"]->table("contract");
-			$user_table = $GLOBALS["ecs"]->table("users");
+			$suppliers_table = $GLOBALS["ecs"]->table("suppliers");
 			$order_table = $GLOBALS['ecs']->table('order_info');
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
 
-			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, odr.`contract_sn`, odr.`user_id` AS `customer_id`, odr.`add_time`, odr.`best_time`, odr.`goods_amount`, odr.`order_status`' .
-				   ' ,usr.`companyName` as `customer_name`, IFNULL(crt.`contract_name`,\'\') as `contract_name` ' .
+			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, odr.`add_time`, odr.`order_status`, odr.`child_order_status`,' .
+				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`,' .		
+				   ' og.`goods_id`,og.`goods_name`,og.`goods_sn`, og.`goods_number_send_saler`,og.`goods_price_send_saler`,og.`goods_number_arr_saler`,og.`goods_price_arr_saler`' .
 				   ' FROM ' . $order_table .
 				   ' AS odr';
 
@@ -138,21 +140,21 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$where_str = ' WHERE odr.`order_id` IN(' . $order_ids . ')';
 					}	
 				}
-				if( isset( $like["user_name"] ) ){
-					$user_name_sql = 'SELECT `user_id` FROM ' . $user_table . ' WHERE `companyName` like \'%' . $like['user_name'] . '%\' ORDER BY `user_id` ASC';
-					$user_name_arr = $GLOBALS['db']->getAll( $user_name_sql );
+				if( isset( $like["suppliers_name"] ) ){
+					$suppliers_name_sql = 'SELECT `suppliers_id` FROM ' . $suppliers_table . ' WHERE `suppliers_name` like \'%' . $like['suppliers_name'] . '%\' ORDER BY `suppliers_id` ASC';
+					$suppliers_name_arr = $GLOBALS['db']->getAll( $suppliers_name_sql );
 
-					if( !empty( $user_name_arr ) ){
-						$user_id_arr = array();
-						foreach ($user_name_arr as $k => $v) {
-							$user_id_arr[] = $v['user_id'];
+					if( !empty( $suppliers_name_arr ) ){
+						$suppliers_id_arr = array();
+						foreach ($suppliers_name_arr as $k => $v) {
+							$suppliers_id_arr[] = $v['suppliers_id'];
 						}
-						$user_ids = implode(',', $user_id_arr);
+						$suppliers_ids = implode(',', $suppliers_id_arr);
 
 						if( $where_str )
-							$where_str .= ' AND usr.`user_id` IN(' . $user_ids . ')';
+							$where_str .= ' AND spl.`suppliers_id` IN(' . $suppliers_ids . ')';
 						else
-							$where_str .= ' WHERE usr.`user_id` IN(' . $user_ids . ')';
+							$where_str .= ' WHERE spl.`suppliers_id` IN(' . $user_ids . ')';
 					}
 
 				}
@@ -209,44 +211,67 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$where_str .= " WHERE odr.`add_time` <= '" . $where['due_date2'] . "'";
 			}
 
-			//过滤子订单
+			//过滤原始订单
 			if( $where_str ){
-				$where_str .= ' AND ( odr.`parent_order_id` IS NULL OR odr.`parent_order_id` = 0 )';
+				$where_str .= ' AND odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` >= ' . SOS_SEND_PP;
 			}else{
-				$where_str .= ' WHERE ( odr.`parent_order_id` IS NULL OR odr.`parent_order_id` = 0 )';
+				$where_str .= ' WHERE odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` >= ' . SOS_SEND_PP;
 			}
 
 			$sql = $sql .
-				   ' LEFT JOIN ' . $user_table . ' as usr ON odr.`user_id` = usr.`user_id` '.
+				   ' LEFT JOIN ' . $suppliers_table . ' as spl ON odr.`suppers_id` = spl.`suppliers_id` '.
 				   ' LEFT JOIN ' . $contract_table . ' as crt ON odr.`contract_sn` = crt.`contract_num` ' .
-				   $where_str . 'ORDER BY odr.`add_time` DESC' .
+				   ' LEFT JOIN ' . $order_goods_table . ' as og ON og.`order_id` = odr.`order_id` ' .
+				   $where_str . ' ORDER BY odr.`add_time` DESC' .
 				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$orders = $GLOBALS['db']->getAll($sql);
 			
 			$total_sql = $total_sql . 
-						' LEFT JOIN ' . $user_table . ' as usr ON odr.`user_id` = usr.`user_id` '.
+						' LEFT JOIN ' . $suppliers_table . ' as spl ON odr.`suppers_id` = spl.`suppliers_id` '.
 				   		' LEFT JOIN ' . $contract_table . ' as crt ON odr.`contract_sn` = crt.`contract_num` ' .
+				   		' LEFT JOIN ' . $order_goods_table . ' as og ON og.`order_id` = odr.`order_id` ' .
 						$where_str;
 			$resultTotal = $GLOBALS['db']->getRow($total_sql);
 
 			if( $resultTotal )
 			{
 				$orders = $orders ? $orders : array();
-				//订单是否可取消
-				foreach ($orders as &$v) {
+				foreach($orders as &$v){
 
-					$child_total_sql = 'SELECT COUNT(*) AS `child_number` FROM ' . $order_table . ' WHERE `parent_order_id` = ' .
-							 		   $v['order_id'] . ' AND `child_order_status` <> ' . SOS_UNCONFIRMED .
-							   ' AND `child_order_status` <> ' . SOS_CANCEL;
-					$child_total = $GLOBALS['db']->getRow( $child_total_sql );
-
-					if( $child_total['child_number'] == 0 ){
-						$v['is_cancel'] = 'yes';
+					if( $v['child_order_status'] < SOS_ARR_CC ){//发货
+						$v['number'] = $v['goods_number_send_saler'];//单价
+						$v['price'] = $v['goods_price_send_saler'];//数量
+						$v['shipping'] = $v['shipping_fee_send_saler'];//物流
+					}else{//到货
+						$v['number'] = $v['goods_number_arr_saler'];
+						$v['price'] = $v['goods_price_arr_saler'];
+						$v['shipping'] = $v['shipping_fee_arr_saler'];
+					}
+					$v['order_sn'] = $v['order_sn'] ? $v['order_sn'] . '-cg' : '';//订单编号
+					$v['status'] = $v['order_status'];//状态
+					//规格、型号、材质
+					$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $v['goods_id'];
+					$goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
+					if( empty( $goods_attr ) ){
+						$v['attr'] = '';
 					}else{
-						$v['is_cancel'] = 'no';
+						$attr_arr = array();
+						foreach ($goods_attr as $value) {
+							$attr_arr[] = $value['attr_value'];
+						}
+						$v['attr'] = implode('/', $attr_arr);
 					}
 
+					unset( $v['goods_number_send_saler'] );
+					unset( $v['goods_price_send_saler'] );
+					unset( $v['shipping_fee_send_saler'] );
+					unset( $v['goods_number_arr_saler'] );
+					unset( $v['goods_price_arr_saler'] );
+					unset( $v['shipping_fee_arr_saler'] );
+					unset( $v['goods_id']);
+					unset( $v['order_status'] );
 				}
+				
 				unset( $v );
 
 				$content = array();
