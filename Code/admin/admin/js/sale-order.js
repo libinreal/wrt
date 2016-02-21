@@ -749,11 +749,22 @@ var SaleOrder = {
 				$.each(obj.content.form,function(key, value){
 					var row = "";
 					if($("select[name='"+key+"']").length>0){
-						$.each(value, function(k, v){
-							row += appendOption(v[key_arr[key].id], v[key_arr[key].name])
-						});
+						if(key == "suppers_id"){
+							$.each(value, function(k, v){
+								if(v[key_arr[key].id] == obj.content.form.default_suppliers_id){
+									row += appendOption(v[key_arr[key].id], v[key_arr[key].name], 1);
+								}else{
+									row += appendOption(v[key_arr[key].id], v[key_arr[key].name]);		
+								}
+							});
+						}else{
+							$.each(value, function(k, v){
+								row += appendOption(v[key_arr[key].id], v[key_arr[key].name]);
+							});
+						}
 						$("select[name='"+key+"']").append(row);		
 					}
+
 					if($("input[name="+key+"]").length){
 						$("input[name="+key+"]").val(value);
 					}

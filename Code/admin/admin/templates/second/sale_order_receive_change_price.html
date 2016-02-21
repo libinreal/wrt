@@ -98,7 +98,7 @@
 					<td class="title">物料单价：</td>
 					<td><input type="text" name="goods_price_arr_saler" id="goods_price_arr_saler"></td>
 					<td class="title">物料数量：</td>
-					<td><input type="text" name="goods_number_arr_saler" id="goods_number_arr_saler"></td>
+					<td><input type="text" name="goods_number_arr_saler" id="goods_number_arr_saler" readonly="readonly"></td>
 					<td class="title">物流费用：</td>
 					<td><input type="text" name="shipping_fee_arr_saler" id="shipping_fee_arr_saler" data-rule-required="true" data-rule-number="true"></td>
 				</tr>
@@ -159,6 +159,8 @@ $(document).ready(function(){
 		}else{
 			customerPriceChange(financial_arr);
 		}
+		$("#goods_number_arr_saler").val(number);
+		supplierPriceChange();
 	});
 	// 客户价格-金融费用比率修改
 	$('#financial_arr_rate').on('valuechange', function (e, previous) {

@@ -489,5 +489,41 @@ var PurchaseOrder = {
 				return false;
 			}
 		}, "json");
+	},
+
+	updateButtonStatus: function(){
+		var order_id = getQueryStringByName('id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var params = {"params":{"order_id":order_id}};
+		strJson = createJson("childerDetail", this.entity, params);
+		that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$.each(obj.content.info, function(k, v){
+					if($("select[name="+k+"]").length){
+						console.log($("select[name="+k+"]").val());
+						$("select[name="+k+"]>option[value='"+v+"']").attr("selected","selected");
+					}
+				});
+				// 按钮状态更新
+				var button = '';
+				$.each(obj.content.buttons, function(k, v){
+					if(v == "发货改价"){
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
+					}else if(v == "到货改价"){
+						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
+					}else{
+						button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
+					}
+				});
+				$("#handle_button>span").html(button);
+			}
+			$('#message_area').html('');
+		}, "json");
 	}
 }
