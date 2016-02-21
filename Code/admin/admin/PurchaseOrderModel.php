@@ -570,7 +570,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 		/**
 		 * 接口名称: 发货改价表单数据
-		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
+		 * 接口地址：http://admin.zj.dev/admin/PurchaseOrderModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
 	     *  {
@@ -1070,6 +1070,183 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content['form'] = $order_info;
 
 			make_json_response($content, '0', '到货改价初始化成功');	
+
+		}
+
+
+		/**
+		 * 接口名称: 发货改价保存
+		 * 接口地址：http://admin.zj.dev/admin/PurchaseOrderModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
+		 * {
+	     *      "entity": "order_info",
+	     *      "command": "updatePriceSend",
+	     *      "parameters": {
+	     *          "params": {
+	     *          	"order_id":101,//订单ID
+		 *		        "goods_price_send_saler": "20000.00",//供应商价格.物料单价
+		 *		        "goods_number_send_saler": "20000.00",//供应商价格.物料数量
+		 *		        "shipping_fee_send_saler": "20000.00",//供应商价格.物流费用
+		 *		        "order_amount_send_saler": "20000.00",//供应商价格.发货总价
+		 *		        "pay_id":0//支付方式id
+	     * 
+	     *          }
+	     *      }
+	     *  }
+		 * 返回数据格式如下 :
+		 * 	{
+		 * 		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "发货改价成功",
+		 *	    "content": {}
+		 *	}
+		 * 
+		 */
+		public function updatePriceSendAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+
+			if( !isset( $params['order_id'] ) ){
+				make_json_response('', '-1', '订单ID错误');
+			}
+
+			if( !isset( $params['suppers_id'] ) ){
+				make_json_response('', '-1', '请选择供应商');
+			}	
+			$order_id = intval( $params['order_id'] );
+
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$contract_table = $GLOBALS['ecs']->table('contract');//合同
+			$goods_table = $GLOBALS['ecs']->table('goods');//物料
+
+			$category_table = $GLOBALS['ecs']->table('category');//物料类别
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//物料属性
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');//订单商品
+
+			//检查订单状态
+			$order_info_sql = 'SELECT o.`child_order_status`, og.`goods_name`, g.`goods_id`, g.`price_num`, g.`price_rate` FROM ' . $order_info_table .
+							  ' AS o LEFT JOIN ' . $order_goods_table . ' AS og ON o.`order_id` = og.`order_id` ' .
+							  ' LEFT JOIN ' . $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
+					 		  ' WHERE o.`order_id` = ' . $order_id;
+			$order_status = $GLOBALS['db']->getRow( $order_info_sql );
+			if( !$order_status ){
+				make_json_response('', '-1', '订单不存在');
+			}
+
+			if( $order_status['child_order_status'] > SOS_SEND_PC ){//平台已验签(发货)
+				make_json_response('', '-1', '发货验签完毕，无法发货改价');
+			}
+
+			$goods_number_send_saler = $params['goods_number_send_saler'];
+			$goods_price_send_saler = (double)( $params['goods_price_send_saler'] );
+
+			$suppers_id = intval( $params['suppers_id'] );//销售信息.供货商id
+
+			$shipping_fee_send_saler = (double)( $params['shipping_fee_send_saler'] );//供货信息.发货物流费
+			$pay_id = intval( $params['pay_id'] );//支付方式id
+
+			$order_amount_send_saler = (double)( $params['order_amount_send_saler'] );
+
+			$order_info = array();
+			$order_info['suppers_id'] = $suppers_id;
+			$order_info['shipping_fee_send_saler'] = $shipping_fee_send_saler;
+
+			$order_info['order_amount_send_saler'] = $order_amount_send_saler;
+			$order_info['pay_id'] = $pay_id;
+
+			$order_info_update_sql = 'UPDATE ' . $order_info_table .' SET ';
+
+			foreach ($order_info as $cn => $cv) {
+				$order_info_update_sql .= '`' . $cn . '` = ' . $cv . ',';
+			}
+
+			$order_info_update_sql = substr( $order_info_update_sql, 0, -1 );
+			$order_info_update_sql .= ' WHERE `order_id` = ' . $order_id . ' LIMIT 1';
+			$order_info_update = $GLOBALS['db']->query( $order_info_update_sql );// update `order_info`
+
+			if( $order_info_update ) {// update `order_goods`
+				$order_goods_update_sql = 'UPDATE ' . $order_goods_table . ' SET ';
+
+				$order_goods = array();
+
+				$order_goods['goods_number_send_saler'] = $goods_number_send_saler;
+
+				$order_goods['goods_price_send_saler'] = $goods_price_send_saler;
+
+				foreach ($order_goods as $cn => $cv) {
+					$order_goods_update_sql .= '`' . $cn . '` = ' . $cv . ',';
+				}
+
+				$order_goods_update_sql = substr( $order_goods_update_sql, 0, -1 );
+				$order_goods_update_sql .= ' WHERE `order_id` = ' . $order_id . ' LIMIT 1';
+				$order_goods_update = $GLOBALS['db']->query( $order_goods_update_sql );
+
+				if ( $order_goods_update ) {
+
+					//保存报价到`price_log`
+					$price_log_table = $GLOBALS['ecs']->table( 'price_log' );
+					$price_log_sql = 'INSERT INTO ' . $price_log_table . ' (';
+
+					//商品属性	
+					$goods_attr_sql = 'SELECT `goods_id`, `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $order_status['goods_id'];
+					$goods_attr_arr = $GLOBALS['db']->getAll( $goods_attr_sql );
+
+					$goods_attr_val = array();
+					foreach ($goods_attr_arr as $v) {
+						$goods_attr_val[] = $v['attr_value'];
+					}
+					
+					$goods_attr_str = implode('/', $goods_attr_val);
+
+					$price_log = array();
+					$price_log['order_id'] = $order_id;
+					$price_log['goods_name'] = $order_status['goods_name'];
+					$price_log['goods_attr'] = $goods_attr_str;
+					//供应商名字
+					$suppliers_table = $GLOBALS['ecs']->table('suppliers');
+					$supplier_sql = 'SELECT `suppliers_name` FROM ' . $suppliers_table . ' WHERE `suppliers_id` = ' . $suppers_id;
+					$supplier = $GLOBALS['db']->getRow( $supplier_sql );
+					$supplier_name = empty( $supplier ) ? '' : $supplier['suppliers_name'];
+
+					$price_log['suppliers_name'] = $supplier_name;
+					$price_log['suppliers_price'] = $goods_price_send_saler;
+					$price_log['actual_price'] = $goods_price_send_buyer;
+
+					$price_log['shipping_fee'] = $shipping_fee_send_buyer;
+					$price_log['financial'] = $financial_send;
+					$price_log['total'] = $order_amount_send_buyer;
+
+					//支付方式
+					$pay_cfg = C('payment');
+					$price_log['payment'] = $pay_cfg[ $pay_id ];
+					$price_log['price_date'] = date('Y-m-d H:i:s');
+
+					$price_log_keys = array_keys( $price_log );
+
+					foreach ($price_log_keys as $k => $v) {
+						$price_log_sql .= ' `' . $v . '`,';
+					}
+
+					$price_log_sql = substr($price_log_sql, 0, -1) . ") VALUES(";
+
+					foreach ($price_log as $v) {
+						if( is_string( $v ) )
+							$v = '\'' . $v . '\'';
+						$price_log_sql = $price_log_sql . $v . ",";
+					}
+					$price_log_sql = substr($price_log_sql, 0, -1) . ')';
+					
+					$GLOBALS['db']->query( $price_log_sql );//保存到历史报价
+
+
+					make_json_response('', '0', '发货改价成功');
+				}else{
+					make_json_response('', '-1', '发货改价失败');
+				}
+			}else{
+				make_json_response('', '-1', '发货改价失败');
+			}
 
 		}
 
