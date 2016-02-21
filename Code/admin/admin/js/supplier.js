@@ -246,16 +246,15 @@ var Supplier = {
 		}
 		var button = $(handle).val();
 		var params = {"params":{"order_id":order_id, "button": button}};
-		strJson = createJson("updateChilderStatus", this.entity, params);
-		that = this
+		var strJson = createJson("updateChilderStatus", this.entity, params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
 				$('#message_area').html(createTip(obj.message));
-				var table = '<tr><td>'+$("input[name=date]").val()+'</td><td colspan="7">'+$("textarea[name=log]").val()+'</td></tr>';
-				$('#logistics_info>table>tbody').append(table);
+				$("#handle_button>span").html('');
 				return false;
 			}
 		}, "json");		
@@ -418,5 +417,39 @@ var Supplier = {
 				return false;
 			}
 		}, "json");		
+	},
+
+	updateButtonStatus: function(){
+		var order_id = getQueryStringByName('id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var params = {"params":{"order_id":order_id}};
+		var strJson = createJson("orderDetail", this.entity, params);
+		var that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$.each(obj.content.info, function(k, v){
+					if($("select[name="+k+"]").length){
+						console.log($("select[name="+k+"]").val());
+						$("select[name="+k+"]>option[value='"+v+"']").attr("selected","selected");
+					}
+				});
+				// 按钮状态更新
+				var button = '';
+				$.each(obj.content.buttons, function(k, v){
+					if(v == ""){
+						button +='';
+					}else{
+						button += '<input type="button" class="button" onclick="Supplier.updateChilderStatus(this)" value="'+v+'" >';
+					}
+				});
+				$("#handle_button>span").html(button);
+			}
+			$('#message_area').html('');
+		}, "json");
 	}
 }

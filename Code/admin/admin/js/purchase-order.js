@@ -518,7 +518,7 @@ var PurchaseOrder = {
 					}else if(v == "到货改价"){
 						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
 					}else{
-						button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
+						button += '<input type="button" class="button" onclick="PurchaseOrder.updateChilderStatus(this)" value="'+v+'" >';
 					}
 				});
 				$("#handle_button>span").html(button);
