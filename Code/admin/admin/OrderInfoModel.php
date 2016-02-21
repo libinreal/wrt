@@ -2844,7 +2844,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_goods_update_sql = 'UPDATE ' . $order_goods_table . ' SET ';
 
 				$order_goods = array();
-				$order_goods['goods_number_arrival'] = $goods_number_arrival;
+				$order_goods['goods_number_arr_buyer'] = $goods_number_arr_buyer;
+				$order_goods['goods_price_arr_buyer'] = $goods_price_arr_buyer;
+				$order_goods['goods_number_arr_saler'] = $goods_number_arr_saler;
+				$order_goods['goods_price_arr_saler'] = $goods_price_arr_saler;
 
 				foreach ($order_goods as $cn => $cv) {
 					$order_goods_update_sql .= '`' . $cn . '` = ' . $cv . ',';
