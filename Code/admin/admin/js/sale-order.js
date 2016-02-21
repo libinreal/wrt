@@ -451,6 +451,9 @@ var SaleOrder = {
 					if($("#"+k).length){
 						$("#"+k).text(v);
 					}
+					if($("."+k).length){
+						$("."+k).text(v);
+					}
 				});
 				// 订单状态相应操作
 				var button = '';

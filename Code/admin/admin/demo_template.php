@@ -198,6 +198,14 @@ if($section == "purchase_order_manage"){
 		case 'detail':
 			$smarty->display('second/purchase_order_detail.html');		
 			break;
+
+		case 'send_price':
+			$smarty->display('second/purchase_order_send_change_price.html');		
+			break;
+
+		case 'receive_price':
+			$smarty->display('second/purchase_order_receive_change_price.html');		
+			break;
 		
 		default:
 			exit;
