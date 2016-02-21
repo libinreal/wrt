@@ -445,6 +445,9 @@ var SaleOrder = {
 					if($("select[name="+k+"]").length){
 						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");
 					}
+					if($("."+k).length){
+						$("."+k).text(v);
+					}
 				});
 				$.each(obj.content.invoice, function(k, v){
 					if($("#"+k).length){
