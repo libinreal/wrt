@@ -19,8 +19,9 @@ $_LANG['15_bthPrice'] = '采购价格管理';
 $_LANG['16_applyCredit'] = '平台授信管理';
 $_LANG['17_bill_manage'] = '应收票据管理';
 $_LANG['18_sale_order'] = '销售订单管理';
+$_LANG['23_purchase_order_manage'] = '采购订单管理';
 $_LANG['19_bank_manage'] = '银行管理';
-$_LANG['20_supplier_order'] = '采购订单管理';
+$_LANG['20_supplier_order'] = '订单管理';
 $_LANG['21_order_pay'] = '应付款管理';
 $_LANG['22_order_recipient'] = '应收款管理';
 
@@ -123,8 +124,11 @@ $_LANG['bill_manage_user_list'] = '额度分配调整列表';
 $_LANG['sale_order_list'] = '（销售订单）订单列表';
 $_LANG['sale_order_suborder_all'] = '子订单列表';
 
-//订单管理
-$_LANG['supplier_order_list'] = '（采购订单）订单列表';
+//采购订单管理
+$_LANG['purchase_order_manage_list'] = '（采购订单）订单列表';
+
+//供应商订单管理
+$_LANG['supplier_order_list'] = '（供应商）订单列表';
 
 //应付款管理
 $_LANG['order_pay_list'] = '应付单列表';

@@ -1025,7 +1025,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *      	"financial_send_rate":0.0001,//金融费率
 	     *      	"financial_send":20,//金融费用
 	     *      	"pay_id":1,//支付方式
-	     *      	"suppliers_id":1//供应商id
+	     *      	"suppliers":1//供应商id
 	     *      }
 	     *  }
 	     * 返回数据格式如下 :
@@ -1037,6 +1037,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 */	        	
 		public function splitAction()
 		{
+			exit;
 			$content = $this->content;
 			$order_id = $content['parameters']['order_id'];
 			$goods_id = $content['parameters']['goods_id'];
@@ -1050,7 +1051,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			if( empty( $order_id) )
 				make_json_response('', '-1', '订单id错误');
-
+			if( empty( $suppliers_id) )
+				make_json_response('', '-1', '请选择供应商');
 			if( empty( $goods_id) )
 				make_json_response('', '-1', '商品id错误');
 
@@ -1434,7 +1436,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			// $attribute_table = $GLOBALS['ecs']->table('attribute');
 			$order_goods_sql = 'SELECT og.`goods_id`, og.`goods_name`, og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_number_arr_buyer`, ' .
-							   'og.`goods_number_arr_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`, og.`goods_price_arr_buyer`, og.`goods_price_arr_saler`, sp.`suppliers_name` FROM ' .
+							   'og.`goods_number_arr_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`, og.`goods_price_arr_buyer`, og.`goods_price_arr_saler` FROM ' .
 							   $order_goods_table . //物料编码 名称 下单数 供应商
 							   ' AS og LEFT JOIN '. $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' . 
@@ -2329,6 +2331,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( !isset( $params['order_id'] ) ){
 				make_json_response('', '-1', '订单ID错误');
 			}
+
+			if( !isset( $params['suppers_id'] ) ){
+				make_json_response('', '-1', '请选择供应商');
+			}	
 			$order_id = intval( $params['order_id'] );
 
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
@@ -2775,6 +2781,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			if( !isset( $params['order_id'] ) ){
 				make_json_response('', '-1', '订单ID错误');
+			}
+			if( !isset( $params['suppers_id'] ) ){
+				make_json_response('', '-1', '请选择供应商');
 			}
 			$order_id = intval( $params['order_id'] );
 
