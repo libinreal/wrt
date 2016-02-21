@@ -1815,7 +1815,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						break;
 					}
 					$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `bill_used` = 0, `cash_used`= 0' . ' WHERE `order_id` = ' . $order_id;//扣除归0
-					$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, SALE_ORDER_CONFIRMED);
+					$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CANCEL, SALE_ORDER_UNCONFIRMED);
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
@@ -1842,7 +1842,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					//票据和现金各回滚到对应的数据中
 					//待修改2016-02-19
 					$update_contract_sql = ' UPDATE ' . $GLOBALS['ecs']->table('contract') . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $order_status['cash_used'] .
-											', `bill_amount_valid` = `bill_amount_valid` + ' . $order_status['bill_used'] . ' WHERE `contract_num` = ' . $order_status['contract_sn'] . ' LIMIT 1';
+											', `bill_amount_valid` = `bill_amount_valid` + ' . $order_status['bill_used'] . ' WHERE `contract_num` = \'' . $order_status['contract_sn'] . '\' LIMIT 1';
 					$GLOBALS['db']->query( $update_contract_sql );//商城库存回滚
 
 					$cancel = true;
