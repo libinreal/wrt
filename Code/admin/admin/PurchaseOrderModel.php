@@ -1372,7 +1372,154 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 
 
+	   /**
+		 * 接口名称:订单详情-平台操作按钮对应的接口("确认"  "发货验签" "取消验签"...)
+		 * 接口地址：http://admin.zj.dev/admin/PurchaseOrderModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "updateChilderStatus",
+	     *      "parameters": {
+	     *          "params": {
+	     *          	"order_id":101//订单ID
+	     *           	"button":"确认"//按钮名称（可能的名称有: 确认 发货验签、取消验签 到货验签 ）
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "确认成功",
+		 *	    "content": {}
+		 *  }
+		 * @return [type] [description]
+		 */
+		public function updateChilderStatusAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
 
+			if( !isset( $params['order_id'] ) ){
+				make_json_response('', '-1', '订单ID错误');
+			}
+			$order_id = intval( $params['order_id'] );
+
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$contract_table = $GLOBALS['ecs']->table('contract');
+
+			//检查订单状态
+			$order_info_sql = 'SELECT odr.`child_order_status`, odr.`suppers_id`, odr.`parent_order_id`, odr.`order_amount_send_buyer`, odr.`order_amount_arr_buyer`,' .
+							  ' odr.`contract_sn` ,odr.`cash_used` , odr.`bill_used`, og.`goods_id`, og.`goods_number` FROM ' . $order_info_table .
+							  ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id` ' .
+					 		  ' WHERE odr.`order_id` = ' . $order_id;
+			$order_status = $GLOBALS['db']->getRow( $order_info_sql );
+			if( !$order_status ){
+				make_json_response('', '-1', '订单不存在');
+			}
+
+			//子订单状态更改
+			$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d WHERE `order_id` = ' . $order_id;
+
+			$buttons = trim($params['button']);
+			switch ( $buttons ) {
+				
+				case '发货验签':
+					if( $order_status['child_order_status'] == SOS_SEND_SC ){
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC2, SALE_ORDER_UNRECEIVE);
+						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
+
+						if( $childer_order_update )
+							make_json_response('', '0', '发货验签 成功');
+						else
+							make_json_response('', '-1', '发货验签 失败');
+					}					
+					break;
+				case '取消验签':
+					
+					if( $order_status['child_order_status'] == SOS_SEND_SC ){//供应商已验签
+						$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d' . ' WHERE `order_id` = ' . $order_id;
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP, SALE_ORDER_UNRECEIVE);
+
+					}else{
+
+						break;
+					}
+
+					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
+
+					if( $childer_order_update )
+						make_json_response('', '0', '取消验签 成功');
+					else
+						make_json_response('', '-1', '取消验签 失败');
+
+					break;
+			
+				case '到货验签':
+					if( $order_status['child_order_status'] == SOS_ARR_SC ){
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC2, SALE_ORDER_COMPLETE);
+						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
+
+						if( $childer_order_update )
+							make_json_response('', '0', '到货验签 成功');
+						else
+							make_json_response('', '-1', '到货验签 失败');
+					}					
+					break;
+				
+				default:
+					
+					break;
+			}
+
+			$childer_order_status = C('childer_order_status');
+			// 状态提示
+			$msg = '订单当前状态是 %s, 无法执行该操作';
+			switch ( $order_status['child_order_status'] ) {
+				case SOS_UNCONFIRMED:
+					$msg = sprintf($msg, $childer_order_status[SOS_UNCONFIRMED]);
+					break;
+				case SOS_CONFIRMED:
+					$msg = sprintf($msg, $childer_order_status[SOS_CONFIRMED]);
+					break;
+				case SOS_SEND_CC:
+					$msg = sprintf($msg, $childer_order_status[SOS_SEND_CC]);
+					break;
+				case SOS_SEND_PC:
+					$msg = sprintf($msg, $childer_order_status[SOS_SEND_PC]);
+					break;
+				case SOS_SEND_PP:
+					$msg = sprintf($msg, $childer_order_status[SOS_SEND_PP]);
+					break;
+				case SOS_SEND_SC:
+					$msg = sprintf($msg, $childer_order_status[SOS_SEND_SC]);
+					break;
+				case SOS_SEND_PC2:
+					$msg = sprintf($msg, $childer_order_status[SOS_SEND_PC2]);
+					break;
+
+				case SOS_ARR_CC:
+					$msg = sprintf($msg, $childer_order_status[SOS_ARR_CC]);
+					break;
+				case SOS_ARR_PC:
+					$msg = sprintf($msg, $childer_order_status[SOS_ARR_PC]);
+					break;		
+				case SOS_ARR_SC:
+					$msg = sprintf($msg, $childer_order_status[SOS_ARR_SC]);
+					break;
+				case SOS_ARR_PC2:
+					$msg = sprintf($msg, $childer_order_status[SOS_ARR_PC2]);
+					break;		
+				case SOS_CANCEL:
+					$msg = sprintf($msg, $childer_order_status[SOS_CANCEL]);
+					break;	
+				default:
+					$msg = sprintf($msg, '未知');
+					break;
+			}
+			make_json_response('', '-1', $msg);
+		}
 
 
 	}
