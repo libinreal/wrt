@@ -185,6 +185,11 @@ $(document).ready(function(){
 		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
 		customerPriceChange(financial_send);
 	});
+	// 客户价格-金融费用改价
+	$('#financial_send').on('valuechange', function (e, previous) {
+		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
+		customerPriceChange(financial_send);
+	});
 	// 供应商价格 - 物料单价修改
 	$('#goods_price_send_saler').on('valuechange', function (e, previous) {
 		supplierPriceChange()
