@@ -1,24 +1,17 @@
 var PurchaseOrder = {
 	order_arr: [
 		"order_sn",
-		"customer_name",
-		"customer_id",
-		"contract_sn",
-		"contract_name",
+		"goods_name",
+		"goods_sn",
+		"attr",
+		"price",
+		"number",
+		"shipping",
 		"add_time",
-		"best_time",
-		"goods_amount",
-		"order_status",
+		"status",
 		"operate"
 	],
-	order_status: {
-		"0":"已下单",
-		"1":"<span style='color:#00f;'>处理中</span>",
-		"2":"<span style='color:#00f;'>处理中</span>",
-		"3":"<span style='color:#00f;'>处理中</span>",
-		"4":"<span style='color:#999;'>已完成</span>",
-		"5":"<span style='color:#999;'>订单取消</span>"
-	},
+	order_status: {},
 	suborder_status: {},
 	order_detail_arr: [
 		"goods_sn",
@@ -72,7 +65,7 @@ var PurchaseOrder = {
 			var condition = {};
 			var like = {};
 			if($('input[name=order_sn]').val() != '') like["order_sn"] = $('input[name=order_sn]').val();
-			if($('input[name=user_name]').val() != '') like["user_name"] = $('input[name=user_name]').val();
+			if($('input[name=suppliers_name]').val() != '') like["suppliers_name"] = $('input[name=suppliers_name]').val();
 			if($('input[name=contract_name]').val() != '') like["contract_name"] = $('input[name=contract_name]').val();
 			if($('select[name=status]').val() != '') condition["status"] = $('select[name=status]').val();
 			var due_date1 = $('#search_form input[name=due_date1]').val();
@@ -116,16 +109,15 @@ var PurchaseOrder = {
 								}else{
 									var edit = '';
 								}
-								edit += createLink("demo_template.php?section=sale_order&act=detail&id="+value.order_id, "详情");
-								edit += createLink("demo_template.php?section=sale_order&act=suborder_list&id="+value.order_id, "子订单列表");
+								edit += createLink("demo_template.php?section=purchase_order_manage&act=detail&id="+value.order_id, "订单详情");
 								row += createTd(edit);
 								continue;
 							}
 							if(value[that.order_arr[i]] != null || value[that.order_arr[i]] != ''){
-								if(that.order_arr[i] == "add_time" || that.order_arr[i] == "best_time"){
+								if(that.order_arr[i] == "add_time"){
 									row += createTd(timestampToDate(value[that.order_arr[i]]));
-								}else if(that.order_arr[i] == "order_status"){
-									row += createTd(that.order_status[value.order_status] === undefined ? "未知状态" : that.order_status[value.order_status]);
+								}else if(that.order_arr[i] == "status"){
+									row += createTd(that.order_status[value.status] === undefined ? "未知状态" : that.order_status[value.status]);
 								}else{
 									row += createTd(value[that.order_arr[i]]);
 								}

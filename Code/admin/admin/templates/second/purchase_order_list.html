@@ -22,7 +22,7 @@
 			<input type="text" name="order_sn"/>
 			&nbsp;
 			<labe>供应商名称：</labe>
-			<input type="text" name="user_name"/>
+			<input type="text" name="suppliers_name"/>
 			&nbsp;
 			<labe>合同名称：</labe>
 			<input type="text" name="contract_name"/>
@@ -102,8 +102,13 @@ $(document).ready(function(){
         elem: '#due_date2'
     });
 });
-TypeMode.getOrderStatus('order_status');
-PurchaseOrder.getList();
+TypeMode.getOrderStatus('order_status', 'init');
+function init(){
+	$("#order_status>option").each(function(index, elem){
+		PurchaseOrder.order_status[$(elem).val()] = $(elem).text();
+	});
+	PurchaseOrder.getList();
+}
 function first(){
 	PurchaseOrder.current_page = 1;
 	PurchaseOrder.limit = 0;

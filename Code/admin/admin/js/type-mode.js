@@ -243,7 +243,7 @@ var TypeMode = {
 		},"json");
 	},
 
-	getOrderStatus: function(select_id){
+	getOrderStatus: function(select_id, func){
 		var strJson = createJson("order_status", "order_status", {});
 		var that = this;
 		$.post(that.url, strJson, function(object){
@@ -258,7 +258,11 @@ var TypeMode = {
 				$('#'+select_id).append(row);
 			}
 			$('#message_area').html('');
-		},"json");		
+		},"json").done(function(){
+			if(func){
+				window[func]();
+			}			
+		});
 	},
 
 	getChilderOrderStatus: function(select_id, func){
