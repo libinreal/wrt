@@ -113,8 +113,8 @@ var Supplier = {
 				return false;
 			}else{
 				$.each(obj.content.info,function(key, value){
-					if($("span#"+key).length == 1){
-						$("span#"+key).text(value);
+					if($("td#"+key).length == 1){
+						$("td#"+key).text(value);
 					}
 				});
 
