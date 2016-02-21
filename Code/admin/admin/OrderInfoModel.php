@@ -2056,11 +2056,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    		   "suppliers_name":"天津天佑"//供应商名字
 		 *	    	    }
 		 *	    	    ],
+		 *	    	    "default_suppliers_id":1,//供应商id
 		 *	    	    "financial_send_rate":0.0001,//客户价格.金融费率 (数字)
 		 *	    	    "shipping_fee_send_buyer":82,//客户价格.物流费用
 		 *	    	    "financial_send":1,//客户价格.金融费用
 		 *      	    "order_amount_send_buyer":200,//客户价格.发货总价
-		 *      	
+		 *      	    
 		 *	    	 	"goods_price_send_saler":100,//供应商价格.物料单价
 		 *	    	 	"goods_number_send_saler":100,//供应商价格.物料数量
 		 *	    	  	"shipping_fee_send_saler":82,//供应商价格.物流费用
@@ -2116,7 +2117,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//子订单+商品信息
 			$order_sql = 'SELECT og.`goods_id`, og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`,' .
-						 ' o.`suppers_id`, g.`cat_id`, ' .
+						 ' o.`suppers_id` as `default_suppliers_id`, g.`cat_id`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
 						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
 						 ' o.`shipping_fee_send_buyer`, o.`financial_send`, o.`financial_send_rate`, o.`order_amount_send_buyer`,' .
@@ -2539,6 +2540,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    		   "suppliers_name":"天津天佑"//供应商名字
 		 *	    	    }
 		 *	    	    ],
+		 *	    	    "default_suppliers_id":1,//供应商id
 		 *	    	    "financial_arr_rate":0.0001,//客户价格.金融费率 (数字)
 		 *	    	    "shipping_fee_arr_buyer":82,//客户价格.物流费用
 		 *	    	    "financial_arr":1,//客户价格.金融费用
@@ -2582,7 +2584,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//子订单+商品信息
 			$order_sql = 'SELECT og.`goods_id`, og.`goods_price_arr_buyer`, og.`goods_number_arr_buyer`, og.`goods_price_arr_saler`, og.`goods_number_arr_saler`,' .
-						 ' o.`order_amount_arr_saler`,o.`order_amount_arr_buyer`,o.`suppers_id`, g.`cat_id`, ' .
+						 ' o.`order_amount_arr_saler`,o.`order_amount_arr_buyer`,o.`suppers_id` as `default_suppliers_id`, g.`cat_id`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
 						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
 						 ' o.`shipping_fee_arr_buyer`, o.`financial_arr`, o.`financial_arr_rate`, o.`shipping_fee_arr_saler` ' .
