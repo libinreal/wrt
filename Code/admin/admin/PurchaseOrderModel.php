@@ -1184,6 +1184,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				if ( $order_goods_update ) {
 
+					/*
 					//保存报价到`price_log`
 					$price_log_table = $GLOBALS['ecs']->table( 'price_log' );
 					$price_log_sql = 'INSERT INTO ' . $price_log_table . ' (';
@@ -1238,7 +1239,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$price_log_sql = substr($price_log_sql, 0, -1) . ')';
 					
 					$GLOBALS['db']->query( $price_log_sql );//保存到历史报价
-
+					*/
 
 					make_json_response('', '0', '发货改价成功');
 				}else{
