@@ -226,7 +226,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' . 
 							   ' WHERE og.`order_id` = ' . $order_id . ' AND sp.`suppliers_name` IS NOT NULL';
 			$order_goods_arr = $GLOBALS['db']->getAll($order_goods_sql);
-			
+
 			$order_info['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
 
 			if( !empty( $order_goods_arr ) ){
@@ -1037,7 +1037,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 */	        	
 		public function splitAction()
 		{
-			exit;
 			$content = $this->content;
 			$order_id = $content['parameters']['order_id'];
 			$goods_id = $content['parameters']['goods_id'];
@@ -1193,7 +1192,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			$childer_order_sql = 'INSERT INTO ' . $order_info_table .'(';
 			$childer_order_keys = array_keys( $childer_order );
-			// print_r( $childer_order_keys );exit;
+			
 			foreach ($childer_order_keys as $v) {
 				$childer_order_sql .= '`' . $v .'`,';
 			}
