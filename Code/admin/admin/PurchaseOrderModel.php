@@ -1111,9 +1111,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '订单ID错误');
 			}
 
-			if( !isset( $params['suppers_id'] ) ){
+			/*if( !isset( $params['suppers_id'] ) ){
 				make_json_response('', '-1', '请选择供应商');
-			}	
+			}	*/
 			$order_id = intval( $params['order_id'] );
 
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
