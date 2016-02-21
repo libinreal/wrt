@@ -102,7 +102,7 @@ $(document).ready(function(){
         elem: '#due_date2'
     });
 });
-TypeMode.getOrderStatus('order_status', 'init');
+TypeMode.getPurchaseOrderStatus('order_status', 'init');
 function init(){
 	$("#order_status>option").each(function(index, elem){
 		PurchaseOrder.order_status[$(elem).val()] = $(elem).text();

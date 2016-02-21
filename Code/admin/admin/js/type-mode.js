@@ -265,6 +265,28 @@ var TypeMode = {
 		});
 	},
 
+	getPurchaseOrderStatus: function(select_id, func){
+		var strJson = createJson("purchase_status", "purchase_status", {});
+		var that = this;
+		$.post(that.url, strJson, function(object){
+			if(object.error == -1){
+				$('#message_area').html(createError(object.message));
+				return false;
+			}else{
+				var row = '';
+				$.each(object.content, function(k, v){
+					row += appendOption(k, v);
+				})
+				$('#'+select_id).append(row);
+			}
+			$('#message_area').html('');
+		},"json").done(function(){
+			if(func){
+				window[func]();
+			}			
+		});
+	},
+
 	getChilderOrderStatus: function(select_id, func){
 		var strJson = createJson("childer_order_status", "childer_order_status", {});
 		var that = this;
