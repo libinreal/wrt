@@ -446,7 +446,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$sql = 'SELECT odr.`order_id`, odr.`child_order_status`, odr.`order_sn`, odr.`add_time`, ' .
 				   ' odr.`shipping_fee_send_saler`, odr.`shipping_fee_arr_saler`, odr.`best_time`, odr.`suppers_id`,' .
-				   ' og.`goods_sn`, og.`goods_name`, og.`goods_price`, og.`goods_number`, og.`goods_id`, ' .
+				   ' og.`goods_sn`, og.`goods_name`, og.`goods_number_arr_saler`, og.`goods_number_send_saler`, og.`goods_price_send_saler`,og.`goods_price_arr_saler`,' .
+				   ' og.`goods_id`, ' .
 				   ' odr.`consignee`, odr.`address`, odr.`mobile`, odr.`sign_building`, odr.`shipping_info`, odr.`shipping_log`, ' .
 				   ' u.`companyName` AS receiver ' .
 				   'FROM ' . $order_info_table . ' AS odr LEFT JOIN ' .
@@ -475,8 +476,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 				//物流费
 				if( $order_info['child_order_status'] <= SOS_SEND_PC2){
 					$order_info['shipping_fee'] = $order_info['shipping_fee_send_saler'];//发货
+					$order_info['goods_number'] = $order_info['goods_number_send_saler'];//发货
+					$order_info['goods_price'] = $order_info['goods_price_send_saler'];//发货
 				}else{
 					$order_info['shipping_fee'] = $order_info['shipping_fee_arr_saler'];//到货
+					$order_info['goods_number'] = $order_info['goods_number_arr_saler'];//到货
+					$order_info['goods_price'] = $order_info['goods_price_arr_saler'];//到货
 				}
 				
 				//物流
