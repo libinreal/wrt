@@ -1676,13 +1676,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			//子订单状态更改
-			$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d' . ' WHERE `order_id` = ' . $order_id;
+			$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d WHERE `order_id` = ' . $order_id;
 
 			$buttons = trim($params['button']);
 			switch ( $buttons ) {
 				case '确认':
 					if( $order_status['child_order_status'] == SOS_UNCONFIRMED ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, SALE_ORDER_CONFIRMED);
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						if( $childer_order_update )
@@ -1694,7 +1694,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case '发货验签':
 					if( $order_status['child_order_status'] == SOS_SEND_CC ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC, SALE_ORDER_UNRECEIVE);
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						if( $childer_order_update )
@@ -1706,8 +1706,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				case '取消验签':
 					
 					if( $order_status['child_order_status'] == SOS_SEND_CC ){//客户已验签
-						$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `bill_used` = 0, `cash_used`= 0' . ' WHERE `order_id` = ' . $order_id;
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_UNCONFIRMED);
+						$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `bill_used` = 0, `cash_used`= 0' . ' WHERE `order_id` = ' . $order_id;
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, SALE_ORDER_CONFIRMED);
 
 					}else{
 
@@ -1737,7 +1737,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 
 					if(  $order_status['child_order_status'] == SOS_SEND_PC ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP, SALE_ORDER_UNRECEIVE );
 					}
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
@@ -1749,7 +1749,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case '到货验签':
 					if( $order_status['child_order_status'] == SOS_ARR_CC ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC, SALE_ORDER_COMPLETE);
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						if( $childer_order_update )
@@ -1762,8 +1762,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 					if( $order_status['child_order_status'] >= SOS_SEND_PC ){//已验签的 无法取消订单
 						break;
 					}
-					$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `bill_used` = 0, `cash_used`= 0' . ' WHERE `order_id` = ' . $order_id;//扣除归0
-					$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CANCEL);
+					$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `bill_used` = 0, `cash_used`= 0' . ' WHERE `order_id` = ' . $order_id;//扣除归0
+					$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, SALE_ORDER_CONFIRMED);
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
@@ -2042,7 +2042,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    	"form":
 		 *	    	{
 		 *	    		"order_id":142,
-		 *	    	 	"goods_price_send_buyer":100,//客户价格.物料单价 goods_price_add
+		 *	    	 	"goods_price_send_buyer":100,//客户价格.物料单价 
 		 *	    	  	"goods_number_send_buyer":100,//客户价格.物料数量
 		 *	    	   	"suppers_id"://客户价格.实际供应商列表
 		 *	    	    [
@@ -2521,7 +2521,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    	"form":
 		 *	    	{
 		 *	    		"order_id":142,
-		 *	    	 	"goods_price_arr_buyer":100,//客户价格.物料单价 goods_price_add
+		 *	    	 	"goods_price_arr_buyer":100,//客户价格.物料单价
 		 *	    	  	"goods_number_arr_buyer":100,//客户价格.物料数量
 		 *	    	    "suppers_id"://客户价格.实际供应商列表
 		 *	    	    [
@@ -2573,7 +2573,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//子订单+商品信息
 			$order_sql = 'SELECT og.`goods_id`, og.`goods_price_arr_buyer`, og.`goods_number_arr_buyer`, og.`goods_price_arr_saler`, og.`goods_number_arr_saler`,' .
-						 ' o.`suppers_id`, g.`cat_id`, ' .
+						 ' o.`order_amount_arr_saler`,o.`order_amount_arr_buyer`,o.`suppers_id`, g.`cat_id`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
 						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
 						 ' o.`shipping_fee_arr_buyer`, o.`financial_arr`, o.`financial_arr_rate`, o.`shipping_fee_arr_saler` ' .
@@ -2793,8 +2793,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '订单不存在');
 			}
 
-			if( $order_status['child_order_status'] < SOS_SEND_PC2 ){//未发货
-				make_json_response('', '-1', '尚未进行发货验签，无法到货改价');
+			if( $order_status['child_order_status'] < SOS_SEND_PP ){//未发货
+				make_json_response('', '-1', '尚未进行采购下单，无法到货改价');
 			}
 
 			if( $order_status['child_order_status'] >= SOS_ARR_PC2 ){//到货验签（平台验签完）
