@@ -98,7 +98,7 @@
 					<td class="title">物料单价：</td>
 					<td><input type="text" name="goods_price_arr_saler" id="goods_price_arr_saler"></td>
 					<td class="title">物料数量：</td>
-					<td><input type="text" name="goods_number_arr_saler" id="goods_number_arr_saler" readonly="readonly"></td>
+					<td><input type="text" name="goods_number_arr_saler" id="goods_number_arr_saler"></td>
 					<td class="title">物流费用：</td>
 					<td><input type="text" name="shipping_fee_arr_saler" id="shipping_fee_arr_saler" data-rule-required="true" data-rule-number="true"></td>
 				</tr>
@@ -191,6 +191,10 @@ $(document).ready(function(){
 	});
 	// 供应商价格 - 物料数量修改
 	$('#goods_number_arr_saler').on('valuechange', function (e, previous) {
+		var goods_number_arr_saler = validateNumber(parseFloat($("#goods_number_arr_saler").val())) == 0 ? 0 : parseFloat($("#goods_number_arr_saler").val());
+		$("#goods_number_arr_buyer").val(goods_number_arr_saler);
+		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
+		customerPriceChange(financial_send);
 		supplierPriceChange()
 	});
 	// 供应商价格 - 物流费用
