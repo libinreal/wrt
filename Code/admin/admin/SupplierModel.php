@@ -143,7 +143,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     * 返回数据格式如下 :
 	     *  {
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
-		 *	    "message": "票据列表查询成功",
+		 *	    "message": "订单列表查询成功",
 		 *	    "content": { 
 		 *	    	"data":[
 		 *	        {
@@ -170,7 +170,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
 
 			$suppliers_id = $this->getSuppliersId();
-
+			$childer_map = C('purchase_to_childer_map');
 		    if( empty( $suppliers_id ) ){
 		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
 		    }
@@ -210,7 +210,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( isset( $where["status"] ) )
 			{
 				$where_status = intval( $where['status'] );
-				$childer_map = C('purchase_to_childer_map');
+				
 				if( isset( $childer_map[ $where_status ] ) ){
 
 					$childer_map_values = $childer_map[ $where_status ];
@@ -488,12 +488,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$childer_map = C('purchase_to_childer_map');
 				$purchase_status = C('purchase_status');
-						
+					
 				$order_info['order_status'] = '';
 				//订单状态转换
 				foreach ($childer_map as $pk => $pv) {
 					foreach ($pv as $s) {
 						if( $s == $order_info['child_order_status'] ){
+
 							$order_info['order_status'] = $purchase_status[ $pk ];
 							break 2;
 						}

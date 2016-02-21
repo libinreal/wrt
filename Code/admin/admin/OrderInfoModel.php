@@ -1397,7 +1397,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						 ' odr.`consignee`, odr.`address`, odr.`mobile`, odr.`sign_building`, ' .
 					 	 ' odr.`inv_type`, odr.`inv_payee`, odr.`inv_bank_name`, odr.`inv_bank_account`, odr.`inv_bank_address`, odr.`inv_tel`, odr.`inv_fax`, ' .	//发票相关
 					 	 ' odr.`shipping_fee_send_buyer`, odr.`shipping_fee_arr_buyer`, odr.`shipping_fee_send_saler`, odr.`shipping_fee_arr_saler`, ' .//商品资料
-					 	 ' odr.`financial_send`, odr.`financial_arr`, ' .//金融费
+					 	 ' odr.`financial_send`, odr.`financial_arr`, odr.`financial_send_rate`, ' .//金融费
 					 	 ' odr.`order_amount_send_buyer`, odr.`order_amount_arr_buyer`, odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`, ' .//总金额
 					 	 ' odr.`shipping_info`, odr.`shipping_log`, ' .//物流信息
 					 	 ' odr.`suppers_id` ' .//供应商信息
@@ -1419,14 +1419,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$invoice['inv_bank_address'] = $order_info['inv_bank_address'];//银行地址
 			$invoice['inv_tel'] = $order_info['inv_tel'];//联系电话
 			$invoice['inv_fax'] = $order_info['inv_fax'];//联系传真
-
-			unset( $order_info['inv_type'] );
-			unset( $order_info['inv_payee'] );
-			unset( $order_info['inv_bank_name'] );
-			unset( $order_info['inv_bank_account'] );
-			unset( $order_info['inv_bank_address'] );
-			unset( $order_info['inv_tel'] );
-			unset( $order_info['inv_fax'] );
 
 			//商品详情
 			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
@@ -1478,11 +1470,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_good['order_amount_send_saler'] = $order_info['order_amount_send_saler'];//采购订单 发货总金融
 				$order_good['order_amount_arr_saler'] = $order_info['order_amount_arr_saler'];//采购订单 到货总金融
 
-				unset($order_info['shipping_fee_send_saler']);
-				unset($order_info['shipping_fee_arr_saler']);
-				unset($order_info['order_amount_send_saler']);
-				unset($order_info['order_amount_arr_saler']);
-
 				//销售信息
 				// $order_good['goods_price_arr_buyer'] = $order_good['goods_price_send_buyer'];//销售订单 商品记录 加价后价格
 				$order_good['shipping_fee_send_buyer'] = $order_info['shipping_fee_send_buyer'];//销售订单 物流
@@ -1492,14 +1479,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 				
 				$order_good['order_amount_send_buyer'] = $order_info['order_amount_send_buyer'];//销售订单 发货总金融
 				$order_good['order_amount_arr_buyer'] = $order_info['order_amount_arr_buyer'];//销售订单 到货总金融
-
-				unset($order_info['shipping_fee_send_buyer']);
-				unset($order_info['shipping_fee_arr_buyer']);
-				unset($order_info['financial_send']);
-				unset($order_info['financial_arr']);
-
-				unset($order_info['order_amount_send_buyer']);
-				unset($order_info['order_amount_arr_buyer']);
 
 				//物流
 				// $shipping = empty( $order_info['shipping_info'] ) ? array() : json_decode( $order_info['shipping_info'], true);
@@ -1552,7 +1531,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_SEND_CC://客户已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_CC];
-						$buttons = array('发货验签', '发货改价', '取消验签');
+						$buttons = array('发货验签', '取消验签');
 						break;
 					case SOS_SEND_PC://平台已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
@@ -1563,6 +1542,53 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PP];
 						$buttons = array('到货改价');//销售价格修改
+
+						//***************到货改价数据初始化 START**********
+						//订单到货信息初始化
+						$arr_data = array();
+						$arr_data['financial_arr_rate'] = $order_info['financial_send_rate'];
+						$arr_data['financial_arr'] = $order_info['financial_send'];
+						$arr_data['shipping_fee_arr_buyer'] = $order_info['shipping_fee_send_buyer'];
+						$arr_data['shipping_fee_arr_saler'] = $order_info['shipping_fee_send_saler'];
+						$arr_data['order_amount_arr_buyer'] = $order_info['order_amount_send_buyer'];
+						$arr_data['order_amount_arr_saler'] = $order_info['order_amount_send_saler'];
+
+						$arr_data_keys = array_keys( $arr_data );
+						$arr_update_sql = 'UPDATE ' . $order_info_table . ' SET ';
+						foreach ($arr_data_keys as $ak) {
+							if( is_string( $arr_data[$ak] ) ){
+								$arr_update_sql .= '`' . $ak . '` = \'' . $arr_data[$ak] .'\',';
+							}else{
+								$arr_update_sql .= '`' . $ak . '` = ' . $arr_data[$ak] .',';
+							}
+						}
+
+						$arr_update_sql = substr($arr_update_sql, 0, -1);
+						$arr_update_sql .= ' WHERE `order_id` = ' . $order_id;
+						$GLOBALS['db']->query( $arr_update_sql );
+						//订单商品到货信息初始化
+						$arr_data = array();
+						$arr_data['goods_number_arr_buyer'] = $order_good['goods_number_send_buyer'];
+						$arr_data['goods_number_arr_saler'] = $order_good['goods_number_send_saler'];
+						$arr_data['goods_price_arr_buyer'] = $order_good['goods_price_send_buyer'];
+						$arr_data['goods_price_arr_saler'] = $order_good['goods_price_send_saler'];
+
+						$arr_data_keys = array_keys( $arr_data );
+						$arr_update_sql = 'UPDATE ' . $order_goods_table . ' SET ';
+						foreach ($arr_data_keys as $ak) {
+							if( is_string( $arr_data[$ak] ) ){
+								$arr_update_sql .= '`' . $ak . '` = \'' . $arr_data[$ak] .'\',';
+							}else{
+								$arr_update_sql .= '`' . $ak . '` = ' . $arr_data[$ak] .',';
+							}
+						}
+
+						$arr_update_sql = substr($arr_update_sql, 0, -1);
+						$arr_update_sql .= ' WHERE `order_id` = ' . $order_id;
+						$GLOBALS['db']->query( $arr_update_sql );
+
+						//***************到货改价数据初始化 END**********
+
 						break;	
 
 					//************************** 采购发货中 BEGIN **************************
@@ -1574,7 +1600,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_SEND_PC2://平台已验签(发货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC2];
-						$buttons = array();
+						$buttons = array('到货改价');
 						break;
 					//************************** 采购发货中 END **************************
 					
@@ -1615,11 +1641,33 @@ require(dirname(__FILE__) . '/includes/init.php');
 						break;
 				}
 
+				unset( $order_info['inv_type'] );
+				unset( $order_info['inv_payee'] );
+				unset( $order_info['inv_bank_name'] );
+				unset( $order_info['inv_bank_account'] );
+				unset( $order_info['inv_bank_address'] );
+				unset( $order_info['inv_tel'] );
+				unset( $order_info['inv_fax'] );
+
+				unset($order_info['shipping_fee_send_saler']);
+				unset($order_info['shipping_fee_arr_saler']);
+				unset($order_info['order_amount_send_saler']);
+				unset($order_info['order_amount_arr_saler']);
+
+				unset($order_info['shipping_fee_send_buyer']);
+				unset($order_info['shipping_fee_arr_buyer']);
+				unset($order_info['financial_send']);
+				unset($order_info['financial_arr']);
+
+				unset($order_info['order_amount_send_buyer']);
+				unset($order_info['order_amount_arr_buyer']);
+
+
 			}else{
 				$order_good = array();
 				$buttons = array();
 			}
-				
+							
 			$content = array();
 
 			$content['info'] = $order_info;
@@ -1723,7 +1771,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					//待修改2016-02-19
 					// $return_amount = $order_status['order_amount_send_buyer'];
 					$update_contract_sql = ' UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $order_status['cash_used'] .
-											', `bill_amount_valid` = `bill_amount_valid` + ' . $order_status['bill_used'] . ' WHERE `contract_num` = ' . $order_status['contract_sn'] . ' LIMIT 1';;
+											', `bill_amount_valid` = `bill_amount_valid` + ' . $order_status['bill_used'] . ' WHERE `contract_num` = \'' . strval($order_status['contract_sn']) . '\' LIMIT 1';;
 					$GLOBALS['db']->query( $update_contract_sql );
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
@@ -1767,7 +1815,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						break;
 					}
 					$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `bill_used` = 0, `cash_used`= 0' . ' WHERE `order_id` = ' . $order_id;//扣除归0
-					$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, SALE_ORDER_CONFIRMED);
+					$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CANCEL, SALE_ORDER_UNCONFIRMED);
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
@@ -1794,7 +1842,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					//票据和现金各回滚到对应的数据中
 					//待修改2016-02-19
 					$update_contract_sql = ' UPDATE ' . $GLOBALS['ecs']->table('contract') . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $order_status['cash_used'] .
-											', `bill_amount_valid` = `bill_amount_valid` + ' . $order_status['bill_used'] . ' WHERE `contract_num` = ' . $order_status['contract_sn'] . ' LIMIT 1';
+											', `bill_amount_valid` = `bill_amount_valid` + ' . $order_status['bill_used'] . ' WHERE `contract_num` = \'' . $order_status['contract_sn'] . '\' LIMIT 1';
 					$GLOBALS['db']->query( $update_contract_sql );//商城库存回滚
 
 					$cancel = true;
