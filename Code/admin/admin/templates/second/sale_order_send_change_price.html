@@ -213,7 +213,7 @@ $(document).ready(function(){
 	});
 	// 供应商价格 - 物料数量修改
 	$('#goods_number_send_saler').on('valuechange', function (e, previous) {
-		var goods_number_send_saler = validateNumber(parseFloat($("#goods_number_arr_saler").val())) == 0 ? 0 : parseFloat($("#goods_number_arr_saler").val());
+		var goods_number_send_saler = validateNumber(parseFloat($("#goods_number_send_saler").val())) == 0 ? 0 : parseFloat($("#goods_number_send_saler").val());
 		$("#goods_number_send_buyer").val(goods_number_send_saler);
 		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
 		customerPriceChange(financial_send);
