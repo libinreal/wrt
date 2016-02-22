@@ -144,8 +144,8 @@ var BillAjust = {
 				}else{
 					$("#to_amount_valid").text(obj.content.init.contracts[to_order].cash_amount_valid);
 				}
-				$("#from_ajust_amount").val(0);
-				$("#to_ajust_amount").val(0);
+				$("#from_adjust_amount").val(0);
+				$("#to_adjust_amount").val(0);
 			}
 			$('#message_area').html('');
 		}, "json");

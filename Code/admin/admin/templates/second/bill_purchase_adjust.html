@@ -42,8 +42,8 @@
 						<td>可用余额：</td><td id="to_amount_valid"></td>
 					</tr>
 					<tr>
-						<td>调整额度：</td><td><input type="text" name="ajust_amount" id="from_ajust_amount" data-rule-required="true" data-rule-number="true" value="0" />元</td>
-						<td>调整额度：</td><td><input type="text" id="to_ajust_amount" readonly="readonly" /></td>
+						<td>调整额度：</td><td><input type="text" name="adjust_amount" id="from_adjust_amount" data-rule-required="true" data-rule-number="true" value="0" />元</td>
+						<td>调整额度：</td><td><input type="text" id="to_adjust_amount" readonly="readonly" /></td>
 					</tr>
 					<tr>
 						<td colspan="4">大写（RMB）：<span id="captial_currency"></span></td>
@@ -77,23 +77,23 @@
 <script type="text/javascript">
 BillAjust.getAddInitAction();
 $("#adjust_form").validate();
-$('#from_ajust_amount').on('valuechange', function (e, previous) {
+$('#from_adjust_amount').on('valuechange', function (e, previous) {
 	if($('select[name=from_contract_id]').val() == $('select[name=to_contract_id]').val()){
 		$('#message_area').html(createError('合同编号重复'));
 		return false;
 	}
 	var from_amount_valid = parseFloat($("#from_amount_valid").text());
-	var from_ajust_amount = parseFloat($("#from_ajust_amount").val());
+	var from_adjust_amount = parseFloat($("#from_adjust_amount").val());
 	var to_amount_valid = parseFloat($("#to_amount_valid").text());
-	if(from_ajust_amount > from_amount_valid){
+	if(from_adjust_amount > from_amount_valid){
 		$('#message_area').html(createError('可用额度不足'));
 		return false;
 	}else{
 		$('#message_area').html(createError(''));
-		$('#to_ajust_amount').val(from_ajust_amount);
-		$('#from_remain_amount').text(from_amount_valid - from_ajust_amount);
-		$('#to_remain_amount').text(to_amount_valid + from_ajust_amount);
-		piliskys('from_ajust_amount','captial_currency');
+		$('#to_adjust_amount').val(from_adjust_amount);
+		$('#from_remain_amount').text(from_amount_valid - from_adjust_amount);
+		$('#to_remain_amount').text(to_amount_valid + from_adjust_amount);
+		piliskys('from_adjust_amount','captial_currency');
 	}
 });
 </script>
