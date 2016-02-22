@@ -495,6 +495,7 @@ class OrderInfo extends \PhpRudder\Mvc\ModelBase
             'order_status' => 'status',
             'shipping_status' => 'shippingStatus',
             'pay_status' => 'payStatus',
+            'purchase_pay_status' => 'purchasePayStatus',
             'consignee' => 'name',
             'country' => 'country',
             'province' => 'province',
@@ -589,7 +590,7 @@ class OrderInfo extends \PhpRudder\Mvc\ModelBase
         	'order_amount_arr_buyer'  => 'orderAmountArrBuyer', 
             'order_amount_arr_saler'  => 'orderAmountArrSaler',
             'bill_used'  => 'billUsed',
-        	'cash_used'  => 'cashUsed',
+        	'cash_used'  => 'cashUsed'
         );
     }
 

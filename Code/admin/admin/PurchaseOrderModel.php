@@ -132,7 +132,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$like["order_sn"] = $temp_order_sn[0];
 					$order_sn_sql =  'SELECT `order_id` FROM ' . $order_table . ' WHERE `order_sn` like \'%' . $like['order_sn'] . '%\' ORDER BY `order_id` ASC';
 					$order_sn_arr = $GLOBALS['db']->getAll( $order_sn_sql );
-
+					
 					if( !empty( $order_sn_arr ) ){
 						$order_sn_id = array();
 						foreach ($order_sn_arr as $k => $v) {
@@ -141,6 +141,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$order_ids = implode(',', $order_sn_id);
 
 						$where_str = ' WHERE odr.`order_id` IN(' . $order_ids . ')';
+					}else{
+						make_json_response('', '-1', '没有查找到指定订单编号的叮当');
 					}	
 				}
 				if( isset( $like["suppliers_name"] ) ){
@@ -158,6 +160,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 							$where_str .= ' AND spl.`suppliers_id` IN(' . $suppliers_ids . ')';
 						else
 							$where_str .= ' WHERE spl.`suppliers_id` IN(' . $user_ids . ')';
+					}else{
+						make_json_response('', '-1', '没有查找到指定供应商的订单');
 					}
 
 				}
@@ -176,6 +180,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 							$where_str .= ' AND crt.`contract_id` IN(' . $contract_ids . ')';
 						else
 							$where_str .= ' WHERE crt.`contract_id` IN(' . $contract_ids . ')';
+					}else{
+						make_json_response('', '-1', '没有查找到指定合同名称的订单');
 					}
 				}
 			}
@@ -436,6 +442,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_good = $GLOBALS['db']->getRow($order_goods_sql);
 
 			$order_info['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
+
+			//采购订单编号
+			$order_info['order_sn'] = $order_info['order_sn'] ? $order_info['order_sn'] . '-cg' : '';
 
 			if( !empty( $order_good ) ){
 				
