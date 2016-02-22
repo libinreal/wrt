@@ -356,13 +356,13 @@ var SaleOrder = {
 			var due_date1 = $('#search_form input[name=due_date1]').val();
 			var due_date2 = $('#search_form input[name=due_date2]').val();
 			if(user_name != ''){
-				condition.like = {"user_name":user_name};
+				condition.like.user_name = user_name;
 			}
 			if(order_sn != ''){
-				condition.like = {"order_sn":order_sn};
+				condition.like.order_sn = order_sn;
 			}
 			if(contract_name != ''){
-				condition.like = {"contract_name":contract_name};
+				condition.like.contract_name = contract_name;
 			}
 			if(child_order_status != ''){
 				condition["child_order_status"] = child_order_status;
