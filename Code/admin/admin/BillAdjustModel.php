@@ -220,7 +220,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$sql = substr($sql, 0, -1) . ')';
-			$GLOBALS['db']->query("START TRANSACTION");//开启事务
+			// $GLOBALS['db']->query("START TRANSACTION");//开启事务
 			$createAdjust = $GLOBALS['db']->query($sql);
 			
 			if( $createAdjust )
@@ -250,18 +250,24 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					if( $updateTo )
 					{
-						$GLOBALS['db']->query("COMMIT");//事务提交
 						make_json_response("", "0", "额度调整单添加成功");//暂不返回自增id
 					}
 					else
 					{
-						$GLOBALS['db']->query("ROLLBACK");//事务回滚
+						if( $data['type'] == 0){//调整的额度类型(0:采购额度，1:现金额度)
+							$contract_from_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_valid` = `bill_amount_valid` + ' . $data['adjust_amount'] .
+									' WHERE `contract_id` = ' . $data['from_contract_id'];
+						}else{//现金
+							$contract_from_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $data['adjust_amount'] .
+									' WHERE `contract_id` = ' . $data['from_contract_id'];
+						}
+						$GLOBALS['db']->query($contract_from_sql);
+
 						make_json_response("", "-1", "额度调整单添加失败");//暂不返回自增id		
 					}
 				}
 				else
 				{
-					$GLOBALS['db']->query("ROLLBACK");//事务回滚
 					make_json_response("", "-1", "额度调整单添加失败");//暂不返回自增id
 				}
 			}
