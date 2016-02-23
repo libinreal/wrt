@@ -165,6 +165,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case 'purchase_status':
 					$content = C('purchase_status');
+				case 'purchase_pay_status':
+					$content = C('purchase_pay_status');
 				default:
 					# code...
 					break;
@@ -184,7 +186,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 	}
 	$command_arr = array('bill_type', 'bill_status', 'bill_currency', 'users', 'admin_users', 
 						'admin_user_banks', 'admin_user_bank_accounts', 'user_banks', 'user_bank_accounts',
-						'payment', 'childer_order_status', 'order_status', 'bill_repay_type','purchase_status'
+						'payment', 'childer_order_status', 'order_status', 'bill_repay_type','purchase_status',
+						'purchase_pay_status'
 					);
 	$content = jsonAction( $command_arr );
 	$typeModel = new TypeModel($content);

@@ -71,9 +71,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif($this->command == 'categoryShippingDetail'){
 				//
 				$this->categoryShippingDetailAction();			
-			}elseif ($this->command == 'create'){
+			}elseif ($this->command == 'createOrderPay'){
 				//生成支付单信息
 				$this->createOrderPayAction();
+			}elseif( $this->command == 'completeList'){
+				//
+				$this->completeListAction();
 			}
 
 
@@ -116,6 +119,26 @@ require(dirname(__FILE__) . '/includes/init.php');
 		    	return 0;
 		    }else{
 		    	return $admin_user['suppliers_id'];
+		    }
+		}
+
+		/**
+		 * 获取供应商名称
+		 * @param $suppliers_id 供应商id
+		 * @return $result string 供应商名称
+		 */
+		private function getSuppliersName( $suppliers_id = 0 )
+		{
+			if( empty($suppliers_id) ){
+				$suppliers_id = $this->getSuppliersId();
+			}
+			$sql = "SELECT `suppliers_name` FROM " .$GLOBALS['ecs']->table('suppliers'). " WHERE `suppliers_id` = '". $suppliers_id ."'";
+		    $result = $GLOBALS['db']->getOne($sql);
+
+		    if( empty( $result ) ){
+		    	return '';
+		    }else{
+		    	return $result;
 		    }
 		}
 
@@ -307,12 +330,181 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 		
 		/**
+		 * 接口名称：已完成的订单
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "completeList",
+	     *      "parameters": {
+	     *          "params": {
+	     *              "where": {
+	     *                  "status": 0,//订单状态 0 未确认
+	     *                  "due_date1": 2015-01-01,//起始日期
+	     *                  "due_date2": 2015-01-01,//结束日期
+	     *              },
+	     *              "limit": 0,//起始行号
+	     *              "offset": 2//返回的行数
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "订单列表查询成功",
+		 *	    "content": { 
+		 *	    	"data":[
+		 *	        {
+		 *	        		"order_id":1, //订单ID
+		 *                  "order_sn":2 ,//订单号
+		 *                  "goods_name": 'xxx' ,//商品名称
+		 *                  "goods_sn": "ad11223", //商品编号
+		 *                  "attr": "2015-12-12" ,//规格/型号/材质
+		 *                  "goods_price": "薛某" ,//单价
+		 *                  "goods_number": 12 ,  //数量
+		 *                  "shipping_fee": 300.00 ,//物流费
+		 *                  "purchase_pay_status": 0,//订单状态
+		 *           }
+		 *	         ],
+		 *	         "total":3
+		 *	}
+		 */
+		public function completeListAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+			
+			$order_table = $GLOBALS['ecs']->table('order_info');
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+
+			$suppliers_id = $this->getSuppliersId();
+			$childer_map = C('purchase_to_childer_map');
+		    if( empty( $suppliers_id ) ){
+		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
+		    }
+
+			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
+				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
+				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status`,odr.`purchase_pay_status` ' .
+				   ' FROM ' . $order_table .
+				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
+				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP . ' AND ' .//订单为已推给当前登录的供应商
+				   ' odr.`child_order_status` <> ' . SOS_CANCEL;
+
+			$total_sql = 'SELECT COUNT(*) AS `total`' .
+				   		 ' FROM ' . $order_table .
+				   		 ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
+				   		 ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP .
+				   		 ' AND odr.`child_order_status` <> ' . SOS_CANCEL;
+		
+			$where = array();	
+			if( isset($params['where']) )
+				$where = $params['where'];
+
+			$where_str = ' AND odr.`child_order_status` = ' . SOS_ARR_PC2 . ' ';//已完成的采购订单
+			
+			if( isset( $where["status"] ) )
+			{
+				$where_status = intval( $where['status'] );
+				$where_str .= ' AND odr.`purchase_pay_status` = ' . $where_status;
+
+			}	
+
+			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				
+				$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+				
+			}
+			else if( isset( $where["due_date1"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "'";
+			}
+			else if( isset( $where["due_date2"] ) )
+			{
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				$where_str .= " AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+			}
+
+			$sql = $sql . $where_str . ' ORDER BY odr.`add_time` DESC' .
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];//echo $sql;exit;
+			$orders = $GLOBALS['db']->getAll($sql);
+			
+			$total_sql = $total_sql . $where_str;
+			$resultTotal = $GLOBALS['db']->getRow($total_sql);
+
+			if( $resultTotal )
+			{
+				$orders = $orders ? $orders : array();
+				$purchase_status = C('purchase_status');
+				//订单是否可取消
+				foreach ($orders as &$v) {
+					$v['add_time'] = date('Y-m-d H:i:s', $v['add_time']);
+					//物流费
+					if( $v['child_order_status'] <= SOS_SEND_PC2){
+						$v['shipping_fee'] = $v['shipping_fee_send_saler'];//发货
+						$v['goods_price'] = $v['goods_price_send_saler'];//发货
+						$v['goods_number'] = $v['goods_number_send_saler'];//发货
+					}else{
+						$v['shipping_fee'] = $v['shipping_fee_arr_saler'];//到货
+						$v['goods_number'] = $v['goods_number_arr_saler'];//到货
+						$v['goods_price'] = $v['goods_price_arr_saler'];//到货
+					}
+
+					$v['order_status'] = '';
+					//订单状态转换
+					if (!empty($childer_map)) {
+						foreach ($childer_map as $pk => $pv) {
+							foreach ($pv as $s) {
+								if( $s == $v['child_order_status'] ){
+									$v['order_status'] = $purchase_status[ $pk ];
+									break 2;
+								}
+							}
+						}
+					}
+					
+
+					//规格、型号、材质
+					$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $v['goods_id'];
+					$goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
+					if( empty( $goods_attr ) ){
+						$v['attr'] = '';
+					}else{
+						$attr_arr = array();
+						foreach ($goods_attr as $value) {
+							$attr_arr[] = $value['attr_value'];
+						}
+						$v['attr'] = implode('/', $attr_arr);
+					}
+
+				}
+				unset( $v );
+
+				$content = array();
+				$content['data'] = $orders;
+				$content['total'] = $resultTotal['total'];
+				make_json_response( $content, "0", "订单查询成功");
+			}
+			else
+			{
+				make_json_response("", "-1", "订单查询失败");
+			}	
+		}
+
+
+		/**
 		 * 生成应付单/应收单数据。根据订单ID查询出来基础数据，然后把基础数据以json格式存入到 OrderPay 表
 		 *  接口地址：http://admin.zjgit.dev/admin/SupplierModel.php
 		 *  传入参数格式(主键id在parameters下级)：
 		 *  {
-		 *	    "command": "insert",
-		 *	    "entity": "OrderPay",
+		 *	    "command": "createOrderPay",
+		 *	    "entity": "order_pay",
 		 *	    "parameters": {
 		 *	        "order_id":"1,2,3"
 		 *	    }
@@ -321,15 +513,36 @@ require(dirname(__FILE__) . '/includes/init.php');
 		public function createOrderPayAction(){
 // 			print_r($_SESSION);die;
 			$content = $this->content;
-			$params = $content['parameters']['order_id'];
-			
-			if (!empty($params)) {
-				$order_ids = explode(',',$params);
+			$order_id_str = $content['parameters']['order_id'];
+			$order_ids = array();
+			if (!empty($order_id_str)) {
+				$order_ids = explode(',',$order_id_str);
 			}
-// 			print_r($order_ids);die;
+
+			$suppliers_id = $this->getSuppliersId();
+			if( empty( $suppliers_id ) ){
+				make_json_response('', '-1', '当前登录的必须是供应商账号');
+			}
+
+			$order_table = $GLOBALS['ecs']->table('order_info');
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+
+			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
+				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
+				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status`,odr.`purchase_pay_status` ' .
+				   ' FROM ' . $order_table .
+				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
+				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP .//订单为已推给当前登录的供应商
+				   ' AND odr.`order_id` IN (' . $order_id_str . ')';
+			$order_infos = $GLOBALS['db']->getAll( $sql );
+
 			$order_total = 0;
-			foreach ($order_ids as $value){
-				$order_info = $this->getOrderBaseInfo($value);
+			foreach ($order_infos as $order_info){
+				if( $order_info[''] ){
+
+				}
+
 				$order_goods['goods_sn'] = $order_info['goods_sn'];//物料编码
 				$order_goods['goods_name'] = $order_info['goods_name'];//物料名称
 				$order_goods['goods_number'] = $order_info['goods_number'];//数量
@@ -346,34 +559,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$data['goods_json'] = json_encode($json_goods);
 			$data['suppliers_id'] = $_SESSION['suppliers_id'];
 			$data['suppliers_name'] = '';
+
+			var_dump($data);exit;
 		}
-		
-/* 		public function insertOrderPayAction($data = array()){
-			$sql = 'INSERT INTO order_pay (user_id,suppliers_id,order_id_str,order_sn_str,order_total,suppliers_name,goods_json) VALUES (1,.",".$data['suppliers_id'].",".'2,3','a-b,c-d',$data['order_total'],$data['suppliers_name'],$data['goods_json'] ) ";
-						
-		} */
-		
-		/**
-		 * 获取订单商品基本信息
-		 * @param unknown $order_id
-		 */
-		public function getOrderBaseInfo($order_id){
-			$suppliers_id = $this->getSuppliersId();
-// 			print_r($suppliers_id);die;
-			$order_table = $GLOBALS['ecs']->table('order_info');
-			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
-			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, odr.`financial_arr`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, og.`goods_number`, og.`goods_price`,' .
-					' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status` ' .
-					' FROM ' . $order_table .
-					' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
-					' WHERE odr.`suppers_id` = ' . $suppliers_id. ' AND og.order_id = '.$order_id;
-			$order_goods = $GLOBALS['db']->getrow($sql);
-// 			print_r($sql);die;
-			return $order_goods;
-		}
-		
-		
-		
+
 		/**
 		 * 接口名称：订单详情
 		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
@@ -1210,7 +1399,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 	}
 	$content = jsonAction( 
 				array( 'orderPage', 'orderDetail', 'updateChilderStatus', 'addShippingLog', 'addShippingInfo', 'initcategoryShipping',
-						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail','createOrderPay'
+						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail','createOrderPay',
+						'completeList'
 			 	) 
 			);
 	$supplierModel = new SupplierModel($content);
