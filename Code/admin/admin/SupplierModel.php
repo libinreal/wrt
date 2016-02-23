@@ -47,6 +47,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'orderDetail'){
 				//
 				$this->orderDetailAction();
+			}elseif ($this->command == 'orderPayDetail'){
+				//
+				$this->orderPayDetailAction();
 			}elseif($this->command == 'updateChilderStatus'){
 				//
 				$this->updateChilderStatusAction();
@@ -499,14 +502,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 
 		/**
-		 * 生成应付单/应收单数据。根据订单ID查询出来基础数据，然后把基础数据以json格式存入到 OrderPay 表
-		 *  接口地址：http://admin.zjgit.dev/admin/SupplierModel.php
-		 *  传入参数格式(主键id在parameters下级)：
+		 * 接口名称：生成应收单
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
 		 *  {
 		 *	    "command": "createOrderPay",
 		 *	    "entity": "order_pay",
 		 *	    "parameters": {
-		 *	        "order_id":"1,2,3"
+		 *	        "order_id":"1,2,3"//多个id用","分隔
 		 *	    }
 		 *	}
 		 */
@@ -532,7 +536,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
 				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
-				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status`,odr.`purchase_pay_status` ' .
+				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status`,odr.`purchase_pay_status`, ' .
+				   ' odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`' .
 				   ' FROM ' . $order_table .
 				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
 				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP .//订单为已推给当前登录的供应商
@@ -551,16 +556,22 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$order_goods = array();
 
-				$order_goods['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
+				$order_goods['order_id'] = $order_info['order_id'];
+				$order_goods['order_sn'] = $order_info['order_sn'];
+				$order_goods['goods_sn'] = $order_info['goods_sn'];
+				$order_goods['goods_name'] = $order_info['goods_name'];
+				// $order_goods['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
 				//物流费
 				if( $order_goods['child_order_status'] <= SOS_SEND_PC2){
 					$order_goods['shipping_fee'] = $order_info['shipping_fee_send_saler'];//发货
 					$order_goods['goods_price'] = $order_info['goods_price_send_saler'];//发货
 					$order_goods['goods_number'] = $order_info['goods_number_send_saler'];//发货
+					$order_goods['total'] = $order_info['order_amount_send_saler'];//发货
 				}else{
 					$order_goods['shipping_fee'] = $order_info['shipping_fee_arr_saler'];//到货
 					$order_goods['goods_number'] = $order_info['goods_number_arr_saler'];//到货
 					$order_goods['goods_price'] = $order_info['goods_price_arr_saler'];//到货
+					$order_goods['total'] = $order_info['order_amount_arr_saler'];//到货
 				}
 
 				//规格、型号、材质
@@ -576,8 +587,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$order_goods['attr'] = implode('/', $attr_arr);
 				}
 
-				$order_goods['total'] = $order_goods['goods_number'] * $order_goods['goods_price'] + $order_goods['shipping_fee'];
-				
 				$order_sn_str .= $order_info['order_sn'] . '-cg,';
 				$order_id_str .= $order_info['order_id'] . ',';
 
@@ -627,6 +636,89 @@ require(dirname(__FILE__) . '/includes/init.php');
 					make_json_response('', '-1', '生成失败');
 			}else{
 				make_json_response('', '-1', '生成失败');
+			}
+		}
+
+		/**
+		 * 接口名称：应收单详情
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "orderPayDetail",
+	     *      "parameters": {
+	     *          "params": {
+	     *              "order_pay_id": 2//应收单id
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "应收单详情查询成功",
+		 *	    "content": 
+		 *	    { 
+		 *	    	"info":
+		 *	    	{
+		 *	    		"order_pay_id":1,//流水编号
+		 *	    		"order_total":1500,//总金额
+		 *	    		"order_count":3,//订单数量
+		 *	    		"create_time":"2016-02-23 13:57:00",//发起时间
+		 *	    	},
+		 *	    	"orders"://订单信息
+		 *	        [
+		 *	        {
+		 *	        	"order_id":1,//订单id
+		 *	        	"order_sn":"os122311",//订单编号
+		 *	        	"goods_name":"纹钢",//商品名称
+		 *	        	"goods_sn":"s20000",//商品编号
+		 *	        	"attr":"",//规格/牌号/材质
+		 *	        	"goods_price":152,//单价
+		 *          	"goods_number":251,//数量
+		 *          	"shipping_fee":250.0//物流
+		 *          	"total":250.0//小计
+		 *	        }
+		 *	        ]
+		 *	    }
+		 *	}
+		 */
+		public function orderPayDetailAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+			
+			$suppliers_id = $this->getSuppliersId();
+			if( empty( $suppliers_id ) ){
+				make_json_response('', '-1', '当前登录的必须是供应商账号');
+			}
+
+			$order_pay_id = $params['order_pay_id'];
+
+			$order_pay_table = $GLOBALS['ecs']->table('order_pay');//生成单表
+			$sql = 'SELECT * FROM ' . $order_pay_table . ' WHERE `order_pay_id` = ' . $order_pay_id;
+			$order_pay = $GLOBALS['db']->getRow( $sql );
+
+			if( $order_pay ){
+				$content = array();
+
+				$orders = json_decode( $order_pay['goods_json'] ,true );
+				
+				if( empty( $orders ) ){
+					$orders = array();
+				}
+
+				$content['orders'] = array_values( $orders );
+				$content['info'] = array();
+				$content['info']['order_pay_id'] = $order_pay['order_pay_id'];
+				
+				$content['info']['order_total'] = $order_pay['order_total'];
+				$content['info']['order_count'] = count( $content['orders'] );
+				$content['info']['create_time'] = $order_pay['create_time'];
+				
+				make_json_response($content, '0', '生成单查询成功');
+			}else{
+				make_json_response('', '-1', '生成单查询失败');
 			}
 		}
 
@@ -1467,7 +1559,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	$content = jsonAction( 
 				array( 'orderPage', 'orderDetail', 'updateChilderStatus', 'addShippingLog', 'addShippingInfo', 'initcategoryShipping',
 						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail','createOrderPay',
-						'completeList'
+						'completeList', 'orderPayDetail'
 			 	) 
 			);
 	$supplierModel = new SupplierModel($content);
