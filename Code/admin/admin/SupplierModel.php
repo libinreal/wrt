@@ -528,39 +528,106 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
 			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
 
+			$order_pay_table = $GLOBALS['ecs']->table('order_pay');//生成单表
+
 			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
 				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
 				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status`,odr.`purchase_pay_status` ' .
 				   ' FROM ' . $order_table .
 				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
 				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP .//订单为已推给当前登录的供应商
-				   ' AND odr.`order_id` IN (' . $order_id_str . ')';
+				   ' AND odr.`purchase_pay_status` = 0 AND odr.`child_order_status` <> ' . SOS_CANCEL .' AND odr.`order_id` IN (' . $order_id_str . ')';
+
 			$order_infos = $GLOBALS['db']->getAll( $sql );
 
+			if( empty( $order_infos ) ){
+				make_json_response('', '-1', '没有可以生成应付款的订单');
+			}
+
+			$order_sn_str = '';
+			$order_id_str = '';
 			$order_total = 0;
 			foreach ($order_infos as $order_info){
-				if( $order_info[''] ){
 
+				$order_goods = array();
+
+				$order_goods['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
+				//物流费
+				if( $order_goods['child_order_status'] <= SOS_SEND_PC2){
+					$order_goods['shipping_fee'] = $order_info['shipping_fee_send_saler'];//发货
+					$order_goods['goods_price'] = $order_info['goods_price_send_saler'];//发货
+					$order_goods['goods_number'] = $order_info['goods_number_send_saler'];//发货
+				}else{
+					$order_goods['shipping_fee'] = $order_info['shipping_fee_arr_saler'];//到货
+					$order_goods['goods_number'] = $order_info['goods_number_arr_saler'];//到货
+					$order_goods['goods_price'] = $order_info['goods_price_arr_saler'];//到货
 				}
 
-				$order_goods['goods_sn'] = $order_info['goods_sn'];//物料编码
-				$order_goods['goods_name'] = $order_info['goods_name'];//物料名称
-				$order_goods['goods_number'] = $order_info['goods_number'];//数量
-				$order_goods['goods_price'] = $order_info['goods_price']; //单价
-				$order_goods['shipping_fee_arr_saler'] = $order_info['shipping_fee_arr_saler'];//物流费用
-				$order_goods['financial_arr'] = $order_info['financial_arr'];//金融费用
-				$order_goods['total'] = $order_info['goods_number'] * $order_info['goods_price'] + $order_info['shipping_fee_arr_saler'] + $order_info['financial_arr'];
+				//规格、型号、材质
+				$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $order_info['goods_id'];
+				$goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
+				if( empty( $goods_attr ) ){
+					$order_goods['attr'] = '';
+				}else{
+					$attr_arr = array();
+					foreach ($goods_attr as $value) {
+						$attr_arr[] = $value['attr_value'];
+					}
+					$order_goods['attr'] = implode('/', $attr_arr);
+				}
+
+				$order_goods['total'] = $order_goods['goods_number'] * $order_goods['goods_price'] + $order_goods['shipping_fee'];
 				
+				$order_sn_str .= $order_info['order_sn'] . '-cg,';
+				$order_id_str .= $order_info['order_id'] . ',';
+
 				$order_total += $order_goods['total'];
-				$json_goods[] = $order_goods;
+				$json_goods[ $order_info['order_id'] ] = $order_goods;
 			}
-			$data['count'] = count($json_goods);
+
+			$data = array();
+			$data['user_id'] = $_SESSION['admin_id'];
+			$data['order_id_str'] = substr( $order_id_str, 0, '-1' );
+			$data['order_sn_str'] = substr( $order_sn_str, 0, '-1' );
 			$data['order_total'] = $order_total;
 			$data['goods_json'] = json_encode($json_goods);
-			$data['suppliers_id'] = $_SESSION['suppliers_id'];
-			$data['suppliers_name'] = '';
+			$data['suppliers_id'] = $suppliers_id;
+			$data['suppliers_name'] = $this->getSuppliersName( $suppliers_id );
+			$data['create_time'] = date('Y-m-d H:i:s', time());
+			
+			$insert_sql = 'INSERT INTO ' . $order_pay_table . ' (';
+			$data_key_arr = array_keys( $data );
+			foreach ($data_key_arr as $k) {
+				$insert_sql .= '`' . $k . '`,';
+			}
 
-			var_dump($data);exit;
+			$insert_sql = substr( $insert_sql, 0, -1 );
+			$insert_sql .= ') VALUES (';
+			foreach ($data as $v) {
+				if( is_string( $v ) ){
+					$insert_sql .= '\'' . $v . '\',';
+				}else{
+					$insert_sql .= $v . ',';
+				}
+			}
+
+			$insert_sql = substr( $insert_sql, 0, -1 );
+			$insert_sql .= ');';
+			
+			$insert_result = $GLOBALS['db']->query( $insert_sql );
+
+			if( $insert_result ){
+				$purchase_status_sql = 'UPDATE ' . $order_table . ' SET `purchase_pay_status` = 1 ' .
+										' WHERE `order_id` IN(' . $data['order_id_str'] . ')';
+				$update_ret = $GLOBALS['db']->query( $purchase_status_sql );
+
+				if( $update_ret )
+					make_json_response('', '0', '生成成功');
+				else
+					make_json_response('', '-1', '生成失败');
+			}else{
+				make_json_response('', '-1', '生成失败');
+			}
 		}
 
 		/**
