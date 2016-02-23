@@ -77,6 +77,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'createOrderPay'){
 				//生成支付单信息
 				$this->createOrderPayAction();
+			}elseif( $this->command == 'orderPayList' ){
+				//
+				$this->orderPayListAction();
 			}elseif( $this->command == 'completeList'){
 				//
 				$this->completeListAction();
@@ -636,6 +639,124 @@ require(dirname(__FILE__) . '/includes/init.php');
 					make_json_response('', '-1', '生成失败');
 			}else{
 				make_json_response('', '-1', '生成失败');
+			}
+		}
+
+		/**
+		 * 接口名称：应收单详情
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+	     *  {
+	     *      "entity": "order_info",
+	     *      "command": "orderPayList",
+	     *      "parameters": {
+	     *          "params": {
+	     *              "where": {
+	     *                  "status": 0,//订单状态 0 未确认
+	     *                  "due_date1": "2015-01-01",//起始日期
+	     *                  "due_date2": "2015-01-01"//结束日期
+	     *              },
+	     *              "limit": 0,//起始行号
+	     *              "offset": 2//返回的行数
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "应收单查询成功",
+		 *	    "content": 
+		 *	    { 
+		 *	    	"data":
+		 *	    	[
+		 *	    	{
+		 *	    		"order_pay_id":1,//流水号
+		 *	    		"create_time":"2016-02-23 17:21:33",//发起时间
+		 *	    		"order_sn_str":"1234-1-CG,1234-2-CG,1236-1-CG",//订单号
+		 *	    		"order_total":100,//发起金额
+		 *	    		"pay_status":1//付款状态
+		 *	    	}
+		 *	    	],
+		 *	    	"total":10
+		 *	    }
+		 *	}
+		 */	
+		public function orderPayListAction()
+		{
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+			
+			$order_pay_table = $GLOBALS['ecs']->table('order_pay');
+
+			$suppliers_id = $this->getSuppliersId();
+
+		    if( empty( $suppliers_id ) ){
+		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
+		    }
+
+		    $sql = 'SELECT `order_pay_id`, `order_sn_str`, `order_total`, `pay_status` FROM ' . $order_pay_table;
+
+		    $total_sql = 'SELECT COUNT(*) AS `total` FROM ' . $order_pay_table;
+		
+			$where = array();	
+			if( isset($params['where']) )
+				$where = $params['where'];
+
+			$where_str = '';
+			
+			if( isset( $where["status"] ) )
+			{
+				$where_status = intval( $where['status'] );
+				if( $where_str )
+					$where_str .= ' AND `pay_status` = ' . $where_status;
+				else
+					$where_str .= ' WHERE `pay_status` = ' . $where_status;
+
+			}	
+
+			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				if( $where_str )
+					$where_str .= " AND `create_time` >= '" . $where['due_date1'] . "' AND `create_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE `create_time` >= '" . $where['due_date1'] . "' AND `create_time` <= '" . $where['due_date2'] . "'";
+				
+			}
+			else if( isset( $where["due_date1"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				if( $where_str )
+					$where_str .= " AND `create_time` >= '" . $where['due_date1'] . "'";
+				else
+					$where_str .= " WHERE `create_time` >= '" . $where['due_date1'] . "'";
+			}
+			else if( isset( $where["due_date2"] ) )
+			{
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				if( $where_str )
+					$where_str .= " AND `create_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE `create_time` <= '" . $where['due_date2'] . "'";
+			}
+
+			$sql = $sql . $where_str . ' ORDER BY `create_time` DESC' .
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];//echo $sql;exit;
+			$order_pay = $GLOBALS['db']->getAll( $sql );
+			
+			$total_sql = $total_sql . $where_str;
+			$resultTotal = $GLOBALS['db']->getRow($total_sql);		
+
+			if( $resultTotal ){
+				$content = array();
+				$content['data'] = $order_pay;
+				$content['total'] = $resultTotal['total'];
+
+				make_json_response($content, '0', '应收单查询成功');
+			}else{
+				make_json_response('', '-1', '应收单查询成功');
 			}
 		}
 
@@ -1559,7 +1680,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	$content = jsonAction( 
 				array( 'orderPage', 'orderDetail', 'updateChilderStatus', 'addShippingLog', 'addShippingInfo', 'initcategoryShipping',
 						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail','createOrderPay',
-						'completeList', 'orderPayDetail'
+						'completeList', 'orderPayDetail', 'orderPayList'
 			 	) 
 			);
 	$supplierModel = new SupplierModel($content);
