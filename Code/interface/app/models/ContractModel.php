@@ -5,7 +5,7 @@ use PhpRudder\Mvc\ModelBase;
 
 class ContractModel extends ModelBase
 {
-    
+    public $id;
     
     public function columnMap()
     {

@@ -74,6 +74,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif($this->command == 'categoryShippingDetail'){
 				//
 				$this->categoryShippingDetailAction();			
+			}elseif ($this->command == 'initOrderPay'){
+				//应付单初始化
+				$this->initOrderPayAction();
 			}elseif ($this->command == 'createOrderPay'){
 				//生成支付单信息
 				$this->createOrderPayAction();
@@ -518,8 +521,29 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * 返回数据格式如下 :
 	     *  {
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
-		 *	    "message": "生成应收单初始化成功",
-		 *	    "content": {}
+		 *	    "message": "应收单详情查询成功",
+		 *	    "content": 
+		 *	    { 
+		 *	    	"info":
+		 *	    	{
+		 *	    		"order_total":1500,//总金额
+		 *	    		"order_count":3,//订单数量
+		 *	    	},
+		 *	    	"orders"://订单信息
+		 *	        [
+		 *	        {
+		 *	        	"order_id":1,//订单id
+		 *	        	"order_sn":"os122311",//订单编号
+		 *	        	"goods_name":"纹钢",//商品名称
+		 *	        	"goods_sn":"s20000",//商品编号
+		 *	        	"attr":"",//规格/牌号/材质
+		 *	        	"goods_price":152,//单价
+		 *          	"goods_number":251,//数量
+		 *          	"shipping_fee":250.0//物流
+		 *          	"total":250.0//小计
+		 *	        }
+		 *	        ]
+		 *	    }
 		 *	}
 		 */
 		public function initOrderPayAction()
@@ -549,24 +573,22 @@ require(dirname(__FILE__) . '/includes/init.php');
 				   ' odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`' .
 				   ' FROM ' . $order_table .
 				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
-				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP .//订单为已推给当前登录的供应商
+				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_ARR_PC2 .//订单为已推给当前登录的供应商
 				   ' AND odr.`purchase_pay_status` = 0 AND odr.`child_order_status` <> ' . SOS_CANCEL .' AND odr.`order_id` IN (' . $order_id_str . ')';
 
 			$order_infos = $GLOBALS['db']->getAll( $sql );
-
+			
 			if( empty( $order_infos ) ){
 				make_json_response('', '-1', '没有可以生成应付款的订单');
 			}
 
-			$order_sn_str = '';
-			$order_id_str = '';
 			$order_total = 0;
 			foreach ($order_infos as $order_info){
 
 				$order_goods = array();
 
 				$order_goods['order_id'] = $order_info['order_id'];
-				$order_goods['order_sn'] = $order_info['order_sn'];
+				$order_goods['order_sn'] = $order_info['order_sn'] . '-cg,';
 				$order_goods['goods_sn'] = $order_info['goods_sn'];
 				$order_goods['goods_name'] = $order_info['goods_name'];
 				// $order_goods['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
@@ -596,24 +618,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$order_goods['attr'] = implode('/', $attr_arr);
 				}
 
-				$order_sn_str .= $order_info['order_sn'] . '-cg,';
-				$order_id_str .= $order_info['order_id'] . ',';
-
 				$order_total += $order_goods['total'];
-				$json_goods[ $order_info['order_id'] ] = $order_goods;
+				$goods[] = $order_goods;
 			}
 
-			$data = array();
-			$data['user_id'] = $_SESSION['admin_id'];
-			$data['order_id_str'] = substr( $order_id_str, 0, '-1' );
-			$data['order_sn_str'] = substr( $order_sn_str, 0, '-1' );
-			$data['order_total'] = $order_total;
-			$data['goods_json'] = json_encode($json_goods);
-			$data['suppliers_id'] = $suppliers_id;
-			$data['suppliers_name'] = $this->getSuppliersName( $suppliers_id );
-			$data['create_time'] = date('Y-m-d H:i:s', time());
+			$content = array();
+			$content['info'] = array('order_total' => $order_total, 'order_count' => count( $goods) );
+			$content['orders'] = $goods;
 			
-			make_json_response('', '0', '生成成功');
+			make_json_response($content, '0', '生成初始化成功');
 		}
 
 
@@ -662,7 +675,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				   ' odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`' .
 				   ' FROM ' . $order_table .
 				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
-				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP .//订单为已推给当前登录的供应商
+				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_ARR_PC2 .//订单为已推给当前登录的供应商
 				   ' AND odr.`purchase_pay_status` = 0 AND odr.`child_order_status` <> ' . SOS_CANCEL .' AND odr.`order_id` IN (' . $order_id_str . ')';
 
 			$order_infos = $GLOBALS['db']->getAll( $sql );
@@ -1799,7 +1812,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	$content = jsonAction( 
 				array( 'orderPage', 'orderDetail', 'updateChilderStatus', 'addShippingLog', 'addShippingInfo', 'initcategoryShipping',
 						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail','createOrderPay',
-						'completeList', 'orderPayDetail', 'orderPayList'
+						'completeList', 'orderPayDetail', 'orderPayList', 'initOrderPay'
 			 	) 
 			);
 	$supplierModel = new SupplierModel($content);

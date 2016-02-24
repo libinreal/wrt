@@ -81,19 +81,35 @@ class Contract1 extends \Phalcon\Mvc\Model
     public function columnMap()
     {
         return array(
-            'id' => 'id',
-            'cusFnum' => 'cusFnum',
-        	'conFnum' => 'conFnum',
-            'conName' => 'name',
-            'strDate' => 'strDate',
-            'endDate' => 'endDate',
-            'conAmt' => 'conAmt',
-            'conState' => 'conState',
-            'conNo' => 'code',
-            'Remark' => 'Remark',
-            'Banks' => 'Banks',
-            'Mats' => 'Mats',
+            'contract_id' => 'id',
+            'customer_id' => 'cusFnum',//1期的客户编号这里用2期的id
+        	'customer_id' => 'conFnum',
+            'contract_name' => 'name',
+            'start_time' => 'strDate',
+            'end_time' => 'endDate',
+            'contract_amount' => 'conAmt',
+            'contract_status' => 'conState',
+            'contract_num' => 'code',
+            'remark' => 'Remark',
+            // 'Banks' => 'Banks',
+            // 'Mats' => 'Mats',
         );
+    }
+
+    public function initialize() {
+        $this->Banks = '';
+        $this->Mats = '';
+        $attributes = array(
+            'Banks',
+            'Mats', 
+        );
+        $this->skipAttributesOnCreate($attributes);
+        $this->skipAttributesOnUpdate($attributes);
+    }
+
+    public function getSource() 
+    {
+        return 'contract_old';
     }
 
 }
