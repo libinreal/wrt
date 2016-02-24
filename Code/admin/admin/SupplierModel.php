@@ -503,6 +503,119 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}	
 		}
 
+		/**
+		 * 接口名称：生成应收单初始化
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+		 *  {
+		 *	    "command": "initOrderPay",
+		 *	    "entity": "order_pay",
+		 *	    "parameters": {
+		 *	        "order_id":"1,2,3"//多个id用","分隔
+		 *	    }
+		 *	}
+		 * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "生成应收单初始化成功",
+		 *	    "content": {}
+		 *	}
+		 */
+		public function initOrderPayAction()
+		{
+			$content = $this->content;
+			$order_id_str = strval( $content['parameters']['order_id'] );
+			$order_ids = array();
+			if (!empty($order_id_str)) {
+				$order_ids = explode(',',$order_id_str);
+			}
+
+			$suppliers_id = $this->getSuppliersId();
+			if( empty( $suppliers_id ) ){
+				make_json_response('', '-1', '当前登录的必须是供应商账号');
+			}
+
+			
+			$order_table = $GLOBALS['ecs']->table('order_info');
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+
+			$order_pay_table = $GLOBALS['ecs']->table('order_pay');//生成单表
+
+			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
+				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
+				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status`,odr.`purchase_pay_status`, ' .
+				   ' odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`' .
+				   ' FROM ' . $order_table .
+				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
+				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP .//订单为已推给当前登录的供应商
+				   ' AND odr.`purchase_pay_status` = 0 AND odr.`child_order_status` <> ' . SOS_CANCEL .' AND odr.`order_id` IN (' . $order_id_str . ')';
+
+			$order_infos = $GLOBALS['db']->getAll( $sql );
+
+			if( empty( $order_infos ) ){
+				make_json_response('', '-1', '没有可以生成应付款的订单');
+			}
+
+			$order_sn_str = '';
+			$order_id_str = '';
+			$order_total = 0;
+			foreach ($order_infos as $order_info){
+
+				$order_goods = array();
+
+				$order_goods['order_id'] = $order_info['order_id'];
+				$order_goods['order_sn'] = $order_info['order_sn'];
+				$order_goods['goods_sn'] = $order_info['goods_sn'];
+				$order_goods['goods_name'] = $order_info['goods_name'];
+				// $order_goods['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
+				//物流费
+				if( $order_goods['child_order_status'] <= SOS_SEND_PC2){
+					$order_goods['shipping_fee'] = $order_info['shipping_fee_send_saler'];//发货
+					$order_goods['goods_price'] = $order_info['goods_price_send_saler'];//发货
+					$order_goods['goods_number'] = $order_info['goods_number_send_saler'];//发货
+					$order_goods['total'] = $order_info['order_amount_send_saler'];//发货
+				}else{
+					$order_goods['shipping_fee'] = $order_info['shipping_fee_arr_saler'];//到货
+					$order_goods['goods_number'] = $order_info['goods_number_arr_saler'];//到货
+					$order_goods['goods_price'] = $order_info['goods_price_arr_saler'];//到货
+					$order_goods['total'] = $order_info['order_amount_arr_saler'];//到货
+				}
+
+				//规格、型号、材质
+				$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $order_info['goods_id'];
+				$goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
+				if( empty( $goods_attr ) ){
+					$order_goods['attr'] = '';
+				}else{
+					$attr_arr = array();
+					foreach ($goods_attr as $value) {
+						$attr_arr[] = $value['attr_value'];
+					}
+					$order_goods['attr'] = implode('/', $attr_arr);
+				}
+
+				$order_sn_str .= $order_info['order_sn'] . '-cg,';
+				$order_id_str .= $order_info['order_id'] . ',';
+
+				$order_total += $order_goods['total'];
+				$json_goods[ $order_info['order_id'] ] = $order_goods;
+			}
+
+			$data = array();
+			$data['user_id'] = $_SESSION['admin_id'];
+			$data['order_id_str'] = substr( $order_id_str, 0, '-1' );
+			$data['order_sn_str'] = substr( $order_sn_str, 0, '-1' );
+			$data['order_total'] = $order_total;
+			$data['goods_json'] = json_encode($json_goods);
+			$data['suppliers_id'] = $suppliers_id;
+			$data['suppliers_name'] = $this->getSuppliersName( $suppliers_id );
+			$data['create_time'] = date('Y-m-d H:i:s', time());
+			
+			make_json_response('', '0', '生成成功');
+		}
+
 
 		/**
 		 * 接口名称：生成应收单
@@ -515,6 +628,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "parameters": {
 		 *	        "order_id":"1,2,3"//多个id用","分隔
 		 *	    }
+		 *	}
+		 * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "生成应收单成功",
+		 *	    "content": {}
 		 *	}
 		 */
 		public function createOrderPayAction(){
@@ -643,7 +762,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 
 		/**
-		 * 接口名称：应收单详情
+		 * 接口名称：应收单列表
 		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：

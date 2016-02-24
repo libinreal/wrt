@@ -613,6 +613,7 @@ class GoodsController extends ControllerBase {
     public function historyListAction() {
     	$size = $this->request->get('size', 'int') ?: self::HISTORY_SZIE;
     	$historyList = array();
+    	return ResponseApi::send($historyList);
 		$user = $this->get_user();
 		if(is_object($user) && $user) {
 			$key = 'his_'.$user->id;
