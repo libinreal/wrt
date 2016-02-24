@@ -83,7 +83,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif( $this->command == 'orderPayList' ){
 				//
 				$this->orderPayListAction();
-			}elseif( $this->command == 'completeList'){
+			}
+			elseif( $this->command == 'upload' ){
+				//
+				$this->uploadAction();
+			}
+			elseif( $this->command == 'completeList'){
 				//
 				$this->completeListAction();
 			}
@@ -566,6 +571,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
 
 			$order_pay_table = $GLOBALS['ecs']->table('order_pay');//生成单表
+			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');//文件上传表
 
 			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
 				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
@@ -577,7 +583,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				   ' AND odr.`purchase_pay_status` = 0 AND odr.`child_order_status` <> ' . SOS_CANCEL .' AND odr.`order_id` IN (' . $order_id_str . ')';
 
 			$order_infos = $GLOBALS['db']->getAll( $sql );
-			
+
 			if( empty( $order_infos ) ){
 				make_json_response('', '-1', '没有可以生成应付款的订单');
 			}
@@ -625,7 +631,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content = array();
 			$content['info'] = array('order_total' => $order_total, 'order_count' => count( $goods) );
 			$content['orders'] = $goods;
-			
+
+			/*$content['file_0'] = $files;
+			$content['file_1'] = $files;*/
 			make_json_response($content, '0', '生成初始化成功');
 		}
 
@@ -640,6 +648,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "entity": "order_pay",
 		 *	    "parameters": {
 		 *	        "order_id":"1,2,3"//多个id用","分隔
+		 *	        "file_0":["20160224.jpg", "20160224.jpg"],//上传的发票文件名字，数组形式
+		 *	        "file_1":["20160224.jpg", "20160224.jpg"]//上传的送货单文件名字，数组形式
 		 *	    }
 		 *	}
 		 * 返回数据格式如下 :
@@ -657,6 +667,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if (!empty($order_id_str)) {
 				$order_ids = explode(',',$order_id_str);
 			}
+
+			$file_0 = $content['parameters']['file_0'];
+			$file_1 = $content['parameters']['file_1'];
+
+			if( !is_array( $file_0 ) )
+				$file_0 = array();
+
+			if( !is_array( $file_1 ) )
+				$file_1 = array();
 
 			$suppliers_id = $this->getSuppliersId();
 			if( empty( $suppliers_id ) ){
@@ -759,8 +778,24 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$insert_sql .= ');';
 			
 			$insert_result = $GLOBALS['db']->query( $insert_sql );
+			$order_pay_id = $GLOBALS['db']->insert_id();
 
 			if( $insert_result ){
+				//图片文件名字记录
+				/*foreach ($file_0 as $k0=>$f0) {
+					if( $file_0 ){
+							
+					}
+				}*/
+
+
+
+
+				/*$upload_data['order_pay_id'] = $order_pay_id;
+				$upload_data['upload_type'] = ;
+				$upload_data['order_pay_id'] = $order_pay_id;*/
+
+				//生成状态记录
 				$purchase_status_sql = 'UPDATE ' . $order_table . ' SET `purchase_pay_status` = 1 ' .
 										' WHERE `order_id` IN(' . $data['order_id_str'] . ')';
 				$update_ret = $GLOBALS['db']->query( $purchase_status_sql );
@@ -932,6 +967,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *          	"shipping_fee":250.0//物流
 		 *          	"total":250.0//小计
 		 *	        }
+		 *	        ],
+		 *	        "file_0"://发票文件
+		 *	        [
+		 *	        	{
+		 *	        		"upload_name":"20160224_s1.jpg",//文件名字
+		 *	        		"upload_id":1,//文件id
+		 *	        	}
+		 *	        ],
+		 *	        "file_1"://送货单文件
+		 *	        [
+		 *	        	{
+		 *	        		"upload_name":"20160224_s1.jpg",//文件名字
+		 *	        		"upload_id":1,//文件id
+		 *	        	}
 		 *	        ]
 		 *	    }
 		 *	}
@@ -949,6 +998,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_pay_id = $params['order_pay_id'];
 
 			$order_pay_table = $GLOBALS['ecs']->table('order_pay');//生成单表
+			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');//生成单文件表
+
 			$sql = 'SELECT * FROM ' . $order_pay_table . ' WHERE `order_pay_id` = ' . $order_pay_id;
 			$order_pay = $GLOBALS['db']->getRow( $sql );
 
@@ -968,7 +1019,23 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$content['info']['order_total'] = $order_pay['order_total'];
 				$content['info']['order_count'] = count( $content['orders'] );
 				$content['info']['create_time'] = $order_pay['create_time'];
-				
+			
+				//已上传文件
+				$upload_sql = 'SELECT `upload_name`,`upload_type`, `upload_id` FROM ' . $upload_table;
+				$files = $GLOBALS['db']->getAll( $upload_sql );
+
+				$file_0 = $file_1 = array();
+
+				foreach ($files as $f) {
+					if( $f['upload_type'] == 0 )
+						$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+					else
+						$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+				}
+
+				$content['file_0'] = $file_0;
+				$content['file_1'] = $file_1;
+
 				make_json_response($content, '0', '生成单查询成功');
 			}else{
 				make_json_response('', '-1', '生成单查询失败');
@@ -1808,11 +1875,60 @@ require(dirname(__FILE__) . '/includes/init.php');
 		    }
 		}
 
+		/**
+		 * 接口名称：上传文件
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 请求方式：POST
+		 * 接口参数：
+		 * {
+         *      "command" : "upload", 
+         *      "entity"  : "file_0", //file_0 发票 file_1物流
+         *      "parameters" : {} 
+         * }
+	     *  
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "物流费用编辑成功",
+		 *	    "content": {}
+		 *	 }
+		 */
+		public function uploadAction()
+		{
+			$entity = $this->content['entity'];
+
+			$suppliers_id = $this->getSuppliersId();
+
+		    if( empty( $suppliers_id ) ){
+		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
+		    }
+
+			require('../includes/cls_image.php');
+	        if (empty($_FILES))
+	        	make_json_response('', '-1', '上传失败');
+	        $file = pathinfo($_FILES[$entity]['name']);
+	        // if ($file['extension'] != 'pdf') {
+	        //     failed_json('只允许上传pdf格式的文件！');
+	        // }
+	        
+	        
+	        //upload
+	        $upload = new cls_image();
+	        $fileName = date('YmdHis') . '_s' . $suppliers_id . '.' . $file['extension'];
+	        $res = $upload->upload_image($_FILES[$entity], PURCHASE_ORDER_DIR, $fileName);
+	        if ($res === false) {
+	        	make_json_response('', '-1', '保存文件失败');
+	        } else {
+	            make_json_response($fileName, '0', '保存文件成功');
+	        }
+
+		}
+
 	}
 	$content = jsonAction( 
 				array( 'orderPage', 'orderDetail', 'updateChilderStatus', 'addShippingLog', 'addShippingInfo', 'initcategoryShipping',
 						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail','createOrderPay',
-						'completeList', 'orderPayDetail', 'orderPayList', 'initOrderPay'
+						'completeList', 'orderPayDetail', 'orderPayList', 'initOrderPay', 'upload'
 			 	) 
 			);
 	$supplierModel = new SupplierModel($content);
