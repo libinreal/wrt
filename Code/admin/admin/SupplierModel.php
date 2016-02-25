@@ -37,7 +37,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 */
 			$entity = $_POST['entity'];
 
-			$suppliers_id = $this->getSuppliersId();
+			$supplierModel = new SupplierModel(array( 'content' => '') );
+
+			$suppliers_id = $supplierModel->getSuppliersId();
 
 		    if( empty( $suppliers_id ) ){
 		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
@@ -48,8 +50,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 
 			require('../includes/cls_image.php');
-	        if (empty($_FILES))
+	        if (empty($_FILES)){
 	        	make_json_response('', '-1', '上传失败');
+	        }
 	        $file = pathinfo($_FILES[$entity]['name']);
 	        // if ($file['extension'] != 'pdf') {
 	        //     failed_json('只允许上传pdf格式的文件！');
@@ -217,7 +220,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * 获取供应商id
 		 * @return int 供应商id
 		 */
-		private function getSuppliersId(){
+		public function getSuppliersId(){
 			$sql = "SELECT `user_id`, `user_name`, `suppliers_id` ".
 		           "FROM " .$GLOBALS['ecs']->table('admin_user'). " WHERE `user_id` = '".$_SESSION['admin_id']."'";
 		    $admin_user = $GLOBALS['db']->getRow($sql);
