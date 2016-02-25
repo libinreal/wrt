@@ -53,7 +53,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "parameters": {
 		 *	        "params": {
 		 *	            "where": {
-		 *	               "like":{"order_sn":"6789-1","suppliers_name":"供应商","pay_status":"1"}
+		 *	               "like":{
+		 *	               		"order_sn":"6789-1",
+		 *	               		"suppliers_name":"供应商",
+		 *	               		"pay_status":"1",
+		 *	               		"contract_sn": "2015-12-12" ,//合同号
+		 *	               		"purchase_order_sn":"",//采购订单号
+		 *	               	}
 		 *	            },
 		 *	            "limit": 0,
 		 *	            "offset": 2
@@ -98,8 +104,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$params = $content['parameters']['params'];
 			
 			$order_pay_table = $GLOBALS['ecs']->table('order_pay');
-			$sql_total = 'SELECT COUNT(*) as total FROM '.$order_pay_table;
-			$total = $GLOBALS['db']->getRow($sql_total);
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
 
 			$like = $params['where']['like'];
 			$condition = '1=1 ';
@@ -112,8 +117,33 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if (isset($like['pay_status'])) {
 				$condition .= ' AND pay_status = '.$like['pay_status'];
 			}
+			if (isset($like['contract_sn'])) {
+				$contract_sql = 'SELET `order_id` FROM ' . $order_info_table . ' WHERE `contract_sn` LIKE \'%' . $like['contract_sn']  . '%\'';
+				$contract_ret = $GLOBALS['db']->getAll( $contract_sql );
+
+				$contract_order_arr = array();
+
+				if( $contract_ret ){
+
+					$contract_order_like = '';
+					foreach ($contract_ret as $o) {
+						
+						$contract_order_like .= ' `order_id_str` LIKE \'%' . $o['order_id'] . '%\' OR ';
+					}
+					$condition .= ' AND ' . substr( $contract_order_like, 0, -4);
+
+				}else{
+					make_json_response( array( 'data' =>array(), 'total' => 0 ) , "0", "应付款查询成功");
+				}
+
+
+			}
+
 			$sql = 'SELECT * FROM '.$order_pay_table. ' WHERE '.$condition.' ORDER BY create_time DESC LIMIT '.$params['limit'].",".$params['offset'];
+			$total_sql = 'SELECT COUNT(*) AS `total` FROM '.$order_pay_table. ' WHERE '.$condition;
+
 			$list = $GLOBALS['db']->getAll($sql);
+			$total = $GLOBALS['db']->getRow($total_sql);
 			
 			$content = array();
 			$content['data'] = $list;

@@ -169,10 +169,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case 'purchase_status':
 					$content = C('purchase_status');
+					break;
 				case 'purchase_pay_status':
 					$content = C('purchase_pay_status');
+					break;
 				case 'purchase_order_pay_status':
 					$content = C('purchase_order_pay_status');
+					break;
 				default:
 					# code...
 					break;
