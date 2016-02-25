@@ -13,8 +13,14 @@
     {literal}
     <style type="text/css">
         body {
+			overflow:auto;
             background: #3D3D3D;margin: 0px;padding:0px;
         }
+
+		a{
+			text-decoration:none;
+		}
+
         dl,dd,dt,ul,ol,li {
             margin: 0px;padding:0px;
         }
@@ -152,17 +158,83 @@
             background: #fff;
         }
         .accordion dd ul li {margin-left: 20px;height: 20px;line-height: 20px;}
-
+		
+		.menuone{
+			width:180px;
+			background:#616e80;
+			padding-top:10px;
+			float:left;
+			display:inline-block;
+		}
+		.backgrounddiv{
+			width:183px;
+			background:#e2ebea;
+			margin-left:180px;
+		}
+		.menutwo{
+			height:30px;
+			width:160px;
+			padding-left:20px;
+			padding-top:15px;
+			padding-bottom:15px;
+		}
+		.icon1{
+			height:30px;
+			width:40px;
+			background:#0000ff;
+			float:left;
+		}
+		.menuname1{
+			height:30px;
+			line-height:30px;
+			padding-left:10px;
+			color:#fff;
+			font-size:16px;
+			float:left;
+			display:inline-block;
+			width: 96px;
+		}
+		.triangle{
+			float: right;
+			width: 0;
+			height: 0;
+			border-top: 10px solid transparent;
+			border-right: 11px solid #e2ebea;
+			border-bottom: 10px solid transparent;
+			margin-top: 5px;
+			display:none;
+		}
+		.menudetail{
+			position: absolute;
+			height: 100%;
+			width: 180px;
+			background: #e2ebea;
+			padding-top: 10px;
+			border-right: 1px solid #cbd3d2;
+			margin-left: 160px;
+			display: none;
+			top: 0px;
+		}
+		.menudetailone{
+			height:60px;
+			width:180px;
+			text-align:center;
+			line-height:60px;
+			font-size:16px;
+			color:#848f94;
+			background:#e2ebea;
+		}
     </style>
     {/literal}
+	<script src="/admin/js/jquery-1.8.3.min.js" type="text/javascript"></script>
 </head>
 <body>
-<div id="tabbar-div">
+<!-- <div id="tabbar-div">
     <p><span style="float:right; padding: 3px 5px;" ><a href="javascript:toggleCollapse();"></a></span>
         <span class="tab-front" id="menu-tab">{$lang.menu}</span>
     </p>
-</div>
-<div id="main-div">
+</div> -->
+<!-- <div id="main-div">
     <div id="accordion">
         <dl class="accordion" id="slider">
             {foreach from=$menus item=menu key=k}
@@ -178,7 +250,7 @@
             </dd>
             {/foreach}
         </dl>
-    </div>
+    </div> -->
     <!--
     <div id="menu-list">
         <ul id="menu-ul">
@@ -201,234 +273,49 @@
         </ul>
     </div>
     -->
+<!-- </div> -->
+<div class="menuone">
+	{foreach from=$menus item=menu key=k}
+	<div class="menutwo">
+		<div class="icon1"></div>
+		<div class="menuname1">{$menu.label}</div>
+		<div class="triangle"></div>
+		<div class="menudetail">
+		{if $menu.children}
+		<ul>
+			{foreach from=$menu.children item=child}
+			<a href="{$child.action}" target="main-frame" style="text-decoration:none;"><div class="menudetailone">{$child.label}</div></a>
+			{/foreach}
+		</ul>
+		{/if}
+		</div>
+	</div>
+	{/foreach}
 </div>
-
-{insert_scripts files="accordion.js,../js/global.js,../js/utils.js,../js/transport.js,menu.js"}
-<script language="JavaScript">
-<!--
-var collapse_all = "{$lang.collapse_all}";
-var expand_all = "{$lang.expand_all}";
-var collapse = true;
-{literal}
-accordion.slider("slider", 0, "open");
-//function toggleCollapse()
-//{
-//    var items = document.getElementsByTagName('LI');
-//    for (i = 0; i < items.length; i++)
-//    {
-//        if (collapse)
-//        {
-//            if (items[i].className == "explode")
-//            {
-//                toggleCollapseExpand(items[i], "collapse");
-//            }
-//        }
-//        else
-//        {
-//            if ( items[i].className == "collapse")
-//            {
-//                toggleCollapseExpand(items[i], "explode");
-//                ToggleHanlder.Reset();
-//            }
-//        }
-//    }
-//
-//    collapse = !collapse;
-//    document.getElementById('toggleImg').src = collapse ? 'images/menu_minus.gif' : 'images/menu_plus.gif';
-//    document.getElementById('toggleImg').alt = collapse ? collapse_all : expand_all;
-//}
-//
-//function toggleCollapseExpand(obj, status)
-//{
-//    if (obj.tagName.toLowerCase() == 'li' && obj.className != 'menu-item')
-//    {
-//        for (i = 0; i < obj.childNodes.length; i++)
-//        {
-//            if (obj.childNodes[i].tagName == "UL")
-//            {
-//                if (status == null)
-//                {
-//                    if (obj.childNodes[1].style.display != "none")
-//                    {
-//                        obj.childNodes[1].style.display = "none";
-//                        ToggleHanlder.RecordState(obj.getAttribute("key"), "collapse");
-//                        obj.className = "collapse";
-//                    }
-//                    else
-//                    {
-//                        obj.childNodes[1].style.display = "block";
-//                        ToggleHanlder.RecordState(obj.getAttribute("key"), "explode");
-//                        obj.className = "explode";
-//                    }
-//                    break;
-//                }
-//                else
-//                {
-//                    if( status == "collapse")
-//                    {
-//                        ToggleHanlder.RecordState(obj.getAttribute("key"), "collapse");
-//                        obj.className = "collapse";
-//                    }
-//                    else
-//                    {
-//                        ToggleHanlder.RecordState(obj.getAttribute("key"), "explode");
-//                        obj.className = "explode";
-//                    }
-//                    obj.childNodes[1].style.display = (status == "explode") ? "block" : "none";
-//                }
-//            }
-//        }
-//    }
-//}
-
-//document.getElementById('menu-list').onclick = function(e)
-//{
-//    var obj = Utils.srcElement(e);
-//    toggleCollapseExpand(obj);
-//}
-//
-//document.getElementById('tabbar-div').onmouseover=function(e)
-//{
-//    var obj = Utils.srcElement(e);
-//
-//    if (obj.className == "tab-back")
-//    {
-//        obj.className = "tab-hover";
-//    }
-//}
-//
-//document.getElementById('tabbar-div').onmouseout=function(e)
-//{
-//    var obj = Utils.srcElement(e);
-//
-//    if (obj.className == "tab-hover")
-//    {
-//        obj.className = "tab-back";
-//    }
-//}
-
-
-/**
- * 创建XML对象
- */
-function createDocument()
-{
-    var xmlDoc;
-    // create a DOM object
-    if (window.ActiveXObject)
-    {
-        try
-        {
-            xmlDoc = new ActiveXObject("Msxml2.DOMDocument.6.0");
-        }
-        catch (e)
-        {
-            try
-            {
-                xmlDoc = new ActiveXObject("Msxml2.DOMDocument.5.0");
-            }
-            catch (e)
-            {
-                try
-                {
-                    xmlDoc = new ActiveXObject("Msxml2.DOMDocument.4.0");
-                }
-                catch (e)
-                {
-                    try
-                    {
-                        xmlDoc = new ActiveXObject("Msxml2.DOMDocument.3.0");
-                    }
-                    catch (e)
-                    {
-                        alert(e.message);
-                    }
-                }
-            }
-        }
-    }
-    else
-    {
-        if (document.implementation && document.implementation.createDocument)
-        {
-            xmlDoc = document.implementation.createDocument("","doc",null);
-        }
-        else
-        {
-            alert("Create XML object is failed.");
-        }
-    }
-    xmlDoc.async = false;
-
-    return xmlDoc;
-}
-
-//菜单展合状态处理器
-//var ToggleHanlder = new Object();
-//
-//Object.extend(ToggleHanlder ,{
-//    SourceObject : new Object(),
-//    CookieName   : 'Toggle_State',
-//    RecordState : function(name,state)
-//    {
-//        if(state == "collapse")
-//        {
-//            this.SourceObject[name] = state;
-//        }
-//        else
-//        {
-//            if(this.SourceObject[name])
-//            {
-//                delete(this.SourceObject[name]);
-//            }
-//        }
-//        var date = new Date();
-//        date.setTime(date.getTime() + 99999999);
-//        document.setCookie(this.CookieName, this.SourceObject.toJSONString(), date.toGMTString());
-//    },
-//
-//    Reset :function()
-//    {
-//        var date = new Date();
-//        date.setTime(date.getTime() + 99999999);
-//        document.setCookie(this.CookieName, "{}" , date.toGMTString());
-//    },
-//
-//    Load : function()
-//    {
-//        if (document.getCookie(this.CookieName) != null)
-//        {
-//            this.SourceObject = t_eval();
-//            var items = document.getElementsByTagName('LI');
-//            for (var i = 0; i < items.length; i++)
-//            {
-//                if ( items[0].getAttribute("name") == "menu" && items[0].getAttribute("id") != '20_yun')
-//                {
-//                    for (var k in this.SourceObject)
-//                    {
-//                        if ( typeof(items[i]) == "object")
-//                        {
-//                            if (items[i].getAttribute('key') == k)
-//                            {
-//                                toggleCollapseExpand(items[i], this.SourceObject[k]);
-//                                collapse = false;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        document.getElementById('toggleImg').src = collapse ? 'images/menu_minus.gif' : 'images/menu_plus.gif';
-//        document.getElementById('toggleImg').alt = collapse ? collapse_all : expand_all;
-//    }
-//});
-{/literal}
-//ToggleHanlder.CookieName += "_{$admin_id}";
-//初始化菜单状态
-//ToggleHanlder.Load();
-
-//-->
+<div class="backgrounddiv"></div>
+<script type="text/javascript">
+    $(document).ready(function(){
+		var widthone=$(".menuone").height();
+		$(".menudetail").css("height",(widthone)+"px");
+		$(".backgrounddiv").css("height",(widthone+10)+"px");
+		$(".menutwo").on("click",function(){
+			$(".menutwo").css("background","none");
+			$(this).css("background","#60cbe1");
+			$(".triangle").css("display","none");
+			$(this).find(".triangle").css("display","block");
+			$(".menudetail").css("display","none");
+			$(this).find(".menudetail").css("display","block");
+		})
+		$(".menudetailone").on("click",function(){
+			$(".menudetailone").css("background","#e2ebea");
+			$(".menudetailone").css("color","#848f94");
+			$(this).css("background","#9ec9d1");
+			$(this).css("color","#fff");
+		})
+    });
 </script>
+
+
 
 </body>
 </html>

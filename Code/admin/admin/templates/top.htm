@@ -52,7 +52,7 @@
         }
 
         #submenu-div a:hover {
-            color: #F5C29A;
+
         }
 
         #loading-div {
@@ -85,12 +85,10 @@
             padding: 0 20px;
             text-decoration: none;
             color: #335B64;
-            background:#7BB233;
         }
 
         #menu-div a:hover {
             color: #000;
-            background:#7BB233;
         }
 
         #submenu-div a.fix-submenu{ clear:both; margin-left:5px; padding:1px 5px; *padding:3px 5px 5px; background:#DDEEF2; color:#278296; }
@@ -99,7 +97,7 @@
         #menu-div li.fix-spacer{ border-right:none; }
 
         .topmenu {
-            width: width:600px;height: 72px;float: left;margin-top: 5px;
+            width:600px;height: 72px;float: left;margin-top: 5px;margin-left:130px;
         }
         .topmenu ul li {
             width: 72px;height: 85px;
@@ -115,53 +113,105 @@
         }
         .topmenu ul li a span.iocn {
             display: block;
-            height: 26px;
-            width: 30px;
+            height: 85px;
+            width: 72px;
             text-align: center;
-            left: 20px;
-            top: 15px;
-            background-image: url("/admin/images/menu-bg.png");
             background-repeat: no-repeat;
+			position:absolute;
+			z-index:100;
         }
         .curr {
             background: url("/admin/images/curr.png") no-repeat;
         }
 
-        .iocn1 {
-             background-position: 0px 0px;
+        .iocn1 img{
+			 margin-top:20px;
          }
-        .iocn2 {
-            background-position: -100px 0px;
+        .iocn2 img{
+             	 margin-top:17px;
         }
-        .iocn3 {
-            background-position: -200px 0px;
+        .iocn3 img{
+           	 margin-top:17px;
         }
-        .iocn4 {
-            background-position: -300px 0px;
+        .iocn4 img{
+			 	 margin-top:17px;
         }
-        .iocn5 {
-            background-position: -400px 0px;
+        .iocn5 img{
+           	 margin-top:17px;
         }
-        .iocn6 {
-            background-position: -500px 0px;
+        .iocn6 img{
+             margin-top:17px;
         }
-        .iocn7 {
-            background-position: -600px 0px;
+        .iocn7 img{
+           	 margin-top:17px;
         }
-        .iocn8 {
-            background-position: -700px 0px;
+        .iocn8 img{
+           	 margin-top:15px;
         }
         .topmenu ul li a span.f14 {
-            text-align: center;top: 25px;
+            text-align: center;top: 55px;
         }
         .topmenuRight {
-            width: 230px;float: right;margin-top: 30px;height:30px;line-height:30px;padding-left:40px;border-left:1px solid #ddd;
+            width: 300px;float: right;margin-top: 30px;height:30px;line-height:30px;padding-left:40px;border-left:1px solid #ddd;
         }
         .topmenuRight li {
             margin: 0px 0px;padding-right:10px;border-right: 1px solid #FFFFFF;height: 18px;line-height: 40px;
         }
 		.toplogofirst img{
 			height:85px;
+		}
+		.renovateicon{
+			height:20px;
+			width:20px;
+			float:left;
+			margin-top:10px;
+			padding-right:6px;
+			display:inline-block;
+			background:url("/admin/images/renovate.png") no-repeat;
+			background-size:20px 20px;
+		}
+		.Personal{
+			height:20px;
+			width:20px;
+			float:left;
+			margin-top:10px;
+			padding-right:6px;
+			display:inline-block;
+			background:url("/admin/images/Personal.png") no-repeat;
+			background-size:20px 20px;
+		}
+		.clearcache{
+			height:20px;
+			width:20px;
+			float:left;
+			margin-top:10px;
+			padding-right:6px;
+			display:inline-block;
+			background:url("/admin/images/clearcache.png") no-repeat;
+			background-size:20px 20px;
+		}
+		.quit{
+			height:20px;
+			width:20px;
+			float:left;
+			margin-top:10px;
+			padding-right:6px;
+			display:inline-block;
+			background:url("/admin/images/quit.png") no-repeat;
+			background-size:20px 20px;
+		}
+		.backgroundone{
+			height:40px;
+			width:180px;
+			background:#616e80;
+			float:left;
+		}
+		.backgroundtwo{
+			height:40px;
+			width:200px;
+			background:#e2ebea;
+			float:left;
+			box-shadow:0 1px 3px #ccc inset
 		}
     </style>
     {insert_scripts files="../js/transport.js"}
@@ -209,18 +259,18 @@
 <body>
 <div id="header-div">
     <div id="submenu-div">
-        <div style="float: left;width: 250px;text-align: left;padding-left: 20px;"><a class="toplogofirst" href="/"><img src="/admin/images/top_logo.jpg" alt=""/></a></div>
+        <div style="float: left;width: 250px;text-align: left;padding-left:0px;"><a class="toplogofirst" href="/"><img src="/admin/images/top_logo.jpg" alt=""/></a></div>
         <div class="topmenu">
             {if $role_id eq '1'}
             <ul>
-                <li class="curr"><a href="goods.php?act=list_arr" target="main-frame"><span class="iocn iocn1"></span><span class="f14">基建商城</span></a></li>
-                <li><a href="order.php?act=list_arr" target="main-frame"><span class="iocn iocn2"></span><span class="f14">订单管理</span></a></li>
-                <li><a href="exchange_goods.php?act=list_arr" target="main-frame"><span class="iocn iocn3"></span><span class="f14">积分商城</span></a></li>
-                <li><a href="wrnews.php?act=list_arr" target="main-frame"><span class="iocn iocn4"></span><span class="f14">内容管理</span></a></li>
-                <li><a href="custom.php?act=list_arr" target="main-frame"><span class="iocn iocn5"></span><span class="f14">定制管理</span></a></li>
-                <li><a href="evaluation.php?act=list_arr" target="main-frame"><span class="iocn iocn6"></span><span class="f14">信用池管理</span></a></li>
-                <li><a href="category.php?act=list_arr" target="main-frame"><span class="iocn iocn7"></span><span class="f14">基础数据</span></a></li>
-                <li><a href="sales_analysis.php?act=list_arr" target="main-frame"><span class="iocn iocn8"></span><span class="f14">报表统计</span></a></li>
+                <li class="curr"><a href="goods.php?act=list_arr" target="main-frame"><span class="iocn iocn1"><img src="/admin/images/icon11.png"></img></span><span class="f14">基建商城</span></a></li>
+                <li><a href="order.php?act=list_arr" target="main-frame"><span class="iocn iocn2"><img src="/admin/images/icon2.png"></img></span><span class="f14">订单管理</span></a></li>
+                <li><a href="exchange_goods.php?act=list_arr" target="main-frame"><span class="iocn iocn3"><img src="/admin/images/icon3.png"></img></span><span class="f14">积分商城</span></a></li>
+                <li><a href="wrnews.php?act=list_arr" target="main-frame"><span class="iocn iocn4"><img src="/admin/images/icon4.png"></img></span><span class="f14">内容管理</span></a></li>
+                <li><a href="custom.php?act=list_arr" target="main-frame"><span class="iocn iocn5"><img src="/admin/images/icon5.png"></img></span><span class="f14">定制管理</span></a></li>
+                <li><a href="evaluation.php?act=list_arr" target="main-frame"><span class="iocn iocn6"><img src="/admin/images/icon6.png"></img></span><span class="f14">信用池管理</span></a></li>
+                <li><a href="category.php?act=list_arr" target="main-frame"><span class="iocn iocn7"><img src="/admin/images/icon7.png"></img></span><span class="f14">基础数据</span></a></li>
+                <li><a href="sales_analysis.php?act=list_arr" target="main-frame"><span class="iocn iocn8"><img src="/admin/images/icon8.png"></img></span><span class="f14">报表统计</span></a></li>
             </ul>
             {/if}
         </div>
@@ -231,10 +281,10 @@
                 <li><a href="../" target="_blank">{$lang.preview}</a></li>
                 <li><a href="message.php?act=list" target="main-frame">{$lang.view_message}</a></li>
                 -->
-                <li><a href="javascript:window.top.frames['main-frame'].document.location.reload();window.top.frames['header-frame'].document.location.reload()">{$lang.refresh}</a></li>
-                <li><a href="privilege.php?act=modif" target="main-frame">{$lang.profile}</a></li>
-                <li><a href="index.php?act=clear_cache" target="main-frame">{$lang.clear_cache}</a></li>
-                <li><a href="privilege.php?act=logout" target="_top">{$lang.signout}</a></li>
+                <li><div class="renovateicon" ></div><a href="javascript:window.top.frames['main-frame'].document.location.reload();window.top.frames['header-frame'].document.location.reload()">{$lang.refresh}</a></li>
+                <li><div class="Personal" ></div><a href="privilege.php?act=modif" target="main-frame">{$lang.profile}</a></li>
+                <li><div class="clearcache" ></div><a href="index.php?act=clear_cache" target="main-frame">{$lang.clear_cache}</a></li>
+                <li><div class="quit" ></div><a href="privilege.php?act=logout" target="_top">{$lang.signout}</a></li>
                 <!--
                 <li><a href="#"  onclick="ShowToDoList()">{$lang.todolist}</a></li>
                 <li style="border-left:none;"><a href="index.php?act=first" target="main-frame">{$lang.shop_guide}</a></li>
@@ -250,13 +300,15 @@
         </div>
     </div>
 </div>
-<div id="menu-div" style="clear: both;">
+<div id="menu-div" style="clear: both; background-color:#f0f0f0;height:40px;box-shadow:0 1px 3px #ccc inset">
+	<div class="backgroundone"></div>
+	<div class="backgroundtwo"></div>
     <ul>
         <li class="fix-spacel">&nbsp;</li>
-        <li><a  style="color: #FFFFFF;" href="index.php?act=main" target="main-frame">{$lang.admin_home}</a></li>
+        <li><a  style="color: #8f9499;" href="index.php?act=main" target="main-frame">{$lang.admin_home}</a></li>
         <!--<li><a href="privilege.php?act=modif" target="main-frame">{$lang.set_navigator}</a></li>-->
         {foreach from=$nav_list item=item key=key}
-        <li><a  style="color: #FFFFFF;" href="{$key}" target="main-frame">{$item}</a></li>
+        <li><a  style="color: #8f9499;" href="{$key}" target="main-frame">{$item}</a></li>
         {/foreach}
         <li class="fix-spacer">&nbsp;</li>
     </ul>
@@ -272,6 +324,86 @@
 			$('.topmenu li').find("span").css("color","#898f95");
 			$(this).find("span").css("color","#fff");
         });
+		$(".iocn1").on("click",function(){
+			$(".iocn2 img").attr('src',"/admin/images/icon2.png"); 
+			$(".iocn3 img").attr('src',"/admin/images/icon3.png"); 
+			$(".iocn4 img").attr('src',"/admin/images/icon4.png"); 
+			$(".iocn5 img").attr('src',"/admin/images/icon5.png"); 
+			$(".iocn6 img").attr('src',"/admin/images/icon6.png"); 
+			$(".iocn7 img").attr('src',"/admin/images/icon7.png"); 
+			$(".iocn8 img").attr('src',"/admin/images/icon8.png"); 
+			$(this).find("img").attr('src',"/admin/images/icon11.png"); 
+		})
+		$(".iocn2").on("click",function(){
+			$(".iocn1 img").attr('src',"/admin/images/icon1.png"); 
+			$(".iocn3 img").attr('src',"/admin/images/icon3.png"); 
+			$(".iocn4 img").attr('src',"/admin/images/icon4.png"); 
+			$(".iocn5 img").attr('src',"/admin/images/icon5.png"); 
+			$(".iocn6 img").attr('src',"/admin/images/icon6.png"); 
+			$(".iocn7 img").attr('src',"/admin/images/icon7.png"); 
+			$(".iocn8 img").attr('src',"/admin/images/icon8.png"); 
+			$(this).find("img").attr('src',"/admin/images/icon22.png"); 
+		})
+		$(".iocn3").on("click",function(){
+			$(".iocn1 img").attr('src',"/admin/images/icon1.png"); 
+			$(".iocn2 img").attr('src',"/admin/images/icon2.png"); 
+			$(".iocn4 img").attr('src',"/admin/images/icon4.png"); 
+			$(".iocn5 img").attr('src',"/admin/images/icon5.png"); 
+			$(".iocn6 img").attr('src',"/admin/images/icon6.png"); 
+			$(".iocn7 img").attr('src',"/admin/images/icon7.png"); 
+			$(".iocn8 img").attr('src',"/admin/images/icon8.png"); 
+			$(this).find("img").attr('src',"/admin/images/icon33.png"); 
+		})
+		$(".iocn4").on("click",function(){
+			$(".iocn1 img").attr('src',"/admin/images/icon1.png"); 
+			$(".iocn2 img").attr('src',"/admin/images/icon2.png"); 
+			$(".iocn3 img").attr('src',"/admin/images/icon3.png"); 
+			$(".iocn5 img").attr('src',"/admin/images/icon5.png"); 
+			$(".iocn6 img").attr('src',"/admin/images/icon6.png"); 
+			$(".iocn7 img").attr('src',"/admin/images/icon7.png"); 
+			$(".iocn8 img").attr('src',"/admin/images/icon8.png"); 
+			$(this).find("img").attr('src',"/admin/images/icon44.png"); 
+		})
+		$(".iocn5").on("click",function(){
+			$(".iocn1 img").attr('src',"/admin/images/icon1.png"); 
+			$(".iocn2 img").attr('src',"/admin/images/icon2.png"); 
+			$(".iocn3 img").attr('src',"/admin/images/icon3.png"); 
+			$(".iocn4 img").attr('src',"/admin/images/icon4.png"); 
+			$(".iocn6 img").attr('src',"/admin/images/icon6.png"); 
+			$(".iocn7 img").attr('src',"/admin/images/icon7.png"); 
+			$(".iocn8 img").attr('src',"/admin/images/icon8.png"); 
+			$(this).find("img").attr('src',"/admin/images/icon55.png");
+		})
+		$(".iocn6").on("click",function(){
+			$(".iocn1 img").attr('src',"/admin/images/icon1.png"); 
+			$(".iocn2 img").attr('src',"/admin/images/icon2.png"); 
+			$(".iocn3 img").attr('src',"/admin/images/icon3.png"); 
+			$(".iocn4 img").attr('src',"/admin/images/icon4.png"); 
+			$(".iocn5 img").attr('src',"/admin/images/icon5.png"); 
+			$(".iocn7 img").attr('src',"/admin/images/icon7.png"); 
+			$(".iocn8 img").attr('src',"/admin/images/icon8.png"); 
+			$(this).find("img").attr('src',"/admin/images/icon66.png");
+		})
+		$(".iocn7").on("click",function(){
+			$(".iocn1 img").attr('src',"/admin/images/icon1.png"); 
+			$(".iocn2 img").attr('src',"/admin/images/icon2.png"); 
+			$(".iocn3 img").attr('src',"/admin/images/icon3.png"); 
+			$(".iocn4 img").attr('src',"/admin/images/icon4.png"); 
+			$(".iocn5 img").attr('src',"/admin/images/icon5.png"); 
+			$(".iocn6 img").attr('src',"/admin/images/icon6.png"); 
+			$(".iocn8 img").attr('src',"/admin/images/icon8.png"); 
+			$(this).find("img").attr('src',"/admin/images/icon77.png");
+		})
+		$(".iocn8").on("click",function(){
+			$(".iocn1 img").attr('src',"/admin/images/icon1.png"); 
+			$(".iocn2 img").attr('src',"/admin/images/icon2.png"); 
+			$(".iocn3 img").attr('src',"/admin/images/icon3.png"); 
+			$(".iocn4 img").attr('src',"/admin/images/icon4.png"); 
+			$(".iocn5 img").attr('src',"/admin/images/icon5.png"); 
+			$(".iocn6 img").attr('src',"/admin/images/icon6.png"); 
+			$(".iocn7 img").attr('src',"/admin/images/icon7.png"); 
+			$(this).find("img").attr('src',"/admin/images/icon88.png");
+		})
     });
 </script>
 {if $send_mail_on eq 'on'}
