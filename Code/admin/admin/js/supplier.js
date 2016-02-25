@@ -598,7 +598,7 @@ var Supplier = {
 		}, "json");		
 	},
 
-	getUploadFile: function(id){
+	getUploadFile: function(id, insert_id){
 		if($("#"+id+"_form").valid() === false){
 			return false;
 		}
@@ -610,11 +610,14 @@ var Supplier = {
             dataType: 'json',//返回数据的类型
             data:strJson,//一同上传的数据
             success: function (data, status) {
-				if(data.error){
-					$('#message_area').html(createError(data.message));
-				}else{
-					$('#message_area').html(createTip('上传成功'));
-				}
+				var	row = "<tr>";
+				row += "<td>"+data.content.upload_name+"</td>";
+				var edit = createButton("removeItem(this)", "移除");
+				edit += "<input type='hidden' name='upload_id[]' value='"+data.content.upload_id+"'>";
+				row += createTd(edit);
+				row += "</tr>";
+				$("#"+insert_id+">tbody").append(row);
+				$('#message_area').html(createTip(data.message));
             },
             error: function (data, status, e) {
                 console.log(e);
@@ -645,46 +648,20 @@ var Supplier = {
 		var file_1_id_arr = $("#right_form").FormtoJson().upload_id;
 		if(file_1_id_arr){
 			$.each(file_1_id_arr, function(k, v){
-				file_0.push({"upload_id":v});
+				file_1.push({"upload_id":v});
 			});
 		}
-		var params = {"order_pay_id":0, "order_id":order_id, "file_0":file_0};
+		var params = {"order_pay_id":0, "order_id":order_id, "file_0":file_0, "file_1":file_1};
 		var strJson = createJson("createOrderPay", "order_pay", params);
 		var that = this;
-		console.log(strJson);
-		return false;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				$.each(obj.content.info,function(key, value){
-					if($("#"+key).length == 1){
-						$("#"+key).text(value);
-					}
-				});
-				var row ="";
-				$.each(obj.content.orders,function(key, value){
-					row += "<tr>";
-					for(var i=0;i<that.render_arr.length;i++){
-						if(that.render_arr[i] == "operate"){
-							var edit = createButton("removeItem()", "移除");
-							edit += "<input type='hidden' name='order_id[]' value='"+value.order_id+"'>";
-							row += createTd(edit);
-							continue;
-						}
-						if(value[that.render_arr[i]] != null){
-							row += createTd(subString(value[that.render_arr[i]],10,true));
-						}else{
-							row += createTd(createWarn('无数据'));
-						}
-					}
-					row += "</tr>";
-				});
-				$("#main_list>tbody").html(row);
-				$('#message_area').html('');
+				redirectToUrl('demo_template.php?section=supplier&act=recipient_list');
 			}
-		}, "json");		
+		}, "json");
 	},
 
 	orderPayList: function(search){
@@ -770,6 +747,25 @@ var Supplier = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
+				var row = "";
+				$.each(obj.content.file_0,function(key, value){
+					row += "<tr>";
+					row += createTd(value.upload_name);
+					var edit = createButton("removeFile("+value.upload_id+")", "删除");
+					edit += "<input type='hidden' name='file_0[]' value='"+value.upload_name+"'>";
+					row += createTd(edit);
+				});
+				$("#left_list>tbody").html(row);
+				row ="";
+				$.each(obj.content.file_1,function(key, value){
+					row += "<tr>";
+					row += createTd(value.upload_name);
+					var edit = createButton("removeFile("+value.upload_id+")", "删除");
+					edit += "<input type='hidden' name='file_1[]' value='"+value.upload_name+"'>";
+					row += createTd(edit);
+				});
+				$("#right_list>tbody").html(row);
+				row = "";
 				$.each(obj.content.info,function(key, value){
 					if($("#"+key).length == 1){
 						$("#"+key).text(value);
@@ -815,18 +811,12 @@ var Supplier = {
 				$.each(obj.content.file_0,function(key, value){
 					row += "<tr>";
 					row += createTd(value.upload_name);
-					var edit = createButton("removeFile("+value.upload_id+")", "删除");
-					edit += "<input type='hidden' name='file_0[]' value='"+value.upload_name+"'>";
-					row += createTd(edit);
 				});
 				$("#left_list>tbody").html(row);
 				row ="";
 				$.each(obj.content.file_1,function(key, value){
 					row += "<tr>";
 					row += createTd(value.upload_name);
-					var edit = createButton("removeFile("+value.upload_id+")", "删除");
-					edit += "<input type='hidden' name='file_1[]' value='"+value.upload_name+"'>";
-					row += createTd(edit);
 				});
 				$("#right_list>tbody").html(row);
 				row = "";
@@ -879,32 +869,7 @@ var Supplier = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				$.each(obj.content.info,function(key, value){
-					if($("#"+key).length == 1){
-						$("#"+key).text(value);
-					}
-				});
-				var row ="";
-				$.each(obj.content.orders,function(key, value){
-					row += "<tr>";
-					for(var i=0;i<that.render_arr.length;i++){
-						if(that.render_arr[i] == "operate"){
-							var edit = createButton("removeItem()", "移除");
-							edit += "<input type='hidden' name='order_id[]' value='"+value.order_id+"'>";
-							row += createTd(edit);
-							continue;
-						}
-						if(value[that.render_arr[i]] != null){
-							row += createTd(subString(value[that.render_arr[i]],10,true));
-						}else{
-							row += createTd(createWarn('无数据'));
-						}
-					}
-					row += "</tr>";
-				});
-				$("#main_list>tbody").html(row);
-
-				$('#message_area').html('');		
+				$('#message_area').html(createTip(obj.message));		
 			}
 		}, "json");		
 	},

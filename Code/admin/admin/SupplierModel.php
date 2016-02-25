@@ -12,7 +12,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 	 */
 	
 	if ( $_POST['command'] == 'upload' ) {//上传文件
-		
 		/**
 		 * 接口名称：上传文件
 		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
@@ -66,7 +65,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	        if ($res === false) {
 	        	;
 	        } else {
-	        	$type_arr = explode( ",", $entity);
+	        	$type_arr = explode( "_", $entity);
 	        	$type = $type_arr[1];
 
 	        	$data = array();

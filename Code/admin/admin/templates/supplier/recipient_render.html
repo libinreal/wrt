@@ -58,7 +58,7 @@
 						<tr>
 						<td colspan="4" style="text-align:center">
 						<form id="file_0_form">
-						<input type="file" id="file_0" name="file_0" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_0')">
+						<input type="file" id="file_0" name="file_0" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_0', 'left_list')">
 						</form>
 						</td>
 						</tr>
@@ -81,7 +81,7 @@
 						<tr>
 						<td colspan="4" style="text-align:center">
 						<form id="file_1_form" onsubmit="return false;">
-						<input type="file" id="file_1" name="file_1" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_1')">
+						<input type="file" id="file_1" name="file_1" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_1', 'right_list')">
 						</form>
 						</td>
 						</tr>
@@ -110,7 +110,7 @@
 Supplier.initOrderPay();
 function removeItem(handle){
 	$(handle).parent().parent().remove();
-	return false;	
+	return false;
 }
 </script>
 	</body>
