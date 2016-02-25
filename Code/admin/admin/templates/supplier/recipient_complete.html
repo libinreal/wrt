@@ -113,7 +113,12 @@ function generate(){
 	var order_id = [];
 	order_id = $("#main_form").FormtoJson().order_id;
 	if(order_id){
-		
+		var str = '';
+		$.each(order_id, function(k, v){
+			str += v + ",";
+		});
+		str = str.substring(0, str.length - 1);
+		redirectToUrl("demo_template.php?section=supplier&act=recipient_render&order_id="+order_id);
 		return true;
 	}else{
 		alert('请选择至少一个订单');

@@ -525,5 +525,63 @@ var PurchaseOrder = {
 			}
 			$('#message_area').html('');
 		}, "json");
+	},
+
+	initOrderPay: function(){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var params = {"order_id":order_id};
+		var strJson = createJson("initOrderPay", "order_pay", params);
+		var that = this
+		$.post(this.url, strJson, function(obj){
+			console.log(obj)
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				// 初始化列表
+				var key_arr = {
+					"pay_id":{id:"id",name:"name"},
+					"suppers_id":{id:"suppliers_id",name:"suppliers_name"}
+				}
+				$.each(obj.content.form,function(key, value){
+					var row = "";
+					if($("select[name='"+key+"']").length>0){
+						$.each(value, function(k, v){
+							row += appendOption(v[key_arr[key].id], v[key_arr[key].name])
+						});
+						$("select[name='"+key+"']").append(row);		
+					}
+					if($("input[name="+key+"]").length){
+						$("input[name="+key+"]").val(value);
+					}
+					if($("textarea[name="+key+"]").length){
+						$("textarea[name="+key+"]").text(value);
+					}
+				});
+				$.each(obj.content.info,function(key, value){
+					if($("#"+key).length){
+						$("#"+key).text(value);	
+					}
+				});
+				var row = "";
+				$.each(obj.content.price_log,function(key, value){
+					row += "<tr>";
+					for(var i=0;i<that.price_log.length;i++){
+						if(value[that.price_log[i]] != null){
+							row += createTd(subString(value[that.price_log[i]],10,true));
+						}else{
+							row += createTd(createWarn('无数据'));
+						}
+					}
+					row += "</tr>";
+					$("#price_log_list>tbody").html(row);
+				});
+
+				$('#message_area').html('');		
+			}
+		}, "json");		
 	}
 }
