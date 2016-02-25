@@ -1983,7 +1983,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		        	$content['upload_id'] = $upload_id;
 		        	$content['upload_name'] = $fileName;
 
-	            	make_json_response($fileName, '0', '保存文件成功');
+	            	make_json_response($content, '0', '保存文件成功');
 	            }
 	        }
 
