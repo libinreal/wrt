@@ -83,7 +83,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif( $this->command == 'orderPayList' ){
 				//
 				$this->orderPayListAction();
-			}elseif( $this->command == 'upload' ){
+			}elseif( $this->command == 'delUpload' ){
+				//
+				$this->delUploadAction();
+			}
+			elseif( $this->command == 'upload' ){
 				//
 				$this->uploadAction();
 			}
@@ -546,20 +550,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *          	"shipping_fee":250.0//物流
 		 *          	"total":250.0//小计
 		 *	        }
-		 *	        ],
-		 *	        "file_0"://发票文件
-		 *	        [
-		 *	        	{
-		 *	        		"upload_name":"20160224_s1.jpg",//文件名字
-		 *	        		"upload_id":1,//文件id
-		 *	        	}
-		 *	        ],
-		 *	        "file_1"://送货单文件
-		 *	        [
-		 *	        	{
-		 *	        		"upload_name":"20160224_s1.jpg",//文件名字
-		 *	        		"upload_id":1,//文件id
-		 *	        	}
 		 *	        ]
 		 *	    }
 		 *	}
@@ -584,7 +574,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
 
 			$order_pay_table = $GLOBALS['ecs']->table('order_pay');//生成单表
-			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');//文件上传表
 
 			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
 				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
@@ -644,24 +633,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content = array();
 			$content['info'] = array('order_total' => $order_total, 'order_count' => count( $goods) );
 			$content['orders'] = $goods;
-
-			$file_0 = $file_1 = array();
-
-			//已上传文件
-			$upload_sql = 'SELECT `upload_name`,`upload_type`, `upload_id` FROM ' . $upload_table;
-			$files = $GLOBALS['db']->getAll( $upload_sql );
-
-			$file_0 = $file_1 = array();
-
-			foreach ($files as $f) {
-				if( $f['upload_type'] == 0 )
-					$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
-				else
-					$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
-			}
-
-			$content['file_0'] = $file_0;
-			$content['file_1'] = $file_1;
 			make_json_response($content, '0', '生成初始化成功');
 		}
 
@@ -676,8 +647,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "entity": "order_pay",
 		 *	    "parameters": {
 		 *	        "order_id":"1,2,3"//多个id用","分隔
-		 *	        "file_0":["20160224.jpg", "20160224.jpg"],//上传的发票文件名字，数组形式
-		 *	        "file_1":["20160224.jpg", "20160224.jpg"]//上传的送货单文件名字，数组形式
 		 *	    }
 		 *	}
 		 * 返回数据格式如下 :
@@ -695,15 +664,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if (!empty($order_id_str)) {
 				$order_ids = explode(',',$order_id_str);
 			}
-
-			$file_0 = $content['parameters']['file_0'];
-			$file_1 = $content['parameters']['file_1'];
-
-			if( !is_array( $file_0 ) )
-				$file_0 = array();
-
-			if( !is_array( $file_1 ) )
-				$file_1 = array();
 
 			$suppliers_id = $this->getSuppliersId();
 			if( empty( $suppliers_id ) ){
@@ -809,19 +769,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_pay_id = $GLOBALS['db']->insert_id();
 
 			if( $insert_result ){
-				//图片文件名字记录
-				/*foreach ($file_0 as $k0=>$f0) {
-					if( $file_0 ){
-							
-					}
-				}*/
-
-
-
-
-				/*$upload_data['order_pay_id'] = $order_pay_id;
-				$upload_data['upload_type'] = ;
-				$upload_data['order_pay_id'] = $order_pay_id;*/
 
 				//生成状态记录
 				$purchase_status_sql = 'UPDATE ' . $order_table . ' SET `purchase_pay_status` = 1 ' .
@@ -1049,16 +996,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$content['info']['create_time'] = $order_pay['create_time'];
 			
 				//已上传文件
-				$upload_sql = 'SELECT `upload_name`,`upload_type`, `upload_id` FROM ' . $upload_table;
+				$upload_sql = 'SELECT `upload_name`,`upload_type`, `upload_id` FROM ' . $upload_table .
+							  'WHERE `order_pay_id` = ' . $order_pay_id;
 				$files = $GLOBALS['db']->getAll( $upload_sql );
 
 				$file_0 = $file_1 = array();
 
-				foreach ($files as $f) {
-					if( $f['upload_type'] == 0 )
-						$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
-					else
-						$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+				if( $files ){
+
+					foreach ($files as $f) {
+						if( $f['upload_type'] == 0 )
+							$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+						else
+							$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+					}
 				}
 
 				$content['file_0'] = $file_0;
@@ -1910,15 +1861,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * 接口参数：
 		 * {
          *      "command" : "upload", 
-         *      "entity"  : "file_0", //file_0 发票 file_1物流
-         *      "parameters" : {} 
+         *      "entity"  : "file_0", //file_0 发票 file_1 送货单
+         *      "parameters" : {
+         *      	"order_pay_id":1
+         *      } 
          * }
 	     *  
 	     * 返回数据格式如下 :
 	     *  {
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
-		 *	    "message": "物流费用编辑成功",
-		 *	    "content": {}
+		 *	    "message": "文件上传成功",
+		 *	    "content": {
+		 *	    	"upload_id":1,
+		 *	    	"upload_name":"xxx.jpg"
+		 *	    }
 		 *	 }
 		 */
 		public function uploadAction()
@@ -1930,6 +1886,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 		    if( empty( $suppliers_id ) ){
 		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
 		    }
+
+		    $upload_table = $GLOBALS['ecs']->table('order_pay_upload');
+		    $order_pay_id = $this->content['parameters']['order_pay_id'];
+
 
 			require('../includes/cls_image.php');
 	        if (empty($_FILES))
@@ -1945,10 +1905,85 @@ require(dirname(__FILE__) . '/includes/init.php');
 	        $fileName = date('YmdHis') . '_s' . $suppliers_id . '.' . $file['extension'];
 	        $res = $upload->upload_image($_FILES[$entity], PURCHASE_ORDER_DIR, $fileName);
 	        if ($res === false) {
-	        	make_json_response('', '-1', '保存文件失败');
+	        	;
 	        } else {
-	            make_json_response($fileName, '0', '保存文件成功');
+	        	$type_arr = explode( ",", $entity);
+	        	$type = $type_arr[1];
+
+	        	$data = array();
+	        	$data['upload_type'] = $type;
+	        	$data['upload_name'] = $fileName;
+	        	$data['order_pay_id'] = $order_pay_id;
+
+	        	$insert_sql = 'INSERT INTO ' . $upload_table . ' (';
+				$data_key_arr = array_keys( $data );
+				foreach ($data_key_arr as $k) {
+					$insert_sql .= '`' . $k . '`,';
+				}
+
+				$insert_sql = substr( $insert_sql, 0, -1 );
+				$insert_sql .= ') VALUES (';
+				foreach ($data as $v) {
+					if( is_string( $v ) ){
+						$insert_sql .= '\'' . $v . '\',';
+					}else{
+						$insert_sql .= $v . ',';
+					}
+				}
+
+				$insert_sql = substr( $insert_sql, 0, -1 );
+				$insert_sql .= ');';
+				
+				$GLOBALS['db']->query( $insert_sql );
+				$upload_id = $GLOBALS['db']->insert_id();
+
+				if( $upload_id ){
+		        	$content = array();
+		        	$content['upload_id'] = $upload_id;
+		        	$content['upload_name'] = $fileName;
+
+	            	make_json_response($fileName, '0', '保存文件成功');
+	            }
 	        }
+
+	        make_json_response('', '-1', '保存文件失败');
+
+		}
+
+		/**
+		 * 接口名称：删除文件
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 请求方式：POST
+		 * 接口参数：
+		 * {
+         *      "command" : "delUpload", 
+         *      "entity"  : "order_pay_upload",
+         *      "parameters" : {
+         *      	"upload_id":1//保存的文件记录id
+         *      } 
+         * }
+	     *  
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "文件删除成功",
+		 *	    "content": {}
+		 *	 }
+		 */
+		public function delUploadAction()
+		{
+			$params = $this->content['parameters'];
+			$upload_id = $params['upload_id'];
+			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');
+
+			$del_sql = 'DELETE FROM ' . $upload_table . ' WHERE `upload_id` = ' . $upload_id . 'LIMIT 1';
+			if ( $GLOBALS['db']->query( $del_sql ) ){
+				//默认保留磁盘文件
+				
+				make_json_response('', '0', '删除图片成功');
+			}else{
+				make_json_response('', '-1', '删除图片失败');
+			}
 
 		}
 
@@ -1956,7 +1991,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	$content = jsonAction( 
 				array( 'orderPage', 'orderDetail', 'updateChilderStatus', 'addShippingLog', 'addShippingInfo', 'initcategoryShipping',
 						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail','createOrderPay',
-						'completeList', 'orderPayDetail', 'orderPayList', 'initOrderPay', 'upload'
+						'completeList', 'orderPayDetail', 'orderPayList', 'initOrderPay', 'upload', 'delUpload'
 			 	) 
 			);
 	$supplierModel = new SupplierModel($content);
