@@ -646,6 +646,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "command": "createOrderPay",
 		 *	    "entity": "order_pay",
 		 *	    "parameters": {
+		 *	    	"order_pay_id":1,//应收款记录id
 		 *	        "order_id":"1,2,3"//多个id用","分隔
 		 *	        "file_0"://发票文件
 		 *	        [
@@ -672,6 +673,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 // 			print_r($_SESSION);die;
 			$content = $this->content;
 			$params = $content['parameters'];
+
+			$order_pay_id = intval( $content['order_pay_id'] );
 
 			$order_id_str = $params['order_id'];
 			$order_ids = array();
@@ -771,27 +774,46 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$data['suppliers_name'] = $this->getSuppliersName( $suppliers_id );
 			$data['create_time'] = date('Y-m-d H:i:s', time());
 			
-			$insert_sql = 'INSERT INTO ' . $order_pay_table . ' (';
-			$data_key_arr = array_keys( $data );
-			foreach ($data_key_arr as $k) {
-				$insert_sql .= '`' . $k . '`,';
-			}
-
-			$insert_sql = substr( $insert_sql, 0, -1 );
-			$insert_sql .= ') VALUES (';
-			foreach ($data as $v) {
-				if( is_string( $v ) ){
-					$insert_sql .= '\'' . $v . '\',';
-				}else{
-					$insert_sql .= $v . ',';
+			if( !$order_pay_id ){//新增生成单
+				$insert_sql = 'INSERT INTO ' . $order_pay_table . ' (';
+				$data_key_arr = array_keys( $data );
+				foreach ($data_key_arr as $k) {
+					$insert_sql .= '`' . $k . '`,';
 				}
-			}
 
-			$insert_sql = substr( $insert_sql, 0, -1 );
-			$insert_sql .= ');';
-			
-			$insert_result = $GLOBALS['db']->query( $insert_sql );
-			$order_pay_id = $GLOBALS['db']->insert_id();
+				$insert_sql = substr( $insert_sql, 0, -1 );
+				$insert_sql .= ') VALUES (';
+				foreach ($data as $v) {
+					if( is_string( $v ) ){
+						$insert_sql .= '\'' . $v . '\',';
+					}else{
+						$insert_sql .= $v . ',';
+					}
+				}
+
+				$insert_sql = substr( $insert_sql, 0, -1 );
+				$insert_sql .= ');';
+				
+				$insert_result = $GLOBALS['db']->query( $insert_sql );
+				$order_pay_id = $GLOBALS['db']->insert_id();
+			}else{//编辑保存
+
+				unset( $data['create_time'] );
+
+				$update_sql = 'UPDATE ' . $order_pay_table . ' SET ';
+
+				foreach ($data as $k => $v) {
+					if( is_string( $v ) )
+						$update_sql .= '`' . $k . '` = \'' . $v . '\',';
+					else
+						$update_sql .= '`' . $k . '` = ' . $v . ',';
+				}
+
+				$update_sql = substr( $update_sql, 0, -1 );
+				$update_sql .= ' WHERE `order_pay_id` = ' . $order_pay_id . ' LIMIT 1';
+				
+				$insert_result = $GLOBALS['db']->query( $update_sql );
+			}
 
 			if( $insert_result ){
 
