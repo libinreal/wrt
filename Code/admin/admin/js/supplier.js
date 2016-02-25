@@ -574,7 +574,6 @@ var Supplier = {
 					}
 				});
 				var row ="";
-
 				$.each(obj.content.orders,function(key, value){
 					row += "<tr>";
 					for(var i=0;i<that.render_arr.length;i++){
@@ -639,9 +638,9 @@ var Supplier = {
 			});
 		}
 		order_id = order_id.substring(0, order_id.length - 1);
-		var params = {"order_id":order_id};
+		var params = {"order_pay_id":0, "order_id":order_id};
 		var strJson = createJson("createOrderPay", "order_pay", params);
-		var that = this
+		var that = this;
 		console.log(strJson);
 		return false;
 		$.post(this.url, strJson, function(obj){
@@ -673,8 +672,7 @@ var Supplier = {
 					row += "</tr>";
 				});
 				$("#main_list>tbody").html(row);
-
-				$('#message_area').html('');		
+				$('#message_area').html('');
 			}
 		}, "json");		
 	},
@@ -748,6 +746,7 @@ var Supplier = {
 			$('#message_area').html('');
 		}, "json");		
 	},
+
 	orderPayEdit: function(){
 		var id = getQueryStringByName('id');
 		if(id===""||!validateNumber(id)){
@@ -844,5 +843,59 @@ var Supplier = {
 				$("#main_list>tbody").html(row);
 			}
 		},"json");
-	}
+	},
+
+	saveOrderPay: function(){
+		var order_pay_id = getQueryStringByName('id');
+		if(order_pay_id===""||!validateNumber(order_pay_id)){
+			return false;
+		}		
+		var order_arr = $("#order_id_form").FormtoJson().order_id;
+		if(order_arr.length == 0){
+			alert("至少一个订单");
+			return false;
+		}else{
+			var order_id = '';
+			$.each(order_arr, function(k, v){
+				order_id += v + ",";
+			});
+		}
+		order_id = order_id.substring(0, order_id.length - 1);
+		var params = {"order_pay_id":order_pay_id, "order_id":order_id};
+		var strJson = createJson("createOrderPay", "order_pay", params);
+		var that = this;
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$.each(obj.content.info,function(key, value){
+					if($("#"+key).length == 1){
+						$("#"+key).text(value);
+					}
+				});
+				var row ="";
+				$.each(obj.content.orders,function(key, value){
+					row += "<tr>";
+					for(var i=0;i<that.render_arr.length;i++){
+						if(that.render_arr[i] == "operate"){
+							var edit = createButton("removeItem()", "移除");
+							edit += "<input type='hidden' name='order_id[]' value='"+value.order_id+"'>";
+							row += createTd(edit);
+							continue;
+						}
+						if(value[that.render_arr[i]] != null){
+							row += createTd(subString(value[that.render_arr[i]],10,true));
+						}else{
+							row += createTd(createWarn('无数据'));
+						}
+					}
+					row += "</tr>";
+				});
+				$("#main_list>tbody").html(row);
+
+				$('#message_area').html('');		
+			}
+		}, "json");		
+	},
 }

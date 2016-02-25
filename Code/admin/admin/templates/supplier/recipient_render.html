@@ -50,7 +50,16 @@
 							<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;发票扫描件：</h4></td>
 						</tr>
 					</thead>
-					<tbody></tbody>
+					<tbody>
+						<tr>
+						<td><input type="text" name="upload_id[]" value="1"></td>
+						<td></td>
+						</tr>
+						<tr>
+						<td><input type="text" name="upload_id[]" value="2"></td>
+						<td></td>
+						</tr>
+					</tbody>
 				</table>
 				</form>
 				<table cellspacing="1" cellpadding="0">
@@ -58,7 +67,7 @@
 						<tr>
 						<td colspan="4" style="text-align:center">
 						<form id="file_0_form" onsubmit="return false;">
-						<input type="file" id="file_0" name="file_0" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_0')">
+						<input type="file" id="file_0" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_0')">
 						</form>
 						</td>
 						</tr>
@@ -109,20 +118,7 @@
 Supplier.initOrderPay();
 function removeItem(handle){
 	$(handle).parent().parent().remove();
-	var order_id = [];
-	order_id = $("#order_id_form").FormtoJson().order_id;
-	if(order_id){
-		var str = '';
-		$.each(order_id, function(k, v){
-			str += v + ",";
-		});
-		str = str.substring(0, str.length - 1);
-		setSessionStorage("order_id", str);
-		return true;
-	}else{
-		alert('请选择至少一个订单');
-		return false;
-	}	
+	return false;	
 }
 </script>
 	</body>
