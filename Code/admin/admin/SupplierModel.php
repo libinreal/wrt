@@ -671,7 +671,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		public function createOrderPayAction(){
 // 			print_r($_SESSION);die;
 			$content = $this->content;
-			$order_id_str = $content['parameters']['order_id'];
+			$params = $content['parameters'];
+
+			$order_id_str = $params['order_id'];
 			$order_ids = array();
 			if (!empty($order_id_str)) {
 				$order_ids = explode(',',$order_id_str);
@@ -682,11 +684,22 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '当前登录的必须是供应商账号');
 			}
 
+			$file_0 = $params['file_0'];
+			$file_1 = $params['file_1'];
+
+			if( empty( $file_0 ) ){
+				$file_0 = array();
+			}
+
+			if( empty( $file_1 ) ){
+				$file_1 = array();
+			}
 			$order_table = $GLOBALS['ecs']->table('order_info');
 			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
 			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
 
 			$order_pay_table = $GLOBALS['ecs']->table('order_pay');//生成单表
+			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');//生成单文件表
 
 			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
 				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
@@ -781,6 +794,23 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_pay_id = $GLOBALS['db']->insert_id();
 
 			if( $insert_result ){
+
+				//文件记录更新
+				$upload_id_arr = array();
+				
+				foreach ($file_0 as $i) {
+					$upload_id_arr[] = $i['upload_id'];
+				}
+
+				foreach ($file_0 as $i) {
+					$upload_id_arr[] = $i['upload_id'];	
+				}
+
+				$upload_id_str = implode(',', $upload_id_arr);
+				$upload_sql = 'UPDATE ' . $upload_table . ' SET `order_pay_id` = ' . $order_pay_id . ' WHERE `upload_id` IN (' .
+							  . $upload_id_str .');';
+
+				$GLOBALS['db']->query( $upload_sql );
 
 				//生成状态记录
 				$purchase_status_sql = 'UPDATE ' . $order_table . ' SET `purchase_pay_status` = 1 ' .
@@ -1899,7 +1929,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		    }
 
 		    $upload_table = $GLOBALS['ecs']->table('order_pay_upload');
-		    $order_pay_id = $this->content['parameters']['order_pay_id'];
+		    // $order_pay_id = $this->content['parameters']['order_pay_id'];
 
 
 			require('../includes/cls_image.php');
@@ -1924,7 +1954,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	        	$data = array();
 	        	$data['upload_type'] = $type;
 	        	$data['upload_name'] = $fileName;
-	        	$data['order_pay_id'] = $order_pay_id;
+	        	// $data['order_pay_id'] = $order_pay_id;
 
 	        	$insert_sql = 'INSERT INTO ' . $upload_table . ' (';
 				$data_key_arr = array_keys( $data );
