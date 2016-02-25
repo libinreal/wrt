@@ -808,7 +808,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$upload_id_str = implode(',', $upload_id_arr);
 				$upload_sql = 'UPDATE ' . $upload_table . ' SET `order_pay_id` = ' . $order_pay_id . ' WHERE `upload_id` IN (' .
-							  . $upload_id_str .');';
+							  $upload_id_str .');';
 
 				$GLOBALS['db']->query( $upload_sql );
 
