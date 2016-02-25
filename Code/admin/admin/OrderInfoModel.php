@@ -2864,8 +2864,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$goods_number_arr_buyer = $params['goods_number_arr_buyer'];
 			$goods_price_arr_buyer = (double)( $params['goods_price_arr_buyer'] );
-			$goods_number_arr_saler = $params['goods_number_arr_saler'];
-			$goods_price_arr_saler = (double)( $params['goods_price_arr_saler'] );
+			/*$goods_number_arr_saler = $params['goods_number_arr_saler'];
+			$goods_price_arr_saler = (double)( $params['goods_price_arr_saler'] );*/
 
 			$suppers_id = intval( $params['suppers_id'] );//销售信息.供货商id
 
@@ -2873,11 +2873,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$financial_arr = $params['financial_arr'] ? (double)($params['financial_arr']) : 0;//销售信息.发货金融费
 			$financial_arr_rate = ( double )( $params['financial_arr_rate'] / 100 );//销售信息.发货金融费
 
-			$shipping_fee_arr_saler = (double)( $params['shipping_fee_arr_saler'] );//供货信息.发货物流费
+			// $shipping_fee_arr_saler = (double)( $params['shipping_fee_arr_saler'] );//供货信息.发货物流费
 			$pay_id = intval( $params['pay_id'] );//支付方式id
 
 			$order_amount_arr_buyer = (double)( $params['order_amount_arr_buyer'] );
-			$order_amount_arr_saler = (double)( $params['order_amount_arr_saler'] );
+			// $order_amount_arr_saler = (double)( $params['order_amount_arr_saler'] );
 
 			$order_info = array();
 			$order_info['suppers_id'] = $suppers_id;
@@ -2885,10 +2885,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$order_info['financial_arr'] = $financial_arr;
 			$order_info['shipping_fee_arr_buyer'] = $shipping_fee_arr_buyer;
-			$order_info['shipping_fee_arr_saler'] = $shipping_fee_arr_saler;
+			// $order_info['shipping_fee_arr_saler'] = $shipping_fee_arr_saler;
 
 			$order_info['order_amount_arr_buyer'] = $order_amount_arr_buyer;
-			$order_info['order_amount_arr_saler'] = $order_amount_arr_saler;
+			// $order_info['order_amount_arr_saler'] = $order_amount_arr_saler;
 			$order_info['pay_id'] = $pay_id;
 
 			$order_info_update_sql = 'UPDATE ' . $order_info_table .' SET ';
@@ -2907,8 +2907,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_goods = array();
 				$order_goods['goods_number_arr_buyer'] = $goods_number_arr_buyer;
 				$order_goods['goods_price_arr_buyer'] = $goods_price_arr_buyer;
-				$order_goods['goods_number_arr_saler'] = $goods_number_arr_saler;
-				$order_goods['goods_price_arr_saler'] = $goods_price_arr_saler;
+				// $order_goods['goods_number_arr_saler'] = $goods_number_arr_saler;
+				// $order_goods['goods_price_arr_saler'] = $goods_price_arr_saler;
 
 				foreach ($order_goods as $cn => $cv) {
 					$order_goods_update_sql .= '`' . $cn . '` = ' . $cv . ',';
