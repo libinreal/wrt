@@ -29,21 +29,44 @@
 		<div class="head-title">
 			<span>票据信息</span>
 		</div>
-		<div class="info-border first">
-			<div><span class="distance">票据编号：<!--[= bill_num || '--']--></span><span class="distance">票据类型：<!--[= bill_type || '--']--></span><span class="distance">币别：<!--[= currency || '--']--></span></div>
-			<div><span class="distance">票面金额：<!--[= bill_amount || '--']--></span><span class="distance">客户号：<!--[= customer_num || '--']--></span><span class="distance">合同编号：<a href="my-contract-detail.html?contract_id=<!--[= contract_id || '0']-->"><!--[= contract_num || '--']--></a></span></div>
-			<div><span class="distance">付款利率：<!--[= payment_rate || '--']--></span><span class="distance">到期金额：<!--[= expire_amount || '--']--></span></div>
-			<div><span class="distance">签发日期：<!--[= issuing_date || '--']--></span><span class="distance">结束日期：<!--[= due_date || '--']--></span><span class="distance">付款期限：<!--[= prompt_day || '--']--></span></div>
-			<div><span class="distance">出票人：<!--[= drawer || '--']--></span><span class="distance">承兑人：<!--[= acceptor || '--']--></span></div>
-			<div><span class="distance">承兑协议编号：<!--[= accept_num || '--']--></span><span class="distance">承兑日期：<!--[= accept_date || '--']--></span></div>
-			<div><span class="distance">收票日：<!--[= receive_date || '--']--></span><span class="distance">交易金额：<!--[= trans_amount || '--']--></span></div>
-			<div><span class="distance">销售人员：<!--[= saler || '--']--></span><span class="distance">收款组织：<!--[= receiver || '--']--></span><span class="distance">结算组织：<!--[= balance || '--']--></span></div>
-			<div><span class="distance">折算比例：<!--[= discount_rate || '--']--></span><span class="distance">票据状态：<!--[= status || '--']--></span><span class="distance">累计已还金额：<!--[= has_repay || '--']--></span></div>
-			<div><span class="distance">折后额度：<!--[= discount_amount || '--']--></span><span class="distance">带追索权：<!--[= is_recourse || '--']--></span></div>
+		<div class="info-border">
+			<div><span class="distance"></span><span class="distance"></span><span class="distance">累计已还金额：<!--[= has_repay || '--']--></span></div>
+			<div><span class="distance"></span><span class="distance">带追索权：<!--[= is_recourse || '--']--></span></div>
 			<div><span class="distance">付款账号：<!--[= pay_account || '--']--></span><span class="distance">收款账号：<!--[= receive_account || '--']--></span></div>
-			<div><span class="distance">来往单位：<!--[= current_unit || '--']--></span><span class="distance">备注：<!--[= remark || '--']--></span></div>
+			<div><span class="distance"></span><span class="distance"></span></div>
+			<table cellpadding="0" cellspacing="1">
+				<tr>
+				<th>票据编号：</th><td width=150><!--[= bill_num || '--']--></td><th>票据类型：</th><td><!--[= bill_type || '--']--></td><th>币别：</th><td><!--[= currency || '--']--></td><th>票面金额：</th><td><!--[= bill_amount || '--']--></td>
+				</tr>
+				<tr>
+				<th>客户号：</th><td><!--[= customer_num || '--']--></td><th>合同编号：</th><td><!--[= contract_num || '--']--></td><th>付款利率(%)：</th><td><!--[= payment_rate || '--']-->%</td><th>到期金额：</th><td><!--[= expire_amount || '--']--></td>
+				</tr>
+				<tr>
+				<th>签发日：</th><td><!--[= issuing_date || '--']--></td><th>到期日：</th><td><!--[= due_date || '--']--></td><th>付款期限：</th><td><!--[= prompt_day || '--']--></td><th>出票人：</th><td><!--[= drawer || '--']--></td>
+				</tr>
+				<tr>
+				<th>承兑人：</th><td><!--[= issuing_date || '--']--></td><th>承兑协议编号：</th><td><!--[= accept_num || '--']--></td><th>承兑日期：</th><td><!--[= accept_date || '--']--></td><th>备注：</th><td><!--[= remark || '--']--></td>
+				</tr>
+				<tr>
+				<th>来往单位：</th><td><!--[= current_unit || '--']--></td><th>收票日：</th><td><!--[= receive_date || '--']--></td><th>交易金额：</th><td><!--[= trans_amount || '--']--></td><th>销售人员：</th><td><!--[= saler || '--']--></td>
+				</tr>
+				<tr>
+				<th>收款组织：</th><td><!--[= receiver || '--']--></td><th>结算组织：</th><td><!--[= balance || '--']--></td><th>折算比例：</th><td colspan="3"><!--[= discount_rate || '--']-->%</td>
+				</tr>
+				<tr>
+				<th>ID：</th><td><!--[= bill_id || '--']--></td><th>票据状态：</th><td><!--[= status || '--']--></td><th>折后比例：</th><td><!--[= discount_rate || '--']-->%</td><th>折算比例：</th><td><!--[= discount_rate || '--']-->%</td>
+				</tr>
+				<tr>
+				<th colspan="2">ID：</th><td><!--[= bill_id || '--']--></td>
+				</tr>
+				<tr>
+				<th>备注：</th><td colspan="20"><!--[= remark || '--']--></td>
+				</tr>
+			</table>
 		</div>
-		
+		<div style="text-align:center">
+		<a class="button btn-gray" href="javascript:history.back()">返回</a>
+		</div>		
 	</div>
 
 	

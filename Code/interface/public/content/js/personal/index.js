@@ -11,7 +11,6 @@ define(function(require) {
         tempIcon = account.icon;
         $('.user-icon').attr('src', config.getUserIcon(account.icon))
     }
-
     //通过信用额度登记机构获取用户信息
     Ajax.custom({
         url: config.mycreamt
@@ -19,13 +18,11 @@ define(function(require) {
         if (response.code != 0) {
             return;
         }
-
         var data = response.body;
 
         if (tempIcon) {
             data.icon = config.getUserIcon(tempIcon); //用户头像
         }
-
         var result = template.render('zj-summary-tmpl', data);
         $('#zj-summary').html(result);
 

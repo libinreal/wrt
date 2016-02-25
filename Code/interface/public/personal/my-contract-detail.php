@@ -29,19 +29,29 @@
 		<div class="head-title">
 			<span>合同信息</span>
 		</div>
-		<div class="info-border first">
-			<div><span class="distance">合同编号：<!--[= num || '--']--></span><span class="distance">合同名称：<!--[= name || '--']--></span><span class="distance">合同金额：<!--[= amount || '--']--></span></div>
-			<div><span class="distance">合同状态：<!--[= status || '--']--></span><span class="distance">合同类型：<!--[= type || '--']--></span><span class="distance">合同签署类型：<!--[= signType || '--']--></span></div>
-			<div><span class="distance">开始时间：<!--[= startTime || '--']--></span><span class="distance">结束时间：<!--[= endTime || '--']--></span></div>
-			<div><span class="distance">金融费率：<!--[= rate || '--']-->%</span><span class="distance">登记机构：<!--[= reg || '--']--></span></div>
-			<div><span class="distance">合同创建人：<!--[= createBy || '--']--></span><span class="distance">合同创建时间：<!--[= createTime || '--']--></span></div>
-			<div><span class="distance">备注：<!--[= remark || '--']--></span></div>
+		<div class="info-border">
+			<table cellpadding="0" cellspacing="1">
+				<tr>
+				<th>合同编号：</th><td><!--[= num || '--']--></td><th>合同名称：</th><td><!--[= name || '--']--></td><th>合同金额：</th><td><!--[= amount || '--']--></td><th>合同状态：</th><td><!--[= status || '--']--></td>
+				</tr>
+				<tr>
+				<th>公司：</th><td>中交物融</td><th>客户：</th><td><!--[= userName || '--']--></td><th>合同类型：</th><td><!--[= type || '--']--></td><th>签署类型：</th><td><!--[= signType || '--']--></td>
+				</tr>
+				<tr>
+				<th>开始时间：</th><td><!--[= startTime || '--']--></td><th>结束时间：</th><td><!--[= endTime || '--']--></td><th>是否控制类型：</th><td><!--[= isControl || '--']--></td><th>物料类型：</th><td></td>
+				</tr>
+				<tr>
+				<th>金融费率：</th><td><!--[= rate || '--']-->%</td><th>登记机构：</th><td><!--[= reg || '--']--></td><th>附件：</th><td colspan="4"><!--[= file || '--']--></td>
+				</tr>
+				<tr>
+				<th>备注：</th><td colspan="20"><!--[= remark || '--']--></td>
+				</tr>
+			</table>
+			<div style="text-align:center">
+			<a class="button btn-gray" href="javascript:history.back()">返回</a>
+			</div>
 		</div>
-		
 	</div>
-
-	
-
 </script>
 
 <script src="../content/js/module/seajs/2.2.0/sea.js"></script>

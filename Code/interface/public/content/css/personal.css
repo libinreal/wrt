@@ -90,7 +90,7 @@
     display: block;
 }
 /* common end */
-/* 导航 icon */
+/* 碌录潞陆 icon */
 
 .icon-nav-1 {
     background-position: 12px 10px;
@@ -133,8 +133,8 @@
 .content-left a.icon-nav-0:hover,.content-left a.icon-nav-0.active{
      background-image: url(../images/personal/icon-nav-0.png);
 }
-/*--------------------会员信息--------------------*/
-/*上传头像*/
+/*--------------------禄谩脭卤脨脜脧垄--------------------*/
+/*脡脧麓芦脥路脧帽*/
 
 .upload-user-icon {
     padding: 35px 0;
@@ -208,7 +208,7 @@
     height: 37px;
     border-radius: 5px;
 }
-/*会员信息表格*/
+/*禄谩脭卤脨脜脧垄卤铆赂帽*/
 
 .personal-info {
     height: 568px;
@@ -249,8 +249,8 @@
 .personal-info-value.big {
     width: 704px;
 }
-/*--------------------会员信息--------------------*/
-/*--------------------安全中心--------------------*/
+/*--------------------禄谩脭卤脨脜脧垄--------------------*/
+/*--------------------掳虏脠芦脰脨脨脛--------------------*/
 
 .safe-center {
     padding-left: 13px;
@@ -347,8 +347,8 @@
 .form-bottom .button {
     width: 118px;
 }
-/*--------------------安全中心--------------------*/
-/*--------------------收货地址--------------------*/
+/*--------------------掳虏脠芦脰脨脨脛--------------------*/
+/*--------------------脢脮禄玫碌脴脰路--------------------*/
 .address-form{
     width: 860px;
     margin: auto;
@@ -448,8 +448,8 @@
 .add-addres .button {
     width: 162px;
 }
-/*--------------------收货地址--------------------*/
-/*--------------------订单--------------------*/
+/*--------------------脢脮禄玫碌脴脰路--------------------*/
+/*--------------------露漏碌楼--------------------*/
 
 .order-list , .contract_list{
     padding-right: 15px;
@@ -613,7 +613,6 @@
     position: relative;
     height: 56px;
     padding-left: 50px;
-    border-bottom: 1px solid #e9e9e9;
     background-color: #F5F5F5;
 }
 .head-title span {
@@ -635,8 +634,21 @@
     margin: 0px 50px;
     padding-top: 5px;
 }
-.info-border.first {
-    border-top: none;
+.info-border table{
+    width:100%;
+    background:#ccc;
+    border:1px solid #d3d3d3;
+    margin: 5px 0 10px 0;
+}
+.info-border th{
+    background:#e9e9e9;
+    border:1px solid #d3d3d3;
+    height: 30px;
+}
+.info-border table td{
+    background: #fff;
+    border:1px solid #d3d3d3;
+    text-align: center;
 }
 .info-border div {
     margin: 8px 0;
@@ -740,8 +752,8 @@
     line-height: 32px;
     background-color: #e6e6e6;
 }
-/*--------------------订单--------------------*/
-/*--------------------定制--------------------*/
+/*--------------------露漏碌楼--------------------*/
+/*--------------------露篓脰脝--------------------*/
 
 .customize-list {
     font-size: 15px;
@@ -819,8 +831,8 @@
 .tab-ckdz {
 	padding: 0;
 }
-/*--------------------定制--------------------*/
-/*--------------------收藏--------------------*/
+/*--------------------露篓脰脝--------------------*/
+/*--------------------脢脮虏脴--------------------*/
 
 .collect-list {} .collect-list li {
     background-color: #fff;
@@ -878,8 +890,8 @@
     background-color: #e84c3d;
     background-image: url(../images/personal/icon_remove_select.png);
 }
-/*--------------------收藏--------------------*/
-/*--------------------项目--------------------*/
+/*--------------------脢脮虏脴--------------------*/
+/*--------------------脧卯脛驴--------------------*/
 
 .product-order-list li {
     height: 105px;
@@ -1021,8 +1033,8 @@
 .cut-num {
     background-image: url(../images/personal/icon_cut.png);
 }
-/*--------------------项目--------------------*/
-/*--------------------积分--------------------*/
+/*--------------------脧卯脛驴--------------------*/
+/*--------------------禄媒路脰--------------------*/
 
 .score-info {
     height: 222px;
@@ -1150,8 +1162,8 @@
 .gcdz-qh{
 	background:#fff;margin-bottom:0px;
 }
-/*--------------------积分--------------------*/
-/*我的信用B*/
+/*--------------------禄媒路脰--------------------*/
+/*脦脪碌脛脨脜脫脙B*/
 /*common creditB*/
 
 .creditb-amount, .creditB_bill, .creditB, .creditB_level, .creditB_history {
@@ -1388,7 +1400,7 @@
     padding-left: 15px;
     color: #818181;
 }
-/*我的信用B-采购额度追加申请单*/
+/*脦脪碌脛脨脜脫脙B-虏脡鹿潞露卯露脠脳路录脫脡锚脟毛碌楼*/
 
 .creditb-amount .form-item em {
     color: #ff0000;
@@ -1413,7 +1425,7 @@
     width: 138px;
     height: 49px;
 }
-/*我的信用B-票据兑付*/
+/*脦脪碌脛脨脜脫脙B-脝卤戮脻露脪赂露*/
 
 .bill_header {
     background: #f26c4f url(../images/personal/credit_bill.png)no-repeat 185px center;
@@ -1509,7 +1521,7 @@
 .bill_select_drop a:hover span {
     color: #7cb234;
 }
-/*我的信用B-信用等级*/
+/*脦脪碌脛脨脜脫脙B-脨脜脫脙碌脠录露*/
 
 .creditb-level {
     margin-bottom: 0;
@@ -1541,7 +1553,7 @@
 .last {
     border-bottom: none;
 }
-/*历史流水记录*/
+/*脌煤脢路脕梅脣庐录脟脗录*/
 
 .creditB_history {
     padding: 20px 24px 20px 24px;
@@ -1877,7 +1889,7 @@
 .pdt-detail .last {
     /*  border-bottom:none;*/
 }
-/*button按钮*/
+/*button掳麓脜楼*/
 .credit_level_r_right .btn-yellow, .m-c-i-right .btn-yellow {
     color: #fff;
     border-color: #fc9208;
@@ -1893,7 +1905,7 @@
     border-color: #5a698a;
     background-color: #5a698a;
 }
-/*工程定制切换*/
+/*鹿陇鲁脤露篓脰脝脟脨禄禄*/
 .gcdz{
     width:332px;
     margin: 0 auto;
@@ -1915,7 +1927,7 @@
 .ckxq a {
     display:block;
 }
-/*定制详情*/
+/*露篓脰脝脧锚脟茅*/
 .apply-form {
     background: #fff;
     padding: 36px 83px 82px 32px;

@@ -513,6 +513,13 @@ var Supplier = {
 								row += createTd(edit);
 								continue;
 							}
+							if(that.order_arr[i] == "order_sn"){
+								var edit = "";
+								edit += "<input type='checkbox' name='order_id[]' value='"+value.order_id+"' />";
+								edit += value[that.order_arr[i]];
+								row += createTd(edit);
+								continue;
+							}
 							if(that.complete_arr[i] == "purchase_pay_status"){
 								row += createTd(that.purchase_pay_status[value.purchase_pay_status]);
 								continue;
