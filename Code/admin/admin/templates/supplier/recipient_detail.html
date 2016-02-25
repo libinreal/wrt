@@ -1,8 +1,7 @@
-
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
-		<title>中交物融平台 管理中心 - 应收单详情页</title>
+		<title>{$lang.cp_home} - 应收单编辑页</title>
 		<meta name="robots" content="noindex, nofollow">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link href="styles/general.css" rel="stylesheet" type="text/css" />
@@ -11,17 +10,16 @@
 	</head>
 	<body>
 		<h1>
-		<span class="action-span1"><a href="index.php?act=main">中交物融平台 管理中心</a> </span>
-		<span id="search_id" class="action-span1"> - 应收单详情页</span>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1"> - 应收单编辑页</span>
 		<div style="clear:both"></div>
 		</h1>
 		<div id="message_area"></div>
-
 		<div class="list-div" id="listDiv">
 			<div style="clear:both;">
-			<h3 style="float:left;">&nbsp;&nbsp;&nbsp;&nbsp;流水编号：<span id=""></span></h3>
-			<h3 style="float:right;">发货时间：<span id=""></span></h3></div>
-			<table cellpadding="3" cellspacing="1" id="sale_order_list">
+			<h3 style="float:left;">&nbsp;&nbsp;&nbsp;&nbsp;流水编号：<span id="order_pay_id"></span></h3>
+			<h3 style="float:right;">发货时间：<span id="create_time"></span></h3></div>
+			<table cellpadding="3" cellspacing="1" id="main_list">
 				<thead>
 				<tr>
 					<th>订单号</th>
@@ -31,60 +29,75 @@
 					<th>单价</th>
 					<th>数量</th>
 					<th>物流费</th>
-					<th>金融费用</th>
 					<th>小计</th>
 				</tr>
 				</thead>
 				<tbody></tbody>
 				<tfoot>
 					<tr>
-						<td colspan="15" style="text-align:right">订单数量：&nbsp;&nbsp; 合计金额：</td>
+						<td colspan="15" style="text-align:right">订单数量：<span id="order_count"></span> &nbsp;&nbsp; 合计金额：￥<span id="order_total"></span> 元</td>
 					</tr>
 				</tfoot>
 			</table>
 		</div>
 		<!-- 分页 -->
 		<div class="goods_type_list2">
-			<table cellspacing="1" cellpadding="0" class="left">
-				<thead>
-					<tr>
-						<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;发票扫描件：</h4></td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-					<td>TEST</td>
-					</tr>
-				</tbody>
-			</table>
-			<table cellspacing="1" cellpadding="0" class="right">
-				<thead>
-					<tr>
-						<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;送货单扫描件：</h4></td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-					<td>TEST</td>
-					</tr>
-				</tbody>
-			</table>
+			<div class="left">
+				<table cellspacing="1" cellpadding="0" id="left_list">
+					<thead>
+						<tr>
+							<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;发票扫描件：</h4></td>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+			<div class="right">
+				<table cellspacing="1" cellpadding="0" id="right_list">
+					<thead>
+						<tr>
+							<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;送货单扫描件：</h4></td>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
 		</div>
 		<div style="clear:both"></div>
 		<div style="text-align:center;margin-top:10px;">
-			<input type="button" class="button" value="通过" />&nbsp;
-			<input type="button" class="button" value="已付款" />&nbsp;
-			<input type="button" class="button" value="返回" />
+			<input type="button" class="button" value="返回" onclick="javascript:void(0)" />
 		</div>
 		
 		<!-- 底部 -->
 		<div id="footer">
-			版权所有 &copy; 2016 中交物融集成服务平台有限公司，并保留所有权利。		</div>
+			{$lang.copyright}
+		</div>
 
 <script src="js/laydate/laydate.dev.js"></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
-<script src="js/payment.js" type="text/javascript" ></script>
+<script src="js/supplier.js" type="text/javascript" ></script>
+<script src="js/type-mode.js" type="text/javascript" ></script>
 <script type="text/javascript">
+Supplier.orderPayDetail();
+function first(){
+	SaleOrder.limit = 0;
+	SaleOrder.getList(true);
+}
+function next(){
+	SaleOrder.current_page = SaleOrder.current_page + 1;
+	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
+	SaleOrder.getList(true);
+}
+function prev(){
+	SaleOrder.current_page = SaleOrder.current_page - 1;
+	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
+	SaleOrder.getList(true);
+}
+function last(){
+	SaleOrder.current_page = SaleOrder.total_page;
+	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
+	SaleOrder.getList(true);
+}
 </script>
 	</body>
 </html>
