@@ -115,7 +115,7 @@ function generate(){
 	if(order_id){
 		var str = '';
 		$.each(order_id, function(k, v){
-			str += v + ",";
+			str += v + "|";
 		});
 		str = str.substring(0, str.length - 1);
 		redirectToUrl("demo_template.php?section=supplier&act=recipient_render&order_id="+order_id);

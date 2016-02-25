@@ -647,6 +647,18 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "entity": "order_pay",
 		 *	    "parameters": {
 		 *	        "order_id":"1,2,3"//多个id用","分隔
+		 *	        "file_0"://发票文件
+		 *	        [
+		 *	        	{
+		 *	        		"upload_id":1//文件id
+		 *	        	}
+		 *	        ],
+		 *	        "file_1"://送货单文件
+		 *	        [
+		 *	        	{
+		 *	        		"upload_id":1,//文件id
+		 *	        	}
+		 *	        ]
 		 *	    }
 		 *	}
 		 * 返回数据格式如下 :
@@ -1863,7 +1875,6 @@ require(dirname(__FILE__) . '/includes/init.php');
          *      "command" : "upload", 
          *      "entity"  : "file_0", //file_0 发票 file_1 送货单
          *      "parameters" : {
-         *      	"order_pay_id":1
          *      } 
          * }
 	     *  

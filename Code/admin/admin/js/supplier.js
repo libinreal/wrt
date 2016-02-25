@@ -26,6 +26,17 @@ var Supplier = {
 		"shipping_fee",
 		"purchase_pay_status"
 	],
+	render_arr: [
+		"order_sn",
+		"goods_sn",
+		"goods_name",
+		"attr",
+		"goods_price",
+		"goods_number",
+		"shipping_fee",
+		"total",
+		"operate"
+	],
 	purchase_pay_status: {},
 	limit: 0,
 	offset: 8,
@@ -114,11 +125,9 @@ var Supplier = {
 			return false;
 		}
 		var params = {"params":{"order_id":id}};
-		strJson = createJson("orderDetail", this.entity, params);
-		that = this
-		console.log(strJson)
+		var strJson = createJson("orderDetail", this.entity, params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -202,9 +211,9 @@ var Supplier = {
 		$("input[name=order_id]").val(order_id);
 		var formData = $("#logistics_form").FormtoJson();
 		var params = {"params":formData};
-		strJson = createJson("addShippingInfo", this.entity, params);
+		var strJson = createJson("addShippingInfo", this.entity, params);
 		var shipping_num = $('input[name="shipping_num"]').val();
-		that = this
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -235,8 +244,8 @@ var Supplier = {
 		$("input[name=order_id]").val(order_id);
 		var formData = $("#logistics_form").FormtoJson();
 		var params = {"params":formData};
-		strJson = createJson("addShippingLog", this.entity, params);
-		that = this
+		var strJson = createJson("addShippingLog", this.entity, params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -537,5 +546,93 @@ var Supplier = {
 			}
 			$('#message_area').html('');
 		}, "json");		
+	},
+
+	initOrderPay: function(){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var params = {"order_id":order_id};
+		var strJson = createJson("initOrderPay", "order_pay", params);
+		var that = this
+		$.post(this.url, strJson, function(obj){
+			console.log(obj)
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$.each(obj.content.info,function(key, value){
+					if($("#"+key).length == 1){
+						$("#"+key).text(value);
+					}
+				});
+				var row ="";
+/*				$.each(obj.content.file_0,function(key, value){
+					row += "<tr>";
+					row += createTd(value.upload_name);
+					var edit = createButton("removeFile("+value.upload_id+")", "删除");
+					edit += "<input type='hidden' name='file_0[]' value='"+value.upload_name+"'>";
+					row += createTd(edit);
+				});
+				$("#left_list>tbody").html(row);
+				var row ="";
+				$.each(obj.content.file_1,function(key, value){
+					row += "<tr>";
+					row += createTd(value.upload_name);
+					var edit = createButton("removeFile("+value.upload_id+")", "删除");
+					edit += "<input type='hidden' name='file_1[]' value='"+value.upload_name+"'>";
+					row += createTd(edit);
+				});
+				$("#right_list>tbody").html(row);
+				row = "";*/
+				$.each(obj.content.orders,function(key, value){
+					row += "<tr>";
+					for(var i=0;i<that.render_arr.length;i++){
+						if(that.render_arr[i] == "operate"){
+							var edit = createButton("removeItem()", "移除");
+							row += createTd(edit);
+							continue;
+						}
+						if(value[that.render_arr[i]] != null){
+							row += createTd(subString(value[that.render_arr[i]],10,true));
+						}else{
+							row += createTd(createWarn('无数据'));
+						}
+					}
+					row += "</tr>";
+				});
+				$("#main_list>tbody").html(row);
+
+				$('#message_area').html('');		
+			}
+		}, "json");		
+	},
+
+	getUploadFile: function(id){
+		if($("#"+id).valid()===false){
+			return false;
+		}
+		var params = {};
+		var strJson = createJson("uploadify", "attachment_file", params, "object");
+		console.log(strJson);
+        $.ajaxFileUpload({
+            url:this.url,
+            fileElementId:id,//file标签的id
+            dataType: 'json',//返回数据的类型  
+            data:strJson,//一同上传的数据
+            success: function (data, status) {
+				if(data.error){
+					$('#message_area').html(createError(data.message));
+				}else{
+					$('#message_area').html(createTip('上传成功'));
+					$('#attachment_name').parent().show();
+					$('#attachment_name').text(data.content);
+				}
+            },
+            error: function (data, status, e) {
+                console.log(e);
+            }
+        });  		
 	}
 }
