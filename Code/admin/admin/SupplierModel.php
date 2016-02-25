@@ -83,8 +83,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif( $this->command == 'orderPayList' ){
 				//
 				$this->orderPayListAction();
-			}
-			elseif( $this->command == 'upload' ){
+			}elseif( $this->command == 'upload' ){
 				//
 				$this->uploadAction();
 			}
@@ -547,6 +546,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *          	"shipping_fee":250.0//物流
 		 *          	"total":250.0//小计
 		 *	        }
+		 *	        ],
+		 *	        "file_0"://发票文件
+		 *	        [
+		 *	        	{
+		 *	        		"upload_name":"20160224_s1.jpg",//文件名字
+		 *	        		"upload_id":1,//文件id
+		 *	        	}
+		 *	        ],
+		 *	        "file_1"://送货单文件
+		 *	        [
+		 *	        	{
+		 *	        		"upload_name":"20160224_s1.jpg",//文件名字
+		 *	        		"upload_id":1,//文件id
+		 *	        	}
 		 *	        ]
 		 *	    }
 		 *	}
@@ -632,8 +645,23 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content['info'] = array('order_total' => $order_total, 'order_count' => count( $goods) );
 			$content['orders'] = $goods;
 
-			/*$content['file_0'] = $files;
-			$content['file_1'] = $files;*/
+			$file_0 = $file_1 = array();
+
+			//已上传文件
+			$upload_sql = 'SELECT `upload_name`,`upload_type`, `upload_id` FROM ' . $upload_table;
+			$files = $GLOBALS['db']->getAll( $upload_sql );
+
+			$file_0 = $file_1 = array();
+
+			foreach ($files as $f) {
+				if( $f['upload_type'] == 0 )
+					$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+				else
+					$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+			}
+
+			$content['file_0'] = $file_0;
+			$content['file_1'] = $file_1;
 			make_json_response($content, '0', '生成初始化成功');
 		}
 

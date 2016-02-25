@@ -147,7 +147,11 @@ class AccountController extends ControllerBase
 						"department",
 						"credits",
 				        "customerAccount",
-				        "customerNo"
+				        "customerNo",
+                        "billAmountHistory",
+                        "billAmountValid",
+                        "cashAmountHistory",
+                        "cashAmountValid",
 				),
         ));
         if (is_object($user) && $user) {
