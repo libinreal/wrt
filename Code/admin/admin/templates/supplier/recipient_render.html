@@ -50,24 +50,15 @@
 							<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;发票扫描件：</h4></td>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-						<td><input type="text" name="upload_id[]" value="1"></td>
-						<td></td>
-						</tr>
-						<tr>
-						<td><input type="text" name="upload_id[]" value="2"></td>
-						<td></td>
-						</tr>
-					</tbody>
+					<tbody></tbody>
 				</table>
 				</form>
 				<table cellspacing="1" cellpadding="0">
 					<tfoot>
 						<tr>
 						<td colspan="4" style="text-align:center">
-						<form id="file_0_form" onsubmit="return false;">
-						<input type="file" id="file_0" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_0')">
+						<form id="file_0_form">
+						<input type="file" id="file_0" name="file_0" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_0')">
 						</form>
 						</td>
 						</tr>
@@ -89,8 +80,8 @@
 					<tfoot>
 						<tr>
 						<td colspan="4" style="text-align:center">
-						<form id="file1_form" onsubmit="return false;">
-						<input type="file" id="file1" name="file1" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file1')">
+						<form id="file_1_form" onsubmit="return false;">
+						<input type="file" id="file_1" name="file_1" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_1')">
 						</form>
 						</td>
 						</tr>
@@ -110,6 +101,7 @@
 		</div>
 
 <script src="js/jquery.validate.js" type="text/javascript" ></script>
+<script src="js/additional-methods.js" type="text/javascript"></script>
 <script src="js/ajaxfileupload.js" type="text/javascript" ></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
 <script src="js/supplier.js" type="text/javascript" ></script>

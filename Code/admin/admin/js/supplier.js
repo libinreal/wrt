@@ -604,20 +604,16 @@ var Supplier = {
 		}
 		var params = {};
 		var strJson = createJson("upload", id, params, "object");
-		console.log(strJson);
         $.ajaxFileUpload({
             url:this.url,
             fileElementId:id,//file标签的id
             dataType: 'json',//返回数据的类型
             data:strJson,//一同上传的数据
             success: function (data, status) {
-
 				if(data.error){
 					$('#message_area').html(createError(data.message));
 				}else{
 					$('#message_area').html(createTip('上传成功'));
-					$('#attachment_name').parent().show();
-					$('#attachment_name').text(data.content);
 				}
             },
             error: function (data, status, e) {
@@ -638,7 +634,21 @@ var Supplier = {
 			});
 		}
 		order_id = order_id.substring(0, order_id.length - 1);
-		var params = {"order_pay_id":0, "order_id":order_id};
+		var file_0 = [];
+		var file_0_id_arr = $("#left_form").FormtoJson().upload_id;
+		if(file_0_id_arr){
+			$.each(file_0_id_arr, function(k, v){
+				file_0.push({"upload_id":v});
+			});
+		}
+		var file_1 = [];
+		var file_1_id_arr = $("#right_form").FormtoJson().upload_id;
+		if(file_1_id_arr){
+			$.each(file_1_id_arr, function(k, v){
+				file_0.push({"upload_id":v});
+			});
+		}
+		var params = {"order_pay_id":0, "order_id":order_id, "file_0":file_0};
 		var strJson = createJson("createOrderPay", "order_pay", params);
 		var that = this;
 		console.log(strJson);
