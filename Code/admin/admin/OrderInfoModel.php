@@ -1210,7 +1210,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			// $GLOBALS['db']->query("START TRANSACTION");//开启事务
 			$createOrder = $GLOBALS['db']->query($childer_order_sql);
-			$new_order_id = $GLOBALS['db']->insert_id();
+			// $new_order_id = $GLOBALS['db']->insert_id();
 
 			if( $createOrder ){
 				//子订单商品
@@ -1226,8 +1226,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				// $order_good['check_price'] = $goods_price;
 				$order_good['check_number'] = $send_number;
 				$order_good['goods_number_send_buyer'] = $send_number;//发货数量
-				$order_good['goods_price_send_buyer'] = $goods_price;//发货单价						       		
+				$order_good['goods_price_send_buyer'] = $goods_price;//发货单价	
 
+				$order_good['goods_number_send_saler'] = $send_number;//发货数量
+				$order_good['goods_price_send_saler'] = $goods_price_send_saler;//发货单价
 				$order_good_keys = array_keys( $order_good );
 				$order_good_sql = 'INSERT INTO ' . $order_goods_table .'(';
 				
