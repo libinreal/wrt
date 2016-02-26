@@ -759,7 +759,7 @@ var Supplier = {
 					row += "<tr>";
 					row += createTd(value.upload_name);
 					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
-					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_name+"'>";
+					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_id+"'>";
 					row += createTd(edit);
 				});
 				$("#left_list>tbody").html(row);
@@ -784,7 +784,7 @@ var Supplier = {
 					for(var i=0;i<that.render_arr.length;i++){
 						if(that.render_arr[i] == "operate"){
 							var edit = createButton("removeItem(this)", "移除");
-							edit += "<input type='hidden' name='order_id[]' value='"+value.upload_id+"'>";
+							edit += "<input type='hidden' name='order_id[]' value='"+value.order_id+"'>";
 							row += createTd(edit);
 							continue;
 						}
@@ -856,7 +856,7 @@ var Supplier = {
 		var order_pay_id = getQueryStringByName('id');
 		if(order_pay_id===""||!validateNumber(order_pay_id)){
 			return false;
-		}		
+		}
 		var order_arr = $("#order_id_form").FormtoJson().order_id;
 		if(order_arr.length == 0){
 			alert("至少一个订单");
