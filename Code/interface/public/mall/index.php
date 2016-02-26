@@ -686,7 +686,7 @@
 			</li>
 		</ul>
 	</div>
-	<div class="smb t-r">共<b><!--[= total]--></b>件商品　共计<strong>￥ <!--[= totalPrice]--></strong><br><a href="cart.html" title="去购物车结算" id="btn-payforgoods">去购物车结算</a></div>
+	<div class="smb t-r">共<b><!--[= total]--></b>件商品　共计<strong>￥ <!--[= (price * nums).toFixed(2)]--></strong><br><a href="cart.html" title="去购物车结算" id="btn-payforgoods">去购物车结算</a></div>
 </script>
 <script id="zj-province-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
