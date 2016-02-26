@@ -118,7 +118,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$condition .= ' AND pay_status = '.$like['pay_status'];
 			}
 			if (isset($like['contract_sn'])) {
-				$contract_sql = 'SELET `order_id` FROM ' . $order_info_table . ' WHERE `contract_sn` LIKE \'%' . $like['contract_sn']  . '%\'';
+				$contract_sql = 'SELECT `order_id` FROM ' . $order_info_table . ' WHERE `contract_sn` LIKE \'%' . $like['contract_sn']  . '%\'';
 				$contract_ret = $GLOBALS['db']->getAll( $contract_sql );
 
 				$contract_order_arr = array();
@@ -128,7 +128,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$contract_order_like = '';
 					foreach ($contract_ret as $o) {
 						
-						$contract_order_like .= ' `order_id_str` LIKE \'%' . $o['order_id'] . '%\' OR ';
+						$contract_order_like .= ' `order_id_str` REGEXP \'(^|,)' . $contract_order_like . '(,|$)\' OR ';
 					}
 					$condition .= ' AND ' . substr( $contract_order_like, 0, -4);
 
@@ -223,8 +223,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$sql_order_pay = 'SELECT * FROM order_pay WHERE order_pay_id = '.$params['order_pay_id'];
 				$order_pay_info = $GLOBALS['db']->getrow($sql_order_pay);
 				
-				$sql_order_goods = "SELECT  og.goods_id,og.goods_name,og.goods_sn,og.goods_number_arrival,og.goods_price_add,oi.order_sn,oi.shipping_fee_arr_saler,oi.financial_arr,oi.order_amount_arr_saler FROM
-						 order_goods og,order_info oi WHERE og.order_id = oi.order_id AND  og.order_id in (".$order_pay_info['order_id_str'].')';
+				$sql_order_goods = 'SELECT  og.goods_id,og.goods_name,og.goods_sn,og.goods_number_send_saler,og.goods_price_send_saler,og.goods_number_arr_saler,'.
+						'og.goods_price_arr_saler,oi.order_sn,oi.shipping_fee_arr_saler,oi.shipping_fee_send_saler,oi.financial_arr,oi.order_amount_arr_saler,oi.`child_order_status` FROM '.
+						'order_goods og,order_info oi WHERE og.order_id = oi.order_id AND  og.order_id in ('.$order_pay_info['order_id_str'].')';
 				$order_goods = $GLOBALS['db']->getAll($sql_order_goods);
 				//获取商品属性
 				foreach ($order_goods as $key => $value){
@@ -235,6 +236,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 					$order_goods[$key]['attributes'] = $str;
 					$order_goods[$key]['order_sn'] = $value['order_sn'].'-CG';
+					
+					//物流费
+					if( $v['child_order_status'] <= SOS_SEND_PC2){
+						$v['shipping_fee'] = $v['shipping_fee_send_saler'];//发货
+						$v['goods_price'] = $v['goods_price_send_saler'];//发货
+						$v['goods_number'] = $v['goods_number_send_saler'];//发货
+					}else{
+						$v['shipping_fee'] = $v['shipping_fee_arr_saler'];//到货
+						$v['goods_number'] = $v['goods_number_arr_saler'];//到货
+						$v['goods_price'] = $v['goods_price_arr_saler'];//到货
+					}
+					$v['finace_fee'] = $v['financial_arr'] = 0;
+
 				}
 				$content = array();
 				//应付单基本信息
