@@ -40,6 +40,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'page'){
 				//
 				$this->pageAction();
+			}elseif ($this->command == 'uPayStat'){
+				//
+				$this->uPayStatAction();
 			}
 		}
 		
@@ -352,6 +355,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		
 	}
 	
-	$content = jsonAction();
+	$content = jsonAction( array( 'uPayStat'
+		)
+		);
 	$orderModel = new OrderPayModel($content);
 	$orderModel->run();
