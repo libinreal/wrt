@@ -526,17 +526,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_SEND_PC2://平台已验签(发货)
 						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_UNCOMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC2];
-						$buttons = array();
+						$buttons = array('到货改价');
 						break;
 					case SOS_ARR_CC://客户已验签(到货)
 						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_UNCOMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
-						$buttons = array();
+						$buttons = array('到货改价');
 						break;
 					case SOS_ARR_PC://平台已验签(到货)
 						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_UNCOMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC];
-						$buttons = array();
+						$buttons = array('到货改价');
 						break;	
 
 					//************************** 采购到货中 BEGIN **************************
