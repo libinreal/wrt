@@ -1431,14 +1431,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 						
 						$arr_up_sql = 'UPDATE ' . $order_info_table . ' SET ';
 						foreach ($arr_data as $uk=>$uv) {
-							$arr_up_sql .= ' `' . $uk . '` = ' . $uv . ','
+							$arr_up_sql .= ' `' . $uk . '` = ' . $uv . ',';
 						}
 						$arr_up_sql = substr($arr_up_sql, 0, -1);
 						$arr_up_sql .= ' WHERE `order_id` = ' .$order_id . ' LIMIT 1';
 						$GLOBALS['db']->query( $arr_up_sql );
 
 						$order_goods_sql = 'SELECT `goods_number_send_saler`, `goods_number_arr_saler`, `goods_price_send_saler`, `goods_price_arr_saler` '.
-											' FROM ' . $order_goods_table . ' WHERE `order_id` = ' . $order_id
+											' FROM ' . $order_goods_table . ' WHERE `order_id` = ' . $order_id;
 						$arr_data = array();
 
 						$arr_data['goods_number_arr_saler'] = $order_status['goods_number_send_saler'];
@@ -1446,7 +1446,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						
 						$arr_up_sql = 'UPDATE ' . $order_goods_table . ' SET ';
 						foreach ($arr_data as $uk=>$uv) {
-							$arr_up_sql .= ' `' . $uk . '` = ' . $uv . ','
+							$arr_up_sql .= ' `' . $uk . '` = ' . $uv . ',';
 						}
 						$arr_up_sql = substr($arr_up_sql, 0, -1);
 						$arr_up_sql .= ' WHERE `order_id` = ' .$order_id . ' LIMIT 1';
