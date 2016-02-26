@@ -716,7 +716,9 @@ var Supplier = {
 						for(var i=0;i<that.recipient_arr.length;i++){
 							if(that.recipient_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=supplier&act=recipient_detail&id="+value.order_pay_id, "查看");
-								edit += createLink("demo_template.php?section=supplier&act=recipient_edit&id="+value.order_pay_id, "编辑");
+								if(value.pay_status != 3){
+									edit += createLink("demo_template.php?section=supplier&act=recipient_edit&id="+value.order_pay_id, "编辑");
+								}
 								row += createTd(edit);
 								continue;
 							}
@@ -757,7 +759,7 @@ var Supplier = {
 					row += "<tr>";
 					row += createTd(value.upload_name);
 					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
-					edit += "<input type='hidden' name='file_0[]' value='"+value.upload_name+"'>";
+					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_name+"'>";
 					row += createTd(edit);
 				});
 				$("#left_list>tbody").html(row);
@@ -766,7 +768,7 @@ var Supplier = {
 					row += "<tr>";
 					row += createTd(value.upload_name);
 					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
-					edit += "<input type='hidden' name='file_1[]' value='"+value.upload_name+"'>";
+					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_id+"'>";
 					row += createTd(edit);
 				});
 				$("#right_list>tbody").html(row);
@@ -782,7 +784,7 @@ var Supplier = {
 					for(var i=0;i<that.render_arr.length;i++){
 						if(that.render_arr[i] == "operate"){
 							var edit = createButton("removeItem(this)", "移除");
-							edit += "<input type='hidden' name='order_id[]' value='"+value.order_id+"'>";
+							edit += "<input type='hidden' name='order_id[]' value='"+value.upload_id+"'>";
 							row += createTd(edit);
 							continue;
 						}
