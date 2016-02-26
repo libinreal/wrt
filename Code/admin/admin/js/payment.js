@@ -15,15 +15,9 @@ var Payment = {
 		"goods_price_add",
 		"goods_number_arrival",
 		"shipping_fee_arr_saler",
-		"financial_arr",
 		"order_amount_arr_saler"
 	],
-	payment_status: {
-		0: "已申请",
-		1: "审核不通过",
-		2: "审核通过",
-		3: "已付款"
-	},
+	payment_status: [],
 	limit: 0,
 	offset: 8,
 	total_page: 0,
