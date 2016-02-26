@@ -255,6 +255,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				//子订单信息
 				$content['data']['goods_list'] = $order_goods;
+				$content['buttons'] = $buttons;
 				make_json_response( $content, "0", "应付款详情查询成功");
 			}
 			make_json_response( array('data'=>array()), "-1", "参数错误");
