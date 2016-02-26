@@ -55,8 +55,8 @@ var Contract = {
 			}
 			var params = {"params":{"where":condition, "limit":this.limit, "offset":this.offset}};
 		}
-		strJson = createJson("contList", "contract", params);
-		that = this
+		var strJson = createJson("contList", "contract", params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			console.log(obj);
 			if(obj.error == -1){
@@ -295,7 +295,6 @@ var Contract = {
 		}
 		var params = {};
 		var strJson = createJson("uploadify", "attachment_file", params, "object");
-		console.log(strJson);
         $.ajaxFileUpload({
             url:this.url,
             fileElementId:'attachment_file',//file标签的id

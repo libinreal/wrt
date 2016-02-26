@@ -40,6 +40,8 @@ var Payment = {
 			var order_sn = $('#search_form input[name=order_sn]').val();
 			var pay_status = $('#search_form select[name=pay_status]').val();
 			var suppliers_name = $('#search_form input[name=suppliers_name]').val();
+			var contract_sn = $('#search_form select[name=contract_sn]').val();
+			var purchase_order_sn = $('#search_form input[name=purchase_order_sn]').val();
 			if(order_sn != ''){
 				condition.like['order_sn'] = order_sn
 			}
@@ -48,6 +50,12 @@ var Payment = {
 			}
 			if(suppliers_name != ''){
 				condition.like['suppliers_name'] = suppliers_name
+			}
+			if(contract_sn != ''){
+				condition.like['contract_sn'] = contract_sn
+			}
+			if(purchase_order_sn != ''){
+				condition.like['purchase_order_sn'] = purchase_order_sn
 			}
 		}
 		if(search != false){

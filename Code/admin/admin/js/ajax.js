@@ -349,3 +349,13 @@ function repace_acc(Money, show_id){
     }
     $("#"+show_id).html(outmoney);
 }
+function setSessionStorage(name, value){
+    sessionStorage.setItem(name, value);
+}
+function getSessionStorage(name){
+    if(sessionStorage.getItem(name)){
+        return sessionStorage.getItem(name);
+    }else{
+        return false;
+    }
+}

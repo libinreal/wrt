@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 admin/data
 admin/temp
 admin/includes/lib_base.php
@@ -23,3 +24,12 @@ interface/.settings/
 interface/.swp
 interface/app/cache/
 interface/public/apply_attachment/
+=======
+
+admin/data
+admin/temp
+admin/includes/lib_base.php
+admin/includes/cls_template.php
+admin/admin/includes/lib_template.php
+interface/app/config/config.php
+>>>>>>> 2d11d9c86a64cbc702510a396e7ccbbbd45d001b

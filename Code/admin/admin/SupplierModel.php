@@ -10,9 +10,101 @@ require(dirname(__FILE__) . '/includes/init.php');
 	/**
 	 * 主要作用是：仅仅只做模板输出。具体数据需要POST调用 class里面的方法。
 	 */
-	if ($_REQUEST['act'] == 'edit' || $_REQUEST['act'] == 'add' ) {
-		
-		exit;
+	
+	if ( $_POST['command'] == 'upload' ) {//上传文件
+		/**
+		 * 接口名称：上传文件
+		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
+		 * 请求方式：POST
+		 * 接口参数：
+		 * {
+         *      "command" : "upload", 
+         *      "entity"  : "file_0", //file_0 发票 file_1 送货单
+         *      "parameters" : {
+         *      } 
+         * }
+	     *  
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "文件上传成功",
+		 *	    "content": {
+		 *	    	"upload_id":1,
+		 *	    	"upload_name":"xxx.jpg"
+		 *	    }
+		 *	 }
+		 */
+			$entity = $_POST['entity'];
+
+			$supplierModel = new SupplierModel(array( 'content' => '') );
+
+			$suppliers_id = $supplierModel->getSuppliersId();
+
+		    if( empty( $suppliers_id ) ){
+		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
+		    }
+
+		    $upload_table = $GLOBALS['ecs']->table('order_pay_upload');
+		    // $order_pay_id = $this->content['parameters']['order_pay_id'];
+
+
+			require('../includes/cls_image.php');
+	        if (empty($_FILES)){
+	        	make_json_response('', '-1', '上传失败');
+	        }
+	        $file = pathinfo($_FILES[$entity]['name']);
+	        // if ($file['extension'] != 'pdf') {
+	        //     failed_json('只允许上传pdf格式的文件！');
+	        // }
+	        
+	        
+	        //upload
+	        $upload = new cls_image();
+	        $fileName = date('YmdHis') . '_s' . $suppliers_id . '.' . $file['extension'];
+	        $res = $upload->upload_image($_FILES[$entity], PURCHASE_ORDER_DIR, $fileName);
+	        if ($res === false) {
+	        	;
+	        } else {
+	        	$type_arr = explode( "_", $entity);
+	        	$type = $type_arr[1];
+
+	        	$data = array();
+	        	$data['upload_type'] = $type;
+	        	$data['upload_name'] = $fileName;
+	        	// $data['order_pay_id'] = $order_pay_id;
+
+	        	$insert_sql = 'INSERT INTO ' . $upload_table . ' (';
+				$data_key_arr = array_keys( $data );
+				foreach ($data_key_arr as $k) {
+					$insert_sql .= '`' . $k . '`,';
+				}
+
+				$insert_sql = substr( $insert_sql, 0, -1 );
+				$insert_sql .= ') VALUES (';
+				foreach ($data as $v) {
+					if( is_string( $v ) ){
+						$insert_sql .= '\'' . $v . '\',';
+					}else{
+						$insert_sql .= $v . ',';
+					}
+				}
+
+				$insert_sql = substr( $insert_sql, 0, -1 );
+				$insert_sql .= ');';
+				
+				$GLOBALS['db']->query( $insert_sql );
+				$upload_id = $GLOBALS['db']->insert_id();
+
+				if( $upload_id ){
+		        	$content = array();
+		        	$content['upload_id'] = $upload_id;
+		        	$content['upload_name'] = $fileName;
+
+	            	make_json_response($content, '0', '保存文件成功');
+	            }
+	        }
+
+	        make_json_response('', '-1', '保存文件失败');
 	}
 
 	class SupplierModel {
@@ -127,7 +219,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * 获取供应商id
 		 * @return int 供应商id
 		 */
-		private function getSuppliersId(){
+		public function getSuppliersId(){
 			$sql = "SELECT `user_id`, `user_name`, `suppliers_id` ".
 		           "FROM " .$GLOBALS['ecs']->table('admin_user'). " WHERE `user_id` = '".$_SESSION['admin_id']."'";
 		    $admin_user = $GLOBALS['db']->getRow($sql);
@@ -964,6 +1056,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}else{
 				make_json_response('', '-1', '应收单查询成功');
 			}
+
+
+
 		}
 
 		/**
@@ -1919,101 +2014,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 
 		/**
-		 * 接口名称：上传文件
-		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
-		 * 请求方式：POST
-		 * 接口参数：
-		 * {
-         *      "command" : "upload", 
-         *      "entity"  : "file_0", //file_0 发票 file_1 送货单
-         *      "parameters" : {
-         *      } 
-         * }
-	     *  
-	     * 返回数据格式如下 :
-	     *  {
-		 *		"error": "0",("0": 成功 ,"-1": 失败)
-		 *	    "message": "文件上传成功",
-		 *	    "content": {
-		 *	    	"upload_id":1,
-		 *	    	"upload_name":"xxx.jpg"
-		 *	    }
-		 *	 }
-		 */
-		public function uploadAction()
-		{
-			$entity = $this->content['entity'];
-
-			$suppliers_id = $this->getSuppliersId();
-
-		    if( empty( $suppliers_id ) ){
-		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
-		    }
-
-		    $upload_table = $GLOBALS['ecs']->table('order_pay_upload');
-		    // $order_pay_id = $this->content['parameters']['order_pay_id'];
-
-
-			require('../includes/cls_image.php');
-	        if (empty($_FILES))
-	        	make_json_response('', '-1', '上传失败');
-	        $file = pathinfo($_FILES[$entity]['name']);
-	        // if ($file['extension'] != 'pdf') {
-	        //     failed_json('只允许上传pdf格式的文件！');
-	        // }
-	        
-	        
-	        //upload
-	        $upload = new cls_image();
-	        $fileName = date('YmdHis') . '_s' . $suppliers_id . '.' . $file['extension'];
-	        $res = $upload->upload_image($_FILES[$entity], PURCHASE_ORDER_DIR, $fileName);
-	        if ($res === false) {
-	        	;
-	        } else {
-	        	$type_arr = explode( ",", $entity);
-	        	$type = $type_arr[1];
-
-	        	$data = array();
-	        	$data['upload_type'] = $type;
-	        	$data['upload_name'] = $fileName;
-	        	// $data['order_pay_id'] = $order_pay_id;
-
-	        	$insert_sql = 'INSERT INTO ' . $upload_table . ' (';
-				$data_key_arr = array_keys( $data );
-				foreach ($data_key_arr as $k) {
-					$insert_sql .= '`' . $k . '`,';
-				}
-
-				$insert_sql = substr( $insert_sql, 0, -1 );
-				$insert_sql .= ') VALUES (';
-				foreach ($data as $v) {
-					if( is_string( $v ) ){
-						$insert_sql .= '\'' . $v . '\',';
-					}else{
-						$insert_sql .= $v . ',';
-					}
-				}
-
-				$insert_sql = substr( $insert_sql, 0, -1 );
-				$insert_sql .= ');';
-				
-				$GLOBALS['db']->query( $insert_sql );
-				$upload_id = $GLOBALS['db']->insert_id();
-
-				if( $upload_id ){
-		        	$content = array();
-		        	$content['upload_id'] = $upload_id;
-		        	$content['upload_name'] = $fileName;
-
-	            	make_json_response($content, '0', '保存文件成功');
-	            }
-	        }
-
-	        make_json_response('', '-1', '保存文件失败');
-
-		}
-
-		/**
 		 * 接口名称：删除文件
 		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
 		 * 请求方式：POST
@@ -2039,7 +2039,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$upload_id = $params['upload_id'];
 			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');
 
-			$del_sql = 'DELETE FROM ' . $upload_table . ' WHERE `upload_id` = ' . $upload_id . 'LIMIT 1';
+			$del_sql = 'DELETE FROM ' . $upload_table . ' WHERE `upload_id` = ' . $upload_id . ' LIMIT 1';
 			if ( $GLOBALS['db']->query( $del_sql ) ){
 				//默认保留磁盘文件
 				

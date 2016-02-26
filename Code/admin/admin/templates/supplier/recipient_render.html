@@ -16,7 +16,7 @@
 		</h1>
 		<div id="message_area"></div>
 		<div class="list-div" id="listDiv">
-		<form>
+		<form id="order_id_form">
 			<table cellpadding="3" cellspacing="1" id="main_list">
 				<thead>
 				<tr>
@@ -42,51 +42,57 @@
 		</div>
 		<!-- 分页 -->
 		<div class="goods_type_list2">
-			<table cellspacing="1" cellpadding="0" class="left" id="left_list">
-				<thead>
-					<tr>
-						<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;发票扫描件：</h4></td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-					<td>test</td>
-					<td style="width:150px;"><input type="button" class="button" value="删除"></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					<td colspan="4" style="text-align:center">
-					<form>
-					<input type="file" id="file0" name="file0" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传">
-					</form>
-					</td>
-					</tr>
-				</tfoot>
-			</table>
-			<table cellspacing="1" cellpadding="0" class="right" id="right_list">
-				<thead>
-					<tr>
-						<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;送货单扫描件：</h4></td>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-					<td>test</td>
-					<td style="width:150px;"><input type="button" class="button" value="删除"></td>
-					</tr>
-				</tbody>
-				<tfoot>
-					<tr>
-					<td colspan="4" style="text-align:center"><input type="file" name="img"><input type="button" class="button" value="上传"></td>
-					</tr>
-				</tfoot>
-			</table>
+			<div class="left">
+				<form id="left_form">
+				<table cellspacing="1" cellpadding="0" id="left_list">
+					<thead>
+						<tr>
+							<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;发票扫描件：</h4></td>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+				</form>
+				<table cellspacing="1" cellpadding="0">
+					<tfoot>
+						<tr>
+						<td colspan="4" style="text-align:center">
+						<form id="file_0_form">
+						<input type="file" id="file_0" name="file_0" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_0', 'left_list')">
+						</form>
+						</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div class="right">
+				<form id="right_form">
+				<table cellspacing="1" cellpadding="0" id="right_list">
+					<thead>
+						<tr>
+							<td colspan="4"><h4>&nbsp;&nbsp;&nbsp;&nbsp;送货单扫描件：</h4></td>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+				</form>
+				<table cellspacing="1" cellpadding="0">
+					<tfoot>
+						<tr>
+						<td colspan="4" style="text-align:center">
+						<form id="file_1_form" onsubmit="return false;">
+						<input type="file" id="file_1" name="file_1" data-rule-required="true" data-msg-required="请选择文件"><input type="button" class="button" value="上传" onclick="Supplier.getUploadFile('file_1', 'right_list')">
+						</form>
+						</td>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
 		</div>
 		<div style="clear:both"></div>
 		<div style="text-align:center;margin-top:10px;">
-			<input type="button" class="button" value="提交" />&nbsp;
-			<input type="button" class="button" value="返回" />
+			<input type="button" class="button" value="提交" onclick="Supplier.createOrderPay()" />&nbsp;
+			<input type="button" class="button" value="返回" onclick="javascript:history.back();" />
 		</div>
 		
 		<!-- 底部 -->
@@ -95,12 +101,17 @@
 		</div>
 
 <script src="js/jquery.validate.js" type="text/javascript" ></script>
+<script src="js/additional-methods.js" type="text/javascript"></script>
 <script src="js/ajaxfileupload.js" type="text/javascript" ></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
 <script src="js/supplier.js" type="text/javascript" ></script>
 <script src="js/type-mode.js" type="text/javascript" ></script>
 <script type="text/javascript">
 Supplier.initOrderPay();
+function removeItem(handle){
+	$(handle).parent().parent().remove();
+	return false;
+}
 </script>
 	</body>
 </html>

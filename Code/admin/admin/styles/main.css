@@ -1332,12 +1332,14 @@ input.error{
 }
 .goods_type_list2 .left{
     float: left;
+     width: 48%;
 }
 .goods_type_list2 .right{
     float: right;
+     width: 48%;
 }
 .goods_type_list2 table{
-    width: 48%;
+    width: 100%;
     background: #ccc;
 }
 .goods_type_list2 table td{

@@ -53,7 +53,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "parameters": {
 		 *	        "params": {
 		 *	            "where": {
-		 *	               "like":{"order_sn":"6789-1","suppliers_name":"供应商","pay_status":"1"}
+		 *	               "like":{
+		 *	               		"order_sn":"6789-1",
+		 *	               		"suppliers_name":"供应商",
+		 *	               		"pay_status":"1",
+		 *	               		"contract_sn": "2015-12-12" ,//合同号
+		 *	               		"purchase_order_sn":"",//采购订单号
+		 *	               	}
 		 *	            },
 		 *	            "limit": 0,
 		 *	            "offset": 2
@@ -98,8 +104,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$params = $content['parameters']['params'];
 			
 			$order_pay_table = $GLOBALS['ecs']->table('order_pay');
-			$sql_total = 'SELECT COUNT(*) as total FROM '.$order_pay_table;
-			$total = $GLOBALS['db']->getRow($sql_total);
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
 
 			$like = $params['where']['like'];
 			$condition = '1=1 ';
@@ -112,8 +117,33 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if (isset($like['pay_status'])) {
 				$condition .= ' AND pay_status = '.$like['pay_status'];
 			}
+			if (isset($like['contract_sn'])) {
+				$contract_sql = 'SELECT `order_id` FROM ' . $order_info_table . ' WHERE `contract_sn` LIKE \'%' . $like['contract_sn']  . '%\'';
+				$contract_ret = $GLOBALS['db']->getAll( $contract_sql );
+
+				$contract_order_arr = array();
+
+				if( $contract_ret ){
+
+					$contract_order_like = '';
+					foreach ($contract_ret as $o) {
+						
+						$contract_order_like .= ' `order_id_str` REGEXP \'(^|,)' . $contract_order_like . '(,|$)\' OR ';
+					}
+					$condition .= ' AND ' . substr( $contract_order_like, 0, -4);
+
+				}else{
+					make_json_response( array( 'data' =>array(), 'total' => 0 ) , "0", "应付款查询成功");
+				}
+
+
+			}
+
 			$sql = 'SELECT * FROM '.$order_pay_table. ' WHERE '.$condition.' ORDER BY create_time DESC LIMIT '.$params['limit'].",".$params['offset'];
+			$total_sql = 'SELECT COUNT(*) AS `total` FROM '.$order_pay_table. ' WHERE '.$condition;
+
 			$list = $GLOBALS['db']->getAll($sql);
+			$total = $GLOBALS['db']->getRow($total_sql);
 			
 			$content = array();
 			$content['data'] = $list;
@@ -193,8 +223,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$sql_order_pay = 'SELECT * FROM order_pay WHERE order_pay_id = '.$params['order_pay_id'];
 				$order_pay_info = $GLOBALS['db']->getrow($sql_order_pay);
 				
-				$sql_order_goods = "SELECT  og.goods_id,og.goods_name,og.goods_sn,og.goods_number_arrival,og.goods_price_add,oi.order_sn,oi.shipping_fee_arr_saler,oi.financial_arr,oi.order_amount_arr_saler FROM
-						 order_goods og,order_info oi WHERE og.order_id = oi.order_id AND  og.order_id in (".$order_pay_info['order_id_str'].')';
+				$sql_order_goods = 'SELECT  og.goods_id,og.goods_name,og.goods_sn,og.goods_number_send_saler,og.goods_price_send_saler,og.goods_number_arr_saler,'.
+						'og.goods_price_arr_saler,oi.order_sn,oi.shipping_fee_arr_saler,oi.shipping_fee_send_saler,oi.financial_arr,oi.order_amount_arr_saler,oi.`child_order_status` FROM '.
+						'order_goods og,order_info oi WHERE og.order_id = oi.order_id AND  og.order_id in ('.$order_pay_info['order_id_str'].')';
 				$order_goods = $GLOBALS['db']->getAll($sql_order_goods);
 				//获取商品属性
 				foreach ($order_goods as $key => $value){
@@ -205,6 +236,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 					$order_goods[$key]['attributes'] = $str;
 					$order_goods[$key]['order_sn'] = $value['order_sn'].'-CG';
+					
+					//物流费
+					if( $v['child_order_status'] <= SOS_SEND_PC2){
+						$v['shipping_fee'] = $v['shipping_fee_send_saler'];//发货
+						$v['goods_price'] = $v['goods_price_send_saler'];//发货
+						$v['goods_number'] = $v['goods_number_send_saler'];//发货
+					}else{
+						$v['shipping_fee'] = $v['shipping_fee_arr_saler'];//到货
+						$v['goods_number'] = $v['goods_number_arr_saler'];//到货
+						$v['goods_price'] = $v['goods_price_arr_saler'];//到货
+					}
+					$v['finace_fee'] = $v['financial_arr'] = 0;
+
 				}
 				$content = array();
 				//应付单基本信息
