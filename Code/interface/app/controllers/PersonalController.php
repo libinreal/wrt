@@ -52,6 +52,7 @@ class PersonalController extends ControllerBase {
 				'bind' => array(
 						1 => $user->id
 						),
+				'columns' => 'id, userId, childOrderStatus',
 				'order' => 'createTime DESC',
 				'limit' => '3'
 				
