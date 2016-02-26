@@ -310,7 +310,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$order_pay_table = $GLOBALS['ecs']->table('order_pay');
 			$find_sql = 'SELECT `pay_status` FROM ' . $order_pay_table . ' WHERE `order_pay_id` = ' . $order_pay_id;
-			$stat = $GLOBALS['db']->getRow( $find_sql );
+			$stat = $GLOBALS['db']->getOne( $find_sql );
 
 			$update_sql = 'UPDATE ' . $order_pay_table . ' SET `pay_status` = %d ' . ' WHERE `order_pay_id` = ' . $order_pay_id . ' LIMIT 1';
 
@@ -344,6 +344,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			
 			if( $msg ){//无法执行操作
+				
 				$msg = sprintf($msg, $statusCfg[ $stat ]);
 				make_json_response('', '-1', $msg);
 			}else{

@@ -175,7 +175,7 @@
     <!--[for(i = 0; i < list.length; i ++) {]-->
 	<table class="index-contract-list">
 		<tr>
-		<td><a href="<!--[= $newsUrl(list[i].id)]-->"><span class="title"><!--[= list[i].title]--></span></a></td>
+		<td><a href="../notice/<!--[= $newsUrl(list[i].id)]-->"><span class="title"><!--[= list[i].title]--></span></a></td>
 		<td><span class="date"><!--[= $formatDate(list[i].createAt,'MM/dd')]--></span></td>
 		</tr>
 	</table>
