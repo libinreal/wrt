@@ -137,7 +137,7 @@ var Payment = {
 					// 按钮状态更新
 					var button = '';
 					$.each(obj.content.buttons, function(k, v){
-						button += '<input type="button" class="button" onclick="Payment.updateButtonStatus(this)" value="'+v+'" >';
+						button += '<input type="button" class="button" onclick="Payment.changeButtonStatus(this)" value="'+v+'" >';
 					});
 					$("#handle_button>span").html(button);
 				}
@@ -168,7 +168,7 @@ var Payment = {
 		}, "json");
 	},
 
-	updateButtonStatus: function(handle){
+	changeButtonStatus: function(handle){
 		var order_pay_id = getQueryStringByName('id');
 		if(order_pay_id===""||!validateNumber(order_pay_id)){
 			return false;
@@ -176,29 +176,33 @@ var Payment = {
 		var button_name = $(handle).val();
 		var params = {"order_pay_id":order_pay_id, "button": button_name};
 
-		strJson = createJson("uPayStat", "uPayStat", params);
+		var strJson = createJson("uPayStat", "uPayStat", params);
+		var that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+				that.updateButtonStatus();
+			}
+		}, "json");
+	},
+
+	updateButtonStatus: function(){
+		var order_pay_id = getQueryStringByName("id");
+		var params = {"order_pay_id":order_pay_id};
+		strJson = createJson("find", this.entity, params);
 		that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				$.each(obj.content.info, function(k, v){
-					if($("select[name="+k+"]").length){
-						console.log($("select[name="+k+"]").val());
-						$("select[name="+k+"]>option[value='"+v+"']").attr("selected","selected");
-					}
-				});
 				// 按钮状态更新
 				var button = '';
 				$.each(obj.content.buttons, function(k, v){
-					if(v == "发货改价"){
-						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
-					}else if(v == "到货改价"){
-						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
-					}else{
-						button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
-					}
+					button += '<input type="button" class="button" onclick="Payment.changeButtonStatus(this)" value="'+v+'" >';
 				});
 				$("#handle_button>span").html(button);
 			}
