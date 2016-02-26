@@ -309,8 +309,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$order_pay_table = $GLOBALS['ecs']->table('order_pay');
-			$find_sql = 'SELECT `pay_status` FROM ' . $order_pay_table . ' WHERE `order_pay_id` = ' . $order_pay_id;
-			$stat = $GLOBALS['db']->getOne( $find_sql );
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
+			$find_sql = 'SELECT `pay_status`,`order_id_str` FROM ' . $order_pay_table . ' WHERE `order_pay_id` = ' . $order_pay_id;
+			
+			$find = $GLOBALS['db']->getRow( $find_sql );
+			$stat = $find['pay_status'];
+			$order_id_str = $find['order_id_str'];
 
 			$update_sql = 'UPDATE ' . $order_pay_table . ' SET `pay_status` = %d ' . ' WHERE `order_pay_id` = ' . $order_pay_id . ' LIMIT 1';
 
@@ -335,6 +339,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 					if( $stat == PURCHASE_ORDER_PAY_SUBMIT ){//已生成 可以驳回
 						$update_sql = sprintf($update_sql, PURCHASE_ORDER_PAY_FAIL);
 						$msg = '';
+
+						$order_up_sql = 'UPDATE ' . $order_info_table . ' SET `purchase_pay_status` = ' . PURCHASE_ORDER_PAY_UNMAKE .
+										' WHERE order_id IN(' . $order_id_str .')';
+						$order_up = $GLOBALS['db']->query( $order_up_sql );
 					}
 
 					break;
@@ -344,7 +352,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 			
 			if( $msg ){//无法执行操作
-				
 				$msg = sprintf($msg, $statusCfg[ $stat ]);
 				make_json_response('', '-1', $msg);
 			}else{
