@@ -227,6 +227,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$order_goods[$key]['goods_price'] = $value['goods_price_arr_saler'];//到货
 						$order_goods[$key]['order_amount'] = $value['order_amount_arr_saler'];//到货
 					}
+					unset($order_goods[$key]['shipping_fee_send_saler']);
+					unset($order_goods[$key]['goods_price_send_saler']);
+					unset($order_goods[$key]['goods_number_send_saler']);
+					unset($order_goods[$key]['order_amount_send_saler']);
+
+					unset($order_goods[$key]['shipping_fee_arr_saler']);
+					unset($order_goods[$key]['goods_number_arr_saler']);
+					unset($order_goods[$key]['goods_price_arr_saler']);
+					unset($order_goods[$key]['order_amount_arr_saler']);
+					
+					
+					
+
 
 				}
 				$content = array();
