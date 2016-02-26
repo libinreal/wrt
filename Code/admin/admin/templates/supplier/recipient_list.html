@@ -64,7 +64,7 @@
 			<input type="hidden" name="order_id">
 			<hr>
 			<div align="center">
-			<input type="button" class="button close" href="javascript:void(0)" onclick="SaleOrder.cancelOrder()" value=" 确认 "><input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 ">
+			<input type="button" class="button close" href="javascript:void(0)" onclick="Supplier.cancelOrder()" value=" 确认 "><input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 ">
 			</div>
 		</form>
 		</div>
@@ -89,23 +89,23 @@ function init(){
 	Supplier.orderPayList();
 }
 function first(){
-	SaleOrder.limit = 0;
-	SaleOrder.getList(true);
+	Supplier.limit = 0;
+	Supplier.orderPayList(true);
 }
 function next(){
-	SaleOrder.current_page = SaleOrder.current_page + 1;
-	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
-	SaleOrder.getList(true);
+	Supplier.current_page = Supplier.current_page + 1;
+	Supplier.limit = (Supplier.current_page - 1)*Supplier.offset;
+	Supplier.orderPayList(true);
 }
 function prev(){
-	SaleOrder.current_page = SaleOrder.current_page - 1;
-	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
-	SaleOrder.getList(true);
+	Supplier.current_page = Supplier.current_page - 1;
+	Supplier.limit = (Supplier.current_page - 1)*Supplier.offset;
+	Supplier.orderPayList(true);
 }
 function last(){
-	SaleOrder.current_page = SaleOrder.total_page;
-	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
-	SaleOrder.getList(true);
+	Supplier.current_page = Supplier.total_page;
+	Supplier.limit = (Supplier.current_page - 1)*Supplier.offset;
+	Supplier.orderPayList(true);
 }
 </script>
 	</body>

@@ -612,7 +612,7 @@ var Supplier = {
             success: function (data, status) {
 				var	row = "<tr>";
 				row += "<td>"+data.content.upload_name+"</td>";
-				var edit = createButton("removeItem(this)", "移除");
+				var edit = createButton("Supplier.delUpload(this,"+data.content.upload_id+")", "删除");
 				edit += "<input type='hidden' name='upload_id[]' value='"+data.content.upload_id+"'>";
 				row += createTd(edit);
 				row += "</tr>";
@@ -627,16 +627,20 @@ var Supplier = {
 
 	createOrderPay: function(){
 		var order_arr = $("#order_id_form").FormtoJson().order_id;
-		if(order_arr.length == 0){
-			alert("至少一个订单");
-			return false;
+		if(order_arr){
+			if(order_arr.length == 0){
+				alert("至少一个订单");
+				return false;
+			}else{
+				var order_id = '';
+				$.each(order_arr, function(k, v){
+					order_id += v + ",";
+				});
+			}
+			order_id = order_id.substring(0, order_id.length - 1);
 		}else{
-			var order_id = '';
-			$.each(order_arr, function(k, v){
-				order_id += v + ",";
-			});
+			return false;
 		}
-		order_id = order_id.substring(0, order_id.length - 1);
 		var file_0 = [];
 		var file_0_id_arr = $("#left_form").FormtoJson().upload_id;
 		if(file_0_id_arr){
@@ -751,7 +755,7 @@ var Supplier = {
 				$.each(obj.content.file_0,function(key, value){
 					row += "<tr>";
 					row += createTd(value.upload_name);
-					var edit = createButton("removeFile("+value.upload_id+")", "删除");
+					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
 					edit += "<input type='hidden' name='file_0[]' value='"+value.upload_name+"'>";
 					row += createTd(edit);
 				});
@@ -760,7 +764,7 @@ var Supplier = {
 				$.each(obj.content.file_1,function(key, value){
 					row += "<tr>";
 					row += createTd(value.upload_name);
-					var edit = createButton("removeFile("+value.upload_id+")", "删除");
+					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
 					edit += "<input type='hidden' name='file_1[]' value='"+value.upload_name+"'>";
 					row += createTd(edit);
 				});
@@ -861,7 +865,21 @@ var Supplier = {
 			});
 		}
 		order_id = order_id.substring(0, order_id.length - 1);
-		var params = {"order_pay_id":order_pay_id, "order_id":order_id};
+		var file_0 = [];
+		var file_0_id_arr = $("#left_form").FormtoJson().upload_id;
+		if(file_0_id_arr){
+			$.each(file_0_id_arr, function(k, v){
+				file_0.push({"upload_id":v});
+			});
+		}
+		var file_1 = [];
+		var file_1_id_arr = $("#right_form").FormtoJson().upload_id;
+		if(file_1_id_arr){
+			$.each(file_1_id_arr, function(k, v){
+				file_1.push({"upload_id":v});
+			});
+		}
+		var params = {"order_pay_id":order_pay_id, "order_id":order_id,  "file_0":file_0, "file_1":file_1};
 		var strJson = createJson("createOrderPay", "order_pay", params);
 		var that = this;
 		$.post(this.url, strJson, function(obj){
@@ -873,4 +891,22 @@ var Supplier = {
 			}
 		}, "json");		
 	},
+
+	delUpload: function(handle, id){
+		if(id===""||!validateNumber(id)){
+			return false;
+		}
+		var params = {"upload_id":id};
+		var strJson = createJson("delUpload", "order_pay_upload", params);
+		var that = this;
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$(handle).parent().parent().remove();
+				$('#message_area').html(createTip(obj.message));		
+			}
+		}, "json");
+	}
 }

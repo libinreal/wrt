@@ -2039,7 +2039,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$upload_id = $params['upload_id'];
 			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');
 
-			$del_sql = 'DELETE FROM ' . $upload_table . ' WHERE `upload_id` = ' . $upload_id . 'LIMIT 1';
+			$del_sql = 'DELETE FROM ' . $upload_table . ' WHERE `upload_id` = ' . $upload_id . ' LIMIT 1';
 			if ( $GLOBALS['db']->query( $del_sql ) ){
 				//默认保留磁盘文件
 				
