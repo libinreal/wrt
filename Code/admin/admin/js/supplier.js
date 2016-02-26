@@ -46,6 +46,7 @@ var Supplier = {
 		"operate"
 	],
 	purchase_pay_status: {},
+	purchase_order_pay_status: {},
 	limit: 0,
 	offset: 8,
 	total_page: 0,
@@ -720,7 +721,7 @@ var Supplier = {
 								continue;
 							}
 							if(that.recipient_arr[i] == "pay_status"){
-								row += createTd(that.purchase_pay_status[value.pay_status]);
+								row += createTd(that.purchase_order_pay_status[value.pay_status]);
 								continue;
 							}
 							if(value[that.recipient_arr[i]] != null){

@@ -72,4 +72,18 @@ define(function(require) {
 
     });
 
+    // 合同
+    Ajax.custom({
+        url: config.contractList,
+        data: {
+            size: 2
+        }
+    }, function(response) {
+        var data = response.body;
+        var result = template.render('contract-list-tmpl', {
+            'list': response.body
+        });
+        $('#contract-list').append(result || config.nodata);
+    });
+
 });

@@ -81,10 +81,10 @@ laydate({
 laydate({
     elem: '#due_date2'
 });
-TypeMode.getPurchasePayStatus('status', 'init');
+TypeMode.getPurchaseOrderPayStatus('status', 'init');
 function init(){
 	$("#status>option").each(function(index, elem){
-		Supplier.purchase_pay_status[$(elem).val()] = $(elem).text();
+		Supplier.purchase_order_pay_status[$(elem).val()] = $(elem).text();
 	});	
 	Supplier.orderPayList();
 }

@@ -262,32 +262,17 @@
 .fcolor {
 	font-size: 15px;
 }
+.index-contract-list{
+    width: 95%;
+    margin: 10px auto;
+    border: 1px solid #ccc;
+}
+.index-contract-list td{
+    padding: 5px;
+}
+.index-contract-list thead td{
+	border-bottom: 1px solid #ccc;
+	font-size: 16px;
+	width: 50%;
+}
 /******/
-<div class="shop-list-item clearfix">
-	<div class="list-title">科技产品</div>
-	<div class="list-detail">
-		<div class="small-title"><span>创新应用</span></div>
-		<div class="list1">
-			<ul class="small-detail clearfix">
-				<li><a href="list.html?code=70010100">SPP声测管</a></li>
-				<li class="last"><a href="list.html?code=70010200">蟹钳式三角钢管支架</a></li>
-			</ul>
-		</div>
-	</div>
-	<div class="list-detail">
-		<div class="small-title"><span>高新材料</span></div>
-		<div class="list1">
-			<ul class="small-detail clearfix">
-				<li class="last"><a href="list.html?code=70010300">彩色橡胶路面</a></li>
-			</ul>
-		</div>
-	</div>
-	<div class="list-detail">
-		<div class="small-title"><span style="padding-left:10px">智能科技</span></div>
-		<div class="list1">
-			<ul class="small-detail clearfix">
-				<li class="last"><a href="list.html?code=70010300">智能科技</a></li>
-			</ul>
-		</div>
-	</div>
-</div>

@@ -336,5 +336,27 @@ var TypeMode = {
 				window[func]();
 			}
 		});
-	}
+	},
+
+	getPurchaseOrderPayStatus: function(select_id, func){
+		var strJson = createJson("purchase_order_pay_status", "purchase_order_pay_status", {});
+		var that = this;
+		$.post(that.url, strJson, function(object){
+			if(object.error == -1){
+				$('#message_area').html(createError(object.message));
+				return false;
+			}else{
+				var row = '';
+				$.each(object.content, function(k, v){
+					row += appendOption(k, v);
+				})
+				$('#'+select_id).append(row);
+			}
+			$('#message_area').html('');
+		},"json").done(function(){
+			if(func){
+				window[func]();
+			}
+		});
+	}	
 }

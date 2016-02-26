@@ -16,6 +16,12 @@
 		<?php include '../com/nav-left.php'; ?>
 		<div class="content-right"style="padding-top: 15px;">
 			<div class="my-credit-info gray-box clearfix" id="zj-summary"></div>
+			<div class="contract-list gray-box">
+				<div class="contract-list-header clearfix">
+					<div style="line-height:30px;">&nbsp;合同管理</div>
+				</div>
+				<div id="contract-list"></div>
+			</div>
 			<div class="project-list gray-box" id="zj-recommend" style="min-height: 211px;">
 				<!-- <div class="tuijian-title">
 					<span>XXXXX项目采购推荐</span>
@@ -90,6 +96,7 @@
 	</div>
 </script>
 <script id="zj-list-tmpl" type="text/html">
+	<ul>
 	<!--[for(i = 0; i < list.length; i ++) {]-->
 		<li class="product-border">
 			<div class="product-name"><a href="../mall/detail.html?id=<!--[= list[i].id]-->" title="<!--[= list[i].name]-->"><!--[= list[i].name || '--']--></a></div>
@@ -98,7 +105,6 @@
 			</div>
 			<div class="product-infos">
 				<div class="product-price clearfix">
-
 					<div class="vip">
 						<span class="price-label">交易单价</span><span 
 						class="price-value"><!--[== $formatCurrency(list[i].vipPrice)]--></span><span 
@@ -134,6 +140,28 @@
 		<li class="m-l">合同金额：<span><em class="c-red"><!--[= $formatCurrency1(price)]--></em>&nbsp;信用B</span></li>
 		<li class="m-r">合同有效截止日：<span><!--[= $formatDate(deadline, 'yyyy-MM-dd')]--></span></li>										
 	</ul>
+</script>
+<script id="contract-list-tmpl" type="text/html">
+    <!--[for(i = 0; i < list.length; i ++) {]-->
+    <table class="index-contract-list">
+    <thead>
+    <tr>
+    <td>项目名称:&nbsp;&nbsp;<!--[= list[i].name || '--']--></td>
+    <td><a href="">查看合同详情</a></td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>公司名称:&nbsp;&nbsp;<!--[= list[i].userName || '--']--></td>
+    <td>合同编号:&nbsp;&nbsp;<!--[= list[i].num || '--']--></td>
+    </tr>
+    <tr>
+    <td>合同金额:&nbsp;&nbsp;<!--[= list[i].amount || '--']--></td>
+    <td>合同有效期:&nbsp;&nbsp;<!--[= $formatDate(list[i].startTime, 1) || '--']--> 至 <!--[= $formatDate(list[i].endTime, 1) || '--']--></td>
+    </tr>
+    </tbody>
+    </table>
+    <!--[}]-->
 </script>
 
 <script src="../content/js/module/seajs/2.2.0/sea.js"></script>
