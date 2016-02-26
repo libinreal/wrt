@@ -80,23 +80,24 @@ function init(){
 	Supplier.getCompleteList();	
 }
 function first(){
-	SaleOrder.limit = 0;
-	SaleOrder.getCompleteList(true);
+	Supplier.limit = 0;
+	Supplier.current_page = 1;
+	Supplier.getCompleteList(true);
 }
 function next(){
-	SaleOrder.current_page = SaleOrder.current_page + 1;
-	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
-	SaleOrder.getCompleteList(true);
+	Supplier.current_page = Supplier.current_page + 1;
+	Supplier.limit = (Supplier.current_page - 1)*Supplier.offset;
+	Supplier.getCompleteList(true);
 }
 function prev(){
-	SaleOrder.current_page = SaleOrder.current_page - 1;
-	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
-	SaleOrder.getCompleteList(true);
+	Supplier.current_page = Supplier.current_page - 1;
+	Supplier.limit = (Supplier.current_page - 1)*Supplier.offset;
+	Supplier.getCompleteList(true);
 }
 function last(){
-	SaleOrder.current_page = SaleOrder.total_page;
-	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
-	SaleOrder.getCompleteList(true);
+	Supplier.current_page = Supplier.total_page;
+	Supplier.limit = (Supplier.current_page - 1)*Supplier.offset;
+	Supplier.getCompleteList(true);
 }
 function checkbox_all(){
 	if($("#check_all:checkbox:checked").length == 1){

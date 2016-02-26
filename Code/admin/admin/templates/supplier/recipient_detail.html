@@ -79,25 +79,6 @@
 <script src="js/type-mode.js" type="text/javascript" ></script>
 <script type="text/javascript">
 Supplier.orderPayDetail();
-function first(){
-	SaleOrder.limit = 0;
-	SaleOrder.getList(true);
-}
-function next(){
-	SaleOrder.current_page = SaleOrder.current_page + 1;
-	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
-	SaleOrder.getList(true);
-}
-function prev(){
-	SaleOrder.current_page = SaleOrder.current_page - 1;
-	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
-	SaleOrder.getList(true);
-}
-function last(){
-	SaleOrder.current_page = SaleOrder.total_page;
-	SaleOrder.limit = (SaleOrder.current_page - 1)*SaleOrder.offset;
-	SaleOrder.getList(true);
-}
 </script>
 	</body>
 </html>
