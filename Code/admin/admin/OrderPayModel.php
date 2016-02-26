@@ -191,6 +191,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 		*	                }
 		*	            ]
 		*	        },
+		*	        "file_0"://发票文件
+		*	        [
+		*	        	{
+		*	        		"upload_name":"20160224_s1.jpg",//文件名字
+		*	        		"upload_id":1,//文件id
+		*	        	}
+		*	        ],
+		*	        "file_1"://送货单文件
+		*	        [
+		*	        	{
+		*	        		"upload_name":"20160224_s1.jpg",//文件名字
+		*	        		"upload_id":1,//文件id
+		*	        	}
+		*	        ]
 		*	        "buttons":["审核通过","付款","驳回"]//可操作的按钮
 		*	    }
 		*	}
@@ -200,8 +214,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$params = $content['parameters'];
 			
 			if (isset($params['order_pay_id'])) {
-				$sql_order_pay = 'SELECT * FROM order_pay WHERE order_pay_id = '.$params['order_pay_id'];
-				$order_pay_info = $GLOBALS['db']->getrow($sql_order_pay);
+
+				$order_pay_id = $params['order_pay_id'];
+
+				$order_pay_table = $GLOBALS['ecs']->table('order_pay');//生成单表
+				$upload_table = $GLOBALS['ecs']->table('order_pay_upload');//生成单文件表
+
+				$sql_order_pay = 'SELECT * FROM ' . $order_pay_table . ' WHERE order_pay_id = '.$params['order_pay_id'];
+				$order_pay_info = $GLOBALS['db']->getRow($sql_order_pay);
 				
 				$sql_order_goods = 'SELECT  og.goods_id,og.goods_name,og.goods_sn,og.goods_number_send_saler,og.goods_price_send_saler,og.goods_number_arr_saler,'.
 						'og.goods_price_arr_saler,oi.order_sn,oi.shipping_fee_arr_saler,oi.shipping_fee_send_saler,oi.order_amount_arr_saler,'.
@@ -246,6 +266,28 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				}
 				$content = array();
+
+
+				//已上传文件
+				$upload_sql = 'SELECT `upload_name`,`upload_type`, `upload_id` FROM ' . $upload_table .
+							  'WHERE `order_pay_id` = ' . $order_pay_id;
+				$files = $GLOBALS['db']->getAll( $upload_sql );
+
+				$file_0 = $file_1 = array();
+
+				if( $files ){
+
+					foreach ($files as $f) {
+						if( $f['upload_type'] == 0 )
+							$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+						else
+							$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+					}
+				}
+
+				$content['file_0'] = $file_0;
+				$content['file_1'] = $file_1;
+				
 				//应付单基本信息
 				$content['data']['order_pay_id'] = $order_pay_info['order_pay_id'];//流水编号
 				$content['data']['create_time'] = $order_pay_info['create_time'];//发起时间
@@ -268,6 +310,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					default:
 						break;
 				}
+
 
 				//子订单信息
 				$content['data']['goods_list'] = $order_goods;

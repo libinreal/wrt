@@ -3129,7 +3129,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$params = $content['parameters']['params'];
 
 			$price = (double)( $params['price'] );
-			$number = intval( $params['number'] );
+			$number = (double)( $params['number'] );
 			$contract_sn = strval( $params['contract_sn'] );
 
 			$rate = (double)( $params['rate'] );

@@ -1150,15 +1150,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods_number_send_saler = $params['goods_number_send_saler'];
 			$goods_price_send_saler = (double)( $params['goods_price_send_saler'] );
 
-			$suppers_id = intval( $params['suppers_id'] );//销售信息.供货商id
-
 			$shipping_fee_send_saler = (double)( $params['shipping_fee_send_saler'] );//供货信息.发货物流费
 			$pay_id = intval( $params['pay_id'] );//支付方式id
 
 			$order_amount_send_saler = (double)( $params['order_amount_send_saler'] );
 
 			$order_info = array();
-			$order_info['suppers_id'] = $suppers_id;
 			$order_info['shipping_fee_send_saler'] = $shipping_fee_send_saler;
 
 			$order_info['order_amount_send_saler'] = $order_amount_send_saler;
@@ -1331,7 +1328,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods_number_arr_saler = $params['goods_number_arr_saler'];
 			$goods_price_arr_saler = (double)( $params['goods_price_arr_saler'] );
 
-			$suppers_id = intval( $params['suppers_id'] );//销售信息.供货商id
 
 			$shipping_fee_arr_saler = (double)( $params['shipping_fee_arr_saler'] );//供货信息.发货物流费
 			$pay_id = intval( $params['pay_id'] );//支付方式id
@@ -1339,7 +1335,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_amount_arr_saler = (double)( $params['order_amount_arr_saler'] );
 
 			$order_info = array();
-			$order_info['suppers_id'] = $suppers_id;
 			$order_info['shipping_fee_arr_saler'] = $shipping_fee_arr_saler;
 			$order_info['order_amount_arr_saler'] = $order_amount_arr_saler;
 			$order_info['pay_id'] = $pay_id;
