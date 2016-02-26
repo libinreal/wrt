@@ -86,4 +86,17 @@ define(function(require) {
         $('#contract-list').append(result || config.nodata);
     });
 
+    // 公告
+    Ajax.custom({
+        url: config.newsList,
+        data: {
+            size: 1
+        }
+    }, function(response) {
+        var data = response.body;
+        var result = template.render('note-list-tmpl', {
+            'list': response.body
+        });
+        $('#note-list').append(result || config.nodata);
+    });
 });
