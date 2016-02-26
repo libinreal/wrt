@@ -20,7 +20,10 @@
 				<div class="contract-list-header clearfix">
 					<div style="line-height:30px;">&nbsp;</div>
 				</div>
-				<div class="list-ti2">最新公告<ul id="note-list"></ul></div>
+				<div class="contract-list-header clearfix">
+					<div style="line-height:30px;color:#f00;">&nbsp;最新公告</div>
+				</div>
+				<div class="list-ti2"><ul id="note-list"></ul></div>
 			</div>
 			
 			<div class="contract-list gray-box">
