@@ -20,7 +20,7 @@ class ApplycreditController extends ControllerBase
 			$storedir = '../public/apply_attachment/'.$filepath;
 			
 			if(!is_dir($storedir)) {
-				if(!mkdir($storedir, 777, true)) {
+				if(!mkdir($storedir, 0777)) {
 					return ResponseApi::send(null, Message::$_ERROR_SYSTEM, '目录创建失败，请稍后再试');
 				}
 			} else {
