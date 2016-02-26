@@ -21,7 +21,7 @@ class PersonalController extends ControllerBase {
 	 * 			    "cashAmountHistory":"111111",//可用现金额度
 	 * 			    "cashAmountValid":"22222",//可用现金额度
 	 * 			 },
-	 * 			 "contract_info":
+	 * 			 "contract_arr":
 	 * 			 [
 	 * 			 	{
 	 * 			 		"contract_name":"xxxxxx",//项目名称
@@ -47,7 +47,16 @@ class PersonalController extends ControllerBase {
 		}
 
 		//合同数据
-		
+		$contract_arr = ContractModel::find( array( 
+				'userId = ?1',
+				'bind' => array(
+						1 => $user->id
+						),
+				'order' => 'createTime DESC',
+				'limit' => '3'
+				
+					) );
+		$contract_arr = $contract_arr->toArray();
 
 		$content = array();
 		$content['user_account'] = $user_account;

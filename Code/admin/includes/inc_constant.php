@@ -122,6 +122,12 @@ define('PURCHASE_ORDER_UNCOMPLETE',  2);//待完成
 define('PURCHASE_ORDER_COMPLETE',    3);//已完成
 define('PURCHASE_ORDER_CANCEL',      4);//订单取消
 
+/*  供应商的生成单付款状态 */
+define('PURCHASE_ORDER_PAY_SUBMIT', 1);//已生成
+define('PURCHASE_ORDER_PAY_FAIL', 4);//审核不通过（驳回）
+define('PURCHASE_ORDER_PAY_SUCCESS', 3);//审核通过
+define('PURCHASE_ORDER_PAY_RECEIVED', 2);//已付款
+
 /* 支付类型 */
 define('PAY_ORDER',                 0); // 订单支付
 define('PAY_SURPLUS',               1); // 会员预付款

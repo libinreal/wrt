@@ -12,6 +12,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	 */
 	
 	if ( $_POST['command'] == 'upload' ) {//上传文件
+		
 		/**
 		 * 接口名称：上传文件
 		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
@@ -373,7 +374,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$sql = $sql . $where_str .
-				   ' LIMIT ' . $params['limit'].','.$params['offset'];//echo $sql;exit;
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$orders = $GLOBALS['db']->getAll($sql);
 			
 			$total_sql = $total_sql . $where_str;
@@ -541,7 +542,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$sql = $sql . $where_str . ' ORDER BY odr.`add_time` DESC' .
-				   ' LIMIT ' . $params['limit'].','.$params['offset'];//echo $sql;exit;
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$orders = $GLOBALS['db']->getAll($sql);
 			
 			$total_sql = $total_sql . $where_str;
@@ -919,13 +920,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 				foreach ($file_0 as $i) {
 					$upload_id_arr[] = $i['upload_id'];	
 				}
+				if( !empty( $upload_id_arr ) ){
+					$upload_id_str = implode(',', $upload_id_arr);
+					$upload_sql = 'UPDATE ' . $upload_table . ' SET `order_pay_id` = ' . $order_pay_id . ' WHERE `upload_id` IN (' .
+								  $upload_id_str .');';
 
-				$upload_id_str = implode(',', $upload_id_arr);
-				$upload_sql = 'UPDATE ' . $upload_table . ' SET `order_pay_id` = ' . $order_pay_id . ' WHERE `upload_id` IN (' .
-							  $upload_id_str .');';
-
-				$GLOBALS['db']->query( $upload_sql );
-
+					$GLOBALS['db']->query( $upload_sql );
+				}
 				//生成状态记录
 				$purchase_status_sql = 'UPDATE ' . $order_table . ' SET `purchase_pay_status` = 1 ' .
 										' WHERE `order_id` IN(' . $data['order_id_str'] . ')';
@@ -1041,7 +1042,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$sql = $sql . $where_str . ' ORDER BY `create_time` DESC' .
-				   ' LIMIT ' . $params['limit'].','.$params['offset'];//echo $sql;exit;
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$order_pay = $GLOBALS['db']->getAll( $sql );
 			
 			$total_sql = $total_sql . $where_str;
@@ -2039,7 +2040,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$upload_id = $params['upload_id'];
 			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');
 
-			$del_sql = 'DELETE FROM ' . $upload_table . ' WHERE `upload_id` = ' . $upload_id . ' LIMIT 1';
+			$del_sql = 'DELETE FROM ' . $upload_table . ' WHERE `upload_id` = ' . $upload_id . 'LIMIT 1';
 			if ( $GLOBALS['db']->query( $del_sql ) ){
 				//默认保留磁盘文件
 				
