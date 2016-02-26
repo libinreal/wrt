@@ -1545,7 +1545,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 						//***************到货改价数据初始化 START**********
 						//订单到货信息初始化
-						$arr_data = array();
+						/*$arr_data = array();
 						$arr_data['financial_arr_rate'] = $order_info['financial_send_rate'];
 						$arr_data['financial_arr'] = $order_info['financial_send'];
 						$arr_data['shipping_fee_arr_buyer'] = $order_info['shipping_fee_send_buyer'];
@@ -1585,7 +1585,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 						$arr_update_sql = substr($arr_update_sql, 0, -1);
 						$arr_update_sql .= ' WHERE `order_id` = ' . $order_id;
-						$GLOBALS['db']->query( $arr_update_sql );
+						$GLOBALS['db']->query( $arr_update_sql );*/
 
 						//***************到货改价数据初始化 END**********
 
@@ -1794,6 +1794,76 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
+
+					$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+					$order_info_table = $GLOBALS['ecs']->table('order_info');
+					$contract_table = $GLOBALS['ecs']->table('contract');
+
+					$order_sql = 'SELECT odr.`shipping_fee_send_buyer`, odr.`shipping_fee_arr_buyer`, odr.`shipping_fee_send_saler`, odr.`shipping_fee_arr_saler`, ' .//商品资料
+					 	 ' odr.`financial_send`, odr.`financial_send_rate`, ' .//金融费
+					 	 ' odr.`order_amount_send_buyer`, odr.`order_amount_arr_buyer`, odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`, ' .//总金额
+					 	 ' odr.`shipping_info`, odr.`shipping_log` ' .//物流信息
+						 'FROM ' .$order_info_table . ' AS odr' . 
+						 ' WHERE odr.`order_id` = ' . $order_id;
+					$order_info = $GLOBALS['db']->getRow( $order_sql );
+
+					//商品详情
+					$goods_table = $GLOBALS['ecs']->table('goods');
+					$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+
+					// $attribute_table = $GLOBALS['ecs']->table('attribute');
+					$order_goods_sql = 'SELECT og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_number_arr_buyer`, ' .
+									   'og.`goods_number_arr_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`, og.`goods_price_arr_buyer`, og.`goods_price_arr_saler` FROM ' .
+									   $order_goods_table . //物料编码 名称 下单数 供应商
+									   ' AS og ' . 
+									   ' WHERE og.`order_id` = ' . $order_id;
+					$order_good = $GLOBALS['db']->getRow($order_goods_sql);
+
+					//***************到货改价数据初始化 START**********
+					//订单到货信息初始化
+					$arr_data = array();
+					$arr_data['financial_arr_rate'] = $order_info['financial_send_rate'];
+					$arr_data['financial_arr'] = $order_info['financial_send'];
+					$arr_data['shipping_fee_arr_buyer'] = $order_info['shipping_fee_send_buyer'];
+					$arr_data['shipping_fee_arr_saler'] = $order_info['shipping_fee_send_saler'];
+					$arr_data['order_amount_arr_buyer'] = $order_info['order_amount_send_buyer'];
+					$arr_data['order_amount_arr_saler'] = $order_info['order_amount_send_saler'];
+
+					$arr_data_keys = array_keys( $arr_data );
+					$arr_update_sql = 'UPDATE ' . $order_info_table . ' SET ';
+					foreach ($arr_data_keys as $ak) {
+						if( is_string( $arr_data[$ak] ) ){
+							$arr_update_sql .= '`' . $ak . '` = \'' . $arr_data[$ak] .'\',';
+						}else{
+							$arr_update_sql .= '`' . $ak . '` = ' . $arr_data[$ak] .',';
+						}
+					}
+
+					$arr_update_sql = substr($arr_update_sql, 0, -1);
+					$arr_update_sql .= ' WHERE `order_id` = ' . $order_id;
+					$GLOBALS['db']->query( $arr_update_sql );
+					//订单商品到货信息初始化
+					$arr_data = array();
+					$arr_data['goods_number_arr_buyer'] = $order_good['goods_number_send_buyer'];
+					$arr_data['goods_number_arr_saler'] = $order_good['goods_number_send_saler'];
+					$arr_data['goods_price_arr_buyer'] = $order_good['goods_price_send_buyer'];
+					$arr_data['goods_price_arr_saler'] = $order_good['goods_price_send_saler'];
+
+					$arr_data_keys = array_keys( $arr_data );
+					$arr_update_sql = 'UPDATE ' . $order_goods_table . ' SET ';
+					foreach ($arr_data_keys as $ak) {
+						if( is_string( $arr_data[$ak] ) ){
+							$arr_update_sql .= '`' . $ak . '` = \'' . $arr_data[$ak] .'\',';
+						}else{
+							$arr_update_sql .= '`' . $ak . '` = ' . $arr_data[$ak] .',';
+						}
+					}
+
+					$arr_update_sql = substr($arr_update_sql, 0, -1);
+					$arr_update_sql .= ' WHERE `order_id` = ' . $order_id;
+					$GLOBALS['db']->query( $arr_update_sql );
+
+					//***************到货改价数据初始化 END**********
 					if( $childer_order_update )
 						make_json_response('', '0', '采购下单 成功');
 					else

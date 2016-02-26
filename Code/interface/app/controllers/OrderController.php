@@ -180,7 +180,7 @@ class OrderController extends ControllerBase
 
 				//libin 2016-02-04
 				if( preg_match( '/-/', $order['orderSn'] ) ){//物料单价
-					if( $order['childOrderStatus'] >= SOS_ARR_CC ){
+					if( $order['childOrderStatus'] >= SOS_SEND_PP ){
 						$r['changePrice'] = $r['changePriceArr'];
 						$r['orderNums'] = $r['orderNumsArr'];
 					}
@@ -197,7 +197,7 @@ class OrderController extends ControllerBase
 
 			//libin 2016-02-04
 			if( preg_match( '/-/', $order['orderSn'] ) ){
-				if( $order['childOrderStatus'] < SOS_ARR_CC )
+				if( $order['childOrderStatus'] < SOS_SEND_PP )
 					$ordersum = $order['orderAmountSendBuyer'];
 				else
 					$ordersum = $order['orderAmountArrBuyer'];
