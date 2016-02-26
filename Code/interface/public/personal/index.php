@@ -18,6 +18,16 @@
 			<div class="my-credit-info gray-box clearfix" id="zj-summary"></div>
 			<div class="contract-list gray-box">
 				<div class="contract-list-header clearfix">
+					<div style="line-height:30px;">&nbsp;</div>
+				</div>
+				<div class="contract-list-header clearfix">
+					<div style="line-height:30px;color:#f00;">&nbsp;最新公告</div>
+				</div>
+				<div class="list-ti2"><ul id="note-list"></ul></div>
+			</div>
+			
+			<div class="contract-list gray-box">
+				<div class="contract-list-header clearfix">
 					<div style="line-height:30px;">&nbsp;合同管理</div>
 				</div>
 				<div id="contract-list"></div>
@@ -96,7 +106,6 @@
 	</div>
 </script>
 <script id="zj-list-tmpl" type="text/html">
-	<ul>
 	<!--[for(i = 0; i < list.length; i ++) {]-->
 		<li class="product-border">
 			<div class="product-name"><a href="../mall/detail.html?id=<!--[= list[i].id]-->" title="<!--[= list[i].name]-->"><!--[= list[i].name || '--']--></a></div>
@@ -123,7 +132,6 @@
 			</div>
 		</li>
 	<!--[}]-->
-	</ul>
 </script>
 <script id="zj-recommend-tmpl" type="text/html">
 	<div class="project-t">
@@ -161,6 +169,16 @@
     </tr>
     </tbody>
     </table>
+    <!--[}]-->
+</script>
+<script id="note-list-tmpl" type="text/html">
+    <!--[for(i = 0; i < list.length; i ++) {]-->
+	<table class="index-contract-list">
+		<tr>
+		<td><a href="../notice/<!--[= $newsUrl(list[i].id)]-->"><span class="title"><!--[= list[i].title]--></span></a></td>
+		<td><span class="date"><!--[= $formatDate(list[i].createAt,'MM/dd')]--></span></td>
+		</tr>
+	</table>
     <!--[}]-->
 </script>
 

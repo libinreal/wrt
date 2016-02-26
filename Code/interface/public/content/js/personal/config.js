@@ -57,6 +57,8 @@ define(function(require, exports, module) {
 
     config.myproject = config.server + '/customize/myproject';//我的工程定制
     config.myprojectdetail = config.server + '/customize/myprojectdetail';//我的工程定制详情
+
+    config.newsList = config.server + '/notice/getannouncelist'; //获取公告
     
     
     

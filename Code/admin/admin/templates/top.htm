@@ -263,16 +263,7 @@
         <div class="topmenu">
             {if $role_id eq '1'}
             <ul>
-<<<<<<< HEAD
-                <li class="curr"><a href="goods.php?act=list_arr" target="main-frame"><span class="iocn iocn1"></span><span class="f14">基建商城aaa</span></a></li>
-                <li><a href="order.php?act=list_arr" target="main-frame"><span class="iocn iocn2"></span><span class="f14">订单管理b</span></a></li>
-                <li><a href="exchange_goods.php?act=list_arr" target="main-frame"><span class="iocn iocn3"></span><span class="f14">积分商城</span></a></li>
-                <li><a href="wrnews.php?act=list_arr" target="main-frame"><span class="iocn iocn4"></span><span class="f14">内容管理</span></a></li>
-                <li><a href="custom.php?act=list_arr" target="main-frame"><span class="iocn iocn5"></span><span class="f14">定制管理</span></a></li>
-                <li><a href="evaluation.php?act=list_arr" target="main-frame"><span class="iocn iocn6"></span><span class="f14">信用池管理</span></a></li>
-                <li><a href="category.php?act=list_arr" target="main-frame"><span class="iocn iocn7"></span><span class="f14">基础数据</span></a></li>
-                <li><a href="sales_analysis.php?act=list_arr" target="main-frame"><span class="iocn iocn8"></span><span class="f14">报表统计</span></a></li>
-=======
+
                 <li class="curr"><a href="goods.php?act=list_arr" target="main-frame"><span class="iocn iocn1"><img src="/admin/images/icon11.png"></img></span><span class="f14">基建商城</span></a></li>
                 <li><a href="order.php?act=list_arr" target="main-frame"><span class="iocn iocn2"><img src="/admin/images/icon2.png"></img></span><span class="f14">订单管理</span></a></li>
                 <li><a href="exchange_goods.php?act=list_arr" target="main-frame"><span class="iocn iocn3"><img src="/admin/images/icon3.png"></img></span><span class="f14">积分商城</span></a></li>
@@ -281,7 +272,6 @@
                 <li><a href="evaluation.php?act=list_arr" target="main-frame"><span class="iocn iocn6"><img src="/admin/images/icon6.png"></img></span><span class="f14">信用池管理</span></a></li>
                 <li><a href="category.php?act=list_arr" target="main-frame"><span class="iocn iocn7"><img src="/admin/images/icon7.png"></img></span><span class="f14">基础数据</span></a></li>
                 <li><a href="sales_analysis.php?act=list_arr" target="main-frame"><span class="iocn iocn8"><img src="/admin/images/icon8.png"></img></span><span class="f14">报表统计</span></a></li>
->>>>>>> 2d11d9c86a64cbc702510a396e7ccbbbd45d001b
             </ul>
             {/if}
         </div>
@@ -292,10 +282,10 @@
                 <li><a href="../" target="_blank">{$lang.preview}</a></li>
                 <li><a href="message.php?act=list" target="main-frame">{$lang.view_message}</a></li>
                 -->
-                <li><div class="renovateicon" ></div><a href="javascript:window.top.frames['main-frame'].document.location.reload();window.top.frames['header-frame'].document.location.reload()">{$lang.refresh}</a></li>
-                <li><div class="Personal" ></div><a href="privilege.php?act=modif" target="main-frame">{$lang.profile}</a></li>
-                <li><div class="clearcache" ></div><a href="index.php?act=clear_cache" target="main-frame">{$lang.clear_cache}</a></li>
-                <li><div class="quit" ></div><a href="privilege.php?act=logout" target="_top">{$lang.signout}</a></li>
+                <li><a href="javascript:window.top.frames['main-frame'].document.location.reload();window.top.frames['header-frame'].document.location.reload()"><div class="renovateicon"></div>{$lang.refresh}</a></li>
+                <li><a href="privilege.php?act=modif" target="main-frame"><div class="Personal"></div>{$lang.profile}</a></li>
+                <li><a href="index.php?act=clear_cache" target="main-frame"><div class="clearcache"></div>{$lang.clear_cache}</a></li>
+                <li><a href="privilege.php?act=logout" target="_top"><div class="quit"></div>{$lang.signout}</a></li>
                 <!--
                 <li><a href="#"  onclick="ShowToDoList()">{$lang.todolist}</a></li>
                 <li style="border-left:none;"><a href="index.php?act=first" target="main-frame">{$lang.shop_guide}</a></li>
@@ -311,9 +301,7 @@
         </div>
     </div>
 </div>
-<div id="menu-div" style="clear: both; background-color:#f0f0f0;height:40px;box-shadow:0 1px 3px #ccc inset">
-	<div class="backgroundone"></div>
-	<div class="backgroundtwo"></div>
+<div id="menu-div" style="clear: both;padding-left:350px; background-color:#f0f0f0;height:40px;box-shadow:0 1px 3px #ccc inset">
     <ul>
         <li class="fix-spacel">&nbsp;</li>
         <li><a  style="color: #8f9499;" href="index.php?act=main" target="main-frame">{$lang.admin_home}</a></li>

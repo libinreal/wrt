@@ -716,7 +716,9 @@ var Supplier = {
 						for(var i=0;i<that.recipient_arr.length;i++){
 							if(that.recipient_arr[i] == "operate"){
 								var edit = createLink("demo_template.php?section=supplier&act=recipient_detail&id="+value.order_pay_id, "查看");
-								edit += createLink("demo_template.php?section=supplier&act=recipient_edit&id="+value.order_pay_id, "编辑");
+								if(value.pay_status != 3){
+									edit += createLink("demo_template.php?section=supplier&act=recipient_edit&id="+value.order_pay_id, "编辑");
+								}
 								row += createTd(edit);
 								continue;
 							}
@@ -757,7 +759,7 @@ var Supplier = {
 					row += "<tr>";
 					row += createTd(value.upload_name);
 					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
-					edit += "<input type='hidden' name='file_0[]' value='"+value.upload_name+"'>";
+					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_id+"'>";
 					row += createTd(edit);
 				});
 				$("#left_list>tbody").html(row);
@@ -766,7 +768,7 @@ var Supplier = {
 					row += "<tr>";
 					row += createTd(value.upload_name);
 					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
-					edit += "<input type='hidden' name='file_1[]' value='"+value.upload_name+"'>";
+					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_id+"'>";
 					row += createTd(edit);
 				});
 				$("#right_list>tbody").html(row);
@@ -854,7 +856,7 @@ var Supplier = {
 		var order_pay_id = getQueryStringByName('id');
 		if(order_pay_id===""||!validateNumber(order_pay_id)){
 			return false;
-		}		
+		}
 		var order_arr = $("#order_id_form").FormtoJson().order_id;
 		if(order_arr.length == 0){
 			alert("至少一个订单");

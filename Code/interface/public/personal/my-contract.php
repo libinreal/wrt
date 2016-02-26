@@ -20,14 +20,7 @@
 			</div>	
 			
 			<div class="contract-list gray-box">
-				<div class="contract-list-header clearfix">
-					<div class="contract-list-col c2">合同编号</div>
-					<div class="contract-list-col c3">合同名称</div>
-					<div class="contract-list-col c4">合同金额</div>
-					<div class="contract-list-col c5">开始时间</div>
-					<div class="contract-list-col c6">结束时间</div>
-				</div>
-				<div class="contract-list-content" id="contract-list"></div>
+				<div id="contract-list"></div>
 			</div>
 		</div>
 	</div>
@@ -40,13 +33,24 @@
 
 <script id="contract-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<a href="my-contract-detail.html?contract_id=<!--[= list[i].id]-->" class="clearfix">
-		<div class="contract-list-col c2"><!--[= list[i].num || '--']--></div>
-		<div class="contract-list-col c3"><!--[= list[i].name || '--']--></div>
-		<div class="contract-list-col c4"><!--[= list[i].amount || '--']--></div>
-		<div class="contract-list-col c5"><!--[= $formatDate(list[i].startTime, 1) || '--']--></div>
-		<div class="contract-list-col c6"><!--[= $formatDate(list[i].endTime, 1) || '--']--></div>
-	</a>
+    <table class="index-contract-list">
+    <thead>
+    <tr>
+    <td>项目名称:&nbsp;&nbsp;<!--[= list[i].name || '--']--></td>
+    <td><a href="">查看合同详情</a></td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>公司名称:&nbsp;&nbsp;<!--[= list[i].userName || '--']--></td>
+    <td>合同编号:&nbsp;&nbsp;<!--[= list[i].num || '--']--></td>
+    </tr>
+    <tr>
+    <td>合同金额:&nbsp;&nbsp;<!--[= list[i].amount || '--']--></td>
+    <td>合同有效期:&nbsp;&nbsp;<!--[= $formatDate(list[i].startTime, 1) || '--']--> 至 <!--[= $formatDate(list[i].endTime, 1) || '--']--></td>
+    </tr>
+    </tbody>
+    </table>
     <!--[}]-->
 </script>
 

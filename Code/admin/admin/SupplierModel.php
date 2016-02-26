@@ -12,6 +12,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	 */
 	
 	if ( $_POST['command'] == 'upload' ) {//上传文件
+		
 		/**
 		 * 接口名称：上传文件
 		 * 接口地址：http://admin.zj.dev/admin/SupplierModel.php
@@ -373,7 +374,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$sql = $sql . $where_str .
-				   ' LIMIT ' . $params['limit'].','.$params['offset'];//echo $sql;exit;
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$orders = $GLOBALS['db']->getAll($sql);
 			
 			$total_sql = $total_sql . $where_str;
@@ -541,7 +542,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$sql = $sql . $where_str . ' ORDER BY odr.`add_time` DESC' .
-				   ' LIMIT ' . $params['limit'].','.$params['offset'];//echo $sql;exit;
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$orders = $GLOBALS['db']->getAll($sql);
 			
 			$total_sql = $total_sql . $where_str;
@@ -761,7 +762,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "content": {}
 		 *	}
 		 */
-		public function createOrderPayAction(){
+		public function createOrderPayAction(){exit;
 // 			print_r($_SESSION);die;
 			$content = $this->content;
 			$params = $content['parameters'];
@@ -772,6 +773,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_ids = array();
 			if (!empty($order_id_str)) {
 				$order_ids = explode(',',$order_id_str);
+			}else{
+				make_json_response('', '-1', '请选择需要生成应付款的订单');
 			}
 
 			$suppliers_id = $this->getSuppliersId();
@@ -796,6 +799,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_pay_table = $GLOBALS['ecs']->table('order_pay');//生成单表
 			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');//生成单文件表
 
+			//**** 更新原始生成单的订单状态已生成变为未生成 BEGIN ***
+			if( $order_pay_id ){
+				$old_data_sql = 'SELECT `order_id_str` FROM ' . $order_pay_table . ' WHERE `order_pay_id` = ' . $order_pay_id;//原始生成单的订单id
+				$order_id_old = $GLOBALS['db']->getOne( $old_data_sql );
+				
+				if( $order_id_old ){//原有生成单的订单存在
+					$maked_update_sql = 'UPDATE ' . $order_table . ' SET `purchase_pay_status` = ' . PURCHASE_ORDER_PAY_UNMAKE .//未生成
+										'WHERE `purchase_pay_status` = ' . PURCHASE_ORDER_PAY_MAKED . ' AND `order_id` IN('.
+										$order_id_old .')';//相关的订单由已生成 更新为 未生成
+					$GLOBALS['db']->query( $maked_update_sql );
+				}
+			}
+			//**** 更新原始生成单的订单状态已生成变为未生成 END ***
+
 			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
 				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
 				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status`,odr.`purchase_pay_status`, ' .
@@ -803,8 +820,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 				   ' FROM ' . $order_table .
 				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
 				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_ARR_PC2 .//订单为已推给当前登录的供应商
-				   ' AND odr.`purchase_pay_status` = 0 AND odr.`child_order_status` <> ' . SOS_CANCEL .' AND odr.`order_id` IN (' . $order_id_str . ')';
-
+				   ' AND odr.`purchase_pay_status` <> ' . PURCHASE_ORDER_PAY_PAID .//去除 已付款 状态的订单
+				   ' AND odr.`child_order_status` <> ' . SOS_CANCEL .' AND odr.`order_id` IN (' . $order_id_str . ')';
+				   // odr.`purchase_pay_status` = 0  //注释是因为需要把 未生成 已生成 已付款的 订单都拣选出来
 			$order_infos = $GLOBALS['db']->getAll( $sql );
 
 			if( empty( $order_infos ) ){
@@ -916,21 +934,22 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$upload_id_arr[] = $i['upload_id'];
 				}
 
-				foreach ($file_0 as $i) {
+				foreach ($file_1 as $i) {
 					$upload_id_arr[] = $i['upload_id'];	
 				}
+				if( !empty( $upload_id_arr ) ){
+					$upload_id_str = implode(',', $upload_id_arr);
+					$upload_sql = 'UPDATE ' . $upload_table . ' SET `order_pay_id` = ' . $order_pay_id . ' WHERE `upload_id` IN (' .
+								  $upload_id_str .');';
 
-				$upload_id_str = implode(',', $upload_id_arr);
-				$upload_sql = 'UPDATE ' . $upload_table . ' SET `order_pay_id` = ' . $order_pay_id . ' WHERE `upload_id` IN (' .
-							  $upload_id_str .');';
+					$GLOBALS['db']->query( $upload_sql );
+				}
 
-				$GLOBALS['db']->query( $upload_sql );
-
-				//生成状态记录
-				$purchase_status_sql = 'UPDATE ' . $order_table . ' SET `purchase_pay_status` = 1 ' .
-										' WHERE `order_id` IN(' . $data['order_id_str'] . ')';
+				//生成状态保存
+				$purchase_status_sql = 'UPDATE ' . $order_table . ' SET `purchase_pay_status` = ' . PURCHASE_ORDER_PAY_MAKED .
+										' WHERE `order_id` IN(' . $data['order_id_str'] . ')';//订单的应付款状态变为 已生成
 				$update_ret = $GLOBALS['db']->query( $purchase_status_sql );
-
+				
 				if( $update_ret )
 					make_json_response('', '0', '生成成功');
 				else
@@ -993,7 +1012,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		    	make_json_response('', '-1', '当前登录的必须是供应商账号');
 		    }
 
-		    $sql = 'SELECT `order_pay_id`, `order_sn_str`, `order_total`, `pay_status` FROM ' . $order_pay_table;
+		    $sql = 'SELECT `order_pay_id`, `create_time`, `order_sn_str`, `order_total`, `pay_status` FROM ' . $order_pay_table;
 
 		    $total_sql = 'SELECT COUNT(*) AS `total` FROM ' . $order_pay_table;
 		
@@ -1041,7 +1060,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$sql = $sql . $where_str . ' ORDER BY `create_time` DESC' .
-				   ' LIMIT ' . $params['limit'].','.$params['offset'];//echo $sql;exit;
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$order_pay = $GLOBALS['db']->getAll( $sql );
 			
 			$total_sql = $total_sql . $where_str;
@@ -2039,7 +2058,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$upload_id = $params['upload_id'];
 			$upload_table = $GLOBALS['ecs']->table('order_pay_upload');
 
-			$del_sql = 'DELETE FROM ' . $upload_table . ' WHERE `upload_id` = ' . $upload_id . ' LIMIT 1';
+			$del_sql = 'DELETE FROM ' . $upload_table . ' WHERE `upload_id` = ' . $upload_id . 'LIMIT 1';
 			if ( $GLOBALS['db']->query( $del_sql ) ){
 				//默认保留磁盘文件
 				

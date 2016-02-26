@@ -96,7 +96,7 @@ $admin_config = array(
     'pay_status' => array(0 => '未付款', 1 => '付款中', 2 => '已付款'),//付款状态
     'purchase_pay_status' => array(0 => '未生成', 1 => '已生成', 2 => '已付款'),//采购订单的收款状态
     'shipping_status' => array( 0 => '未发货', 1 => '已发货', 2 => '收货中', 3 => '已收货', 4 => '确认收货'),//发货状态
-    'purchase_order_pay_status' => array( 0 => '已申请', 1 => '审核不通过', 2 => '审核通过', 3 => '已付款'),//供应商的生成单付款状态
+    'purchase_order_pay_status' => array( 0 => '已生成', 1 => '审核通过', 2 => '已付款', 3 => '驳回' ),//供应商的生成单付款状态
     'payment' => array( 1 => '现金', 2 => '支票'),//付款方式
 );
 

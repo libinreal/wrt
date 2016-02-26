@@ -40,6 +40,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'page'){
 				//
 				$this->pageAction();
+			}elseif ($this->command == 'uPayStat'){
+				//
+				$this->uPayStatAction();
 			}
 		}
 		
@@ -178,40 +181,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 		*	                    "goods_id": "993",
 		*	                    "goods_name": "同鑫晟 Φ12.7mm-1860Mpa预应力钢绞线",
 		*	                    "goods_sn": "001056",
-		*	                    "goods_number_arrival": "0",
-		*	                    "goods_price_add": "0",
+		*	                    "goods_number": "0",
+		*	                    "goods_price": "0",
 		*						"order_sn": "2014111986226-CG",
-		*	                    "shipping_fee_arr_saler": "0.00",
+		*	                    "shipping_fee": "0.00",
 		*	                    "financial_arr": "0.00",
-		*	                    "order_amount_arr_saler": "0.00",
+		*	                    "order_amount": "0.00",
 		*	                    "attributes": "代码:9.50mm\r\n10.80mm\r\n11.10mm\r\n12.70mm\r\n12.90mm\r\n15.20mm\r\n15.24mm\r\n15.70mm\r\n17.80mm结构:1*2\r\n1*3\r\n1*7\r\n1*19\r\n1*37"
-		*	                },
-		*	                {
-		*	                    "goods_id": "993",
-		*	                    "goods_name": "同鑫晟 Φ12.7mm-1860Mpa预应力钢绞线",
-		*	                    "goods_sn": "001056",
-		*	                    "goods_number_arrival": "0",
-		*	                    "goods_price_add": "0",
-		*						"order_sn": "2014111986226-1-CG",
-		*	                    "shipping_fee_arr_saler": "0.00",
-		*	                    "financial_arr": "0.00",
-		*	                    "order_amount_arr_saler": "0.00",
-		*	                    "attributes": "代码:9.50mm\r\n10.80mm\r\n11.10mm\r\n12.70mm\r\n12.90mm\r\n15.20mm\r\n15.24mm\r\n15.70mm\r\n17.80mm结构:1*2\r\n1*3\r\n1*7\r\n1*19\r\n1*37"
-		*	                },
-		*	                {
-		*	                    "goods_id": "366",
-		*	                    "goods_name": "日照钢铁螺纹钢 HRB400 Ф20",
-		*	                    "goods_sn": "001056",
-		*	                    "goods_number_arrival": "0",
-		*	                    "goods_price_add": "2900",
-		*						"order_sn": "2014111986226-1-CG",
-		*	                    "shipping_fee_arr_saler": "0.00",
-		*	                    "financial_arr": "0.00",
-		*	                    "order_amount_arr_saler": "0.00",
-		*	                    "attributes": "牌号:HRB400\r\nHRB400E\r\nHRB335\r\nPSB1080规格:Φ10\r\nΦ12\r\nΦ14\r\nΦ16\r\nΦ18\r\nΦ20\r\nΦ22\r\nФ25\r\nФ28\r\nФ32\r\nФ36\r\nФ40长度:9米\r\n12米"
 		*	                }
 		*	            ]
-		*	        }
+		*	        },
+		*	        "buttons":["审核通过","付款","驳回"]//可操作的按钮
 		*	    }
 		*	}
 		*/
@@ -224,7 +204,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_pay_info = $GLOBALS['db']->getrow($sql_order_pay);
 				
 				$sql_order_goods = 'SELECT  og.goods_id,og.goods_name,og.goods_sn,og.goods_number_send_saler,og.goods_price_send_saler,og.goods_number_arr_saler,'.
-						'og.goods_price_arr_saler,oi.order_sn,oi.shipping_fee_arr_saler,oi.shipping_fee_send_saler,oi.financial_arr,oi.order_amount_arr_saler,oi.`child_order_status` FROM '.
+						'og.goods_price_arr_saler,oi.order_sn,oi.shipping_fee_arr_saler,oi.shipping_fee_send_saler,oi.order_amount_arr_saler,'.
+						'oi.order_amount_send_saler,oi.`child_order_status` FROM '.
 						'order_goods og,order_info oi WHERE og.order_id = oi.order_id AND  og.order_id in ('.$order_pay_info['order_id_str'].')';
 				$order_goods = $GLOBALS['db']->getAll($sql_order_goods);
 				//获取商品属性
@@ -238,16 +219,30 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$order_goods[$key]['order_sn'] = $value['order_sn'].'-CG';
 					
 					//物流费
-					if( $v['child_order_status'] <= SOS_SEND_PC2){
-						$v['shipping_fee'] = $v['shipping_fee_send_saler'];//发货
-						$v['goods_price'] = $v['goods_price_send_saler'];//发货
-						$v['goods_number'] = $v['goods_number_send_saler'];//发货
+					if( $value['child_order_status'] <= SOS_SEND_PC2){
+						$order_goods[$key]['shipping_fee'] = $value['shipping_fee_send_saler'];//发货
+						$order_goods[$key]['goods_price'] = $value['goods_price_send_saler'];//发货
+						$order_goods[$key]['goods_number'] = $value['goods_number_send_saler'];//发货
+						$order_goods[$key]['order_amount'] = $value['order_amount_send_saler'];//发货
 					}else{
-						$v['shipping_fee'] = $v['shipping_fee_arr_saler'];//到货
-						$v['goods_number'] = $v['goods_number_arr_saler'];//到货
-						$v['goods_price'] = $v['goods_price_arr_saler'];//到货
+						$order_goods[$key]['shipping_fee'] = $value['shipping_fee_arr_saler'];//到货
+						$order_goods[$key]['goods_number'] = $value['goods_number_arr_saler'];//到货
+						$order_goods[$key]['goods_price'] = $value['goods_price_arr_saler'];//到货
+						$order_goods[$key]['order_amount'] = $value['order_amount_arr_saler'];//到货
 					}
-					$v['finace_fee'] = $v['financial_arr'] = 0;
+					unset($order_goods[$key]['shipping_fee_send_saler']);
+					unset($order_goods[$key]['goods_price_send_saler']);
+					unset($order_goods[$key]['goods_number_send_saler']);
+					unset($order_goods[$key]['order_amount_send_saler']);
+
+					unset($order_goods[$key]['shipping_fee_arr_saler']);
+					unset($order_goods[$key]['goods_number_arr_saler']);
+					unset($order_goods[$key]['goods_price_arr_saler']);
+					unset($order_goods[$key]['order_amount_arr_saler']);
+					
+					
+					
+
 
 				}
 				$content = array();
@@ -256,15 +251,113 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$content['data']['create_time'] = $order_pay_info['create_time'];//发起时间
 				$content['data']['total'] = count($order_goods);
 				$content['data']['order_total'] = $order_pay_info['order_total'];
+
+				$buttons = array();
+				// 可操作按钮
+				switch( $order_pay_info['pay_status'] ){
+					case PURCHASE_ORDER_PAY_SUBMIT://已生成
+						$buttons = array('审核通过', '驳回');
+						break;
+					case PURCHASE_ORDER_PAY_SUCCESS://审核通过
+						$buttons = array('付款');
+						break;
+					case PURCHASE_ORDER_PAY_RECEIVED://已付款
+						break;
+					case PURCHASE_ORDER_PAY_FAIL://审核不通过（驳回）
+						break;
+					default:
+						break;
+				}
+
 				//子订单信息
 				$content['data']['goods_list'] = $order_goods;
+				$content['buttons'] = $buttons;
 				make_json_response( $content, "0", "应付款详情查询成功");
 			}
 			make_json_response( array('data'=>array()), "-1", "参数错误");
 		}
+
+		/**
+		 * 接口名称：应付款单操作
+		 *  接口地址：http://admin.zj.dev/admin/OrderPayModel.php
+		 *  传入参数格式(主键id在parameters下级)：
+		 *  {
+		 *	    "command": "find",
+		 *	    "entity": "uPayStat",
+		 *	    "parameters": {
+		 *	        "order_pay_id":"1",
+		 *	        "button":"审核通过"
+		 *	    }
+		 *	}
+		 *	 
+		 *  返回
+		 *	{
+		 *	    "error": "0",
+		 *	    "message": "应付款详情操作成功",
+		 *	    "content": {}
+		 *	        
+		 *	}
+		 */
+		public function uPayStatAction()
+		{
+			$params = $this->content['parameters'];
+			$order_pay_id = $params['order_pay_id'];
+			$button = $params['button'];
+
+			if( !$order_pay_id ){
+				make_json_response('', '-1', '参数错误');
+			}
+
+			$order_pay_table = $GLOBALS['ecs']->table('order_pay');
+			$find_sql = 'SELECT `pay_status` FROM ' . $order_pay_table . ' WHERE `order_pay_id` = ' . $order_pay_id;
+			$stat = $GLOBALS['db']->getOne( $find_sql );
+
+			$update_sql = 'UPDATE ' . $order_pay_table . ' SET `pay_status` = %d ' . ' WHERE `order_pay_id` = ' . $order_pay_id . ' LIMIT 1';
+
+			$msg = '生成单状态为 %s, 无法执行该操作';
+			$statusCfg = C('purchase_order_pay_status');
+			switch ( $button ) {
+				case '审核通过':
+					if( $stat == PURCHASE_ORDER_PAY_SUBMIT ){//已生成 可以审核通过
+						$update_sql = sprintf($update_sql, PURCHASE_ORDER_PAY_SUCCESS);
+						$msg = '';
+					}
+
+					break;
+				case '付款':
+					if( $stat == PURCHASE_ORDER_PAY_SUCCESS ){//审核通过 可以付款
+						$update_sql = sprintf($update_sql, PURCHASE_ORDER_PAY_RECEIVED);
+						$msg = '';
+					}
+
+					break;
+				case '驳回':
+					if( $stat == PURCHASE_ORDER_PAY_SUBMIT ){//已生成 可以驳回
+						$update_sql = sprintf($update_sql, PURCHASE_ORDER_PAY_FAIL);
+						$msg = '';
+					}
+
+					break;
+				default:
+					
+					break;
+			}
+			
+			if( $msg ){//无法执行操作
+				
+				$msg = sprintf($msg, $statusCfg[ $stat ]);
+				make_json_response('', '-1', $msg);
+			}else{
+				$GLOBALS['db']->query( $update_sql );
+				make_json_response('', 0, '操作成功');
+			}
+
+		}
 		
 	}
 	
-	$content = jsonAction();
+	$content = jsonAction( array( 'uPayStat'
+		)
+		);
 	$orderModel = new OrderPayModel($content);
 	$orderModel->run();

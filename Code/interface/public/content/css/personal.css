@@ -2086,3 +2086,17 @@
 .twoforyou {
    position: relative;top: 0;right: 0;
 }
+
+.index-contract-list{
+    width: 95%;
+    margin: 10px auto;
+    border: 1px solid #ccc;
+}
+.index-contract-list td{
+    padding: 5px;
+}
+.index-contract-list thead td{
+    border-bottom: 1px solid #ccc;
+    font-size: 16px;
+    width: 50%;
+}
