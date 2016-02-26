@@ -762,7 +762,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "content": {}
 		 *	}
 		 */
-		public function createOrderPayAction(){exit;
+		public function createOrderPayAction(){
 // 			print_r($_SESSION);die;
 			$content = $this->content;
 			$params = $content['parameters'];
