@@ -179,12 +179,61 @@
 			padding-top:15px;
 			padding-bottom:15px;
 		}
-		.icon1{
-			height:30px;
-			width:40px;
-			background:#0000ff;
-			float:left;
-		}
+        .icon_00{
+            height:30px;
+            width:40px;
+            float:left; 
+        }
+        .icon_01_cat_and_goods{
+            background:url("/admin/images/icon11.png") no-repeat center center;
+        }
+        .icon_04_wrnews{
+            background:url("/admin/images/icon44.png") no-repeat center center;
+        }
+        .icon_05_baseData{
+            background:url("/admin/images/icon77.png") no-repeat center center;    
+        }
+        .icon_08_engineering{
+            background:url("/admin/images/icon77.png") no-repeat center center; 
+        }
+        .icon_09_service{
+            background:url("/admin/images/icon77.png") no-repeat center center; 
+        }
+        .icon_10_members{
+
+        }
+        .icon_11_priv_admin{
+
+        }
+        .icon_12_stats{
+
+        }
+        .icon_13_contract{
+
+        }
+        .icon_14_credit{
+
+        }
+        .icon_15_bthPrice{
+
+        }
+        .icon_16_applyCredit{
+
+        }
+        .icon_17_bill_manage{
+
+        }
+        .icon_18_sale_order{
+        }
+        .icon_19_bank_manage{
+
+        }
+        .icon_21_order_pay{
+
+        }
+        .icon_23_purchase_order_manage{
+            
+        }
 		.menuname1{
 			height:30px;
 			line-height:30px;
@@ -234,7 +283,7 @@
 <div class="menuone">
 	{foreach from=$menus item=menu key=k}
 	<div class="menutwo">
-		<div class="icon1"></div>
+		<div class="icon_00 icon_{$k}"></div>
 		<div class="menuname1">{$menu.label}</div>
 		<div class="triangle"></div>
 		<div class="menudetail">
