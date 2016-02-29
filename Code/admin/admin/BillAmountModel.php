@@ -103,6 +103,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "customer_name": "xxx",//客户
 		 *                  "create_time": "2015-12-12",//创建日期
 		 *                  "create_by": "xxx" ,//创建人
+		 *                  "make_date"："2015-12-12"//单据日期
 		 *           }
 		 *	         ],
 		 *	         "total":"3"
@@ -115,9 +116,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			$bill_amount_table = $GLOBALS["ecs"]->table("bill_amount_log");
 			$users_table = $GLOBALS['ecs']->table( 'users' );
-			$sql = 'SELECT ba.`bill_amount_log_id`, ba.`amount_type`, ba.`amount`, ba.`user_id` as `customer_id`, u.`user_name` as `customer_name`, ba.`create_time`, ba.`create_by`' .
+			$sql = 'SELECT IFNULL( b.`issuing_date`, \'\') AS `make_date`, ba.`bill_amount_log_id`, ba.`amount_type`, ba.`amount`, ba.`user_id` as `customer_id`, u.`user_name` as `customer_name`, ba.`create_time`, ba.`create_by`' .
 			  	   ' FROM ' . $bill_amount_table . ' AS ba LEFT JOIN ' . $users_table .
-				   ' AS u ON u.`user_id` = ba.`user_id`';
+				   ' AS u ON u.`user_id` = ba.`user_id` ' .
+				   ' LEFT JOIN `bill` AS b ON b.`bill_id` = ba.`bill_id` ';
 
 			$total_sql = "SELECT COUNT(*) as `total` FROM $bill_amount_table";
 
@@ -187,18 +189,27 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$where_str .= " WHERE `create_time` <= '" . $where['due_date2'] . "'";
 			}
 
+			if( isset( $where["amount_type"] ) ){
+				if( $where_str )
+					$where_str .= " AND `amount_type` = '" . intval( $where['amount_type'] ) . "'";
+				else
+					$where_str .= " WHERE `amount_type` = '" . intval( $where['amount_type'] ) . "'";
+			}
+
 			$sql = $sql . $where_str . " LIMIT " . $params['limit'].",".$params['offset'];
-			$bills = $GLOBALS['db']->getAll($sql);
+			$bills = $GLOBALS['db']->getAll( $sql );
 			
 			$total_sql = $total_sql . $where_str;
-			$resultTotal = $GLOBALS['db']->getRow($total_sql);
-
+			$resultTotal = $GLOBALS['db']->getRow( $total_sql );
+			
 			if( $resultTotal )
 			{
 				if ( $bills ) {
 					foreach($bills as &$b)
 					{
 						$b['create_time'] = date("Y-m-d", $b['create_time'] );
+						if( !$b['make_date'] )
+							$b['make_date'] = $b['create_time'];
 					}
 				} else {
 					$bills = array();
@@ -485,7 +496,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$result['info'] = $bill; 		
 			} elseif ( $type == 1) {//现金
-				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `companyName` IS NOT NULL';
+				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `companyName` IS NOT NULL GROUP BY `companyName`';
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 

@@ -680,7 +680,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$status = array( "0" => "已扣减", "1" => "已恢复" );//
 
 			$is_recourse = array( "0" =>"否", "1" => "是");//
-			$sql = "SELECT `user_id`, `companyName` as `user_name` FROM " . $GLOBALS['ecs']->table('users');
+			$sql = "SELECT `user_id`, `companyName` as `user_name` FROM " . $GLOBALS['ecs']->table('users') . ' GROUP BY `companyName`';
 			$payers = $GLOBALS['db']->getAll( $sql );//
 			
 			if ( empty( $payers ) )

@@ -32,26 +32,6 @@
 				</div>
 				<div id="contract-list"></div>
 			</div>
-			<div class="project-list gray-box" id="zj-recommend" style="min-height: 211px;">
-				<!-- <div class="tuijian-title">
-					<span>XXXXX项目采购推荐</span>
-					<a class="button btn-gray" href="my-order.html">查看订单</a>
-				</div>
-				<div id="zj-recommend"></div>
-				<div class="p-t-content clearfix">
-					<ul>
-						<li>商品名称：<span>xxxxxxx</span></li>
-					</ul>
-					<ul class="p-t-left">
-						<li>合同编号：<span>xxxxxx</span></li>
-						<li>订单金额：<span>xxxxxxxxxxxxxx</span></li>
-					</ul>
-					<ul class="p-t-right">
-						<li>交货时间：<span>xxxxxx</span></li>
-						<li>公司单位：<span>xxxxxx</span></li>
-					</ul>
-				</div> -->
-			</div>
 			<div class="product-tuijian gray-box">
 			<div class="tuijian-title"><span>相关商品推荐</span></div>
 				<ul class="clearfix" id="zj-list"></ul>
@@ -70,40 +50,34 @@
 				<a href="my-info.html"><img class="user-icon" alt="" src="<!--[= $getUserIcon(icon)]-->" /></a>
 			</div>
 			<div class="m-c-i-text">
-				<div><span class="gray-span">信用等级：</span><!--[= cusLevel || '--']--></div>
-				<div><span class="gray-span">客户号：</span><!--[= cusFnum || '--']--></div>
-				<div title="<!--[= cusName]-->"><span class="gray-span">客户名：</span><!--[= cusName || '--']--></div>
+				<div><span class="gray-span">公司名称：</span><!--[= companyName || '--']--></div>
+				<div><span class="gray-span">用户名：</span><!--[= account || '--']--></div>
+				<div title="<!--[= companyAddress]-->"><span class="gray-span">用户地址：</span><!--[= companyAddress || '--']--></div>
 			</div>
 		</div>
-		<div class="m-c-i-btns">
+		<!--<div class="m-c-i-btns">
 			<a class="button btn-gray"  href="../credit/more.html">了解信用B</a>
 			<a class="button btn-gray"  href="my-address.html">收货地址</a>
 			<a class="button btn-primary" href="javascript:;">安全等级：高</a>
-		</div>
+		</div>-->
 	</div>
 	<table width="100%" cellpadding="0" cellspacing="0" class="m-c-i-center">
+		<tr><td></td><td></td></tr>
+		<tr><td></td><td></td></tr>
 		<tr>
-			<td class="gray-span">总信用额度：</td>
-			<td class="money"><!--[= $formatCurrency1(creAmtTot)]-->RMB</td>
+			<td class="gray-span">采购额度：</td>
+			<td style="color:#F00"><!--[= $formatCurrency1(billAmountValid)]-->RMB</td>
 		</tr>
 		<tr>
-			<td class="gray-span">可用总信用额度：</td>
-			<td><!--[= $formatCurrency1(lastAmtTot)]-->RMB</td>
-		</tr>
-		<tr>
-			<td class="gray-span">已使用信用额度：</td>
-			<td><!--[= $formatCurrency1(spendAmtTot)]-->RMB</td>
-		</tr>
-		<tr>
-			<td class="gray-span">已恢复信用额度：</td>
-			<td><!--[= $formatCurrency1(restoreAmtTot)]-->RMB</td>
+			<td class="gray-span">现金额度：</td>
+			<td style="color:#F00"><!--[= $formatCurrency1(cashAmountValid)]-->RMB</td>
 		</tr>
 	</table>
-	<div class="m-c-i-right">
+	<!--<div class="m-c-i-right">
 		<a class="button btn-yellow" href='../credit/additional.html'>追加信用额度</a>
 		<a class="button btn-secondary" href='my-creditb-bill.html'>票据兑换到期提醒</a>
 		<a class="button btn-cgdd" href='my-creditb-history.html'>使用流水历史记录</a>
-	</div>
+	</div>-->
 </script>
 <script id="zj-list-tmpl" type="text/html">
 	<!--[for(i = 0; i < list.length; i ++) {]-->
@@ -132,22 +106,6 @@
 			</div>
 		</li>
 	<!--[}]-->
-</script>
-<script id="zj-recommend-tmpl" type="text/html">
-	<div class="project-t">
-		<div class="project-l" style="margin-left:10px;"><span style="margin-left: 0;"><!--[= prjName || '--']--></span></div>
-        <!--[if (recommand && recommand != '0'){]-->
-		<div class="project-r"><a class="button btn-secondary" href="my-project-detail.html?constractSn=<!--[= prjNo]-->">查看分期推荐订单详情</a></div>
-        <!--[}else{]-->
-		<div class="project-r"><a class="button disabled" href="javascript:;">查看分期推荐订单详情</a></div>
-        <!--[}]-->
-	</div>
-	<ul class="project-m clearfix">
-		<li>公司名称：<span><!--[= companyName || '--']--></span></li>
-		<li>合同编号：<span><!--[= prjNo || '--']--></span></li>
-		<li class="m-l">合同金额：<span><em class="c-red"><!--[= $formatCurrency1(price)]--></em>&nbsp;信用B</span></li>
-		<li class="m-r">合同有效截止日：<span><!--[= $formatDate(deadline, 'yyyy-MM-dd')]--></span></li>										
-	</ul>
 </script>
 <script id="contract-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
