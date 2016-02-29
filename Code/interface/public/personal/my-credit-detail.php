@@ -46,7 +46,7 @@
 		</div>
 		<div class="info-border">
 			<div class="info-head">申请附件</div>
-			<div><span><img src="/public/apply_attachment/<!--[= img || '--']-->" /></span></div>
+			<div><span><img src="<?php echo ($_SERVER['SERVER_NAME'] == 'www.zj.dev') ? '/public' : '';?>/apply_attachment/<!--[= img || '--']-->" /></span></div>
 		</div>
 		<div class="info-border last-div">
 			

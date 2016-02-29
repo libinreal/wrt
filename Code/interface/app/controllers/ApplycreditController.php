@@ -17,7 +17,7 @@ class ApplycreditController extends ControllerBase
 			$opath = "";
 			$filepath = date("Ym");
 			
-			$storedir = '../public/apply_attachment/'.$filepath;
+			$storedir = getcwd().'/apply_attachment/'.$filepath;
 			
 			if(!is_dir($storedir)) {
 				if(!mkdir($storedir, 0777)) {

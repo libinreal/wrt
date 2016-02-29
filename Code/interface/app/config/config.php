@@ -33,6 +33,15 @@ return new \Phalcon\Config(array(
 	        'configDir'       => __DIR__ . '/../../app/config/',
 	        'baseUri'        => '',
     	),
+		
+		'ostatus' => array(
+				'已下单', '确认中', '验收中', '对账中', '已完成', '订单取消'
+		), 
+		'costatus' => array(
+				'未确认', '已确认', '客户已验签(发货)', '平台已验签(发货)', '平台已推单(发货)', 
+				'供应商已验签(发货)', '平台已验签(发货)', '客户已验签(到货)', '平台已验签(到货)', 
+				'供应商已验签(到货)', '平台已验签(到货)', '订单已取消'
+		), 
 	    'enums' => array(
 	        'expireAt' => array('M1', 'M5', 'Y1', 'Y2', 'Y3', 'Y4', 'Y5'),
 	    	'timeType' => array('M' => 'month', 'Y' => 'year'),
