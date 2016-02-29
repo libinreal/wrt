@@ -48,77 +48,6 @@
 		<!--[}]-->
 		</div>
 	</div>
-	<div class="order-progress gray-box clearfix">
-		<div class="order-progress-bg"></div>
-		<ul>
-			<li class="<!--[= $checkStatus(0,childOrderStatus)]-->"><div><i>&nbsp;</i>订单提交</div></li>
-			<li class="<!--[= $checkStatus(1,childOrderStatus)]-->"><div><i>&nbsp;</i>订单确认</div></li>
-			<li class="<!--[= $checkStatus(6,childOrderStatus)]-->"><div><i>&nbsp;</i>物资验收</div></li>
-			<li class="<!--[= $checkStatus(8,childOrderStatus)]-->"><div><i>&nbsp;</i>订单对账</div></li>
-			<li class="<!--[= $checkStatus(9,childOrderStatus)]-->"><div><i>&nbsp;</i>订单完成</div></li>
-		</ul>
-		<div class="order-progress-statu clearfix">
-			<div class="order-progress-text">
-				<table width="100%" cellspacing="0" cellpadding="0">
-				<col width="9%"/>
-					<tr>
-						<td>处理时间：</td>
-						<td><!--[= $formatDate(doTime, 'yyyy-MM-dd hh:mm:ss')]--></td>
-					</tr>
-					<tr>
-						<td>订单状态：</td>
-						<td><!--[= $getStatus(childOrderStatus)]--></td>
-					</tr>
-					<tr>
-						<td>备<span class="e2"></span>注：</td>
-						<td><!--[= remark || '--']--></td>
-					</tr>
-				</table>
-			</div>
-			<div class="order-operate-btns">
-				<!--[if(orderStatus == '-1' || orderStatus == '0') {]-->
-				<div id="btn1">
-					<a class="button btn-cuiban<!--[= (isRemaind == '1' ? ' disabled' : '')]-->" href="#"><!--[= (isRemaind == '1' ? ' 已催办' : '催办订单')]--></a>
-					<!--[if(cancelStatus == '1'){]-->
-					<a class="button btn-quxiao disabled" href="#">取消中</a>
-					<!--[}else{]-->
-					<a class="button btn-quxiao" href="#" data-status="<!--[= orderStatus]-->">取消订单</a>
-					<!--[}]-->
-					<!--[if(orderStatus == '0'){]-->
-					<a class="button btn-primary disabled" href="javascript:;">已签署合同</a>
-					<!--[}else{]-->
-					<a class="button btn-primary" href="../wrt/wrt-order-confirm.html?id=<!--[= id]-->" target="_blank">签署订单合同</a>
-					<!--[}]-->
-				</div>
-				<!--[}else if(orderStatus == '1') {]-->
-				<div id="btn2">
-					<a class="button btn-cuiban<!--[= (isRemaind == '1' ? ' disabled' : '')]-->" href="#"><!--[= (isRemaind == '1' ? ' 已催办' : '催办订单')]--></a>
-					<a class="button" href="my-project-detail.html?constractSn=<!--[= prjNo]-->">查阅订单合同</a>
-					<a class="button btn-queren<!--[= (isAllCheck == '1' ? '' : ' disabled')]-->" href="#" style="display: none;">订单确认完成</a>
-					<!--[if(isAllCheck == '2'){]-->
-					<!--[}]-->
-					<a class="button btn-primary btn-special" href="my-order-acceptance.html?orderSn=<!--[= orderSn]-->&id=<!--[= id]-->">我要验收部分订单批次</a>
-				</div>
-				<!--[}else if(orderStatus == '2') {]-->
-				<div id="btn3">
-					<a class="button" href="my-project-detail.html?constractSn=<!--[= prjNo]-->">查阅电子合同</a>
-					<a class="button btn-primary btn-yanshou<!--[= (isAllCheck == '1' ? '' : ' disabled')]-->" href="#" style="display: none;">完成验收</a>
-				</div>
-				<!--[}else if(orderStatus == '3') {]-->
-				<div id="btn4">
-					<a class="button" href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10048426" target="_blank">物融客服</a>
-					<a class="button" href="my-project-detail.html?constractSn=<!--[= prjNo]-->">查阅电子合同</a>
-					<a class="button btn-primary btn-duizhang<!--[= (isAllCheck == '1' ? '' : ' disabled')]-->" href="../wrt/wrt-bill-confirm.html?id=<!--[= id]-->">完成对账</a>
-				</div>
-				<!--[}else if(orderStatus == '4') {]-->
-				<div id="btn5">
-					<a class="button" href="my-project-detail.html?constractSn=<!--[= prjNo]-->">查阅电子合同</a>
-					<a class="button btn-primary" href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10048426" target="_blank">售后服务</a>
-				</div>
-				<!--[}]-->
-			</div>
-		</div>
-	</div>
 	<div class="order-info gray-box">
 		<div class="head-title">
 			<span>订单信息</span>
@@ -187,17 +116,7 @@
 						<div class="top-8"><!--[= $formatCurrency1(goodsList[i].checkNums)]--></div>
 						<div class="top-7"><!--[== $formatCurrency(goodsList[i].checkPrice)]--></div>
 
-						<!--[if(orderStatus == '0') {]-->
-						<div class="goods-button">&nbsp;</div>
-						<!--[}else if(orderStatus == '1'){]-->
-						<div class="goods-button"><a class="button btn-primary" href="my-order-sub.html?orderSn=<!--[= orderSn]-->&goodsId=<!--[= goodsList[i].goodsId]-->">查看订单批次</a></div>
-						<!--[}else if(orderStatus == '2'){]-->
-						<div class="goods-button"><a class="button btn-primary" href="my-order-acceptance.html?orderSn=<!--[= orderSn]-->&goodsId=<!--[= goodsList[i].goodsId]-->">分批验收</a></div>
-						<!--[}else if(orderStatus == '3'){]-->
-						<div class="goods-button"><a class="button btn-primary" href="my-order-reconciliations.html?orderSn=<!--[= orderSn]-->&goodsId=<!--[= goodsList[i].goodsId]-->">订单对账</a></div>
-						<!--[}else if(orderStatus == '4'){]-->
-						<div class="goods-button"><a class="button btn-primary" href="my-order-reconciliations.html?orderSn=<!--[= orderSn]-->&goodsId=<!--[= goodsList[i].goodsId]-->">订单对账</a></div>
-						<!--[}]-->
+						<div class="goods-button"><a class="button btn-primary" href="my-kid-order.html?id=<!--[= id || '--']-->">子订单列表</a></div>
 
 					</div>
 				<!--[}]-->
@@ -219,12 +138,6 @@
 	</div>
 	<div style="text-align:center;padding-bottom:15px;">
 		<div id="handle-button">
-		<!--[if(childOrderStatus == 1){]-->
-			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">发货验签</a>
-		<!--[}]-->
-		<!--[if(childOrderStatus == 6){]-->
-			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">到货验签</a>
-		<!--[}]-->
 			<a class="button" href="javascript:history.back()">返回</a>
 		</div>
 	</div>

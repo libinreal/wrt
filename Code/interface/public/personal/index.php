@@ -155,7 +155,7 @@
     <thead>
     <tr>
     <td>项目名称:&nbsp;&nbsp;<!--[= list[i].name || '--']--></td>
-    <td><a href="">查看合同详情</a></td>
+    <td><a href="my-contract-detail.html?contract_id=<!--[= list[i].id || '--']-->">查看合同详情</a></td>
     </tr>
     </thead>
     <tbody>

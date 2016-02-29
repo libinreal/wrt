@@ -24,7 +24,7 @@
 					<div class="order-list-col c2">项目编号</div>
 					<div class="order-list-col c3">项目名称</div>
 					<div class="order-list-col c4">订单状态</div>
-					<div class="order-list-col c5"></div>
+					<div class="order-list-col c5">下单时间</div>
 				</div>
 				<div class="order-list-content" id="zj-list"></div>
 			</div>
@@ -48,19 +48,12 @@
 
 <script id="zj-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<a href="my-order-detail.html?id=<!--[= list[i].id]-->" class="clearfix">
+	<a href="my-kid-order-detail.html?id=<!--[= list[i].id]-->" class="clearfix">
 		<div class="order-list-col c1"><!--[= list[i].orderSn || '--']--></div>
 		<div class="order-list-col c2"><!--[= list[i].prjNo || '--']--></div>
 		<div class="order-list-col c3"><!--[= list[i].prjName || '--']--></div>
 		<div class="order-list-col c4"><!--[= $getStatus(list[i].status)]--></div>
-		<div class="order-list-col c5">
-		<!--[if(list[i].allowCancel == 1) {]-->
-		<!--[if(list[i].cancelStatus == 1) {]-->
-			<button class="button btn-gray disabled" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消中</button>
-		<!--[}else{]-->
-			<button class="button btn-gray" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消订单</button>
-		<!--[}}]-->
-		</div>
+		<div class="order-list-col c5"><!--[= $formatDate(list[i].createAt, 1) || '--']--></div>
 	</a>
     <!--[}]-->
 </script>

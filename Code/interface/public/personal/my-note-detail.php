@@ -30,10 +30,6 @@
 			<span>票据信息</span>
 		</div>
 		<div class="info-border">
-			<div><span class="distance"></span><span class="distance"></span><span class="distance">累计已还金额：<!--[= has_repay || '--']--></span></div>
-			<div><span class="distance"></span><span class="distance">带追索权：<!--[= is_recourse || '--']--></span></div>
-			<div><span class="distance">付款账号：<!--[= pay_account || '--']--></span><span class="distance">收款账号：<!--[= receive_account || '--']--></span></div>
-			<div><span class="distance"></span><span class="distance"></span></div>
 			<table cellpadding="0" cellspacing="1">
 				<tr>
 				<th>票据编号：</th><td width=150><!--[= bill_num || '--']--></td><th>票据类型：</th><td><!--[= bill_type || '--']--></td><th>币别：</th><td><!--[= currency || '--']--></td><th>票面金额：</th><td><!--[= bill_amount || '--']--></td>
@@ -57,14 +53,11 @@
 				<th>ID：</th><td><!--[= bill_id || '--']--></td><th>票据状态：</th><td><!--[= status || '--']--></td><th>折后比例：</th><td><!--[= discount_rate || '--']-->%</td><th>折算比例：</th><td><!--[= discount_rate || '--']-->%</td>
 				</tr>
 				<tr>
-				<th colspan="2">ID：</th><td><!--[= bill_id || '--']--></td>
-				</tr>
-				<tr>
 				<th>备注：</th><td colspan="20"><!--[= remark || '--']--></td>
 				</tr>
 			</table>
 		</div>
-		<div style="text-align:center">
+		<div style="text-align:center;margin-bottom:10px;">
 		<a class="button btn-gray" href="javascript:history.back()">返回</a>
 		</div>		
 	</div>
