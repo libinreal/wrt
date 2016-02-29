@@ -31,6 +31,26 @@
 			</div>
 			<div class="order-list gray-box">
 				<div class="order-list-header clearfix">
+					<div style="height:10px;"></div>
+					<form>
+						<div><label>客户订单号：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
+						<label>合同名称：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
+						<label>订单状态：</label>
+						<select>
+							<option value="-1">全部</option>
+							<option value="0">已下单</option>
+							<option value="1">确认中</option>
+							<option value="2">验收中</option>
+							<option value="3">对账中</option>
+							<option value="4">已完成</option>
+							<option value="4">已完成</option>
+						</select>&nbsp;&nbsp;&nbsp;&nbsp;
+						<button class="button">查询</button>
+						</div>
+					</form>
+					<div style="height:10px;"></div>
+				</div>
+				<div class="order-list-header clearfix">
 					<div class="order-list-col c1">订单编号</div>
 					<div class="order-list-col c2">项目编号</div>
 					<div class="order-list-col c3">项目名称</div>

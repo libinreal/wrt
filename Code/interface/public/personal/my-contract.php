@@ -19,7 +19,18 @@
 				<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 			</div>	
 			
-			<div class="contract-list gray-box">
+			<div class="order-list gray-box">
+                <div class="order-list-header clearfix">
+                    <div style="height:10px;"></div>
+                    <form>
+                        <div><label>合同编号：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>合同名称：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button class="button">查询</button></div>
+                        <div><label>合同日期：</label>
+                        <input type="text" name=""> 到 <input type="text" name=""></div>
+                    </form>
+                    <div style="height:10px;"></div>
+                </div>
 				<div id="contract-list"></div>
 			</div>
 		</div>

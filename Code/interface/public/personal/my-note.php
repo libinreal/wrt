@@ -20,6 +20,26 @@
 			</div>	
 			<div class="order-list gray-box">
 				<div class="order-list-header clearfix">
+					<div style="height:10px;"></div>
+					<form>
+						<div><label>票据编号：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
+						<label>出票人：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
+						<label>票据状态：</label>
+						<select>
+							<option value="-1">全部</option>
+							<option value="0">未还</option>
+							<option value="1">已还</option>
+						</select>
+						</div>
+						<div style="height:10px;"></div>
+						<div><label>日期：</label>
+                        <input type="text" name=""> 到 <input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
+						<button class="button">查询</button>
+						</div>
+					</form>
+					<div style="height:10px;"></div>
+				</div>
+				<div class="order-list-header clearfix">
 					<div class="order-list-col c1">票据id</div>
 					<div class="order-list-col c2">票据编号</div>
 					<div class="order-list-col c3">票据类型</div>
