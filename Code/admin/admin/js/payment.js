@@ -112,6 +112,24 @@ var Payment = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
+				var row = "";
+				$.each(obj.content.file_0,function(key, value){
+					row += "<tr>";
+					row += createTd(value.upload_name);
+					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
+					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_id+"'>";
+					row += createTd(edit);
+				});
+				$("#left_list>tbody").html(row);
+				row ="";
+				$.each(obj.content.file_1,function(key, value){
+					row += "<tr>";
+					row += createTd(value.upload_name);
+					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
+					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_id+"'>";
+					row += createTd(edit);
+				});
+				$("#right_list>tbody").html(row);
 				$.each(obj.content.data, function(k,v){
 					if($("#"+k).length){
 						$("#"+k).text(v);

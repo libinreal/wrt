@@ -762,7 +762,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "content": {}
 		 *	}
 		 */
-		public function createOrderPayAction(){exit;
+		public function createOrderPayAction(){
 // 			print_r($_SESSION);die;
 			$content = $this->content;
 			$params = $content['parameters'];
@@ -1399,7 +1399,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 
 			//检查订单状态
-			$order_info_sql = 'SELECT `child_order_status`, `suppers_id` FROM ' . $order_info_table .
+			$order_info_sql = 'SELECT `child_order_status`, `suppers_id`,`shipping_fee_arr_saler`,`shipping_fee_send_saler`,`order_amount_send_saler`,`order_amount_arr_saler` ' .
+							  'FROM ' . $order_info_table .
 							  ' WHERE `order_id` = ' . $order_id;
 			$order_status = $GLOBALS['db']->getRow( $order_info_sql );
 			if( !$order_status ){
@@ -1423,6 +1424,35 @@ require(dirname(__FILE__) . '/includes/init.php');
 							make_json_response('', '0', '发货验签 成功');
 						else
 							make_json_response('', '-1', '发货验签 失败');
+						//********************    到货改价初始化 BEGIN *****************
+						$arr_data = array();
+						$arr_data['shipping_fee_arr_saler'] = $order_status['shipping_fee_send_saler'];
+						$arr_data['order_amount_arr_saler'] = $order_status['order_amount_send_saler']; 
+						
+						$arr_up_sql = 'UPDATE ' . $order_info_table . ' SET ';
+						foreach ($arr_data as $uk=>$uv) {
+							$arr_up_sql .= ' `' . $uk . '` = ' . $uv . ',';
+						}
+						$arr_up_sql = substr($arr_up_sql, 0, -1);
+						$arr_up_sql .= ' WHERE `order_id` = ' .$order_id . ' LIMIT 1';
+						$GLOBALS['db']->query( $arr_up_sql );
+
+						$order_goods_sql = 'SELECT `goods_number_send_saler`, `goods_number_arr_saler`, `goods_price_send_saler`, `goods_price_arr_saler` '.
+											' FROM ' . $order_goods_table . ' WHERE `order_id` = ' . $order_id;
+						$arr_data = array();
+
+						$arr_data['goods_number_arr_saler'] = $order_status['goods_number_send_saler'];
+						$arr_data['goods_price_arr_saler'] = $order_status['goods_price_send_saler']; 
+						
+						$arr_up_sql = 'UPDATE ' . $order_goods_table . ' SET ';
+						foreach ($arr_data as $uk=>$uv) {
+							$arr_up_sql .= ' `' . $uk . '` = ' . $uv . ',';
+						}
+						$arr_up_sql = substr($arr_up_sql, 0, -1);
+						$arr_up_sql .= ' WHERE `order_id` = ' .$order_id . ' LIMIT 1';
+						$GLOBALS['db']->query( $arr_up_sql );
+
+						//********************    到货改价初始化 END *****************
 					}					
 					break;
 				
