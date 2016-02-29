@@ -8,7 +8,6 @@ var Bill = {
 		"customer_name",
 		"drawer",
 		"acceptor",
-		"check_status",
 		"status",
 		"operate"
 	],

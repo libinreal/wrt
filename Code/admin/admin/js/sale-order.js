@@ -42,6 +42,7 @@ var SaleOrder = {
 		"attr",
 		"goods_price",
 		"goods_number",
+		"child_order_status",
 		"order_status",
 		"operate"
 	],
@@ -324,8 +325,12 @@ var SaleOrder = {
 								row += createTd(edit);
 								continue;
 							}
-							if(that.suborder_arr[i] == "order_status"){
+							if(that.suborder_arr[i] == "child_order_status"){
 								row += createTd(that.suborder_status[value["child_order_status"]]);
+								continue;
+							}
+							if(that.suborder_arr[i] == "order_status"){
+								row += createTd(that.order_status[value["order_status"]]);
 								continue;
 							}
 							if(value[that.suborder_arr[i]] != null){
@@ -406,8 +411,12 @@ var SaleOrder = {
 								row += createTd(edit);
 								continue;
 							}
-							if(that.suborder_arr[i] == "order_status"){
+							if(that.suborder_arr[i] == "child_order_status"){
 								row += createTd(that.suborder_status[value["child_order_status"]]);
+								continue;
+							}
+							if(that.suborder_arr[i] == "order_status"){
+								row += createTd(that.order_status[value["order_status"]]);
 								continue;
 							}
 							if(value[that.suborder_arr[i]] != null){

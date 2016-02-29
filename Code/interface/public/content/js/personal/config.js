@@ -59,7 +59,7 @@ define(function(require, exports, module) {
     config.myprojectdetail = config.server + '/customize/myprojectdetail';//我的工程定制详情
 
     config.newsList = config.server + '/notice/getannouncelist'; //获取公告
-    
+    config.userInfo = config.server + '/credit/userinfo'; //获取个人资料
     
     
     //订单状态（二期）

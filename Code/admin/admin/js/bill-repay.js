@@ -1,17 +1,10 @@
 var BillRepay = {
 	order_arr: [
 		"bill_repay_log_id",
-		"audit_status",
 		"create_by",
 		"create_time",
-		"modify_by",
-		"modify_time",
-		"audit_time",
-		"audit_by",
-		"currency_type",
 		"customer_name",
 		"repay_amount",
-		"recover_date",
 		"operate"
 	],
 	limit: 0,

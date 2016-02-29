@@ -13,13 +13,13 @@ define(function(require) {
     }
     //通过信用额度登记机构获取用户信息
     Ajax.custom({
-        url: config.mycreamt
+        url: config.userInfo
     }, function(response) {
         if (response.code != 0) {
             return;
         }
         var data = response.body;
-
+        console.log(data)
         if (tempIcon) {
             data.icon = config.getUserIcon(tempIcon); //用户头像
         }

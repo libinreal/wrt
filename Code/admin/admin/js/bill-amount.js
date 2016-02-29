@@ -1,17 +1,11 @@
 var BillAmount = {
 	order_arr: [
 		"bill_amount_log_id",
-		"audit_status",
 		"create_by",
 		"create_time",
-		"modify_by",
-		"modify_time",
-		"audit_time",
-		"audit_by",
 		"customer_name",
 		"amount",
 		"amount_type",
-		"bill_date",
 		"operate"
 	],
 	note_type: {
