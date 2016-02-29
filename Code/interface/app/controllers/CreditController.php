@@ -154,6 +154,28 @@ class CreditController extends ControllerBase
             "action" => "getcreamt"
         ));
     }
+    
+    
+    /**
+     * 个人中心第一部分信息
+     */
+    public function userinfoAction() 
+    {
+    	$userId = $this->get_user()->id;
+    	$userId = $userId ? $userId : $this->request->getPost('user_id');
+    	if (!$userId) {
+    		return ResponseApi::send(null, -1, 'does not get `user_id`');
+    	}
+    	
+    	//查询
+    	$data = Users::findFirst(array(
+    			'conditions' => 'id='.$userId, 
+    			'columns' => 'id,account,companyName,companyAddress,billAmountValid,cashAmountValid'
+    	))->toArray();
+    	
+    	return ResponseApi::send($data);
+    	die;
+    }
 
     /**
      * 追加信用额度申请 XYC-05

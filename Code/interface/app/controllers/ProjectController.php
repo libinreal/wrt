@@ -17,30 +17,30 @@ class ProjectController extends ControllerBase
 	public function getListAction() {
         $customNo = $this->get_user()->customNo;
         $sqlstatement = "select
-        distinct contract.id as id,
-        contract.conFnum as prjNo,
-        contract.conName as prjName,
-        contract.conAmt as price,
-        contract.endDate as deadline,
+        distinct contract.contract_id as id,
+        contract.customer_id as prjNo,
+        contract.contract_name as prjName,
+        contract.contract_amount as price,
+        contract.end_time as deadline,
         (
             select count(order_recommend.id)
             from order_recommend
-            where order_recommend.conFnum = contract.conFnum and order_recommend.cusFnum= '".$customNo."')
+            where order_recommend.conFnum = contract.customer_id and order_recommend.cusFnum= '".$customNo."')
         as recommand
         from contract
-        where contract.cusFnum= '".$customNo."'";
+        where contract.customer_id= '".$customNo."'";
 
         $result1 = $this->get_db()->fetchAll($sqlstatement);
 
         $sqlstatement2= "select
-        distinct contract.id as id,
-        contract.conFnum as prjNo,
-        contract.conName as prjName,
-        contract.conAmt as price,
-        contract.endDate as deadline,
+        distinct contract.contract_id as id,
+        contract.customer_id as prjNo,
+        contract.contract_name as prjName,
+        contract.contract_amount as price,
+        contract.end_time as deadline,
         order_recommend.id as recommand
-        from contract join order_recommend on contract.conFnum = order_recommend.conFnum
-         and contract.cusFnum!= '".$customNo."' and order_recommend.cusFnum= '".$customNo."'";
+        from contract join order_recommend on contract.customer_id = order_recommend.conFnum
+         and contract.customer_id!= '".$customNo."' and order_recommend.cusFnum= '".$customNo."'";
 
         $result2 = $this->get_db()->fetchAll($sqlstatement2);
         $arr = array_merge($result1,$result2);
