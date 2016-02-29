@@ -1491,6 +1491,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					$shipping = json_decode( $order_info['shipping_info'], true);
 					$shipping['company_name'] = urldecode( $shipping['company_name'] );
+					$shipping['shipping_num'] = urldecode( $shipping['shipping_num'] );
+					$shipping['tel'] = urldecode( $shipping['tel'] );
 				}
 
 				//供应商
@@ -2033,8 +2035,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 			
 			$shipping_info['company_name'] = urlencode($company_name);
-			$shipping_info['shipping_num'] = $shipping_num;
-			$shipping_info['tel'] = $tel;
+			$shipping_info['shipping_num'] = urlencode($shipping_num);
+			$shipping_info['tel'] = urlencode($tel);
 			$shipping_info['shipping_time'] = $shipping_time;
 
 			$shippinf_info_str = json_encode( $shipping_info );

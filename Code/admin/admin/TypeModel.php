@@ -107,7 +107,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case 'users':
 					$sql = 'SELECT `user_id`,`user_name`,`companyName`,`customNo` FROM ' . $GLOBALS['ecs']->table('users') .
-						   ' WHERE `user_name` IS NOT NULL';
+						   ' WHERE `user_name` IS NOT NULL GROUP BY `companyName`';
 					break;
 				case 'admin_users':
 					$sql = 'SELECT `user_id`,`user_name` FROM ' . $GLOBALS['ecs']->table('admin_user');

@@ -135,9 +135,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 				}
 				if( isset( $like["mobile"] ) ){
 					if( !$where_str )
-						$where_str = " WHERE `mobile_phone` like '%" . trim( $like["mobile"] ) . "%'";
+						$where_str = " WHERE `contactsPhone` like '%" . trim( $like["mobile"] ) . "%'";
 					else
-						$where_str .= " AND `mobile_phone` like '%" . trim( $like["mobile"] ) . "%'";
+						$where_str .= " AND `contactsPhone` like '%" . trim( $like["mobile"] ) . "%'";
 				}
 			}
 
