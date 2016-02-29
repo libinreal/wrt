@@ -102,8 +102,8 @@ class NoteController extends ControllerBase
 		
 		if ($data->contract_id) {
 			$contract = ContractModel::findFirst(array(
-					'conditions' => 'contract_id='.$data->contract_id, 
-					'columns'    => 'contract_id,contract_num'
+					'conditions' => 'id='.$data->contract_id, 
+					'columns'    => 'id,name'
 			));
 			$data->contract_num = $contract->contract_num;
 		}
