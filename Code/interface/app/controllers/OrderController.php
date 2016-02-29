@@ -5,7 +5,6 @@ use PhpRudder\Http\ResponseApi;
 
 class OrderController extends ControllerBase
 {
-
     public function indexAction()
     {
     	$this->persistent->parameters = null;
@@ -21,20 +20,36 @@ class OrderController extends ControllerBase
 		$forward = $this->request->get('forward', 'int');
 		$parentId = $this->request->get('parent_id', 'int');
 		$userId = $this->get_user()->id;
+		
+		//搜索条件
+		$orderSn = $this->request->getPost('order_sn');
+		$contractName = $this->request->getPost('contract_name');
+		$orderStatus = $this->request->getPost('order_status');
+		
+		//获取客户名称
+		$users = Users::findFirst(array(
+				'conditions' => 'id='.$userId, 
+				'columns' => 'companyName'
+		))->toArray();
+		$companyName = $users['companyName'];
+		
+		//查询订单
 		$criteria = OrderInfo::query();
 		$criteria->leftJoin('OrderInfo', 'OI.orderSn LIKE CONCAT(OrderInfo.orderSn, "-%")', 'OI');
 		$criteria->leftJoin('ContractModel', 'C.num = OrderInfo.contractSn', 'C');
 		$criteria->where('OrderInfo.userId = :userId:', compact('userId'));
+		$criteria->andWhere('C.type=1'); //销售合同
 		if (!$parentId) {
 			$criteria->andWhere('OrderInfo.parentOrderId = 0');
 		} else {
 			$criteria->andWhere('OrderInfo.parentOrderId = '.intval($parentId));
 		}
-		
+		/* 
 		$criteria->notInWhere('OrderInfo.status', array(5, 6));
 		if ($status) {
 			$criteria->andWhere('OrderInfo.status = :status:' , compact('status'));
 		}
+		 */
 		if($forward) {
 			$criteria->andWhere('OrderInfo.createAt > :createAt:', compact('createAt'));
 			$criteria->orderBy('OrderInfo.createAt ASC');
@@ -42,12 +57,25 @@ class OrderController extends ControllerBase
 			$criteria->andWhere('OrderInfo.createAt < :createAt:', compact('createAt'));
 			$criteria->orderBy('OrderInfo.createAt DESC');
 		}
+		
+		//搜索
+		if ($orderSn) {
+			$criteria->andWhere('OrderInfo.orderSn LIKE "%'.$orderSn.'%"');
+		}
+		if ($contractName) {
+			$criteria->andWhere('C.name LIKE "%'.$contractName.'%"');
+		}
+		if ($orderStatus >= 0 && isset($orderStatus)) {
+			$criteria->andWhere('OrderInfo.status = '.$orderStatus);
+		}
+		
 		$criteria->limit($size);
 		$criteria->columns('DISTINCT OrderInfo.id,
 				OrderInfo.orderSn,
 				C.num prjNo,
 				C.name prjName,
 				OrderInfo.status,
+				OrderInfo.orderAmount,
 				IF((OI.id > 0 OR OrderInfo.status >=2), 0, 1) allowCancel,
 				OrderInfo.createAt');
 		$result = $criteria->execute();
@@ -71,17 +99,77 @@ class OrderController extends ControllerBase
                     $order['cancelStatus'] = 2;
                 }
             }
+            $order['company_name'] = $companyName;
 		}
+		
 		return ResponseApi::send($orderList);
 	}
 
+	
+	
+	/**
+	 * 订单详情
+	 */
+	public function getinfoAction() {
+		$orderId = $this->request->get('order_id');
+		$orderId = intval($orderId);
+		if (!isset($orderId) || !$orderId) {
+			return ResponseApi::send(null, -1, 'doesnot get `order_id`');
+		}
+		
+		//订单信息
+		$orderinfo = OrderInfo::query();
+		$orderinfo->leftjoin('Users', 'U.id=OrderInfo.userId', 'U');
+		$orderinfo->leftjoin('ContractModel', 'C.num=OrderInfo.contractSn', 'C');
+		$orderinfo->where('OrderInfo.id='.$orderId);
+		$orderinfo->columns('
+				OrderInfo.id, 
+				OrderInfo.orderSn, 
+				OrderInfo.status, 
+				OrderInfo.createAt, 
+				OrderInfo.contractSn, 
+				OrderInfo.userId, 
+				U.id, 
+				U.account,
+				U.companyName, 
+				C.id contid, 
+				C.name contName, 
+				C.num contNum, 
+				OrderInfo.invType, 
+				OrderInfo.invPayee, 
+				OrderInfo.invContent, 
+				OrderInfo.name consignee, 
+				OrderInfo.phone, 
+				OrderInfo.address, 
+				OrderInfo.tag
+			');
+		$result = $orderinfo->execute();
+		$result = $result->toArray();
+		$info = $result[0];
+		
+		//订单下的物料
+		$contractId = $info['contid'];
+		$conteg = ContractCategory::query();
+		$conteg->leftjoin('Category', 'C.cat_id=ContractCategory.category_id', 'C');
+		$conteg->where('ContractCategory.contract_id='.$info['contid']);
+		$conteg->columns('
+				C.cat_id, 
+				C.cat_name
+			');
+		$conteg->execute();
+		print_r($info);
+		die;
+	}
+	
+	
+	
 	/**
 	 * 获取订单详情及状态 DDGL-02
 	 */
 	public function getDetailAction() {
 		$id = $this->request->get('id', 'int');
 		if(!$id) {
-			return ResponseApi::send(null, Message::$_ERROR_LOGIC, "数据格式不合法");
+			return ResponseApi::send(null, -1, 'doesnot get `id`');
 		}
 		$orderDetail = array();
 		$builder = $this->modelsManager->createBuilder();
