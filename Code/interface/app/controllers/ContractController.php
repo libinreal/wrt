@@ -173,6 +173,28 @@ class ContractController extends ControllerBase
      * 合同详情附件下载
      */
     public function downloadPdfAction() {
+    	$fileName = $this->request->get('url');
+    	if (!$fileName) {
+    		exit('抱歉，无法获取文件名！');
+    	}
     	
+    	//文件路径
+    	$baseDir = pathinfo(getcwd(), PATHINFO_DIRNAME);
+    	$int = strpos($baseDir, 'interface');
+    	$dir = substr($baseDir, 0, $int);
+    	$dirName = $dir.'admin\data\contract\\'.$fileName;
+    	if (!file_exists($dirName)) {
+    		exit('抱歉，文件不存在！');
+    	}
+    	
+    	//下载文件
+    	$file = fopen($dirName, 'r');
+    	Header("Content-type: application/octet-stream");
+    	Header("Accept-Ranges: bytes");
+    	Header("Accept-Length: ".filesize($dirName));
+    	Header("Content-Disposition: attachment; filename=" . $fileName);
+    	echo fread($file,filesize($dirName));
+    	fclose($file);
+    	exit;
     }
 }
