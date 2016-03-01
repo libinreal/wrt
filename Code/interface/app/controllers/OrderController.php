@@ -39,12 +39,12 @@ class OrderController extends ControllerBase
 		$criteria->leftJoin('ContractModel', 'C.num = OrderInfo.contractSn', 'C');
 		$criteria->where('OrderInfo.userId = :userId:', compact('userId'));
 		$criteria->andWhere('C.type=1'); //销售合同
-		if (!$parentId) {
+		/* if (!$parentId) {
 			$criteria->andWhere('OrderInfo.parentOrderId = 0');
 		} else {
 			$criteria->andWhere('OrderInfo.parentOrderId = '.intval($parentId));
 		}
-		/* 
+		
 		$criteria->notInWhere('OrderInfo.status', array(5, 6));
 		if ($status) {
 			$criteria->andWhere('OrderInfo.status = :status:' , compact('status'));
@@ -192,33 +192,197 @@ class OrderController extends ControllerBase
 		$goodsObj->where('Goods.id IN('.implode(',', $goodsId).')');
 		$goodsObj->columns('
 				Goods.id, 
+				Goods.cat_id, 
 				S.supplier
 			');
 		$result = $goodsObj->execute();
 		$suppliers = $result->toArray();
+		$cateId = array();
+		$i = 0;
 		foreach ($hostGoods as $k=>$v) {
 			foreach ($suppliers as $sk=>$sv) {
 				if ($sv['id'] == $v['goodsId']) {
 					$hostGoods[$k]['suppliers'] = $sv['supplier'];
+					$hostGoods[$k]['cat_id'] = $sv['cat_id'];
+					$cateId[$i] = $sv['cat_id'];
+					$i++;
 				}
 			}
 		}
 		
-		//获取物料信息
-		$category = Category::query();
-		$category->leftjoin('goods_type', 'G.code=Category.code', 'G');
-		
-		
-		print_r($hostGoods);
-		die;
-		
-		
-		//商品
-		$goods = Goods::find(array(
-				'conditions' => 'id IN('.implode(',', $goods).')', 
-				'columns' => 'id,name'
+		//获取商品属性值
+		$attrValue = GoodsAttr::find(array(
+				'conditions' => 'goodsId IN('.implode(',', $goodsId).')', 
+				'columns' => 'goodsId,attr_value'
 		))->toArray();
-		print_r($goods);
+		$attributes = array();
+		$attrString = '';
+		foreach ($attrValue as $v) {
+			$attrString .= $v['attr_value'].'/';
+			$attributes[$v['goodsId']] = substr($attrString, 0, -1);
+		}
+		
+		//获取物料代码
+		$category = Category::find(array(
+				'conditions' => 'id IN('.implode(',', $cateId).')',
+				'columns' => 'id,code'
+		))->toArray();
+		
+		
+		
+		foreach ($hostGoods as $k=>$v) {
+			//属性
+			foreach ($attributes as $sk=>$sv) {
+				if ($sk == $v['goodsId']) {
+					$hostGoods[$k]['attributes'] = $sv;
+				}
+			}
+			
+			//物料代码
+			foreach ($category as $ck=>$cv) {
+				if ($cv['id'] == $v['cat_id']) {
+					$hostGoods[$k]['code'] = $cv['code'];
+				}
+			}
+		}
+		
+		$info['goods'] = $hostGoods;
+		return ResponseApi::send($info);
+	}
+	
+	
+	/**
+	 * 子订单列表
+	 */
+	public function childrenlistAction() {
+		$orderId = $this->request->get('order_id');
+		$orderId = intval($orderId);
+		if (!isset($orderId) || !$orderId) {
+			return ResponseApi::send(null, -1, 'doesnot get `order_id`');
+		}
+		
+		//子订单查询
+		$orders = OrderInfo::query();
+		$orders->leftjoin('OrderGoods', 'OG.orderId=OrderInfo.id', 'OG');
+		$orders->leftjoin('Goods', 'G.id=OG.goodsId', 'G');
+		$orders->leftjoin('Category', 'C.id=G.cat_id', 'C');
+		$orders->leftjoin('ContractModel', 'CM.num=OrderInfo.contractSn', 'CM');
+		$orders->where('OrderInfo.parentOrderId='.$orderId);
+		$orders->columns('
+				OrderInfo.id, 
+				OrderInfo.createAt, 
+				OrderInfo.orderSn, 
+				OrderInfo.status, 
+				OrderInfo.contractSn, 
+				OG.goodsPrice, 
+				OG.nums, 
+				G.id goodsId, 
+				G.name, 
+				C.name cat_name, 
+				CM.name contract_name
+			');
+		$result = $orders->execute();
+		$info = $result->toArray();
+		
+		$goodsId = array();
+		foreach ($info as $v) {
+			$goodsId[] = $v['goodsId'];
+		}
+		$goodsId = array_unique($goodsId);
+		
+		//商品属性
+		$attributes = GoodsAttr::query();
+		$attributes->where('goodsId IN('.implode(',', $goodsId).')');
+		$attributes->columns('
+				goodsId, 
+				attr_value
+			');
+		$result = $attributes->execute();
+		$attrValue = $result->toArray();
+		
+		$attributes = array();
+		$attrString = '';
+		foreach ($attrValue as $v) {
+			$attrString .= $v['attr_value'].'/';
+			$attributes[$v['goodsId']] = substr($attrString, 0, -1);
+		}
+		
+		foreach ($info as $k=>$v) {
+			foreach ($attributes as $sk=>$sv) {
+				if ($sk == $v['goodsId']) {
+					$info[$k]['attributes'] = $sv;
+				}
+			}
+			$info[$k]['createAt'] = date('Y/m/d', $v['createAt']);
+		}
+		return ResponseApi::send($info);
+	}
+	
+	
+	
+	/**
+	 * 子订单详情
+	 */
+	public function childreninfoAction() {
+		$childrenId = $this->request->get('order_id');
+		$childrenId = intval($childrenId);
+		if (!isset($childrenId) || !$childrenId) {
+			return ResponseApi::send(null, -1, 'doesnot get `order_id`');
+		}
+		
+		//查询订单详情
+		$order = OrderInfo::query();
+		$order->leftjoin('ContractModel', 'CM.num=OrderInfo.contractSn', 'CM');
+		$order->leftjoin('Suppliers', 'S.id=OrderInfo.suppersId', 'S');
+		$order->leftjoin('Users', 'U.id=OrderInfo.userId', 'U');
+		$order->leftjoin('OrderGoods', 'OG.orderId=OrderInfo.id', 'OG');
+		$order->leftjoin('Goods', 'G.id=OG.goodsId', 'G');
+		$order->where('OrderInfo.id='.$childrenId);
+		$order->columns('
+				OrderInfo.orderSn, 
+				OrderInfo.childOrderStatus, 
+				FROM_UNIXTIME(OrderInfo.createAt, "%Y/%m/%d") createAt, 
+				OrderInfo.invType, 
+				OrderInfo.invPayee, 
+				OrderInfo.invContent, 
+				OrderInfo.name consignee, 
+				OrderInfo.address, 
+				OrderInfo.phone, 
+				OrderInfo.tag, 
+				OrderInfo.shippingInfo, 
+				OrderInfo.shippingLog, 
+				OrderInfo.financialSendRate, 
+				OrderInfo.financialArrRate, 
+				OrderInfo.shippingFeeSendBuyer, 
+				OrderInfo.shippingFeeArrBuyer, 
+				OrderInfo.orderAmountSendBuyer, 
+				OrderInfo.orderAmountArrBuyer, 
+				CM.num contract_num, 
+				CM.name contract_name, 
+				S.supplier, 
+				U.account, 
+				OG.goodsId, 
+				OG.goodsNumberSendBuyer, 
+				OG.goodsNumberArrBuyer, 
+				OG.goodsPriceSendBuyer, 
+				OG.goodsPriceArrBuyer, 
+				G.name goods_name
+			');
+		$result = $order->execute();
+		$result = $result->toArray();
+		$info = $result[0];
+		
+		$attributes = GoodsAttr::find(array(
+				'conditions' => 'goodsId='.$info['goodsId'], 
+				'columns' => 'goodsId,attr_value'
+		))->toArray();
+		$attrValue = '';
+		foreach ($attributes as $v) {
+			$attrValue .= $v['attr_value'].'/';
+		}
+		$attrValue = substr($attrValue, 0, -1);
+		$info['attributes'] = $attrValue;
+		return ResponseApi::send($info);
 	}
 	
 	
