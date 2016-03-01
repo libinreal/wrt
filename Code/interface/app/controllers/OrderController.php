@@ -39,6 +39,7 @@ class OrderController extends ControllerBase
 		$criteria->leftJoin('ContractModel', 'C.num = OrderInfo.contractSn', 'C');
 		$criteria->where('OrderInfo.userId = :userId:', compact('userId'));
 		$criteria->andWhere('C.type=1'); //销售合同
+		$criteria->andWhere('OrderInfo.parentOrderId=0');
 		/* if (!$parentId) {
 			$criteria->andWhere('OrderInfo.parentOrderId = 0');
 		} else {
@@ -255,6 +256,10 @@ class OrderController extends ControllerBase
 	 * 子订单列表
 	 */
 	public function childrenlistAction() {
+		$createAt = $this->request->get('createAt', 'int') ?: time();
+		$size = $this->request->get('size', 'int') ?: parent::SIZE;
+		$forward = $this->request->get('forward', 'int');
+		
 		$orderId = $this->request->get('order_id');
 		$orderId = intval($orderId);
 		if (!isset($orderId) || !$orderId) {
@@ -268,6 +273,16 @@ class OrderController extends ControllerBase
 		$orders->leftjoin('Category', 'C.id=G.cat_id', 'C');
 		$orders->leftjoin('ContractModel', 'CM.num=OrderInfo.contractSn', 'CM');
 		$orders->where('OrderInfo.parentOrderId='.$orderId);
+		
+		if($forward) {
+			$orders->andWhere('OrderInfo.createAt > :createAt:', compact('createAt'));
+			$orders->orderBy('OrderInfo.createAt ASC');
+		} else {
+			$orders->andWhere('OrderInfo.createAt < :createAt:', compact('createAt'));
+			$orders->orderBy('OrderInfo.createAt DESC');
+		}
+		
+		$orders->limit($size);
 		$orders->columns('
 				OrderInfo.id, 
 				OrderInfo.createAt, 
