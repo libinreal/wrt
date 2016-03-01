@@ -22,9 +22,9 @@ class OrderController extends ControllerBase
 		$userId = $this->get_user()->id;
 		
 		//搜索条件
-		$orderSn = $this->request->getPost('order_sn');
-		$contractName = $this->request->getPost('contract_name');
-		$orderStatus = $this->request->getPost('order_status');
+		$orderSn = $this->request->get('order_sn');
+		$contractName = $this->request->get('contract_name');
+		$orderStatus = $this->request->get('order_status');
 		
 		//获取客户名称
 		$users = Users::findFirst(array(
@@ -147,18 +147,78 @@ class OrderController extends ControllerBase
 		$result = $result->toArray();
 		$info = $result[0];
 		
-		//订单下的物料
-		$contractId = $info['contid'];
-		$conteg = ContractCategory::query();
-		$conteg->leftjoin('Category', 'C.cat_id=ContractCategory.category_id', 'C');
-		$conteg->where('ContractCategory.contract_id='.$info['contid']);
-		$conteg->columns('
-				C.cat_id, 
-				C.cat_name
+		//订单下的子订单
+		$orders = OrderInfo::find(array(
+				'conditions' => 'parentOrderId='.$orderId, 
+				'columns' => 'id'
+		))->toArray();
+		foreach ($orders as &$order) {
+			$order = $order['id'];
+		}
+		$orders[] = $orderId;
+		
+		//订单商品
+		$goods = OrderGoods::find(array(
+				'conditions' => 'orderId IN('.implode(',', $orders).')', 
+				'columns' => 'orderId,goodsId,goodsName,nums,goodsPrice'
+		))->toArray();
+		$hostGoods = array();
+		$lineGoods = array();
+		foreach ($goods as $k=>$v) {
+			if ($v['orderId'] == $orderId) {
+				$hostGoods[] = $v;
+			} else {
+				$lineGoods[] = $v;
+			}
+		}
+		
+		//拆单数量
+		$goodsId = array();
+		foreach ($hostGoods as $k=>$v) {
+			foreach ($lineGoods as $lk=>$lv) {
+				if ($lv['goodsId'] == $v['goodsId']) {
+					@$hostGoods[$k]['dnums'] += $v['nums'];
+				} else {
+					@$hostGoods[$k]['dnums'] = 0;
+				}
+			}
+			$hostGoods[$k]['totalPrice'] = $v['nums']*$v['goodsPrice']; //价格小计
+			$goodsId[] = $v['goodsId'];
+		}
+		
+		//商品供应商信息
+		$goodsObj = Goods::query();
+		$goodsObj->leftjoin('suppliers', 'S.id=Goods.id', 'S');
+		$goodsObj->where('Goods.id IN('.implode(',', $goodsId).')');
+		$goodsObj->columns('
+				Goods.id, 
+				S.supplier
 			');
-		$conteg->execute();
-		print_r($info);
+		$result = $goodsObj->execute();
+		$suppliers = $result->toArray();
+		foreach ($hostGoods as $k=>$v) {
+			foreach ($suppliers as $sk=>$sv) {
+				if ($sv['id'] == $v['goodsId']) {
+					$hostGoods[$k]['suppliers'] = $sv['supplier'];
+				}
+			}
+		}
+		
+		//获取物料信息
+		$category = Category::query();
+		$category->leftjoin('goods_type', 'G.code=Category.code', 'G');
+		
+		
+		print_r($hostGoods);
 		die;
+		
+		
+		//商品
+		$goods = Goods::find(array(
+				'conditions' => 'id IN('.implode(',', $goods).')', 
+				'columns' => 'id,name'
+		))->toArray();
+		print_r($goods);
 	}
 	
 	
