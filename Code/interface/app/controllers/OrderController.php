@@ -178,7 +178,7 @@ class OrderController extends ControllerBase
 		foreach ($hostGoods as $k=>$v) {
 			foreach ($lineGoods as $lk=>$lv) {
 				if ($lv['goodsId'] == $v['goodsId']) {
-					@$hostGoods[$k]['dnums'] += $v['nums'];
+					@$hostGoods[$k]['dnums'] += $lv['nums'];
 				} else {
 					@$hostGoods[$k]['dnums'] = 0;
 				}

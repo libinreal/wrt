@@ -25,6 +25,12 @@ class ContractController extends ControllerBase
         $currentId = $this->request->get('contract_id', 'int') ?: 0;
         $forward = $this->request->get('forward', 'int');
         
+        //
+        $contractSN = $this->request->get('contract_sn');
+        $contractName = $this->request->get('contract_name');
+        $startTime = $this->request->get('start');
+        $endTime = $this->request->get('end');
+        
         if (!$customerId) {
         	return ResponseApi::send('', -1, '合同不存在！');
         }
@@ -60,6 +66,25 @@ class ContractController extends ControllerBase
         	if (!empty($condition)) $condition .= ' AND ';
         	$condition .= 'id<"'.$currentId.'"';
         }
+        
+        //搜索
+        if ($contractSN) {
+        	if (!empty($condition)) $condition .= ' AND ';
+        	$condition .= 'num LIKE "%'.$contractSN.'%"';
+        }
+        if ($contractName) {
+        	if (!empty($condition)) $condition .= ' AND ';
+        	$condition .= 'name LIKE "%'.$contractName.'%"';
+        }
+        if ($startTime) {
+        	if (!empty($condition)) $condition .= ' AND ';
+        	$condition .= 'startTime >= '.strtotime($startTime);
+        }
+        if ($endTime) {
+        	if (!empty($condition)) $condition .= ' AND ';
+        	$condition .= 'endTime <= '.strtotime($endTime);
+        }
+        
         
         $data = ContractModel::query()
         		->where($condition)
@@ -101,13 +126,27 @@ class ContractController extends ControllerBase
     		$userId[] = $v['id'];
     	}
     	
+    	//查询合同
     	$data = ContractModel::findFirst(array(
-    			'conditions' => 'id='.$contractId.' AND userId in('.implode(',', $userId).')'
+    			'conditions' => 'id='.$contractId.' AND userId in('.implode(',', $userId).')' 
     	));
     	if (!$data) {
     		return ResponseApi::send(null, -1, '该合同不存在！');
     	}
     	
+    	//合同下的物料类型
+    	$category = ContractCategory::query();
+    	$category->leftjoin('Category', 'C.id=ContractCategory.category_id', 'C');
+    	$category->where('ContractCategory.contract_id='.$contractId);
+    	$category->columns('
+    			C.id cat_id, 
+    			C.name cat_name
+    		');
+    	$result = $category->execute();
+    	$category = $result->toArray();
+    	
+    	
+    	//解析数据
     	$status = array('作废', '生效');
     	$type = array('', '销售合同', '采购合同');
     	$signType = array('平台到银行', '银行到平台');
@@ -122,7 +161,18 @@ class ContractController extends ControllerBase
     	$data->startTime = date('Y-m-d', $data->startTime);
     	$data->endTime = date('Y-m-d', $data->endTime);
     	$data->createTime = date('Y-m-d', $data->createTime);
+    	$data = $data->toArray();
+    	$data['category'] = $category;
     	
     	return ResponseApi::send($data);
+    }
+    
+    
+    
+    /**
+     * 合同详情附件下载
+     */
+    public function downloadPdfAction() {
+    	
     }
 }
