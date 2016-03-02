@@ -402,8 +402,8 @@ class OrderController extends ControllerBase
 		$attrValue = substr($attrValue, 0, -1);
 		$info['attributes'] = $attrValue;
 		
-		$info['shippingInfo'] = json_decode($info['shippingInfo']);
-		$info['shippingLog'] = json_decode($info['shippingLog']);
+		$info['shippingInfo'] = json_decode(urldecode($info['shippingInfo']));
+		$info['shippingLog'] = json_decode(urldecode($info['shippingLog']));
 		
 		return ResponseApi::send($info);
 	}
