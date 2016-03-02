@@ -5,6 +5,25 @@
 	<title>子订单-个人中心</title>
 	<link rel="stylesheet" href="../content/css/common.css" />
 	<link rel="stylesheet" href="../content/css/personal.css" />
+	<style>
+	.order-list-col{
+		width: 145px;
+	}
+	#zj-list table{
+
+	}
+	#zj-list table td{
+		text-align: center;
+		width: 145px;
+		height: 30px;
+		line-height: 30px;
+		border-bottom: 1px solid #ccc;
+		padding: 5px 0;
+	}
+	#zj-list table td a{
+		display: inline;
+	}
+	</style>
 </head>
 <body>
 
@@ -19,12 +38,13 @@
 				<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 			</div>
 			<div class="order-list gray-box">
-				<div class="order-list-header clearfix">
-					<div class="order-list-col c1">订单编号</div>
-					<div class="order-list-col c2">项目编号</div>
-					<div class="order-list-col c3">项目名称</div>
-					<div class="order-list-col c4">订单状态</div>
-					<div class="order-list-col c5">下单时间</div>
+				<div class="order-list-header clearfix" style="background:#ededed;">
+					<div class="order-list-col c1">拆单时间</div>
+					<div class="order-list-col c2">对应合同号</div>
+					<div class="order-list-col c3">拆分订单号</div>
+					<div class="order-list-col c7">单价</div>
+					<div class="order-list-col c8">数量</div>
+					<div class="order-list-col c9">订单状态</div>
 				</div>
 				<div class="order-list-content" id="zj-list"></div>
 			</div>
@@ -48,13 +68,47 @@
 
 <script id="zj-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<a href="my-kid-order-detail.html?id=<!--[= list[i].id]-->" class="clearfix">
-		<div class="order-list-col c1"><!--[= list[i].orderSn || '--']--></div>
-		<div class="order-list-col c2"><!--[= list[i].prjNo || '--']--></div>
-		<div class="order-list-col c3"><!--[= list[i].prjName || '--']--></div>
-		<div class="order-list-col c4"><!--[= $getStatus(list[i].status)]--></div>
-		<div class="order-list-col c5"><!--[= $formatDate(list[i].createAt, 1) || '--']--></div>
-	</a>
+    	<div href="javascript:void(0);" class="clearfix">
+    	<table cellpadding="0">
+    	<tr>
+    		<td><!--[= list[i].createAt || '--']--></td>
+    		<td><!--[= list[i].contract_name || '--']--></td>
+    		<td><!--[= list[i].orderSn || '--']--></td>
+    		<td><!--[= list[i].goodsPrice || '--']--></td>
+    		<td><!--[= list[i].nums || '--']--></td>
+    		<td><!--[= $getStatus(list[i].status)]--></td>
+    	</tr>
+    	<tr>
+    		<td colspan="4">
+    		<span style='font-weight:bold'>物料名称：</span>
+    		<!--[= list[i].name || '--']-->	
+    		</td>
+    		<td colspan="2" style="text-align:right;">
+    		<span style='font-weight:bold'>订单操作：</span>
+			<a href="my-kid-order-detail.html?id=<!--[= list[i].id]-->">子订单详情</a>
+		<!--[if(list[i].allowCancel == 1) {]-->
+		<!--[if(list[i].cancelStatus == 1) {]-->
+			<button class="button btn-gray disabled" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消中</button>
+		<!--[}else{]-->
+			<button class="button btn-gray" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消订单</button>
+		<!--[}}]-->
+    		</td>
+    	</tr>
+    	<tr>
+    		<td colspan="2">
+    		<span style='font-weight:bold'>物料类别：</span>
+    		<!--[= list[i].cat_name || '--']-->	
+    		</td>
+    		<td colspan="2">
+    		<span style='font-weight:bold'>规格/型号/牌号：</span>
+    		<!--[= list[i].attributes || '--']-->	
+    		</td>
+    	</tr>
+    	<tr>
+    		<td colspan="20" style="background:#ededed;">&nbsp;</td>
+    	</tr>
+    	</table>
+    	</div>
     <!--[}]-->
 </script>
 

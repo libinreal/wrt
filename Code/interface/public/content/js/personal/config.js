@@ -37,7 +37,10 @@ define(function(require, exports, module) {
     config.checkApply     = config.server + '/applyCredit/updateStatus';//审核自有授信
 
     config.getlist = config.server + '/order/getlist';//我的订单-列表
-    config.getdetail = config.server + '/order/getdetail';//我的订单-详情
+    config.getdetail = config.server + '/order/getinfo';//我的订单-详情
+    config.getchildrenlist = config.server + '/order/childrenlist';//我的子订单-列表
+    config.getchildreninfo = config.server + '/order/childreninfo';//我的子订单-详情
+    config.uchildstatus = config.server + '/order/uchildstatus';//我的子订单-更改状态
     config.getbatchs = config.server + '/order/getbatchs';//我的订单-批次详情
     config.orderlogistics = config.server + '/order/getlogistics';//我的订单-物流信息
     config.orderustatus = config.server + '/order/ustatus';//我的订单-提交订单状态
@@ -76,13 +79,14 @@ define(function(require, exports, module) {
     		'1' : '已确认', 
     		'2' : '客户已验签(发货)', 
     		'3' : '平台已验签(发货)', 
-    		'4' : '供应商已验签(发货)', 
-    		'5' : '平台已验签(发货)', 
-    		'6' : '客户已验签(到货)', 
-    		'7' : '平台已验签(到货)', 
-    		'8' : '供应商已验签(到货)', 
-    		'9' : '平台已验签(到货)', 
-    		'11' : '订单已取消', 
+            '4' : '平台已推单(发货)',
+    		'5' : '供应商已验签(发货)',
+    		'6' : '平台已验签(发货)', 
+    		'7' : '客户已验签(到货)', 
+    		'8' : '平台已验签(到货)', 
+    		'9' : '供应商已验签(到货)', 
+    		'10' : '平台已验签(到货)',
+    		'11' : '订单已取消',
     };
 
     //订单状态，0：已提交，1：确认中 ，2：验收中，3、对账中，4、完成

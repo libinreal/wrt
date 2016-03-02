@@ -133,7 +133,7 @@ var Contract = {
 				if(key == "contract_type"){
 					if(value == 1){
 						$("td#rate").html(obj.content.data.rate)
-						that.getUserList(obj.content.data.customer_id, obj.content.data.user_id);
+						$("#user_name").text(obj.content.data.user_name);
 					}else if(value == 2){
 						$("#rate").html(createWarn("费率不可用"))
 						$(".user_id_display").css("display","none");

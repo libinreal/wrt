@@ -177,14 +177,9 @@
 			<div class="title"><a href="detail.html?id=<!--[= list[i].id]-->" title="<!--[= list[i].name]-->"><!--[= list[i].name]--></a></div>
 			<div class="bgimg"><a href="detail.html?id=<!--[= list[i].id]-->" title="<!--[= list[i].name]-->"><img src="<!--[= $absImg(list[i].thumb)]-->" /></a></div>
 			<div class="price clearfix">
-				<div class="vip">
+				<div style="text-align:center">
 					<span class="price-label">交易单价</span><span 
 					class="price-value"><!--[== $formatCurrency(list[i].vipPrice)]--></span><span 
-					class="price-unit">信用B</span>
-				</div>
-				<div class="default">
-					<span class="price-label factory">挂牌单价</span><span 
-					class="price-value"><!--[== $formatCurrency(list[i].price)]--></span><span 
 					class="price-unit">信用B</span>
 				</div>
 			</div>

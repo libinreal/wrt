@@ -10,7 +10,7 @@ define(function(require) {
     template.helper('$getStatus', function(content) {
         if (!content)
             return '--';
-        return config.ORDERSTATUS[content] || '--';
+        return config.KIDORDERSTATUS[content] || '--';
     });
     // 模板帮助方法，确认订单的发票类型
     template.helper('$getInvType', function(content) {
@@ -36,7 +36,7 @@ define(function(require) {
 
     //获取订单详情
     Ajax.detail({
-        url: config.getdetail,
+        url: config.getchildreninfo,
         data: {
             order_id: id
         }
@@ -44,6 +44,32 @@ define(function(require) {
         if (response.code != 0) {
             return;
         }
+    });
+
+    //更改状态
+    $('#zj-detail').on('click', '#handle-button .change-status', function(e) {
+        Ajax.custom({
+            url: config.uchildstatus,
+            data: {
+                oid: id
+            },
+            type: 'GET'
+        }, function(response) {
+            if (response.code != 0) {
+                Tools.showToast(response.message || '操作失败');
+                return;
+            }
+            Ajax.detail({
+                url: config.getchildreninfo,
+                data: {
+                    order_id: id
+                }
+            }, function(response) {
+                if (response.code != 0) {
+                    return;
+                }
+            });
+        });
     });
 
     //催办订单

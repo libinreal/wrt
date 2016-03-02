@@ -793,11 +793,6 @@
 					 class="price-unit">登录后显示</span>
 					<!--[}]-->
 				</div>
-				<div class="price">
-					<span class="price-label factory">挂牌单价</span><span 
-					class="price-value"><!--[== $formatCurrency(list[i].goods[j].price)]--></span><span 
-					class="price-unit">&nbsp;信用B</span>
-				</div>
 			</a>
 		<!--[}else{]-->
 				<div class="detail" href="javascript:;"></div>

@@ -15,20 +15,17 @@
 	<div class="page-vertical clearfix">
 		<?php include '../com/nav-left.php'; ?>
 		<div class="content-right"style="padding-top: 15px;">
-			<div class="my-credit-info gray-box clearfix" id="zj-summary"></div>
+			<div class="gray-box clearfix" id="zj-summary"></div>
 			<div class="contract-list gray-box">
 				<div class="contract-list-header clearfix">
-					<div style="line-height:30px;">&nbsp;</div>
-				</div>
-				<div class="contract-list-header clearfix">
-					<div style="line-height:30px;color:#f00;">&nbsp;最新公告</div>
+					<div style="line-height:50px;color:#f00;font-size:16px;text-indent:1em;">&nbsp;最新公告</div>
 				</div>
 				<div class="list-ti2"><ul id="note-list"></ul></div>
 			</div>
 			
 			<div class="contract-list gray-box">
 				<div class="contract-list-header clearfix">
-					<div style="line-height:30px;">&nbsp;合同管理</div>
+					<div style="line-height:50px;font-size:16px;text-indent:1em;">合同管理</div>
 				</div>
 				<div id="contract-list"></div>
 			</div>
@@ -55,29 +52,19 @@
 				<div title="<!--[= companyAddress]-->"><span class="gray-span">用户地址：</span><!--[= companyAddress || '--']--></div>
 			</div>
 		</div>
-		<!--<div class="m-c-i-btns">
-			<a class="button btn-gray"  href="../credit/more.html">了解信用B</a>
-			<a class="button btn-gray"  href="my-address.html">收货地址</a>
-			<a class="button btn-primary" href="javascript:;">安全等级：高</a>
-		</div>-->
 	</div>
 	<table width="100%" cellpadding="0" cellspacing="0" class="m-c-i-center">
-		<tr><td></td><td></td></tr>
-		<tr><td></td><td></td></tr>
+		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td class="gray-span">采购额度：</td>
 			<td style="color:#F00"><!--[= $formatCurrency1(billAmountValid)]-->RMB</td>
 		</tr>
+		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td class="gray-span">现金额度：</td>
 			<td style="color:#F00"><!--[= $formatCurrency1(cashAmountValid)]-->RMB</td>
 		</tr>
 	</table>
-	<!--<div class="m-c-i-right">
-		<a class="button btn-yellow" href='../credit/additional.html'>追加信用额度</a>
-		<a class="button btn-secondary" href='my-creditb-bill.html'>票据兑换到期提醒</a>
-		<a class="button btn-cgdd" href='my-creditb-history.html'>使用流水历史记录</a>
-	</div>-->
 </script>
 <script id="zj-list-tmpl" type="text/html">
 	<!--[for(i = 0; i < list.length; i ++) {]-->
@@ -109,7 +96,7 @@
 </script>
 <script id="contract-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-    <table class="index-contract-list">
+    <table class="index-contract-index">
     <thead>
     <tr>
     <td>项目名称:&nbsp;&nbsp;<!--[= list[i].name || '--']--></td>
@@ -131,10 +118,10 @@
 </script>
 <script id="note-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<table class="index-contract-list">
+	<table width="95%" style="margin:0 auto; line-height:30px;">
 		<tr>
-		<td><a href="../notice/<!--[= $newsUrl(list[i].id)]-->"><span class="title"><!--[= list[i].title]--></span></a></td>
-		<td><span class="date"><!--[= $formatDate(list[i].createAt,'MM/dd')]--></span></td>
+		<td width="90%"><a href="../notice/<!--[= $newsUrl(list[i].id)]-->"><span class="title"><!--[= list[i].title]--></span></a></td>
+		<td width="10%"><span class="date"><!--[= $formatDate(list[i].createAt,'MM/dd')]--></span></td>
 		</tr>
 	</table>
     <!--[}]-->
