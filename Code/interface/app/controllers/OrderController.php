@@ -301,7 +301,8 @@ class OrderController extends ControllerBase
 		
 		$goodsId = array();
 		foreach ($info as $v) {
-			$goodsId[] = $v['goodsId'];
+			if ($v['goodsId']) 
+				$goodsId[] = $v['goodsId'];
 		}
 		$goodsId = array_unique($goodsId);
 		
