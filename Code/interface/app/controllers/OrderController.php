@@ -353,6 +353,7 @@ class OrderController extends ControllerBase
 		$order->leftjoin('Users', 'U.id=OrderInfo.userId', 'U');
 		$order->leftjoin('OrderGoods', 'OG.orderId=OrderInfo.id', 'OG');
 		$order->leftjoin('Goods', 'G.id=OG.goodsId', 'G');
+		$order->leftjoin('OrderInfo', 'I.id=OrderInfo.parentOrderId', 'I');
 		$order->where('OrderInfo.id='.$childrenId);
 		$order->columns('
 				OrderInfo.orderSn, 
@@ -382,7 +383,9 @@ class OrderController extends ControllerBase
 				OG.goodsNumberArrBuyer, 
 				OG.goodsPriceSendBuyer, 
 				OG.goodsPriceArrBuyer, 
-				G.name goods_name
+				G.name goods_name, 
+				I.id parentId, 
+				I.status parentStatus
 			');
 		$result = $order->execute();
 		$result = $result->toArray();
@@ -398,6 +401,10 @@ class OrderController extends ControllerBase
 		}
 		$attrValue = substr($attrValue, 0, -1);
 		$info['attributes'] = $attrValue;
+		
+		$info['shippingInfo'] = json_decode($info['shippingInfo']);
+		$info['shippingLog'] = json_decode($info['shippingLog']);
+		
 		return ResponseApi::send($info);
 	}
 	
