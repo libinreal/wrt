@@ -5,49 +5,56 @@
 	<title>子订单详情-个人中心</title>
 	<link rel="stylesheet" href="../content/css/common.css" />
 	<link rel="stylesheet" href="../content/css/personal.css" />
+	<style type="text/css">
+	.table_info_2{
+	    margin: 0 auto;
+	    background: #ccc;
+	    width: 100%;
+	}
+	.table_info_2 th{
+	    padding:8px;
+	    background: #eee;
+	    font-weight: bold;
+	    border: 1px solid #ccc;
+	}
+	.table_info_2 td.title{
+	    text-align: right;
+	    font-weight: bold;
+	    padding: 5px 1em;
+	}
+	.table_info_2 td{
+	    background: #fff;
+	    padding:5px;
+	    border: 1px solid #ccc;
+	    text-align: center;
+	}
+	.table_info_2 table{
+	    width: 100%;
+	}
+	table.t_1{
+	    position: relative;
+	    top:-1px;
+	}
+	.table_info_2 table td{
+	    text-align: center;
+	    line-height: 30px;
+	    background: #fff;
+	}
+	</style>
 </head>
 <body>
 
 <?php include '../com/header.php'; ?>
 <div class="section page-vertical">
-	<div class="breadcrumbs">
-		<a href="../">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-order.html">我的订单</a> &gt; <a href="my-kid-order.html?id=240">子订单</a> &gt; <span id="type-name">子订单详情</span>
-		<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
-	</div>
-	<div class="order" id="zj-detail"></div>
+	<div id="zj-detail"></div>
 </div><!--//section-->
-
-<div id="kpsign" style="display:none">
-	<OBJECT classid="CLSID:57A1AA83-D974-4A12-8475-DAAEE04D237C" CODEBASE="kpsignx.cab#Version=1,7,0,3" id="doit" VIEWASTEXT width="200" height="40">
-		<PARAM NAME="_cx" VALUE="5292">
-		<PARAM NAME="_cy" VALUE="1058">
-		<PARAM NAME="DigitalSignature" VALUE="1">
-		<PARAM NAME="SignMethod" VALUE="2">
-		<PARAM NAME="UseFileToken" VALUE="0">
-	</OBJECT>
-</div>
 <?php include '../com/footer.php'; ?>
 <script id="zj-detail-tmpl" type="text/html">
-	<div class="order-head gray-box">
-		<div class="o-h-text">
-			<span>订单编号：<!--[= orderSn || '--']--></span>
-			<span>项目编号：<!--[= prjNo || '--']--></span>
-			<span>所属项目：<!--[= prjName || '--']--></span>
-		</div>
-		<div class="o-h-tip">
-		<!--[if(orderStatus == '-1') {]-->
-			<p>订单已提交审核，请进行订单合同签署流程，并保持联系方式畅通, 商城客服会与您确认订单情况, 以完成订单审核。</p>
-		<!--[}else if(orderStatus == '1'){]-->
-			<p>订单合同已完成签署，请确认订单详情，并“查看订单批次”完成已确认批次订单的支付操作。</p>
-		<!--[}else if(orderStatus == '2'){]-->
-			<p>物资验收中，请验收人员仔细核对物资价格及数量是否与订单一致，若有误差请立即与商城客服联系: 400-058-5888！</p>
-		<!--[}else if(orderStatus == '3'){]-->
-			<p>订单对账中。</p>
-		<!--[}else if(orderStatus == '4'){]-->
-			<p>订单对账中。</p>
-		<!--[}]-->
-		</div>
+	<div class="breadcrumbs">
+		<a href="../">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-order.html">我的订单</a> &gt; <a href="my-kid-order.html?id=<!--[= parentId ]-->">子订单</a> &gt; <span id="type-name">子订单详情</span>
+		<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 	</div>
+	<div class="order">
 	<div class="order-progress gray-box clearfix">
 		<div class="order-progress-bg"></div>
 		<ul>
@@ -58,23 +65,6 @@
 			<li class="<!--[= $checkStatus(9,childOrderStatus)]-->"><div><i>&nbsp;</i>订单完成</div></li>
 		</ul>
 		<div class="order-progress-statu clearfix">
-			<div class="order-progress-text">
-				<table width="100%" cellspacing="0" cellpadding="0">
-				<col width="9%"/>
-					<tr>
-						<td>处理时间：</td>
-						<td><!--[= $formatDate(doTime, 'yyyy-MM-dd hh:mm:ss')]--></td>
-					</tr>
-					<tr>
-						<td>订单状态：</td>
-						<td><!--[= $getStatus(childOrderStatus)]--></td>
-					</tr>
-					<tr>
-						<td>备<span class="e2"></span>注：</td>
-						<td><!--[= remark || '--']--></td>
-					</tr>
-				</table>
-			</div>
 			<div class="order-operate-btns">
 				<!--[if(orderStatus == '-1' || orderStatus == '0') {]-->
 				<div id="btn1">
@@ -121,112 +111,142 @@
 	</div>
 	<div class="order-info gray-box">
 		<div class="head-title">
-			<span>订单信息</span>
+			<span>订单资料</span>
 		</div>
 		<div class="info-border first">
-			<div class="info-head clearfix"><span class="women">收货人信息</span><span>中交物融大宗物流配送</span></div>
-			<div><span class="women">收货人：<!--[= payer || '--']--></span><span>指定交货时间：2015/1/2</span></div>
-			<div><span>地<em class="e1"></em>址：<!--[= address || '--']--></span></div>
-			<div><span>手<em class="e1"></em>机：<!--[= mobile || '--']--></span></div>
+			<table>
+				<tbody>
+				<tr>
+				<th width="100">订单编号：</th><td><!--[= orderSn || '--']--></td>
+				<th width="100">合同号：</th><td><!--[= contract_num || '--']--></td>
+				<th width="100">合同名称：</th><td><!--[= contract_name || '--']--></td>
+				</tr>
+				<tr>
+				<th width="100">公司名称：</th><td><!--[= createAt || '--']--></td>
+				<th width="100">下单人：</th><td><!--[= createAt || '--']--></td>
+				<th width="100">拆单时间：</th><td><!--[= createAt || '--']--></td>
+				</tr>
+				<tr>
+				<th width="100">订单状态：</th><td><!--[= $getStatus(childOrderStatus)]--></td>
+				<th width="100">子订单状态：</th><td colspan="3"><!--[= $getStatus(childOrderStatus)]--></td>
+				</tr>
+				</tbody>
+			</table>
 		</div>
-		<div class="info-border">
-			<div class="info-head">支付信息</div>
-			<div><span>支付方式：信用B支付</span></div>
-			<div><span>支付机构：<!--[= $getPayOrg(payOrg) || '--']--></span></div>
+		<div class="head-title">
+			<span>开票资料</span>
 		</div>
-		<div class="info-border">
-			<div class="info-head">发票信息</div>
-			<div><span>发票类型：<!--[= $getInvType(invType) || '--']--></span></div>
-			<div><span>发票抬头：<!--[= invPayee || '--']--></span></div>
-			<div><span>发票内容：<!--[= invContent || '--']--></span></div>
+		<div class="info-border first">
+			<table>
+				<tbody>
+				<tr>
+				<th>发票类型：</th><td><!--[= $getInvType(invType)]--></td>
+				<th>发票抬头：</th><td><!--[= invPayee || '--']--></td>
+				<th>内容：</th><td><!--[= invContent || '--']--></td>
+				</tr>
+				<tr>
+				<th>收货人：</th><td><!--[= consignee || '--']--></td>
+				<th>收货地址：</th><td><!--[= address || '--']--></td>
+				<th>手机号码：</th><td><!--[= phone || '--']--></td>
+				</tr>
+				<tr>
+				<th>地址标签：</th><td colspan="2"><!--[= tag || '--']--></td>
+				<th>备注：</th><td colspan="2"><!--[= remark || '--']--></td>
+				</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 
-	<div class="order-detial gray-box">
+	<div class="gray-box">
 		<div class="head-title">
-			<span>商品清单</span>
+			<span>商品资料</span>
 		</div>
 		<div class="product-goodsList">
 			<div class="pdt-detail">
-				<ul class="pdt-detail-top clearfix">
-					<li class="top-1">商品编号</li>
-					<li class="top-2">商品信息</li>
-					<li class="top-4">订单数量</li>
-					<li class="top-3">交易单价</li>
-					<li class="top-6">合同数量</li>
-					<li class="top-5">合同单价</li>
-					<li class="top-8">验收数量</li>
-					<li class="top-7">验收单价</li>
-				</ul>
-				<!--[if(goodsList){]-->
-				<!--[for(i = 0; i < goodsList.length; i ++) {]-->
-					<div class="pdt-detail-content last clearfix">
-						<div class="top-1"><!--[= goodsList[i].goodsCode]--></div>
-						<div class="top-2 clearfix">
-							<div class="product-info">
-								<div class="product-img">
-										<img alt="" src="<!--[= $absImg(goodsList[i].thumb)]-->"/>
-									</div>
-									<div class="product-text">
-										<ul>
-											<li class="txt-desc name" title="<!--[= goodsList[i].goodsName]-->"><!--[= goodsList[i].goodsName || '--']--></li>
-											<div class="txt-three"><li class="txt-desc"><span>单位：</span><!--[= goodsList[i].goodsUnit || '--']--></li>
-											<!--[if(goodsList[i].attr){]-->
-											<!--[for(j = 0; j < goodsList[i].attr.length; j++){]-->
-												<li class="txt-desc"><span><!--[= goodsList[i].attr[j].name]-->：</span><!--[= goodsList[i].attr[j].value]--></li>
-											<!--[}]-->
-											<!--[}]-->
-										</ul>					
-									</div>
-								</div>
-						</div>
-						<div class="top-4 c-red"><!--[= goodsList[i].orderNums]--></div>
-						<div class="top-3 c-red"><!--[== $formatCurrency(goodsList[i].changePrice)]--></div>
-						<div class="top-6"><!--[= $formatCurrency1(goodsList[i].contractNums)]--></div>
-						<div class="top-5"><!--[== $formatCurrency(goodsList[i].contractPrice)]--></div>
-						<div class="top-8"><!--[= $formatCurrency1(goodsList[i].checkNums)]--></div>
-						<div class="top-7"><!--[== $formatCurrency(goodsList[i].checkPrice)]--></div>
-
-						<!--[if(orderStatus == '0') {]-->
-						<div class="goods-button">&nbsp;</div>
-						<!--[}else if(orderStatus == '1'){]-->
-						<div class="goods-button"><a class="button btn-primary" href="my-order-sub.html?orderSn=<!--[= orderSn]-->&goodsId=<!--[= goodsList[i].goodsId]-->">查看订单批次</a></div>
-						<!--[}else if(orderStatus == '2'){]-->
-						<div class="goods-button"><a class="button btn-primary" href="my-order-acceptance.html?orderSn=<!--[= orderSn]-->&goodsId=<!--[= goodsList[i].goodsId]-->">分批验收</a></div>
-						<!--[}else if(orderStatus == '3'){]-->
-						<div class="goods-button"><a class="button btn-primary" href="my-order-reconciliations.html?orderSn=<!--[= orderSn]-->&goodsId=<!--[= goodsList[i].goodsId]-->">订单对账</a></div>
-						<!--[}else if(orderStatus == '4'){]-->
-						<div class="goods-button"><a class="button btn-primary" href="my-order-reconciliations.html?orderSn=<!--[= orderSn]-->&goodsId=<!--[= goodsList[i].goodsId]-->">订单对账</a></div>
-						<!--[}]-->
-
-					</div>
-				<!--[}]-->
-				<!--[}else{]-->
-				<tr><td class="nodata">暂无数据。</td></tr>
-				<!--[}]-->
+				<table class="table_info_2">
+					<tr>
+				    	<th width="150" align="right">商品名称：</th><td><!--[= goods_name || '--']--></td>
+				    	<th width="150" align="right">规格/型号/材质：</th><td><!--[= attributes || '--']--></td>
+				    </tr>
+				</table>
+				<table class="table_info_2 t_1">
+					<tr>
+						<td rowspan="4" align="center">订单信息</td>
+						<th rowspan="2">发货信息</th>
+						<th>发货单价</th>
+						<th>发货数量</th>
+						<th>物流费用</th>
+						<th>金融费用</th>
+						<th>总金额</th>
+					</tr>
+				    <tr>
+				    	<td><!--[= goodsPriceSendBuyer || '--']--></td>
+				    	<td><!--[= goodsNumberSendBuyer || '--']--></td>
+				    	<td><!--[= shippingFeeSendBuyer || '--']--></td>
+				    	<td><!--[= financialSendRate || '--']--></td>
+				    	<td><!--[= orderAmountSendBuyer || '--']--></td>
+				    </tr>
+				    <tr>
+				    	<th rowspan="2">到货信息</th>
+				    	<th>到货单价</th>
+				    	<th>到货数量</th>
+				    	<th>物流费用</th>
+				    	<th>金融费用</th>
+				    	<th>总金额</th>
+				    </tr>
+				    <tr>
+				    	<td><!--[= goodsPriceArrBuyer || '--']--></td>
+				    	<td><!--[= goodsNumberArrBuyer || '--']--></td>
+				    	<td><!--[= shippingFeeArrBuyer || '--']--></td>
+				    	<td><!--[= financialArrRate || '--']--></td>
+				    	<td><!--[= orderAmountArrBuyer || '--']--></td>
+				    </tr>
+				</table>
 			</div>
 		</div>
 	</div>
-
-	<div class="order-total my-dtl-btm gray-box">
-		<table width="100%" height="100%">
-			<tr>
-				<td>订单总金额：<span class="c-red"><!--[= $formatCurrency1(typeof ordersum == 'undefined' ? '--' : ordersum)]--></span><!--[= typeof ordersum == 'undefined' ? '' : '&nbsp;信用B']--></td>
-				<!-- <td>合同总金额：<span class="c-red"><!--[= $formatCurrency1(typeof contractsum == 'undefined' ? '--' : contractsum)]--></span><!--[= typeof contractsum == 'undefined' ? '' : '&nbsp;信用B']--></td> -->
-				<!-- <td>验收总金额：<span class="c-red"><!--[= $formatCurrency1(typeof checksum == 'undefined' ? '--' : checksum)]--></span><!--[= typeof checksum == 'undefined' ? '' : '&nbsp;信用B']--></td> -->
-			</tr>
-		</table>
+	<div class="gray-box">
+		<div class="head-title">
+			<span>物流动态</span>
+		</div>
+		<div class="product-goodsList">
+			<div class="pdt-detail">
+				<table class="table_info_2">
+					<tr>
+				    	<th align="right">物流公司：</th><td><!--[= shippingInfo.company_name || '--']--></td>
+				    	<th align="right">物流编号：</th><td><!--[= shippingInfo.shipping_num || '--']--></td>
+				    	<th align="right">联系电话：</th><td><!--[= shippingInfo.tel || '--']--></td>
+				    </tr>
+				</table>
+				<table class="table_info_2 t_1">
+					<thead>
+					<tr>
+				    	<th width="100">日期</th><th>动态</th>
+				    </tr>					
+					</thead>
+					<tbody>
+					<!--[for(i = 0; i < shippingLog.length; i ++) {]-->
+					<tr>
+						<td><!--[= shippingLog[i].date || '--']--></td><td><!--[= shippingLog[i].content || '--']--></td>
+					</tr>
+					<!--[}]-->
+					</tbody>
+				</table>
+			</div>
+		</div>
 	</div>
 	<div style="text-align:center;padding-bottom:15px;">
 		<div id="handle-button">
 		<!--[if(childOrderStatus == 1){]-->
-			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">发货验签</a>
+			<a class="button change-status" href="javascript:void(0)">发货验签</a>
 		<!--[}]-->
 		<!--[if(childOrderStatus == 6){]-->
-			<a class="button" href="javascript:void(0)" onclick="changeStatus(<!--[= id]-->)">到货验签</a>
+			<a class="button change-status" href="javascript:void(0)">到货验签</a>
 		<!--[}]-->
 			<a class="button" href="javascript:history.back()">返回</a>
 		</div>
+	</div>
 	</div>
 </script>
 
@@ -234,15 +254,7 @@
 <script src="../content/js/module/seajs/2.2.0/sea-config.js"></script>
 <script>
 	seajs.use('../content/js/personal/main');
-	seajs.use('../content/js/personal/my-order-detail');
-
-	function changeStatus(oid){
-		var xhReq = new XMLHttpRequest();
-		xhReq.open("GET", "http://"+window.location.host+"/order/uchildstatus?oid="+oid, false);
-		xhReq.send(null);
-		var serverResponse = xhReq.responseText;
-		location.reload();
-	}
+	seajs.use('../content/js/personal/my-kid-order-detail');
 </script>
 
 </body>

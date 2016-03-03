@@ -7,13 +7,21 @@
 	<link rel="stylesheet" href="../content/css/personal.css" />
 	<style>
 	.order-list-col{
-		width: 155px;
+		width: 145px;
 	}
-	.order-list-col.c5{
-		width: 256px;
+	#zj-list table tr:hover{
+		background: #EfEfEf;
 	}
-	.order-list-col.c5 a{
-		display: inline-block;
+	#zj-list table td{
+		text-align: center;
+		width: 145px;
+		height: 30px;
+		line-height: 30px;
+		border-bottom: 1px solid #E6E6E6;
+		padding: 5px 0;
+	}
+	#zj-list table td a{
+		display: inline;
 	}
 	</style>
 </head>
@@ -32,30 +40,31 @@
 			<div class="order-list gray-box">
 				<div class="order-list-header clearfix">
 					<div style="height:10px;"></div>
-					<form>
-						<div><label>客户订单号：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
-						<label>合同名称：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
-						<label>订单状态：</label>
-						<select>
-							<option value="-1">全部</option>
+					<form id="search_form" class="search_form" onsubmit="return false;">
+						<div><label class="gray-span">客户订单号：</label><input type="text" name="order_sn">&nbsp;&nbsp;&nbsp;&nbsp;
+						<label class="gray-span">合同名称：</label><input type="text" name="contract_name">&nbsp;&nbsp;&nbsp;&nbsp;
+						<label class="gray-span">订单状态：</label>
+						<select name="order_status">
+							<option value="">全部</option>
 							<option value="0">已下单</option>
-							<option value="1">确认中</option>
+							<option value="1">处理中</option>
 							<option value="2">验收中</option>
 							<option value="3">对账中</option>
 							<option value="4">已完成</option>
-							<option value="4">已完成</option>
+							<option value="5">订单取消</option>
 						</select>&nbsp;&nbsp;&nbsp;&nbsp;
-						<button class="button">查询</button>
+						<button class="button" id="search_button">查询</button>
 						</div>
 					</form>
 					<div style="height:10px;"></div>
 				</div>
 				<div class="order-list-header clearfix">
-					<div class="order-list-col c1">订单编号</div>
-					<div class="order-list-col c2">项目编号</div>
-					<div class="order-list-col c3">项目名称</div>
-					<div class="order-list-col c4">订单状态</div>
-					<div class="order-list-col c5">操作</div>
+					<div class="order-list-col c1">订单号</div>
+					<div class="order-list-col c2">客户名称</div>
+					<div class="order-list-col c3">合同名称</div>
+					<div class="order-list-col c4">下单时间</div>
+					<div class="order-list-col c5">下单金额</div>
+					<div class="order-list-col c6">订单状态</div>
 				</div>
 				<div class="order-list-content" id="zj-list"></div>
 			</div>
@@ -79,23 +88,34 @@
 
 <script id="zj-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
-	<div href="javascript:void(0);" class="clearfix">
-		<div class="order-list-col c1"><!--[= list[i].orderSn || '--']--></div>
-		<div class="order-list-col c2"><!--[= list[i].prjNo || '--']--></div>
-		<div class="order-list-col c3"><!--[= list[i].prjName || '--']--></div>
-		<div class="order-list-col c4"><!--[= $getStatus(list[i].status)]--></div>
-		<div class="order-list-col c5">
+    	<div href="javascript:void(0);" class="clearfix">
+    	<table cellpadding="0">
+    	<tr>
+    		<td><!--[= list[i].orderSn || '--']--></td>
+    		<td><!--[= list[i].company_name || '--']--></td>
+    		<td><!--[= list[i].prjName || '--']--></td>
+    		<td><!--[= $formatDate(list[i].createAt, 1) || '--']--></td>
+    		<td><!--[= list[i].orderAmount || '--']--></td>
+    		<td><!--[= $getStatus(list[i].status)]--></td>
+    	</tr>
+    	<tr>
+    		<td colspan="20" style="text-align:right;">
+    		<span style='font-weight:bold'>订单操作：</span>
+			<a href="my-order-detail.html?id=<!--[= list[i].id]-->">订单详情</a>&nbsp;&nbsp;|&nbsp;&nbsp;
+			<a href="my-kid-order.html?id=<!--[= list[i].id]-->">子订单列表</a>
 		<!--[if(list[i].allowCancel == 1) {]-->
 		<!--[if(list[i].cancelStatus == 1) {]-->
 			<button class="button btn-gray disabled" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消中</button>
 		<!--[}else{]-->
 			<button class="button btn-gray" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消订单</button>
 		<!--[}}]-->
-		
-			<a href="my-kid-order.html?id=<!--[= list[i].id]-->">子订单</a>
-			<a href="my-order-detail.html?id=<!--[= list[i].id]-->">详情</a>
-		</div>
-	</div>
+    		</td>
+    	</tr>
+    	<tr>
+    		<td colspan="20" style="background:#efefef;">&nbsp;</td>
+    	</tr>
+    	</table>
+    	</div>
     <!--[}]-->
 </script>
 

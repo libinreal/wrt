@@ -15,14 +15,24 @@ define(function(require) {
 
     //获取列表数据
     config.paging = function() {
+        var formData = Ajax.formJson("#search_form");
+        var data = {};
+        $.each(formData, function(k, v){
+            if(v != ""){
+                data[k] = v;
+            }
+        });
+        data.size = config.pageSize;
         Ajax.paging({
             url: config.getlist,
-            data: {
-                size: config.pageSize
-            }
+            data: data
         });
     };
     config.paging();
+
+    $('#search_button').on('click', function(e) {
+        config.paging();
+    });
 
     //取消订单
     $('#zj-list').on('click', 'button', function(e) {

@@ -17,10 +17,10 @@ define(function(require) {
     //获取列表数据
     config.paging = function() {
         Ajax.paging({
-            url: config.getlist,
+            url: config.getchildrenlist,
             data: {
-                size: config.pageSize, 
-                parent_id : parentId
+                size: config.pageSize,
+                order_id : parentId
             }
         });
     };

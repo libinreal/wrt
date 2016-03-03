@@ -175,11 +175,6 @@
 				class="price-value"><!--[== $formatCurrency(list[i].vipPrice)]--></span><span 
 				class="price-unit">信用B</span>
 			</div>
-			<div class="default">
-				<span class="price-label factory">挂牌单价</span><span
-				class="price-value"><!--[== $formatCurrency(list[i].price)]--></span><span 
-				class="price-unit">信用B</span>
-			</div>
 		</div>
 		<div class="operate large-operate">
 			<a class="operate-shoucang <!--[= (list[i].hasFavorites == '1' ? 'active' : '')]-->" data-id="<!--[= list[i].id]-->" href="#"><span>收藏</span></a>

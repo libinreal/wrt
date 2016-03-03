@@ -21,19 +21,18 @@
 			<div class="order-list gray-box">
 				<div class="order-list-header clearfix">
 					<div style="height:10px;"></div>
-					<form>
-						<div><label>票据编号：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
-						<label>出票人：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
-						<label>票据状态：</label>
+					<form id="search_form" class="search_form" onsubmit="return false;">
+						<div>
+						<label>票据编号：</label><input type="text" name="">&nbsp;&nbsp;
+						<label>出票人：</label><input type="text" name="">&nbsp;&nbsp;
+						<label>状态：</label>
 						<select>
 							<option value="-1">全部</option>
 							<option value="0">未还</option>
 							<option value="1">已还</option>
-						</select>
-						</div>
-						<div style="height:10px;"></div>
-						<div><label>日期：</label>
-                        <input type="text" name=""> 到 <input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
+						</select>&nbsp;&nbsp;
+						<label>日期：</label>
+                        <input type="text" name=""> 到 <input type="text" name="">&nbsp;&nbsp;
 						<button class="button">查询</button>
 						</div>
 					</form>

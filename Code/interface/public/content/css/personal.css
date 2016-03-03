@@ -460,6 +460,11 @@
     border-bottom: 1px solid #E6E6E6;
     font-weight: bold;
 }
+.order-list-header{
+    border: 1px solid #ccc;
+    background: #efefef;
+    margin-top: 10px;
+}
 .order-list-col , .contract-list-col{
     float: left;
     width: 175px;
@@ -2090,13 +2095,34 @@
 .index-contract-list{
     width: 95%;
     margin: 10px auto;
-    border: 1px solid #ccc;
+    padding: 0;
+    border: 1px dashed #ccc;
+}
+.index-contract-list:hover{
+    background: #efefef;
 }
 .index-contract-list td{
     padding: 5px;
 }
 .index-contract-list thead td{
-    border-bottom: 1px solid #ccc;
     font-size: 16px;
-    width: 50%;
+}
+.index-contract-list thead th{
+    font-size: 16px;
+    text-align: right;
+}
+.search_form{
+    text-align: center;
+}
+.search_form label{
+    color: #666;
+}
+.search_form input{
+    width: 100px;
+    height: 30px;
+    line-height: 30px;
+}
+.search_form select{
+    height: 30px;
+    line-height: 30px;
 }

@@ -22,12 +22,11 @@
 			<div class="order-list gray-box">
                 <div class="order-list-header clearfix">
                     <div style="height:10px;"></div>
-                    <form>
-                        <div><label>合同编号：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
-                        <label>合同名称：</label><input type="text" name="">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <form id="search_form" class="search_form" onsubmit="return false;">
+                        <div><label>合同编号：</label><input type="text" name="contract_sn">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>合同名称：</label><input type="text" name="contract_name">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>合同日期：</label><input type="text" name="start"> 到 <input type="text" name="end">&nbsp;&nbsp;&nbsp;&nbsp;
                         <button class="button">查询</button></div>
-                        <div><label>合同日期：</label>
-                        <input type="text" name=""> 到 <input type="text" name=""></div>
                     </form>
                     <div style="height:10px;"></div>
                 </div>
@@ -47,18 +46,18 @@
     <table class="index-contract-list">
     <thead>
     <tr>
-    <td>项目名称:&nbsp;&nbsp;<!--[= list[i].name || '--']--></td>
-    <td><a href="my-contract-detail.html?contract_id=<!--[= list[i].id || '--']-->">查看合同详情</a></td>
+    <th class="gray-span">项目名称:</th><td><!--[= list[i].name || '--']--></td>
+    <td colspan="2" align="right"><a href="my-contract-detail.html?contract_id=<!--[= list[i].id || '--']-->">查看合同详情</a></td>
     </tr>
     </thead>
     <tbody>
     <tr>
-    <td>公司名称:&nbsp;&nbsp;<!--[= list[i].userName || '--']--></td>
-    <td>合同编号:&nbsp;&nbsp;<!--[= list[i].num || '--']--></td>
+    <th class="gray-span">公司名称:</th><td><!--[= list[i].userName || '--']--></td>
+    <th class="gray-span">合同编号:</th><td><!--[= list[i].num || '--']--></td>
     </tr>
     <tr>
-    <td>合同金额:&nbsp;&nbsp;<!--[= list[i].amount || '--']--></td>
-    <td>合同有效期:&nbsp;&nbsp;<!--[= $formatDate(list[i].startTime, 1) || '--']--> 至 <!--[= $formatDate(list[i].endTime, 1) || '--']--></td>
+    <th class="gray-span">合同金额:</th><td><!--[= list[i].amount || '--']--></td>
+    <th class="gray-span">合同有效期:</th><td><!--[= $formatDate(list[i].startTime, 1) || '--']--> 至 <!--[= $formatDate(list[i].endTime, 1) || '--']--></td>
     </tr>
     </tbody>
     </table>

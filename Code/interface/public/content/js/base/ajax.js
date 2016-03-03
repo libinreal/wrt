@@ -36,6 +36,7 @@
          * @param callbackError-请求失败后执行的回调方法
          */
         paging: function(data, callback, callbackError) {
+            console.log(data)
             var renderFor = data.renderFor || 'zj-list-tmpl',
                 renderEle = data.renderEle || '#zj-list',
                 timeKey = data.timeKey || 'createAt',
@@ -254,6 +255,21 @@
         },
         test: function() {
             return $('body').length;
+        },
+        formJson: function(form) {
+            var o = {};
+            var a = $(form).serializeArray();
+            $.each(a, function() {
+                if (o[this.name] !== undefined) {
+                    if (!o[this.name].push) {
+                        o[this.name] = [o[this.name]];
+                    }
+                    o[this.name].push(this.value || '');
+                } else {
+                    o[this.name] = this.value || '';
+                }
+            });
+            return o;
         }
     };
 

@@ -30,9 +30,8 @@
 	width: 361px;
 }
 .m-c-i-center{
-	float: left;
+	float: right;
 	width: 345px;
-	height: 190px;
 	border-left: 1px solid #E6E6E6;
 }
 .m-c-i-right{
@@ -55,10 +54,6 @@
 }
 .m-c-i-btns .button:last-child{
 	width: 97px;
-}
-.m-c-i-center td{
-	width: 50%;
-	height: 47px;
 }
 .m-c-i-center .gray-span{
 	text-align: right;
@@ -263,3 +258,23 @@
 	font-size: 15px;
 }
 /******/
+.index-contract-index{
+    width: 95%;
+    margin: 10px auto;
+    padding: 0;
+}
+.index-contract-index:hover{
+    background: #efefef;
+}
+.index-contract-index td{
+    padding: 5px;
+}
+.index-contract-index thead td{
+    font-size: 16px;
+    border-bottom: 1px solid #ccc;
+}
+.index-contract-index thead th{
+    font-size: 16px;
+    text-align: right;
+    border-bottom: 1px solid #ccc;
+}
