@@ -102,7 +102,7 @@
     		<td style="width: 110px;"><!--[= $getStatus(list[i].status)]--></td>
     		<td style="width: 300px;">
 			<a href="my-order-detail.html?id=<!--[= list[i].id]-->">订单详情</a>&nbsp;
-			<a href="my-kid-order.html?id=<!--[= list[i].id]-->">子订单列表</a>&nbsp;
+			<a href="my-kid-order.html?id=<!--[= list[i].id]-->">子订单列表</a><br/>
 		<!--[if(list[i].allowCancel == 1) {]-->
 		<!--[if(list[i].cancelStatus == 1) {]-->
 			<button class="button btn-gray disabled" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消中</button>

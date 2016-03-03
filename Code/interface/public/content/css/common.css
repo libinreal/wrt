@@ -10,6 +10,9 @@ ul, menu, dir, ol, legend, fieldset, input, input[type=password], input[type=sea
 input[type=search], input[type=button], input[type=submit], input[type=reset] {
     -webkit-appearance: none;
 }
+input[type=file]{
+    height: 30px;
+}
 h1, h2, h3, h4, h5, h6 {
     font-size: 100%;
     font-weight: 400;
@@ -279,7 +282,7 @@ input[type="submit"] {
 }
 .header .icon-logo {
     display: block;
-    width: 163px;
+    width: 119px;
     height: 53px;
     background-image: url(../images/common/logo.png);
     background-repeat: no-repeat;

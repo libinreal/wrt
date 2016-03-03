@@ -2,6 +2,9 @@
 <div class="header">
     <div class="page-vertical">
         <a class="icon-logo" href="../"></a>
+        <div style="width:5">
+
+        </div>
         <ul class="header-right">
             <li class="my-customize">
                 <div class="unlink overlay-name">筛选：</div>
@@ -40,7 +43,6 @@
                 </div>
             </li>
             <li class="header-znsj"><a class="link icon znsj-header" href="#">付款方式<span>|</span>提示方式</a></li>
-            <li class="header-mall"><a class="link icon-mall" href="../mall/index.html">回到商城首页</a></li>
             <li class="header-customize">
                 <div class="unlink overlay-name">筛选：</div>
                 <div class="link overlay">
@@ -54,24 +56,6 @@
                 <a class="link icon icon-logout" href="#" style="padding-left: 10px;">退出</a>
             </li>
             <li><a class="icon link icon-home" href="../">首页</a></li>
-            <li>
-                <div class="link icon overlay icon-category">
-                    <span class="overlay-title">全部类目</span>
-                    <div class="overlay-content overlay-cat clearfix">
-                        <div class="overlay-cat-select">
-                            <a href="../customize/"><em>Material Tailor</em> <span>定制专区</span></a>
-                            <a href="../znsj/"><em>Data intelligence</em> <span>数据智能</span></a>
-                            <a href="../project/"><em>Project News</em> <span>工程资讯</span></a>
-                            <a href="../ydwr/"><em>Mobile Material Finance</em> <span>移动物融</span></a>
-                            <a href="../news/"><em>Platform News</em> <span>物融新闻</span></a>
-                        </div>
-                        <div class="overlay-cat-pic">
-                            <a class="credit-pool" href="../credit/"></a>
-                            <a class="project-jsc" href="../mall/"><span class="sc">Infrastructure Mall</span></a>
-                        </div>
-                    </div>
-                </div>
-            </li>
         </ul>
     </div>
 </div><!--//header-->

@@ -1,7 +1,7 @@
 <div id="commonNavLeft" class="content-left">
 	<a href="index.html" class="icon-nav-0">个人中心</a>
 	<a href="my-info.html" class="icon-nav-1">会员信息</a>
-	<a href="my-creditb.html" class="icon-nav-2">我的信用B</a>
+	<!--<a href="my-creditb.html" class="icon-nav-2">我的信用B</a>-->
 	<a href="my-contract.html" class="icon-nav-3">我的合同</a>
 	<a href="my-note.html" class="icon-nav-4">我的票据</a>
 	<a href="my-credit.html" class="icon-nav-5">自有授信</a>

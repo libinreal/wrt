@@ -46,7 +46,6 @@
 			<div class="form-value">
 				<input type="file" id="uploadFile" style="width:337px;border:none;" value="<!--[= img ]-->">
 				<input type="hidden" name="apply_img" id="apply_img" value="<!--[= img ]-->">
-				<button id="upload_button">上传图片</button>
 			</div>
 		</div>
 		<div class="form-item"><img src="/apply_attachment/<!--[= img ]-->" width="150" style="margin:0 auto;"></div>
@@ -58,7 +57,6 @@
 		<input type="hidden" name="act" value=1>
 	</form>
 </script>
-
 
 <script src="../content/js/module/seajs/2.2.0/sea.js"></script>
 <script src="../content/js/module/seajs/2.2.0/sea-config.js"></script>

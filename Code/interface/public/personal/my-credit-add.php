@@ -35,7 +35,7 @@
 	    			<div class="form-item">
 	    				<div class="form-label"><span>*</span>申请附件：</div>
 	    				<div class="form-value">
-	    					<input type="file" id="uploadFile" style="width:337px;border:none;">
+	    					<input type="file" id="uploadFile" style="width:337px;border:none;height:30px;">
 	    					<input type="hidden" name="img" id="apply_img"/>
 	    				</div>
 	    			</div>
