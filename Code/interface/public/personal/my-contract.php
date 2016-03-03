@@ -23,10 +23,11 @@
                 <div class="order-list-header clearfix">
                     <div style="height:10px;"></div>
                     <form id="search_form" class="search_form" onsubmit="return false;">
-                        <div><label>合同编号：</label><input type="text" name="contract_sn">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <div style="text-align:center;">
+                        <label>合同编号：</label><input type="text" name="contract_sn">&nbsp;&nbsp;&nbsp;&nbsp;
                         <label>合同名称：</label><input type="text" name="contract_name">&nbsp;&nbsp;&nbsp;&nbsp;
-                        <label>合同日期：</label><input type="text" name="start"> 到 <input type="text" name="end">&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button class="button">查询</button></div>
+                        <label>合同日期：</label><input type="text" name="start" id="start" readonly="readonly"> 到 <input type="text" name="end" id="end" readonly="readonly">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <button class="button" id="search_button">查询</button></div>
                     </form>
                     <div style="height:10px;"></div>
                 </div>
@@ -47,7 +48,7 @@
     <thead>
     <tr>
     <th class="gray-span">项目名称:</th><td><!--[= list[i].name || '--']--></td>
-    <td colspan="2" align="right"><a href="my-contract-detail.html?contract_id=<!--[= list[i].id || '--']-->">查看合同详情</a></td>
+    <td colspan="2" align="right"><a href="my-contract-detail.html?contract_id=<!--[= list[i].id || '--']-->">查看合同详情</a>&nbsp;&nbsp;</td>
     </tr>
     </thead>
     <tbody>

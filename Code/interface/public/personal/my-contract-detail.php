@@ -38,10 +38,22 @@
 				<th>公司：</th><td>中交物融</td><th>客户：</th><td><!--[= userName || '--']--></td><th>合同类型：</th><td><!--[= type || '--']--></td><th>签署类型：</th><td><!--[= signType || '--']--></td>
 				</tr>
 				<tr>
-				<th>开始时间：</th><td><!--[= startTime || '--']--></td><th>结束时间：</th><td><!--[= endTime || '--']--></td><th>是否控制类型：</th><td><!--[= isControl || '--']--></td><th>物料类型：</th><td></td>
+				<th>开始时间：</th><td><!--[= startTime || '--']--></td><th>结束时间：</th><td><!--[= endTime || '--']--></td><th>是否控制类型：</th><td><!--[= isControl == 1 ? "是" : "否" ]--></td><td></td><td></td>
 				</tr>
 				<tr>
 				<th>金融费率：</th><td><!--[= rate || '--']-->%</td><th>登记机构：</th><td><!--[= reg || '--']--></td><th>附件：</th><td colspan="4"><!--[= file || '--']--></td>
+				</tr>
+				<tr>
+				<th>物料类型：</th>
+				<td colspan="20">
+				<!--[if(category.length == 0) {]-->
+					暂无物料
+				<!--[}else{]-->
+				    <!--[for(i = 0; i < category.length; i ++) {]-->
+				    	<span><!--[= category[i].cat_name || '--']--></span>&nbsp;,&nbsp;
+				    <!--[}]-->
+				<!--[}]-->
+				</td>
 				</tr>
 				<tr>
 				<th>备注：</th><td colspan="20"><!--[= remark || '--']--></td>

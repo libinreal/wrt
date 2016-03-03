@@ -76,6 +76,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * 		//"command":"purchase_status"
 		 * 		"parameters":{}
 		 *
+		 * 		//"command":"parent_users"
+		 * 		"parameters":{}
+		 * 		
 		 *		//"command":"purchase_order_pay_status"
 		 *		"parameters":{}
 		 * 
@@ -108,6 +111,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				case 'users':
 					$sql = 'SELECT `user_id`,`user_name`,`companyName`,`customNo` FROM ' . $GLOBALS['ecs']->table('users') .
 						   ' WHERE `user_name` IS NOT NULL GROUP BY `companyName`';
+					break;
+				case 'parent_users':
+					$sql = 'SELECT `user_id`,`user_name`,`companyName`,`customNo` FROM ' . $GLOBALS['ecs']->table('users') .
+						   ' WHERE `user_name` IS NOT NULL AND `parent_id` IS NOT NULL AND `parent_id` <> 0 GROUP BY `companyName`';
 					break;
 				case 'admin_users':
 					$sql = 'SELECT `user_id`,`user_name` FROM ' . $GLOBALS['ecs']->table('admin_user');
@@ -196,7 +203,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	$command_arr = array('bill_type', 'bill_status', 'bill_currency', 'users', 'admin_users', 
 						'admin_user_banks', 'admin_user_bank_accounts', 'user_banks', 'user_bank_accounts',
 						'payment', 'childer_order_status', 'order_status', 'bill_repay_type','purchase_status',
-						'purchase_pay_status', 'purchase_order_pay_status'
+						'purchase_pay_status', 'purchase_order_pay_status', 'parent_users'
 					);
 	$content = jsonAction( $command_arr );
 	$typeModel = new TypeModel($content);

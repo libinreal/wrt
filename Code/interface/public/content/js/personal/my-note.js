@@ -5,16 +5,34 @@ define(function(require) {
     Tools = require('../base/tools');
 
 	require('../base/common');
+    require('../module/laydate/laydate.dev');
 	
 	//获取列表数据
     config.paging = function() {
+        var formData = Ajax.formJson("#search_form");
+        var data = {};
+        $.each(formData, function(k, v){
+            if(v != ""){
+                data[k] = v;
+            }
+        });
+        data.size = config.pageSize;
         Ajax.paging({
             url: config.getNoteList,
-            data: {
-                size : config.pageSize
-            }, 
+            data: data, 
             timeKey  : 'bill_id'
         });
     };
     config.paging();
+    $(document).ready(function(){
+        laydate({
+            elem: '#start'
+        });
+        laydate({
+            elem: '#end'
+        });
+        $('#search_button').on('click', function(e) {
+            config.paging();
+        });
+    });
 });
