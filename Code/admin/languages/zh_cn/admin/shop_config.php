@@ -164,6 +164,9 @@ $_LANG['cfg_name']['help_open'] = '用户帮助是否打开';
 $_LANG['cfg_name']['mer_id'] = '商户号';
 $_LANG['cfg_name']['saler_cstno'] = '卖方客户号';
 $_LANG['cfg_name']['saler_accno'] = '卖方账号';
+$_LANG['cfg_name']['sign_switch'] = '验签';
+$_LANG['cfg_range']['sign_switch'][0] = '开';
+$_LANG['cfg_range']['sign_switch'][1] = '关';
 /** 验签 end **/
 
 $_LANG['cfg_desc']['smtp'] = '设置邮件服务器基本参数';
