@@ -121,7 +121,7 @@ class ApplycreditController extends ControllerBase
 		//搜索条件
 		if ($applyUser) $condition .= ' AND U.account LIKE "%'.$applyUser.'%"';
 		if ($contractId) $condition .= ' AND CreditModel.contract_id='.$contractId;
-		if ($applyStatus) $condition .= ' AND CreditModel.status='.$applyStatus;
+		if ($applyStatus >= 0 && isset($applyStatus)) $condition .= ' AND CreditModel.status='.$applyStatus;
 		if ($startTime) $condition .= ' AND CreditModel.create_date>="'.$startTime.'"';
 		if ($endTime) $condition .= ' AND CreditModel.check_time<="'.$endTime.'"';
 		
