@@ -35,7 +35,23 @@ class NoteController extends ControllerBase
 		$startTime = $this->request->get('start');
 		$endTime = $this->request->get('end');
 		
-		$condition = ''; //缺少user_id条件
+		//总账号及子帐号都显示总账号下的票据
+		$user = Users::findFirst(array(
+				'conditions' => 'id='.$userId,
+				'columns' => 'id,parent_id'
+		))->toArray();
+		if ($user === false) return ResponseApi::send(null, -1, '查询用户失败');
+		if (!$user) return ResponseApi::send(null, -1, '未获取到用户信息');
+		if ($user['parent_id'] != 0) {
+			$userId = $user['parent_id'];
+		}
+		
+		if ($user) {
+			$condition = 'NoteModel.customer_id='.$userId;
+		} else {
+			$condition = '';
+		}
+		
 		if ($forward || !$currentId) {
 			//上一页 或 第一页操作
 			if (!empty($condition)) $condition .= ' AND ';
@@ -186,6 +202,7 @@ class NoteController extends ControllerBase
 			} elseif (!isset($data['pay_user'])) {
 				$data['pay_user'] = '';
 			}
+			
 			if ($data['receive_user_id'] == $v['id']) {
 				$data['receive_user'] = $v['account'];
 			} elseif (!isset($data['receive_user'])) {

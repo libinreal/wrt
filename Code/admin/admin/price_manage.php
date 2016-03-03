@@ -29,6 +29,8 @@ elseif ($_REQUEST['act'] == 'single')
 }
 
 
+
+
 $ApiList = array(
     'getAttributes', 
     'getBrands', 
@@ -483,6 +485,7 @@ class Price extends ManageModel
         self::init($entity, 'goods');
         parent::checkParams(array('limit', 'offset'));
         $params = $parameters['params'];
+        $isExport = $parameters['export'];
         $psWhere = $params['where'];
         
         //where筛选条件
@@ -668,9 +671,18 @@ class Price extends ManageModel
             $data = array_slice($data, $params['limit'], $params['offset']);
         }
         
-        
         make_json_result(array('total'=>$total, 'data'=>$data));
     }
+    
+    
+    
+    /**
+     * 导出excel
+     */
+    private function exportExcel($data) {
+    	$excel = new PHPExcel();
+    }
+
     
     
     /**

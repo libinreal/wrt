@@ -939,6 +939,10 @@ function goods_list($is_delete, $real_goods=1, $conditions = '')
         $sql    = $result['sql'];
         $filter = $result['filter'];
     }
+    
+    //#导出excel时准备sql
+    setcookie('OUTPUT_GOODS', base64_encode($sql));
+    
     $row = $GLOBALS['db']->getAll($sql);
 
     return array('goods' => $row, 'filter' => $filter, 'page_count' => $filter['page_count'], 'record_count' => $filter['record_count']);
