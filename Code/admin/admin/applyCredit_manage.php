@@ -347,8 +347,20 @@ class ApplyCredit extends ManageModel
 		
 		$status = ($status == 1) ? 2 : 3;
 		
+		$userId = $_SESSION['admin_id'];
+		if (!$userId) failed_json('未获取到当前登录用户');
+		$this->table = 'users';
+		self::selectSql(array(
+				'fields' => 'user_name', 
+				'where'  => 'user_id='.$userId
+		));
+		$userName = $this->db->getOne($this->sql);
+		if ($userName === false) return failed_json('获取用户名失败');
+		if (!$userName) return failed_json('审批失败');
+		
 		//审批
-		$fields = 'check_amount="'.$amount.'",check_remark="'.$remark.'",status="'.$status.'",check_time="'.date('Y-m-d H:i:s').'"';
+		$this->table = 'apply_credit';
+		$fields = 'check_amount="'.$amount.'",check_remark="'.$remark.'",status="'.$status.'",check_time="'.date('Y-m-d H:i:s').'",check_user="'.$userId.'",check_name="'.$userName.'"';
 		$sql = 'UPDATE '.$this->table.' SET '.$fields.' WHERE apply_id='.$applyId;
 		$result = $this->db->query($sql);
 		if ($result === false) {
