@@ -90,6 +90,9 @@ require(ROOT_PATH . ADMIN_PATH . '/includes/cls_exchange.php');
 require(ROOT_PATH . ADMIN_PATH . '/includes/db.php');
 require(ROOT_PATH . ADMIN_PATH . '/admin_config.php');
 
+//加载PHPExcel
+require(ROOT_PATH . 'includes/PHPExcel/PHPExcel.php');
+
 /* 对用户传入的变量进行转义操作。*/
 if (!get_magic_quotes_gpc())
 {

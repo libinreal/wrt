@@ -116,7 +116,7 @@ class cls_image
         }
 
         /* 允许上传的文件类型 */
-        $allow_file_types = '|GIF|JPG|JEPG|PNG|BMP|SWF|PDF|XML|';
+        $allow_file_types = '|GIF|JPG|JEPG|PNG|BMP|SWF|PDF|XML|XLSX|';
         if (!check_file_type($upload['tmp_name'], $img_name, $allow_file_types))
         {
             $this->error_msg = $GLOBALS['_LANG']['invalid_upload_image_type'];
@@ -524,7 +524,8 @@ class cls_image
                $img_type == 'image/jpeg'  ||
                $img_type == 'text/xml'    || //xml
                $img_type == 'application/pdf' || //pdf
-               $img_type == 'application/octet-stream';
+               $img_type == 'application/octet-stream' || 
+        	   $img_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'; //xlsx
     }
 
     /**
