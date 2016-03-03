@@ -348,7 +348,7 @@ class ApplyCredit extends ManageModel
 		$status = ($status == 1) ? 2 : 3;
 		
 		//审批
-		$fields = 'check_amount="'.$amount.'",check_remark="'.$remark.'",status="'.$status.'"';
+		$fields = 'check_amount="'.$amount.'",check_remark="'.$remark.'",status="'.$status.'",check_time="'.date('Y-m-d H:i:s').'"';
 		$sql = 'UPDATE '.$this->table.' SET '.$fields.' WHERE apply_id='.$applyId;
 		$result = $this->db->query($sql);
 		if ($result === false) {
