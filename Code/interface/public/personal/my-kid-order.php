@@ -79,11 +79,11 @@
     		<td><!--[= $getStatus(list[i].status)]--></td>
     	</tr>
     	<tr>
-    		<td colspan="4">
+    		<td colspan="4" style="text-align:left;border-right:1px solid #ccc;">
     		<span style='font-weight:bold'>物料名称：</span>
     		<!--[= list[i].name || '--']-->	
     		</td>
-    		<td colspan="2" style="text-align:right;">
+    		<td colspan="2" rowspan="2">
     		<span style='font-weight:bold'>订单操作：</span>
 			<a href="my-kid-order-detail.html?id=<!--[= list[i].id]-->">子订单详情</a>
 		<!--[if(list[i].allowCancel == 1) {]-->
@@ -95,11 +95,11 @@
     		</td>
     	</tr>
     	<tr>
-    		<td colspan="2">
-    		<span style='font-weight:bold'>物料类别：</span>
+    		<td colspan="2" style="text-align:left;">
+    		<span style='font-weight:bold;'>物料类别：</span>
     		<!--[= list[i].cat_name || '--']-->	
     		</td>
-    		<td colspan="2">
+    		<td colspan="2" style="text-align:left;border-right:1px solid #ccc;">
     		<span style='font-weight:bold'>规格/型号/牌号：</span>
     		<!--[= list[i].attributes || '--']-->	
     		</td>

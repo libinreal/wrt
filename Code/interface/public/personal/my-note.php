@@ -5,6 +5,11 @@
 	<title>我的票据-个人中心</title>
 	<link rel="stylesheet" href="../content/css/common.css" />
 	<link rel="stylesheet" href="../content/css/personal.css" />
+	<style type="text/css">
+	.order-list-col{
+		width: 105px;
+	}
+	</style>
 </head>
 <body>
 
@@ -22,28 +27,35 @@
 				<div class="order-list-header clearfix">
 					<div style="height:10px;"></div>
 					<form id="search_form" class="search_form" onsubmit="return false;">
-						<div>
-						<label>票据编号：</label><input type="text" name="">&nbsp;&nbsp;
-						<label>出票人：</label><input type="text" name="">&nbsp;&nbsp;
+						<div style="text-align:center;">
+						<label>编号：</label><input type="text" name="bill_num">&nbsp;
+						<label>出票人：</label><input type="text" name="drawer">&nbsp;
+						<label>承兑人：</label><input type="text" name="acceptor">&nbsp;
 						<label>状态：</label>
-						<select>
-							<option value="-1">全部</option>
+						<select name="bill_status">
+							<option value="">全部</option>
 							<option value="0">未还</option>
 							<option value="1">已还</option>
-						</select>&nbsp;&nbsp;
+						</select>&nbsp;
 						<label>日期：</label>
-                        <input type="text" name=""> 到 <input type="text" name="">&nbsp;&nbsp;
-						<button class="button">查询</button>
+                        <input type="text" name="start" id="start"> 到 <input type="text" name="end" id="end">
+						</div>
+						<div style="height:5px;"></div>
+						<div style="text-align:right;">
+						<button class="button" id="search_button">查询</button>&nbsp;
 						</div>
 					</form>
 					<div style="height:10px;"></div>
 				</div>
 				<div class="order-list-header clearfix">
-					<div class="order-list-col c1">票据id</div>
-					<div class="order-list-col c2">票据编号</div>
-					<div class="order-list-col c3">票据类型</div>
-					<div class="order-list-col c4">币别</div>
-					<div class="order-list-col c5">票面金额</div>
+					<div class="order-list-col c1">票据号</div>
+					<div class="order-list-col c2">签发日</div>
+					<div class="order-list-col c3">到期日</div>
+					<div class="order-list-col c4">票面金额</div>
+					<div class="order-list-col c5">往来单位</div>
+					<div class="order-list-col c6">出票人</div>
+					<div class="order-list-col c7">承兑人</div>
+					<div class="order-list-col c8">还票状态</div>
 				</div>
 				<div class="order-list-content" id="zj-list"></div>
 			</div>
@@ -58,11 +70,14 @@
 <script id="zj-list-tmpl" type="text/html">
     <!--[for(i = 0; i < list.length; i ++) {]-->
 	<a href="my-note-detail.html?bill_id=<!--[= list[i].bill_id]-->" class="clearfix">
-		<div class="order-list-col c1"><!--[= list[i].bill_id]--></div>
-		<div class="order-list-col c2"><!--[= list[i].bill_num || '--']--></div>
-		<div class="order-list-col c3"><!--[= list[i].bill_type || '--']--></div>
-		<div class="order-list-col c4"><!--[= list[i].currency || '--']--></div>
-		<div class="order-list-col c5"><!--[= list[i].bill_amount || '--']--></div>
+		<div class="order-list-col c1"><!--[= list[i].bill_num]--></div>
+		<div class="order-list-col c2"><!--[= list[i].issuing_date || '--']--></div>
+		<div class="order-list-col c3"><!--[= list[i].due_date || '--']--></div>
+		<div class="order-list-col c4"><!--[= list[i].bill_amount || '--']--></div>
+		<div class="order-list-col c5"><!--[= list[i].companyName || '--']--></div>
+		<div class="order-list-col c5"><!--[= list[i].drawer || '--']--></div>
+		<div class="order-list-col c5"><!--[= list[i].acceptor || '--']--></div>
+		<div class="order-list-col c5"><!--[= list[i].status || '--']--></div>
 	</a>
     <!--[}]-->
 </script>

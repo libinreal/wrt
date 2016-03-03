@@ -105,7 +105,7 @@ var Bill = {
 		// 票据类型
 		TypeMode.getBillType("bill_type");
 		TypeMode.getBillType("bill_status");
-		TypeMode.getUsers("customer_id");
+		TypeMode.getParentUsers("customer_id");
 		// 调用收付款列表
 		TypeMode.getUsers("pay_user_id");
 		TypeMode.getAdminUsers("receive_user_id");
@@ -185,7 +185,7 @@ var Bill = {
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}
 				});
-				TypeMode.getUsers("customer_id", obj.content.info.customer_id);
+				TypeMode.getParentUsers("customer_id", obj.content.info.customer_id);
 				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
 				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id, obj.content.info.pay_account);
 				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.pay_bank_id);

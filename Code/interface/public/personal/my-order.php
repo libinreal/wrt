@@ -7,16 +7,18 @@
 	<link rel="stylesheet" href="../content/css/personal.css" />
 	<style>
 	.order-list-col{
-		width: 145px;
+		width: 100px;
+	}
+	.c7{
+		width: 200px;
 	}
 	#zj-list table tr:hover{
 		background: #EfEfEf;
 	}
 	#zj-list table td{
 		text-align: center;
-		width: 145px;
-		height: 30px;
-		line-height: 30px;
+		height: 40px;
+		line-height: 40px;
 		border-bottom: 1px solid #E6E6E6;
 		padding: 5px 0;
 	}
@@ -41,7 +43,7 @@
 				<div class="order-list-header clearfix">
 					<div style="height:10px;"></div>
 					<form id="search_form" class="search_form" onsubmit="return false;">
-						<div><label class="gray-span">客户订单号：</label><input type="text" name="order_sn">&nbsp;&nbsp;&nbsp;&nbsp;
+						<div style="padding-left:10px;"><label class="gray-span">客户订单号：</label><input type="text" name="order_sn">&nbsp;&nbsp;&nbsp;&nbsp;
 						<label class="gray-span">合同名称：</label><input type="text" name="contract_name">&nbsp;&nbsp;&nbsp;&nbsp;
 						<label class="gray-span">订单状态：</label>
 						<select name="order_status">
@@ -65,6 +67,7 @@
 					<div class="order-list-col c4">下单时间</div>
 					<div class="order-list-col c5">下单金额</div>
 					<div class="order-list-col c6">订单状态</div>
+					<div class="order-list-col c7">操作</div>
 				</div>
 				<div class="order-list-content" id="zj-list"></div>
 			</div>
@@ -91,18 +94,15 @@
     	<div href="javascript:void(0);" class="clearfix">
     	<table cellpadding="0">
     	<tr>
-    		<td><!--[= list[i].orderSn || '--']--></td>
-    		<td><!--[= list[i].company_name || '--']--></td>
-    		<td><!--[= list[i].prjName || '--']--></td>
-    		<td><!--[= $formatDate(list[i].createAt, 1) || '--']--></td>
-    		<td><!--[= list[i].orderAmount || '--']--></td>
-    		<td><!--[= $getStatus(list[i].status)]--></td>
-    	</tr>
-    	<tr>
-    		<td colspan="20" style="text-align:right;">
-    		<span style='font-weight:bold'>订单操作：</span>
-			<a href="my-order-detail.html?id=<!--[= list[i].id]-->">订单详情</a>&nbsp;&nbsp;|&nbsp;&nbsp;
-			<a href="my-kid-order.html?id=<!--[= list[i].id]-->">子订单列表</a>
+    		<td style="width: 110px;"><!--[= list[i].orderSn || '--']--></td>
+    		<td style="width: 110px;"><!--[= list[i].company_name || '--']--></td>
+    		<td style="width: 110px;"><!--[= list[i].prjName || '--']--></td>
+    		<td style="width: 110px;"><!--[= $formatDate(list[i].createAt, 1) || '--']--></td>
+    		<td style="width: 110px;"><!--[= list[i].orderAmount || '--']--></td>
+    		<td style="width: 110px;"><!--[= $getStatus(list[i].status)]--></td>
+    		<td style="width: 300px;">
+			<a href="my-order-detail.html?id=<!--[= list[i].id]-->">订单详情</a>&nbsp;
+			<a href="my-kid-order.html?id=<!--[= list[i].id]-->">子订单列表</a>&nbsp;
 		<!--[if(list[i].allowCancel == 1) {]-->
 		<!--[if(list[i].cancelStatus == 1) {]-->
 			<button class="button btn-gray disabled" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消中</button>
@@ -110,9 +110,6 @@
 			<button class="button btn-gray" data-id="<!--[= list[i].id]-->" data-status="<!--[= list[i].status]-->">取消订单</button>
 		<!--[}}]-->
     		</td>
-    	</tr>
-    	<tr>
-    		<td colspan="20" style="background:#efefef;">&nbsp;</td>
     	</tr>
     	</table>
     	</div>

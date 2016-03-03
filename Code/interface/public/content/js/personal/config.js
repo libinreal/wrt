@@ -30,8 +30,10 @@ define(function(require, exports, module) {
     config.getNoteList    = config.server + '/note/getlist';//我的票据列表
     config.noteDetail     = config.server + '/note/getsingle';//我的票据详情 
     config.creditList     = config.server + '/applyCredit/creditList';//自有授信列表
+    config.creditContractList   = config.server + '/applycredit/contractList';//自有授信列表
     config.getCreditDetail= config.server + '/applyCredit/creditSingle';//自有授信详情
     config.CreditAdd      = config.server + '/applyCredit/creditAdd';//申请自有授信
+    config.CreditSave      = config.server + '/applyCredit/saveCredit';//保存自有授信
     config.CreditContract = config.server + '/applyCredit/contractList';//申请自有授信用途列表
     config.applyAttachment= config.server + '/applyCredit/uploadAttach';//上传申请附件
     config.checkApply     = config.server + '/applyCredit/updateStatus';//审核自有授信

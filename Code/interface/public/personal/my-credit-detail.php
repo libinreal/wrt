@@ -28,32 +28,48 @@
 </div>
 <?php include '../com/footer.php'; ?>
 <script id="zj-detail-tmpl" type="text/html">
-	
 	<div class="order-info gray-box">
 		<div class="head-title">
 			<span>自有授信申请信息</span>
 		</div>
-		<div class="info-border first">
-			<div class="info-head clearfix"></div>
-			<div><span class="women">申请人：<!--[= account || '--']--></span><span>申请时间：<!--[= create_date || '--']--></span></div>
-			<div><span class="women">用途：<!--[= contract_name || '--']--></span><span>申请额度：<!--[= apply_amount || '--']--></span></div>
-			<div><span class="women">所属单位：<!--[= companyName || '--']--></span><span>审批额度：<!--[= check_amount || '--']--></span></div>
-			<div><span class="women">申请备注：<!--[= apply_remark || '--']--></span><span>申请状态：<!--[= status || '--']--></span></div>
+		<div class="info-border">
+		<div class="info-head clearfix"></div>
+			<table cellpadding="0" cellspacing="1">
+				<tr>
+				<th>申请人：</th><td width=150><!--[= account || '--']--></td>
+				<th>申请时间：</th><td><!--[= create_date || '--']--></td>
+				<th>用途：</th><td><!--[= contract_name || '--']--></td>
+				</tr>
+				<tr>
+				<th>申请额度：</th><td width=150><!--[= apply_amount || '--']--></td>
+				<th>所属单位：</th><td><!--[= companyName || '--']--></td>
+				<th>审核时间：</th><td><!--[= check_time || '--']--></td>
+				</tr>
+				<tr>
+				<th>上级审核人：</th><td width=150><!--[= check_name || '--']--></td>
+				<th>审批额度：</th><td><!--[= check_amount || '--']--></td>
+				<th>申请状态：</th><td><!--[= status || '--']--></td>
+				</tr>
+				<tr>
+				<th>申请备注：</th><td colspan="20"><!--[= apply_remark || '--']--></td>
+				</tr>
+				<tr>
+				<th>审批备注：</th><td colspan="20"><!--[= check_remark || '--']--></td>
+				</tr>
+			</table>
 		</div>
 		<div class="info-border">
-			<div class="info-head">审批备注</div>
-			<div><span><!--[= check_remark || '--']--></span></div>
+			<div class="info-head"></div>
+			<div><span></span></div>
 		</div>
 		<div class="info-border">
 			<div class="info-head">申请附件</div>
-			<div><span><img src="<?php echo ($_SERVER['SERVER_NAME'] == 'www.zj.dev') ? '/public' : '';?>/apply_attachment/<!--[= img || '--']-->" /></span></div>
+			<div><span><a href="/apply_attachment/<!--[= img ]-->" target="_blank"><img src="/apply_attachment/<!--[= img ]-->" width="450" ></a></span></div>
 		</div>
-		<div class="info-border last-div">
-			
-			<div></div>
+		<div class="info-border last-div" style="text-align:center"><div>
+		</div>
 		</div>
 	</div>
-	
 </script>
 
 <script src="../content/js/module/seajs/2.2.0/sea.js"></script>

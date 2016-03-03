@@ -50,10 +50,22 @@
 				<th>收款组织：</th><td><!--[= receiver || '--']--></td><th>结算组织：</th><td><!--[= balance || '--']--></td><th>折算比例：</th><td colspan="3"><!--[= discount_rate || '--']-->%</td>
 				</tr>
 				<tr>
-				<th>ID：</th><td><!--[= bill_id || '--']--></td><th>票据状态：</th><td><!--[= status || '--']--></td><th>折后比例：</th><td><!--[= discount_rate || '--']-->%</td><th>折算比例：</th><td><!--[= discount_rate || '--']-->%</td>
+				<th>ID：</th><td><!--[= bill_id || '--']--></td><th>票据状态：</th><td><!--[= status || '--']--></td><th>折后额度：</th><td><!--[= discount_rate*bill_amount/100 || '--']--></td><th>带追索权：</th><td><!--[= is_recourse || '--']--></td>
 				</tr>
 				<tr>
 				<th>备注：</th><td colspan="20"><!--[= remark || '--']--></td>
+				</tr>
+				<tr>
+				<th colspan="2">付款人：</th><td colspan="2"><!--[= pay_user_id || '--']--></td>
+				<th colspan="2">收款人：</th><td colspan="2"><!--[= receive_user_id || '--']--></td>
+				</tr>
+				<tr>
+				<th colspan="2">付款银行：</th><td colspan="2"><!--[= pay_bank_id || '--']--></td>
+				<th colspan="2">收款银行：</th><td colspan="2"><!--[= receive_bank_id || '--']--></td>
+				</tr>
+				<tr>
+				<th colspan="2">付款账号：</th><td colspan="2"><!--[= pay_account || '--']--></td>
+				<th colspan="2">收款账号：</th><td colspan="2"><!--[= receive_account || '--']--></td>
 				</tr>
 			</table>
 		</div>

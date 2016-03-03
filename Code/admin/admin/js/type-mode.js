@@ -358,5 +358,28 @@ var TypeMode = {
 				window[func]();
 			}
 		});
-	}	
+	},
+
+	getParentUsers: function(select_id, check_id){
+		var strJson = createJson("parent_users", "parent_users", {});
+		that = this;
+		$.post(that.url, strJson, function(object){
+			if(object.error == -1){
+				$('#message_area').html(createError(object.message));
+				return false;
+			}else{
+				var row = "";
+				$.each(object.content, function(k, v){
+					if(check_id == v.user_id){
+						row += appendOption(v.user_id, v.companyName, 1);
+					}else{
+						row += appendOption(v.user_id, v.companyName);
+					}
+				})
+				$('#'+select_id).html(row);
+			}
+			$('#message_area').html('');
+		},"json");
+	}
+
 }

@@ -47,9 +47,9 @@
 				<a href="my-info.html"><img class="user-icon" alt="" src="<!--[= $getUserIcon(icon)]-->" /></a>
 			</div>
 			<div class="m-c-i-text">
-				<div><span class="gray-span">公司名称：</span><!--[= companyName || '--']--></div>
-				<div><span class="gray-span">用户名：</span><!--[= account || '--']--></div>
-				<div title="<!--[= companyAddress]-->"><span class="gray-span">用户地址：</span><!--[= companyAddress || '--']--></div>
+				<div><span class="gray-span">公司名称：</span><span style="font-weight:bold;"><!--[= companyName || '--']--></span></div>
+				<div><span class="gray-span">用户名：</span><span style="font-weight:bold;"><!--[= account || '--']--></span></div>
+				<div title="<!--[= companyAddress]-->"><span class="gray-span">用户地址：</span><span style="font-weight:bold;"><!--[= companyAddress || '--']--></span></div>
 			</div>
 		</div>
 	</div>
@@ -60,10 +60,13 @@
 			<td style="color:#F00"><!--[= $formatCurrency1(billAmountValid)]-->RMB</td>
 		</tr>
 		<tr><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td></tr>
+		<tr><td>&nbsp;</td></tr>
 		<tr>
 			<td class="gray-span">现金额度：</td>
 			<td style="color:#F00"><!--[= $formatCurrency1(cashAmountValid)]-->RMB</td>
 		</tr>
+		<tr><td>&nbsp;</td></tr>
 	</table>
 </script>
 <script id="zj-list-tmpl" type="text/html">
@@ -121,7 +124,7 @@
 	<table width="95%" style="margin:0 auto; line-height:30px;">
 		<tr>
 		<td width="90%"><a href="../notice/<!--[= $newsUrl(list[i].id)]-->"><span class="title"><!--[= list[i].title]--></span></a></td>
-		<td width="10%"><span class="date"><!--[= $formatDate(list[i].createAt,'MM/dd')]--></span></td>
+		<td width="10%" style="text-align:right;"><span class="date"><!--[= $formatDate(list[i].createAt,'MM/dd')]--></span></td>
 		</tr>
 	</table>
     <!--[}]-->

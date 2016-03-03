@@ -36,7 +36,6 @@
          * @param callbackError-请求失败后执行的回调方法
          */
         paging: function(data, callback, callbackError) {
-            console.log(data)
             var renderFor = data.renderFor || 'zj-list-tmpl',
                 renderEle = data.renderEle || '#zj-list',
                 timeKey = data.timeKey || 'createAt',
