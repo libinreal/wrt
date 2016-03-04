@@ -100,11 +100,11 @@ class OutputE
 		$excel = self::$excel;
 		$excel->getProperties()->setCreator('3tichina') //创建人
 	        ->setLastModifiedBy('3tichina') //最后修改人
-	        ->setTitle('物融通商品导出') //标题
-	        ->setSubject('物融通商品导出') //题目
-	        ->setDescription('物融通商品导出') //描述
+	        ->setTitle('物融通商品列表') //标题
+	        ->setSubject('物融通商品列表') //题目
+	        ->setDescription('物融通商品列表，导出excel') //描述
 	        ->setKeywords('物融通商品导出') //关键字
-	        ->setCategory('物融通商品导出'); //种类
+	        ->setCategory('物融通商品列表导出'); //种类
 		
 		$excel->setActiveSheetIndex(0)
             ->setCellValue('A1','编号')
@@ -131,7 +131,7 @@ class OutputE
 		
 		
 		//excel数据
-		$filename = urlencode('物融通商品列表').' '.date('Y-m-d');
+		$filename = urlencode('物融通商品列表').' '.date('Y-m-d H:i:s');
 		
 		$this->getxlsx($filename, $excel);
 		exit();
