@@ -40,6 +40,18 @@ class Suppliers extends \Phalcon\Mvc\Model
     public $area_name;
 
     /**
+     *
+     * @var string
+     */
+    public $custom_no;
+
+    /**
+     *
+     * @var string
+     */
+    public $account_no;
+
+    /**
      * Independent Column Mapping.
      */
     public function columnMap()
@@ -50,7 +62,9 @@ class Suppliers extends \Phalcon\Mvc\Model
             'suppliers_desc' => 'suppliers_desc',
             'is_check' => 'is_check',
             'suppliers_code' => 'suppliers_code',
-            'area_name' => 'areaName'
+            'area_name' => 'areaName',
+            'custom_no' => 'customNo',
+            'account_no' => 'accountNo'
         );
     }
 

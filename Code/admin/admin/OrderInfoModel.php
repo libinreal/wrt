@@ -1720,10 +1720,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 			$contract_table = $GLOBALS['ecs']->table('contract');
+			$sign_table = $GLOBALS['ecs']->table('bank_sign');
 
 			//检查订单状态
 			$order_info_sql = 'SELECT odr.`child_order_status`, odr.`suppers_id`, odr.`parent_order_id`, odr.`order_amount_send_buyer`, odr.`order_amount_arr_buyer`,' .
-							  ' odr.`contract_sn` ,odr.`cash_used` , odr.`bill_used`, og.`goods_id`, og.`goods_number` FROM ' . $order_info_table .
+							  ' odr.`order_sn`, odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`,' .
+							  ' og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_number_arr_buyer`, og.`goods_number_arr_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`, og.`goods_price_arr_buyer`, og.`goods_price_arr_saler`,' .
+							  ' odr.`contract_sn` ,odr.`cash_used` , odr.`bill_used`, og.`goods_sn`, og.`goods_id`, og.`goods_number` FROM ' . $order_info_table .
 							  ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id` ' .
 					 		  ' WHERE odr.`order_id` = ' . $order_id;
 			$order_status = $GLOBALS['db']->getRow( $order_info_sql );
@@ -1741,6 +1744,106 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, SALE_ORDER_CONFIRMED);
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
+						//******************  插入子订单的银行签名信息 BEGIN *****************
+						$parent_sn_arr = explode( '-', $order_status['order_sn'] );
+						$parent_sn = $parent_sn_arr[0];
+						//主订单签名信息
+						$parent_order_sign_sql = 'SELECT `submit_data` FROM ' .
+												 $sign_table . ' WHERE `order_sn` = ' . $parent_sn;
+						$parent_sign = $GLOBALS['db']->getRow( $parent_order_sign_sql );
+						// 供应商信息
+						$supplier_info = get_supplier( $order_status['suppers_id'] );
+						// 复制主订单的签名数据
+						$submit_sale_send = $submit_sale_arr = $submit_purchase_send = $submit_purchase_arr = unserialize( $parent_sign['submit_data'] );
+						$sign_sale_send = $sign_sale_arr = $sign_purchase_send = $sign_purchase_arr = array();
+
+						$submit_sale_send['orderNo'] = $submit_sale_arr['orderNo'] = $order_status['order_sn'];//销售订单号
+						$submit_sale_send['orderNo'] = $submit_sale_arr['orderNo'] = $order_status['order_sn'];//销售订单号
+
+						$submit_purchase_send['tranID'] = $submit_purchase_arr['tranID'] = $order_status['order_sn'].'-cg';//采购订单号
+						$submit_purchase_send['tranID'] = $submit_purchase_arr['tranID'] = $order_status['order_sn'].'-cg';//采购订单号
+
+						$submit_purchase_send['buyerCstno'] = $submit_purchase_arr['buyerCstno'] = $submit_sale_send['salerCstno'];//采购买方客户号
+						$submit_purchase_send['buyerAccno'] = $submit_purchase_arr['buyerAccno'] = $submit_sale_send['salerAccno'];//采购买方帐号
+
+						$submit_purchase_send['salerCstno'] = $submit_purchase_arr['salerCstno'] = $supplier_info['custom_no'];//采购卖方客户号
+						$submit_purchase_send['salerAccno'] = $submit_purchase_arr['salerAccno'] = $supplier_info['account_no'];//采购卖方帐号
+
+						$submit_sale_send['allGoodsMoney'] = $submit_sale_arr['allGoodsMoney'] = sprintf('%0.2f', $order_status['order_amount_send_buyer']);//销售金额
+						$submit_purchase_send['allGoodsMoney'] = $submit_purchase_arr['allGoodsMoney'] = sprintf('%0.2f', $order_status['order_amount_send_saler']);//采购金额
+
+				        $submit_sale_send['extraData'] = '0:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_send_buyer'] . ':' . $order_status['goods_number_send_buyer'];//销售发货
+				        $submit_sale_arr['extraData'] = '1:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_arr_buyer'] . ':' . $order_status['goods_number_arr_buyer'];//销售到货
+				        $submit_purchase_send['extraData'] = '0:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_send_saler'] . ':' . $order_status['goods_number_send_saler'];//采购发货
+				        $submit_purchase_arr['extraData'] = '1:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_arr_saler'] . ':' . $order_status['goods_number_arr_saler'];//采购到货
+
+						$submit_sale_send = serialize($submit_sale_send);
+						$submit_sale_arr = serialize($submit_sale_arr);
+						$submit_purchase_send = serialize($submit_purchase_send);
+						$submit_purchase_arr = serialize($submit_purchase_arr);
+
+						$sign_filed = array(
+						    'signVersion',
+						    'timeTamp',
+						    'contractNo',
+						    'orderNo',
+						    'buyerCstno',
+						    'buyerAccno',
+						    'buyerbookSum',
+						    'salerCstno',
+						    'salerAccno',
+						    'salerbookSum',
+						    'allGoodsMoney',
+						    'tranID',
+						    'extraData',
+						);
+						foreach($sign_filed as $sf) {
+						    $sign_sale_send[$sf] = $submit_sale_send[$sf];
+						    $sign_sale_arr[$sf] = $submit_sale_arr[$sf];
+						    $sign_purchase_send[$sf] = $submit_purchase_send[$sf];
+						    $sign_purchase_arr[$sf] = $submit_purchase_arr[$sf];
+						}
+						
+						$sign_sale_send = serialize( $sign_sale_send );
+					    $sign_sale_arr = serialize( $sign_sale_arr );
+					    $sign_purchase_send = serialize( $sign_purchase_send );
+					    $sign_purchase_arr = serialize( $sign_purchase_arr );
+
+					    //销售发货签名
+					    $ss_ss['order_sn'] = $order_status['order_sn'];
+					    $ss_ss['submit_data'] = $submit_sale_send;
+					    $ss_ss['sign_data'] = $sign_sale_send;
+					    $ss_ss['sign_type'] = 1;
+
+						//销售到货签名
+						$ss_sa['order_sn'] = $order_status['order_sn'];
+						$ss_sa['submit_data'] = $submit_sale_arr;
+						$ss_sa['sign_data'] = $sign_sale_arr;
+						$ss_sa['sign_type'] = 2;
+
+					    //采购发货签名
+						$ss_ps['order_sn'] = $order_status['order_sn'];
+						$ss_ps['submit_data'] = $submit_purchase_send;
+						$ss_ps['sign_data'] = $sign_purchase_send;
+						$ss_ps['sign_type'] = 3;
+
+					    //采购到货签名
+					    $ss_pa['order_sn'] = $order_status['order_sn'];
+					    $ss_pa['submit_data'] = $submit_purchase_arr;
+					    $ss_pa['sign_data'] = $sign_purchase_arr;
+					    $ss_pa['sign_type'] = 4;
+
+					    $mut_data = array();
+					    $mut_data[] = $ss_ss;
+					    $mut_data[] = $ss_sa;
+
+					    $mut_data[] = $ss_ps;
+					    $mut_data[] = $ss_pa;
+
+					    $GLOBALS['db']->autoInsertMut( $sign_table, $mut_data );//插入4条签名数据到 `bank_sign`
+
+						//******************  插入子订单的银行签名信息 END *****************
+						
 						if( $childer_order_update )
 							make_json_response('', '0', '确认 成功');
 						else

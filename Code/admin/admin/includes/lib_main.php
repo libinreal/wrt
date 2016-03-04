@@ -1058,4 +1058,42 @@ function suppliers_list_name()
 	}
 	return $json;
 }
+
+/**
+ * 基础数据获取
+ * date 2016-03-03
+ * 
+ * @param  string|array $code 商店设置对应的编码
+ * @return [string|array]       [具体配置]
+ */
+function get_shop_config_item($code = '')
+{
+    if( is_string( $code ) ){
+        $sql = 'SELECT `value` FROM ' . $GLOBALS['ecs']->table('shop_config') .
+               ' WHERE `code` = \'' . $code . '\'';
+        $val = $GLOBALS['db']->getOne( $sql );
+        
+    }else{
+        $sql = 'SELECT `value` FROM ' . $GLOBALS['ecs']->table('shop_config') .
+               ' WHERE `code` IN(' . implode( ',', $code ) . ')';
+        $val = $GLOBALS['db']->getAll( $sql );
+
+    }
+    return $val;
+
+    return $val;
+}
+
+/**
+ * 供应商客户号、帐号
+ * @param  [int] $supplier_id [供应商id]
+ * @return [string]              [供应商信息]
+ */
+function get_supplier( $supplier_id )
+{
+    $sql = 'SELECT `custom_no`, `account_no` FROM ' . $GLOBALS['ecs']->table('suppliers') .
+           ' WHERE `suppliers_id` = ' . $supplier_id;
+    $val = $GLOBALS['db']->getRow( $sql );
+    return $val;
+}
 ?>
