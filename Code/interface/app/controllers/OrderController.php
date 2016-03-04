@@ -298,6 +298,7 @@ class OrderController extends ControllerBase
 			');
 		$result = $orders->execute();
 		$info = $result->toArray();
+		if (!$info) return ResponseApi::send(array());
 		
 		$goodsId = array();
 		foreach ($info as $v) {
@@ -305,6 +306,7 @@ class OrderController extends ControllerBase
 				$goodsId[] = $v['goodsId'];
 		}
 		$goodsId = array_unique($goodsId);
+		if (!$goodsId) return ResponseApi::send(null, -1, '查询失败');
 		
 		//商品属性
 		$attributes = GoodsAttr::query();
