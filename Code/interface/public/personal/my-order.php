@@ -7,10 +7,10 @@
 	<link rel="stylesheet" href="../content/css/personal.css" />
 	<style>
 	.order-list-col{
-		width: 100px;
+		width: 115px;
 	}
 	.c7{
-		width: 200px;
+		width: 150px;
 	}
 	#zj-list table tr:hover{
 		background: #EfEfEf;
@@ -94,13 +94,13 @@
     	<div href="javascript:void(0);" class="clearfix">
     	<table cellpadding="0">
     	<tr>
-    		<td style="width: 110px;"><!--[= list[i].orderSn || '--']--></td>
-    		<td style="width: 110px;"><!--[= list[i].company_name || '--']--></td>
-    		<td style="width: 110px;"><!--[= list[i].prjName || '--']--></td>
-    		<td style="width: 110px;"><!--[= $formatDate(list[i].createAt, 1) || '--']--></td>
-    		<td style="width: 110px;"><!--[= list[i].orderAmount || '--']--></td>
-    		<td style="width: 110px;"><!--[= $getStatus(list[i].status)]--></td>
-    		<td style="width: 300px;">
+    		<td style="width: 130px;"><!--[= list[i].orderSn || '--']--></td>
+    		<td style="width: 130px;"><!--[= list[i].company_name || '--']--></td>
+    		<td style="width: 130px;"><!--[= list[i].prjName || '--']--></td>
+    		<td style="width: 130px;"><!--[= $formatDate(list[i].createAt, 1) || '--']--></td>
+    		<td style="width: 130px;"><!--[= list[i].orderAmount || '--']--></td>
+    		<td style="width: 130px;"><!--[= $getStatus(list[i].status)]--></td>
+    		<td style="width: 220px;">
 			<a href="my-order-detail.html?id=<!--[= list[i].id]-->">订单详情</a>&nbsp;
 			<a href="my-kid-order.html?id=<!--[= list[i].id]-->">子订单列表</a><br/>
 		<!--[if(list[i].allowCancel == 1) {]-->

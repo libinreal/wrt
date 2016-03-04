@@ -382,7 +382,6 @@
         }
         return true;
     }
-
     
     
     //获取签名数据url
@@ -428,7 +427,7 @@
 	            var step = $('input[name="step"]').val();
 	            //生成签名数据
 	            var signData = getSignData(step, tempResponse.body.signRawData);
-	            
+
 	            if(!signData.success){
 	            	alert('生成签名数据失败！' + signData.errorInfo);
 	                return;

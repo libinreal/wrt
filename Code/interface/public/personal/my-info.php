@@ -65,59 +65,64 @@
 <script src="../content/js/module/seajs/2.2.0/sea-config.js"></script>
 <script id="user-tmpl" type="text/html">
 	<div class="personal-item">
-		<div class="personal-info-label">用户名：</div><div class="personal-info-value"><!--[= account]--></div>
-		<div class="personal-info-label small">会员类型：</div>
-		<div class="personal-info-value small"><!--[= $getRoleName(customLevel)]-->&nbsp;</div>
-		<div class="personal-info-label small">会员权限：</div>
-		<div class="personal-info-value small"><!--[= $checkPermisson(customLevel)]--></div>
-	</div>
-	<div class="personal-item">
-		<div class="personal-info-label">会员姓名：</div>
+		<div class="personal-info-label">用户名：</div>
+		<div class="personal-info-value"><!--[= account]--></div>
+		<div class="personal-info-label">姓名：</div>
 		<div class="personal-info-value"><!--[=contacts]--></div>
-		<div class="personal-info-label small">职位：</div>
-		<div class="personal-info-value small"><!--[=position]--></div>
-		<div class="personal-info-label small">性别：</div>
-		<div class="personal-info-value small"><!--[=(gender=='0'?'男':'女')]--></div>
 	</div>
 	<div class="personal-item">
-		<div class="personal-info-label">联系人手机号：</div>
+		<div class="personal-info-label">性别：</div>
+		<div class="personal-info-value"><!--[=(gender=='0'?'男':'女')]--></div>
+		<div class="personal-info-label">联系电话：</div>
 		<div class="personal-info-value"><!--[=telephone]--></div>
+	</div>
+	<div class="personal-item">
+		<div class="personal-info-label">公司名称：</div>
+		<div class="personal-info-value"><!--[=companyName]--></div>
+		<div class="personal-info-label">所在部门：</div>
+		<div class="personal-info-value"><!--[=department]--></div>
+	</div>
+	<div class="personal-item">
+		<div class="personal-info-label">职位：</div>
+		<div class="personal-info-value"><!--[=position]--></div>
+		<div class="personal-info-label">微信号：</div>
+		<div class="personal-info-value"><!--[=weixin]--></div>
+	</div>
+	<div class="personal-item">
+		<div class="personal-info-label">单位地址：</div>
+		<div class="personal-info-value"><!--[=companyAddress]--></div>
+		<div class="personal-info-label">办公电话：</div>
+		<div class="personal-info-value"><!--[=officePhone]--></div>
+	</div>
+	<div class="personal-item">
+		<div class="personal-info-label">办公传真号：</div>
+		<div class="personal-info-value"><!--[=fax]--></div>
 		<div class="personal-info-label">邮箱：</div>
 		<div class="personal-info-value"><!--[=email]--></div>
 	</div>
 	<div class="personal-item">
 		<div class="personal-info-label">第二联系人：</div>
-		<div class="personal-info-value"><!--[=secondContacts]--></div>
+		<div class="personal-info-value"><!--[=secondContacts || "--" ]--></div>
 		<div class="personal-info-label">第二联系人手机号：</div>
-		<div class="personal-info-value"><!--[=secondPhone]--></div>
+		<div class="personal-info-value"><!--[=secondPhone || "--" ]--></div>
 	</div>
 	<div class="personal-item">
-		<div class="personal-info-label">本级单位名称：</div>
-		<div class="personal-info-value big"><!--[=companyName]--></div>
-	</div>
-	<div class="personal-item">
-		<div class="personal-info-label">直属上级单位：</div>
+		<div class="personal-info-label">上级单位：</div>
 		<div class="personal-info-value"><!--[=superiors || '--']--></div>
 		<div class="personal-info-label">直属下级单位：</div>
 		<div class="personal-info-value"><!--[=subordinate || '--']--></div>
 	</div>
 	<div class="personal-item">
-		<div class="personal-info-label">办公电话：</div>
-		<div class="personal-info-value"><!--[=officePhone]--></div>
-		<div class="personal-info-label">办公传真号：</div>
-		<div class="personal-info-value"><!--[=fax]--></div>
+		<div class="personal-info-label">会员类型：</div>
+		<div class="personal-info-value"><!--[= $getRoleName(customLevel)]--></div>
+		<div class="personal-info-label">会员权限：</div>
+		<div class="personal-info-value"><!--[= $checkPermisson(customLevel)]--></div>
 	</div>
 	<div class="personal-item">
-		<div class="personal-info-label">单位地址：</div>
-		<div class="personal-info-value"><!--[=companyAddress]--></div>
-		<div class="personal-info-label">所在部门：</div>
-		<div class="personal-info-value"><!--[=department]--></div>
-	</div>
-	<div class="personal-item">
-		<div class="personal-info-label">微信号：</div>
-		<div class="personal-info-value"><!--[=weixin]--></div>
-		<div class="personal-info-label">QQ号：</div>
-		<div class="personal-info-value"><!--[=qq]--></div>
+		<div class="personal-info-label">银行客户号：</div>
+		<div class="personal-info-value">--</div>
+		<div class="personal-info-label">所属银行：</div>
+		<div class="personal-info-value">--</div>
 	</div>
 </script>
 <script>

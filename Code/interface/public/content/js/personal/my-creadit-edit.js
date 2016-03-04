@@ -1,4 +1,4 @@
-define(function(require, exports) {
+define(function(require) {
     var $ = require('jquery'),
         config = require('./config'),
         Ajax = require('../base/ajax'),
@@ -22,28 +22,26 @@ define(function(require, exports) {
         if (response.code != 0) {
             return;
         }
-        if (response.body.action) {
-        }
-    });
-
-    //upload attachment
-    $('#uploadFile').fileupload({
-        url: config.applyAttachment,
-        dataType: "JSON",
-        replaceFileInput : false, 
-        acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
-        maxFileSize: 5000000,
-        done: function(e, data) {
-            $('#apply_img').val(data.result.body[0]);
-        },
-        process: function(e, data) {
-            for (var i = 0, l = data.processQueue.length; i < l; i++) {
-                if (data.processQueue[i].action == 'validate') {
-                    data.messages.acceptFileTypes = '上传文件格式不支持.';
+        //upload attachment
+        $('#uploadFile').fileupload({
+            url: config.applyAttachment,
+            dataType: "JSON",
+            replaceFileInput : false, 
+            acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
+            maxFileSize: 5000000,
+            done: function(e, data) {
+                $('#apply_img').val(data.result.body[0]);
+                $('#apply_img_show').attr("src", "/apply_attachment/"+data.result.body[0])
+            },
+            process: function(e, data) {
+                for (var i = 0, l = data.processQueue.length; i < l; i++) {
+                    if (data.processQueue[i].action == 'validate') {
+                        data.messages.acceptFileTypes = '上传文件格式不支持.';
+                    }
                 }
+                data.messages.maxFileSize = '上传文件太大，限制' + data.maxFileSize / 1000 + 'K以内.';
             }
-            data.messages.maxFileSize = '上传文件太大，限制' + data.maxFileSize / 1000 + 'K以内.';
-        }
+        });
     });
 
     //表单
@@ -106,5 +104,5 @@ define(function(require, exports) {
             }
             Tools.showToast("保存成功");
         });
-    });
+    });  
 });

@@ -32,10 +32,10 @@
 			<div class="info clearfix" id="zj-detail"></div>
 			<ul class="intro_nav clearfix" style="display: none;">
 				<li class="intro"><a class="active" href="#" data-to="#spjs">商品介绍</a></li>
-				<li class="stand"><a href="#" data-to="#ggjs">规格介绍</a></li>
+				<!--<li class="stand"><a href="#" data-to="#ggjs">规格介绍</a></li>
 				<li class="notice"><a href="#" data-to="#sysm">使用说明</a></li>
 				<li class="saled"><a href="#" data-to="#shbz">售后保障</a></li>
-				<li class="evald"><a href="#" data-to="#sppj">商品评价</a></li>
+				<li class="evald"><a href="#" data-to="#sppj">商品评价</a></li>-->
 			</ul>
 			<div class="shop_intro_list" style="display: none;">
 				<ul class="clearfix" id="zj-detail1"></ul>
@@ -156,13 +156,13 @@
 				 class="price-value"><!--[== $formatCurrency1(vipPrice)]--></span><span
 				 class="price-unit">&nbsp;信用B</span>
 			</div>
-			<div class="price-item">
+			<!--<div class="price-item">
 				<span class="price-label factory">挂牌单价</span><span
 				 class="price-value"><!--[== $formatCurrency1(price)]--></span><span
 				 class="price-unit">&nbsp;信用B</span>
-			</div>
+			</div>-->
 		</div>
-		<div class="comment"><span class="c-gray">商品评论：</span>(已有<!--[= total || '--']-->人参与)</div>
+		<!--<div class="comment"><span class="c-gray">商品评论：</span>(已有<!--[= total || '--']-->人参与)</div>-->
 		<div class="distribution">
 			<div class="distribution-name">配送至：<a class="distribution-choose operate" href="javascript:;"><!--[= salesArea || '--']--></a></div>
 			<div class="distribution-desc"><span style="color:#7cb234;" id="quality-status"><!--[= (storeNum > 0 ? '有货' : '无货')]--></span> 可售数量：<span id="quality-num" style="color:#00a651;"><!--[= storeNum || '--']--></span><!--[= unit]--> 由中交物产负责配送从 <span style="color:#448ccb;"><!--[= shiplocal || '--']--></span> 发货，并提供售后服务。</div>
@@ -175,10 +175,10 @@
 		</div>
 		<div class="apply-btn">
 			<input id="max-num" type="hidden" value="<!--[= storeNum]-->" />
-			<a href="#" class="shop-car" id="add-cart">加入购物车</a><a 
-				href="../customize/apply.html?goodsId=<!--[= id]-->" target="_blank" class="applying">申请定制</a><a 
-				href="#" class="collect <!--[= (hasFavorites == 1) ? 'active' : '']-->">收藏</a><a 
-				href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10048426" target="_blank" class="call-service">物融客服</a>
+			<a href="#" class="shop-car" id="add-cart">加入购物车</a>
+			<!--<a href="../customize/apply.html?goodsId=<!--[= id]-->" target="_blank" class="applying">申请定制</a>-->
+			<a href="#" class="collect <!--[= (hasFavorites == 1) ? 'active' : '']-->">收藏</a>
+			<a href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10048426" target="_blank" class="call-service">物融客服</a>
 		</div>
 	</div>
 </script>
@@ -214,11 +214,11 @@
 					class="price-value"><!--[== $formatCurrency(list[i].vipPrice)]--></span><span 
 					class="price-unit">信用B</span>
 				</div>
-				<div class="default">
+				<!--<div class="default">
 					<span class="price-label factory">挂牌单价</span><span 
 					class="price-value"><!--[== $formatCurrency(list[i].price)]--></span><span 
 					class="price-unit">信用B</span>
-				</div>
+				</div>-->
 			</div>
 			<div class="operate">
 				<a class="operate-shoucang <!--[= (list[i].hasFavorites ? 'active' : '')]-->" data-id="<!--[= list[i].id]-->" href="#"><span>已收藏</span></a>
@@ -248,11 +248,6 @@
 			<div class="vip">
 				<span class="price-label">交易单价</span><span
 				class="price-value"><!--[== $formatCurrency(list[i].vipPrice)]--></span><span 
-				class="price-unit">信用B</span>
-			</div>
-			<div class="default">
-				<span class="price-label factory">挂牌单价</span><span
-				class="price-value"><!--[== $formatCurrency(list[i].price)]--></span><span 
 				class="price-unit">信用B</span>
 			</div>
 		</li>

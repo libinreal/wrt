@@ -290,6 +290,71 @@ input[type="submit"] {
     cursor: pointer;
     float: left;
 }
+.header-left{
+    float:left;
+    line-height:50px;
+    text-indent:5em;  
+}
+.header-left .operate{
+    margin-left:10px;
+    padding:3px 10px;
+    line-height: 22px;
+    border: 1px solid #d9d9d9;
+    font-size: 12px;
+    text-align: center;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+    border-radius: 10px;
+    color: #fff;
+}
+.header-left span{
+    color: #fff;
+}
+.header-left ul li{
+    float: left;
+}
+.header-left ul li a{
+    color: #fff;
+}
+.header-left .search {
+    margin: 5px 0 0 20px;
+    width: 345px;
+    height: 37px;
+    border: 1px solid #fff;
+}
+.header-left .search .search_input {
+    width: 302px;
+    height: 37px;
+    text-indent: 1em;
+    border: 0;
+    float: left;
+}
+.header-left .search .search_bg {
+    width: 41px;
+    height: 38px;
+    border: none;
+    background: url(../images/mall/search.png) no-repeat center center;
+    cursor: pointer;
+    float: left;
+}
+.header-left .icon-home {
+    background-image: url(../images/common/icon_home.png);
+}
+.header-left .icon {
+    padding-left: 35px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+}
+.header-right .link, .header-right .unlink {
+    display: inline-block;
+    height: 53px;
+    line-height: 53px;
+    padding: 0 10px;
+    cursor: pointer;
+    color: #fff;
+}
 .header-right {
     float: right;
 }
@@ -344,6 +409,26 @@ input[type="submit"] {
 }
 .header-right .icon-personal >span {
     color: #fff;
+    display: inline-block;
+    background-image: url(../images/common/user-up-arrow.png) no-repeat;
+    height: 20px;
+    width: 10px;
+}
+.header-right #userbar{
+    position: relative;
+}
+.header-right #userbar dl{
+    position: absolute;
+    background: #fff;
+    padding:15px 10px;
+    top: 40px;
+    height: 68px;
+    width: 68px;
+    background: url(../images/common/user-list-box.png) no-repeat;
+}
+.header-right #userbar dl dt{
+    border-bottom: 1px solid #ccc;
+
 }
 .header-right .icon-screen {
     background-image: url(../images/common/icon_screen.png);
