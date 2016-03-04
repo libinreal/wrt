@@ -309,7 +309,9 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
                            'suppliers_desc'   => trim($_POST['suppliers_desc']),
                            'parent_id'        => 0,
                             'area_name' => trim($_POST['area_name']),
-                            'suppliers_code' => trim($_POST['suppliers_code'])
+                            'suppliers_code' => trim($_POST['suppliers_code']),
+                            'custom_no' => trim($_POST['custom_no']),
+                            'account_no' => trim($_POST['account_no'])
                            );
 
         /* 判断名称是否重复 */
@@ -354,7 +356,9 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
         $suppliers['new'] = array('suppliers_name'   => trim($_POST['suppliers_name']),
                            'suppliers_desc'   => trim($_POST['suppliers_desc']),
                             'suppliers_code' => trim($_POST['suppliers_code']),
-                            'area_name' => trim($_POST['area_name'])
+                            'area_name' => trim($_POST['area_name']),
+                            'custom_no' => trim($_POST['custom_no']),
+                            'account_no' => trim($_POST['account_no'])
                            );
 
         /* 取得供货商信息 */

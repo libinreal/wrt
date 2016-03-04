@@ -18,6 +18,8 @@ $_LANG['suppliers_area_name'] = '请选择区域';
 /* 详情页 */
 $_LANG['label_suppliers_name'] = '供货商名称：';
 $_LANG['label_suppliers_desc'] = '供货商描述：';
+$_LANG['label_suppliers_custom_no'] = '供货商客户号：';
+$_LANG['label_suppliers_acc_no'] = '供货商账号：';
 $_LANG['label_area_name'] = '区域名称：';
 $_LANG['label_admins'] = '绑定管理员：';
 $_LANG['label_suppliers_code']  = '供货商编码：';

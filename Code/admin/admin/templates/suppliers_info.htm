@@ -24,6 +24,14 @@
                 <td><input type="text" name="suppliers_code" maxlength="60" value="{$suppliers.suppliers_code}" /></td>
             </tr>
             <tr>
+                <td class="label">{$lang.label_suppliers_custom_no}{$lang.require_field}</td>
+                <td><input type="text" name="custom_no" maxlength="60" value="{$suppliers.custom_no}" /></td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.label_suppliers_acc_no}{$lang.require_field}</td>
+                <td><input type="text" name="account_no" maxlength="60" value="{$suppliers.account_no}" /></td>
+            </tr>
+            <tr>
                 <td class="label">{$lang.label_suppliers_desc}<span class="require-field"> &nbsp;</span></td>
                 <td><textarea  name="suppliers_desc" cols="60" rows="4"  >{$suppliers.suppliers_desc}</textarea></td>
             </tr>

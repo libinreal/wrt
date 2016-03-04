@@ -912,6 +912,58 @@ class cls_mysql
 
         array_unique($this->mysql_disable_cache_tables);
     }
+
+    /**
+     * 插入多条数据
+     * 2016-03-04
+     * 
+     * @author libin
+     * @param  [type] $table           [表名]
+     * @param  [type] $field_value_mut [二维数组]
+     * @return [bool]                  [执行结果]
+     */
+    function autoInsertMut($table, $field_value_mut)
+    {
+        $field_names = $this->getCol('DESC ' . $table);
+
+        $sql = '';
+        $fields = array();
+
+        foreach ($field_value_mut as $field_values) {
+            
+           $values = array();
+
+            foreach ($field_names AS $value){
+
+                if (array_key_exists($value, $field_values) == true){
+                    if( empty( $sql ) ){
+                        $fields[] = $value;
+                    }
+                    $values[] = "'" . $field_values[$value] . "'";
+                }
+            }
+
+            if ( !empty( $fields ) )
+            {
+                if( empty( $sql ) ){
+                    $sql = 'INSERT INTO ' . $table . ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ')';
+                }else{
+                    $sql .= ',(' . implode(', ', $values) .')';
+                }
+            }
+
+        }
+
+        if ($sql)
+        {
+            return $this->query( $sql );
+        }
+        else
+        {
+            return false;
+        }
+
+    }
 }
 
 ?>

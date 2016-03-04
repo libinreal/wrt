@@ -88,17 +88,32 @@ elseif ($_REQUEST['act'] == 'post')
     /* 保存变量值 */
     $count = count($_POST['value']);
 
+    //是否全部已验签
+    $sign_order = 'SELECT COUNT(*) AS `total` FROM ' . $GLOBALS['ecs']->table('order_info') .
+                  ' WHERE `child_order_status` > ' . SOS_CONFIRMED . ' AND `child_order_status` < ' . SOS_ARR_PC2;//正在验签的数量
+    $sign_number = $GLOBALS['db']->getOne( $sign_order );
+
+    $sign_switch_id = 0;
     $arr = array();
-    $sql = 'SELECT id, value FROM ' . $ecs->table('shop_config');
+    $sql = 'SELECT id, value, code FROM ' . $ecs->table('shop_config');
     $res= $db->query($sql);
     while($row = $db->fetchRow($res))
     {
         $arr[$row['id']] = $row['value'];
+        //中交验签开关 2016-03-03
+        if( $row['code'] == 'sign_switch' ){
+            $sign_switch_id = $row['id'];
+        }
     }
     foreach ($_POST['value'] AS $key => $val)
     {
         if($arr[$key] != $val)
         {
+            if( $key == $sign_switch_id && $sign_number > 0)//id 是验签开关的
+            {
+                continue;//有正在验签的订单，不更新验签开关状态
+            }
+
             $sql = "UPDATE " . $ecs->table('shop_config') . " SET value = '" . trim($val) . "' WHERE id = '" . $key . "'";
             $db->query($sql);
         }

@@ -501,30 +501,6 @@ height: 10px;
 background: #fff;
 }
 
-
-.mall-header .search {
-    float: right;
-    width: 302px;
-    height: 42px;
-    margin-top: 14px;
-    position: relative;
-}
-.search .search_input {
-    width: 302px;
-    height: 37px;
-    text-indent: 1em;
-    border: 0;
-}
-.search .search_bg {
-    position: absolute;
-    top: 0px;
-    right: 0;
-    width: 41px;
-    height: 37px;
-    border: none;
-    background: url(../images/mall/search.png) no-repeat center right;
-    cursor: pointer;
-}
 /* 左侧导航start */
 
 .left-bar {
@@ -969,7 +945,7 @@ background: #fff;
 /* mall detailstart */
 
 .detail-left-nav {
-    width: 240px;
+    width: 215px;
     float: left;
 }
 .detail-left-nav .strip {
@@ -977,8 +953,8 @@ background: #fff;
     padding: 5px;
 }
 .strip img {
-    width: 230px;
-    height: 230px;
+    width: 200px;
+    height: 200px;
 }
 .strip .back {
     display: block;
@@ -1019,8 +995,8 @@ background: #fff;
 }
 .similar .similar-thumb img {
     display: block;
-    width: 230px;
-    height: 220px;
+    width: 200px;
+    height: 190px;
     padding: 5px;
 }
 .similar .similar-name {

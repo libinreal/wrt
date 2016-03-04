@@ -12,13 +12,10 @@
 
 <div class="section">
 	<div class="page-vertical">
-		<div class="mall-header clearfix">
+		<!--<div class="mall-header clearfix">
 			<div class="userinfo" id="zj-userinfo"></div>
-			<form class="search" action="search.html">
-				<input type="text" class="search_input" name="key" placeholder="请输入关键字" />
-				<input type="submit" class="search_bg" value="" />
-			</form>
-		</div>
+		</div>-->
+		<div style="clear:both;height:15px;"></div>
 		<div class="mall-content clearfix">
 			<div class="left-bar">
 				<div class="fli">商品分类</div>
@@ -530,10 +527,6 @@
 					<!--category end-->
 				</ul>
 				<div class="lli">
-					<div class="clearfix">
-						<a class="integral" href="../jifen/">积分商城</a>
-						<a class="mobile" href="../ydwr/">移动物融</a>
-					</div>
 					<div class="clearfix">
 						<a class="service" href="../help/people-service.html">客服中心</a>
 						<a class="help" href="../help/">帮助中心</a>

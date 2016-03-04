@@ -48,6 +48,26 @@
 <div class="section page-vertical">
 	<div id="zj-detail"></div>
 </div><!--//section-->
+<script>
+	var basepath = "";
+	document.write('<div id="kpsign" style="display:none">');
+	if((navigator.userAgent.indexOf("MSIE") > -1) || ((navigator.userAgent.indexOf("rv:11") > -1 && navigator.userAgent.indexOf("Firefox")<= -1)))
+	{
+	    //alert("IE");
+	    if((navigator.platform =="Win32")) {
+	        //alert("windows 32 bit IE");
+	        document.write('<OBJECT id="doit" height=40 width=200 classid="CLSID:D54C3C5F-6CA8-440B-A4E5-8B43186D5DFF" codebase='+basepath+'npkoaliiCZB_x86.CAB VIEWASTEXT>')
+	    } else if(navigator.platform =="Win64") {
+	        //alert("windows 64 bit IE");
+	        document.write('<OBJECT id="doit" height=40 width=200 classid="CLSID:40BEE6CE-DC27-45DB-A07E-42A625547B45" codebase='+basepath+'npkoaliiCZB_x64.CAB VIEWASTEXT>')
+	    }
+	}
+	document.write('<param name="DigitalSignature" value="1">');
+	document.write('<param name="SignMethod" value="2">');
+	document.write('</OBJECT>');
+	document.write('</div>');
+	document.write('<input type="hidden" name="step" value="1" />');
+</script>
 <?php include '../com/footer.php'; ?>
 <script id="zj-detail-tmpl" type="text/html">
 	<div class="breadcrumbs">

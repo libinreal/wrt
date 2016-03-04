@@ -2,8 +2,20 @@
 <div class="header">
     <div class="page-vertical">
         <a class="icon-logo" href="../"></a>
-        <div style="width:5">
-
+        <div class="header-left">
+            <span style="font-weight:bold;">所在地区：</span>
+            <span class="value">上海市</span><a class="operate" href="#">更换</a>
+        </div>
+        <div class="header-left">
+            <ul>
+                <li><a class="icon link icon-home" href="../">首页</a></li>
+                <li>
+                    <form class="search" action="search.html">
+                <input type="text" class="search_input" name="key" placeholder="请输入关键字">
+                <input type="submit" class="search_bg" value="">
+            </form>
+                </li>
+            </ul>
         </div>
         <ul class="header-right">
             <li class="my-customize">
@@ -52,10 +64,13 @@
             </li>
             <li id="loginbar" style="display: <?php echo isset($auth) ? 'none' : 'block' ?>"><a class="link icon icon-login" href="#open-dialog">登录</a></li>
             <li id="userbar" style="display: <?php echo isset($auth) ? 'block' : 'none' ?>;">
-                <a class="link icon icon-personal" href="../personal/"><?php if(isset($auth)){echo $auth->account;} ?></a>
+                <a class="link icon icon-personal" href="../personal/">&nbsp;<span class="arrow"></span></a>
                 <a class="link icon icon-logout" href="#" style="padding-left: 10px;">退出</a>
+                <!--<dl>
+                    <dt>我的订单</dt>
+                    <dt>个人中心</dt>
+                </dl>-->
             </li>
-            <li><a class="icon link icon-home" href="../">首页</a></li>
         </ul>
     </div>
 </div><!--//header-->

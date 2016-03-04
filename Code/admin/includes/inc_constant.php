@@ -145,6 +145,10 @@ define('SS_SHIPPED_PART',           4); // 已发货(部分商品)
 define('SS_SHIPPED_ING',            5); // 发货中(处理分单)
 define('OS_SHIPPED_PART',           6); // 已发货(部分商品)
 
+/*  验签开关  */
+define('SIGN_SWITCH_OPEN', 0);//开
+define('SIGN_SWITCH_CLOSE', 1);//关
+
 /* 支付状态 */
 define('PS_UNPAYED',                0); // 未付款
 define('PS_PAYING',                 1); // 付款中

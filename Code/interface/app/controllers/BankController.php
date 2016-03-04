@@ -479,6 +479,97 @@ class BankController extends ControllerBase {
         return ResponseApi::send($confirmSignData);
     }
 
+    /**
+     * 用户发货(到货)验签,保存签名
+     * 
+     * @return code 0:正常 其它:失败
+     */
+    public function submitSaleOrderAction() {
+        
+        $signId = $this->request->getPost('signId', 'int');
+        $buyerSign = $this->request->getPost('buyerSign');
+        if(!$signId || !$buyerSign) {
+            return ResponseApi::send(null, Message::$_ERROR_LOGIC, '数据格式错误！');
+        }
+        
+        $sign = BankSign::findFirst( array( 'conditions' => 'signId = ?1',
+                                            'bind'      => array(1 => $signId)
+                )
+            );
+        if(!is_object($sign) || !$sign) {
+            return ResponseApi::send(null, Message::$_ERROR_LOGIC, '系统异常');
+        }
+        $sign->buyerSign = $buyerSign;
+        $sign->buyerSignTime = time();
+        
+        if(!$sign->save()) {
+            foreach($sign->getMessages() as $message) {
+                return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
+            }
+        }
+        
+        return ResponseApi::send();
+    }
+
+    /**
+     * 签署订单合同，中交验签，发送数据到银行
+     */
+    public function submitSaleOrderAdminAction() {
+        $orderSn = $this->request->getPost('orderSn');
+        $signId = $this->request->getPost('signId');
+        $salerSign = $this->request->getPost('salerSign');
+        if(!$orderSn || !$signId || !$salerSign) {
+            return ResponseApi::send(null, Message::$_ERROR_LOGIC, '数据格式错误！');
+        }
+        $sign = BankSign::findFirst('signId = "' . $signId . '" AND orderSn = "' . $orderSn . '"');
+        if(!is_object($sign) || !$sign) {
+            return ResponseApi::send(null, Message::$_ERROR_LOGIC, '系统异常');
+        }
+        $sign->salerSign = $salerSign;
+        $sign->salerSignTime = time();
+        $sign->signType = 1;
+        $sign->signResult = 1;
+        $manager = new TxManager();
+        $transaction = $manager->get();
+        $sign->setTransaction($transaction);
+        try {
+            if(!$sign->save()) {
+                foreach($sign->getMessages() as $message) {
+                    return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
+                }
+            }
+        } catch (\Exception $ex) {
+            $manager->rollback($transaction);
+            return ResponseApi::send(null, Message::$_ERROR_SYSTEM, $ex->getMessage());
+        }
+
+        //发送数据到银行
+        $submitData = unserialize($sign->submitData);
+        $submitData['buyerSign'] = $sign->buyerSign;
+        $submitData['salerSign'] = $sign->salerSign;
+        $rs = RequestUtil::httpsPost($submitData, self::B2BPAY_URL . '/SubmitContract');
+        $msg = null;
+        if(!self::checkResult($rs, $msg)) {
+            return ResponseApi::send(null, Message::$_ERROR_LOGIC, $msg);
+        }
+        //银行验签成功过，修改订单状态
+        $orderInfo = OrderInfo::findFirst('orderSn = ' . $orderSn);
+        $orderInfo->status = 1;
+        $orderInfo->setTransaction($transaction);
+        try {
+            if(!$orderInfo->save()) {
+                foreach($orderInfo->getMessages() as $message) {
+                    return ResponseApi::send(null, Message::$_ERROR_LOGIC, $message);
+                }
+            }
+        } catch (\Exception $ex) {
+            $manager->rollback($transaction);
+            return ResponseApi::send(null, Message::$_ERROR_SYSTEM, $ex->getMessage());
+        }
+        $manager->commit();
+        return ResponseApi::send();
+    }
+
 
     private static function checkResult($rs, &$msg) {
         if(self::WITHOUT_ERROR) {

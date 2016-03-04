@@ -2,7 +2,9 @@ define(function(require) {
     var $ = require('jquery'),
         config = require('./config'),
         Ajax = require('../base/ajax'),
-        Tools = require('../base/tools');
+        Tools = require('../base/tools'),
+        Sign = require('./sign'),
+        signUrl = '/bank/getSubmitData';
 
     require('../base/common');
 
@@ -48,27 +50,96 @@ define(function(require) {
 
     //更改状态
     $('#zj-detail').on('click', '#handle-button .change-status', function(e) {
-        Ajax.custom({
-            url: config.uchildstatus,
+
+        //检测浏览器，当前只在ie可用
+        var msie = /msie/.test(navigator.userAgent.toLowerCase());
+        var msie11 = /rv:11/.test(navigator.userAgent.toLowerCase());//ie11
+        if(!msie && !msie11){
+            alert('验签只能在IE中使用');
+            return;
+        }
+
+        //获取订单签名数据
+        $.ajax({
+            url: signUrl,
             data: {
-                oid: id
+                orderId: id//当前订单id
             },
-            type: 'GET'
-        }, function(response) {
-            if (response.code != 0) {
-                Tools.showToast(response.message || '操作失败');
-                return;
-            }
-            Ajax.detail({
-                url: config.getchildreninfo,
-                data: {
-                    order_id: id
+            dataType: 'text',
+            type: 'POST',
+            success: function(response){
+                try{
+                    tempResponse = JSON.parse(response);
+                }catch(e){
+                    tempResponse = {};
                 }
-            }, function(response) {
-                if (response.code != 0) {
+
+                if(tempResponse.code != 0 || !tempResponse.body){
+                    alert('获取订单签名数据失败');
                     return;
                 }
-            });
+
+                var step = $('input[name="step"]').val();
+                //生成签名数据
+                var signData = getSignData(1, tempResponse.body.signRawData);
+
+                if(!signData.success){
+                    alert('生成签名数据失败！' + signData.errorInfo);
+                    return;
+                }
+
+                var submitSignUrl = '/bank/submitSaleOrder';
+
+                $.ajax({
+                    url: submitSignUrl,
+                    data: {
+                        'signId': tempResponse.body.signId,
+                        'salerSign': signData.data
+                    },
+                    dataType: 'text',
+                    type: 'POST',
+                    success: function(response){
+                        try{
+                            response = JSON.parse(response);
+                        }catch(e){
+                            response = {};
+                        }
+                        if (response.code != 0) {
+                            alert(response.message);
+                            return;
+                        }
+                        alert('签名成功！');
+                        Ajax.custom({
+                            url: config.uchildstatus,
+                            data: {
+                                oid: id
+                            },
+                            type: 'GET'
+                        }, function(response) {
+                            if (response.code != 0) {
+                                Tools.showToast(response.message || '操作失败');
+                                return;
+                            }
+                            Ajax.detail({
+                                url: config.getchildreninfo,
+                                data: {
+                                    order_id: id
+                                }
+                            }, function(response) {
+                                if (response.code != 0) {
+                                    return;
+                                }
+                            });
+                        });
+                    },
+                    error: function(jqXHR, textStatus, errorThrown){
+                        alert('签名失败！');
+                    }
+                });
+            },
+            error:function(xhr, textStatus, errorThrown){
+                alert('获取签名数据失败！');
+            }
         });
     });
 
@@ -315,4 +386,43 @@ define(function(require) {
             }
         });  
     });
+
+    //生成签名数据
+    function getSignData(step, data) {
+        var result = {};
+        if(typeof doit == 'undefined'){
+            doit = document.getElementById('doit');
+        }
+        if(typeof doit == 'undefined'){
+            result.success = false;
+            result.errorInfo = '请插入object标签';
+            return result;
+        }
+        var signData;
+        switch (step) {
+            case 1: //提交合同签名 flag：0买方，1卖方
+                signData = Sign.koalSign4submitContract(1, data);
+            break;
+            case 2: //取消合同签名 flag：0买方，1卖方
+                signData = Sign.koalSign4cancelContract(1, data);
+            break;
+            case 3: // 内部数据签名
+                signData = Sign.koalSign4zjwcCheck(data);
+            break;
+            default:
+                console.log(step)
+            break;
+        }
+        if(!signData.success) {
+            result.success = false;
+            result.errorInfo = signData.msg;
+            result.data = "";
+        } else {
+            result.success = true,
+            result.errorInfo = "";
+            result.data = signData.data;
+        }
+
+        return result;
+    }
 });
