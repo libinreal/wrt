@@ -68,13 +68,11 @@ class Credit extends ManageModel
     {
     	self::init($entity, 'xmlList');
     	
-    	$this->creditXML();
-    	
-    	die;
     	//SFTP 目录
     	$dir = 'E:\project';
     	if (!is_dir($dir)) return failed_json('SFTP目录不存在');
     	
+    	//读取SFTP目录文件
     	$files = scandir($dir);
     	if (!$files) return failed_json('获取文件列表失败');
     	$fileName = '';

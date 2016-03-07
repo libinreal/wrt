@@ -79,6 +79,8 @@ class Goods extends ManageModel
 			}
 		}
 		
+		if (empty($info)) return failed_json('没有找到符合该用户的商品信息');
+		
 		//商品导入修改信息
 		$sql = 'UPDATE goods SET goods_name= CASE goods_id';
 		$goodsNameSql = ''; $goodsNumberSql = ''; $goodsPriceSql = '';
@@ -87,6 +89,7 @@ class Goods extends ManageModel
 			$goodsNumberSql .= ' WHEN '.$v[0].' THEN "'.$v[5].'"';
 			$goodsPriceSql .= ' WHEN '.$v[0].' THEN "'.$v[6].'"';
 		}
+		
 		$sql .= $goodsNameSql.' END, goods_number= CASE goods_id'.$goodsNumberSql.' END, shop_price= CASE goods_id'.$goodsPriceSql.' END ';
 		$sql .= 'WHERE goods_id IN('.implode(',', $goods).')';
 		$result = $this->db->query($sql);
