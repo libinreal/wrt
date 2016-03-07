@@ -38,6 +38,7 @@ define(function() {
 
     //绝对化图片地址
     config.absImg = function(content) {
+
         if (!content) {
             // 测试时使用相对
             return '../content/images/common/d300x300-1.png';

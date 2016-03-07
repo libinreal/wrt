@@ -422,12 +422,13 @@ input[type="submit"] {
     padding:15px 10px;
     top: 40px;
     height: 68px;
-    width: 68px;
+    width: 70px;
     background: url(../images/common/user-list-box.png) no-repeat;
 }
 .header-right #userbar dl dt{
     border-bottom: 1px solid #ccc;
-
+    line-height: 25px;
+    height: 25px;
 }
 .header-right .icon-screen {
     background-image: url(../images/common/icon_screen.png);

@@ -149,11 +149,33 @@
 		<div id="popupLayer" class="messagepop pop"></div>
 		<div id="mask_layout"></div>
 
+<script>
+	var basepath = "";
+	document.write('<div id="kpsign" style="display:none">');
+	if((navigator.userAgent.indexOf("MSIE") > -1) || ((navigator.userAgent.indexOf("rv:11") > -1 && navigator.userAgent.indexOf("Firefox")<= -1)))
+	{
+	    //alert("IE");
+	    if((navigator.platform =="Win32")) {
+	        //alert("windows 32 bit IE");
+	        document.write('<OBJECT id="doit" height=40 width=200 classid="CLSID:D54C3C5F-6CA8-440B-A4E5-8B43186D5DFF" codebase='+basepath+'npkoaliiCZB_x86.CAB VIEWASTEXT>')
+	    } else if(navigator.platform =="Win64") {
+	        //alert("windows 64 bit IE");
+	        document.write('<OBJECT id="doit" height=40 width=200 classid="CLSID:40BEE6CE-DC27-45DB-A07E-42A625547B45" codebase='+basepath+'npkoaliiCZB_x64.CAB VIEWASTEXT>')
+	    }
+	}
+	document.write('<param name="DigitalSignature" value="1">');
+	document.write('<param name="SignMethod" value="2">');
+	document.write('</OBJECT>');
+	document.write('</div>');
+	document.write('<input type="hidden" name="step" value="1" />');
+</script>
+
 <script src="js/laydate/laydate.dev.js"></script>
 <script src="js/jquery.validate.js" type="text/javascript" ></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
 <script src="js/sale-order.js" type="text/javascript" ></script>
 <script src="js/type-mode.js" type="text/javascript" ></script>
+<script src="js/sign.js" type="text/javascript" ></script>
 <script type="text/javascript">
 TypeMode.getOrderStatus('order_status');
 TypeMode.getChilderOrderStatus('child_order_status');

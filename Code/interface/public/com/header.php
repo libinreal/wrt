@@ -11,7 +11,7 @@
             <ul>
                 <li><a class="icon link icon-home" href="../">首页</a></li>
                 <li>
-                    <form class="search" action="search.html">
+                    <form class="search" action="../mall/search.html">
                 <input type="text" class="search_input" name="key" placeholder="请输入关键字">
                 <input type="submit" class="search_bg" value="">
             </form>
@@ -65,12 +65,12 @@
             </li>
             <li id="loginbar" style="display: <?php echo isset($auth) ? 'none' : 'block' ?>"><a class="link icon icon-login" href="#open-dialog">登录</a></li>
             <li id="userbar" style="display: <?php echo isset($auth) ? 'block' : 'none' ?>;">
-                <a class="link icon icon-personal" href="../personal/">&nbsp;<span class="arrow"></span></a>
+                <a class="link icon icon-personal" href="../personal/"></a>
                 <a class="link icon icon-logout" href="#" style="padding-left: 10px;">退出</a>
-                <!--<dl>
-                    <dt>我的订单</dt>
-                    <dt>个人中心</dt>
-                </dl>-->
+                <dl id="userlist" style="display:none;">
+                    <dt><a href="../personal/my-order.html">我的订单</a></dt>
+                    <dt><a href="../personal/" target="_self">个人中心</a></dt>
+                </dl>
             </li>
         </ul>
     </div>

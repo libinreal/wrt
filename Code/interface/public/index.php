@@ -6,7 +6,7 @@
 <!--<![endif]-->
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>首页-中交物融平台</title>
+    <title>首页-物融通平台</title>
     <link rel="stylesheet" href="content/css/common.css" />
     <link rel="stylesheet" href="content/css/home.css" />
 </head>
@@ -97,7 +97,7 @@
     </div>
     <!--//section-->
 
-    <div class="home-footer">让建设无忧&nbsp;&nbsp;让工程无患&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Copyright 2014 中交物融集成服务平台有限公司&nbsp;&nbsp;&nbsp;版权所有<a href="help/index.html">帮助中心</a></div>
+    <div class="home-footer">让建设无忧&nbsp;&nbsp;让工程无患&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;Copyright 2014 物融通集成服务平台有限公司&nbsp;&nbsp;&nbsp;版权所有<a href="help/index.html">帮助中心</a></div>
     <div class="modal modal2" id="modal-login">
         <div class="modal-dialog">
             <div class="modal-content">

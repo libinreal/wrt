@@ -4,7 +4,7 @@ define(function(require) {
         Ajax = require('../base/ajax'),
         Tools = require('../base/tools'),
         Sign = require('./sign'),
-        signUrl = '/bank/getSubmitData';
+        signUrl = '/bank/getSubmitSaleOrder';
 
     require('../base/common');
 
@@ -73,6 +73,7 @@ define(function(require) {
                 }catch(e){
                     tempResponse = {};
                 }
+                console.log(tempResponse.code)
                 if(tempResponse.code != 0 || !tempResponse.body){
                     alert('获取订单签名数据失败');
                     return;
@@ -93,7 +94,7 @@ define(function(require) {
                     url: submitSignUrl,
                     data: {
                         'signId': tempResponse.body.signId,
-                        'salerSign': signData.data
+                        'buyerSign': signData.data
                     },
                     dataType: 'text',
                     type: 'POST',

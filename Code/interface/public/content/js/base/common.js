@@ -702,6 +702,18 @@ define(function(require) {
             }
             return true;
         }
-
+        // 用户中心
+        $('#userbar .icon-personal').mouseover(function(e) {
+            $("#userlist").css("display","block");
+            return false;
+        });
+        $('#userlist').mouseover(function(e) {
+            $("#userlist").css("display","block");
+            return false;
+        });
+        $('#userbar .icon-personal, #userlist').mouseout(function(e) {
+            $("#userlist").css("display","none");
+            return false;
+        });
     }
 });

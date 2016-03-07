@@ -144,7 +144,7 @@
 								</ul>
 					    	</div>
 							<div class="body clearfix">
-								<div class="body_l"><span class="bank bank-06">中交物融</span></div>							
+								<div class="body_l"><span class="bank bank-06">物融通</span></div>							
 								<ul class="body_c">
 									<li class="t-d">可用额度：</li>
 									<li class="red">--</li>
@@ -200,7 +200,7 @@
 							<li>
 								<label>
 									<input type="radio" name="payOrgcode" value="06"/>
-									<span class="zhongjiao">中交物融</span>
+									<span class="zhongjiao">物融通</span>
 								</label>
 							</li>
 						</ul>
