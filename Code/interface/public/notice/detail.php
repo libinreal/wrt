@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	<title>公告-中交物融平台</title>
+	<title>公告-物融通平台</title>
 	<link rel="stylesheet" href="../content/css/common.css" />
 	<link rel="stylesheet" href="../content/css/news.css" />
 </head>

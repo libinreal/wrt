@@ -79,7 +79,7 @@
 				<li>
 					<label>
 						<input type="radio" name="payOrgcode" value="06">
-						<span class="zhongjiao">中交物融</span>
+						<span class="zhongjiao">物融通</span>
 					</label>
 				</li>
 			</ul>

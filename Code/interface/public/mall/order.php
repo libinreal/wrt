@@ -23,7 +23,7 @@
 				<div class="form-value form-radio-group" style="line-height:50px">
 					<div class="number-o2-time">
 						<label class="active">
-							中交物融大宗物流配送
+							物融通大宗物流配送
 						</label>
 					</div>
 					<div class="number-o2-time clearfix">
@@ -46,7 +46,7 @@
 					<li>
 						<label class="active"><input type="radio" name="" value="01" checked />信用B支付</label>
 					</li>
-					<li><em>使用中交物融平台的信用B进行物资采购支付</em></li>
+					<li><em>使用物融通平台的信用B进行物资采购支付</em></li>
 				</ul>
 			</div>
 			<div class="invoice">

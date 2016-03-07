@@ -41,7 +41,7 @@
 			<div><span>收货人：<!--[= payer || '--']--></span></div>
 			<div><span>地<em class="e1"></em>址：<!--[= address || '--']--></span></div>
 			<div><span>手<em class="e1"></em>机：<!--[= mobile || '--']--></span></div>
-			<div class="info-head" style="margin-top:20px">中交物融大宗物流配送</div>
+			<div class="info-head" style="margin-top:20px">物融通大宗物流配送</div>
 			<div><span>指定交货时间：2015-5-5</span></div>
 		</div>
 		<div class="info-border">

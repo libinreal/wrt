@@ -44,7 +44,7 @@
             </ul>
             <ul class="helper-item">
                 <li class="helper-title"><a href="../help/common-page.html?type=about">关于我们</a></li>
-                <li><a href="../help/common-page.html?type=about#0">中交物融介绍</a></li>
+                <li><a href="../help/common-page.html?type=about#0">物融通介绍</a></li>
                 <li><a href="../help/common-page.html?type=about#1">物融新闻</a></li>
                 <li><a href="../help/common-page.html?type=about#2">合作加盟</a></li>
                 <li><a href="../help/common-page.html?type=about#3">下载中心</a></li>
@@ -54,7 +54,7 @@
     </div>
     <div class="company">
     	<div class="page-vertical">
-    		<span class="copyright-zh"><a href="../help/common-page.html?type=about">中交物融集成服务平台有限公司</a>&nbsp;&nbsp;版权所有&nbsp;&nbsp;浙ICP备10200744-3号</span>
+    		<span class="copyright-zh"><a href="../help/common-page.html?type=about">物融通集成服务平台有限公司</a>&nbsp;&nbsp;版权所有&nbsp;&nbsp;浙ICP备10200744-3号</span>
     		<span>&copy;Copyright2014 All Rights Reserved&nbsp;&nbsp;互联网基建平台&nbsp;&nbsp;产业链金融的贴身管家.</span>
     	</div>
     </div>

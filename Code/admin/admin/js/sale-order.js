@@ -149,7 +149,7 @@ var SaleOrder = {
 			return false;
 		}
 		var params = {"params":{"order_id":id}};
-		strJson = createJson("find", this.entity, params);
+		var strJson = createJson("find", this.entity, params);
 		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -303,7 +303,7 @@ var SaleOrder = {
 			return false;
 		}
 		var params = {"order_id":id};
-		strJson = createJson("childerList", this.entity, params);
+		var strJson = createJson("childerList", this.entity, params);
 		var that = this
 		$.post(this.url, strJson, function(obj){
 			console.log(obj)
@@ -597,26 +597,6 @@ var SaleOrder = {
 			}
 		}, "json");
 		popupLayer();
-	},
-
-	updateChilderStatus: function(handle){
-		var order_id = getQueryStringByName('order_id');
-		if(order_id===""||!validateNumber(order_id)){
-			return false;
-		}
-		var button_name = $(handle).val();
-		var params = {"params":{"order_id":order_id, "button":button_name}};
-		strJson = createJson("updateChilderStatus", this.entity, params);
-		that = this
-		$.post(this.url, strJson, function(obj){
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				$('#message_area').html(createTip(obj.message));
-				that.updateButtonStatus();
-			}
-		}, "json");
 	},
 
 	initPriceSend: function(){
@@ -928,7 +908,6 @@ var SaleOrder = {
 		var goods_id = $("input[name=goods_id]").val();
 		var params = {"params":{"suppliers_id":suppliers_id, "cat_id":cat_id, "goods_id":goods_id}};
 		var strJson = createJson("getSuppliersPrice", this.entity, params);
-		console.log(strJson);
 		var that = this
 		var finance = 0;
 		$.post(this.url, strJson, function(obj){
@@ -941,5 +920,136 @@ var SaleOrder = {
 		}, "json").done(function(){
 			supplierPriceChange();
 		});
+	},
+
+	updateChilderStatus: function(handle){
+		var order_id = getQueryStringByName('order_id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var button_name = $(handle).val();
+		this.getSign(order_id, 1, button_name)
+	},
+
+	getSign: function(order_id, step, button_name){
+	    //检测浏览器，当前只在ie可用
+	    var msie = /msie/.test(navigator.userAgent.toLowerCase());
+	    var msie11 = /rv:11/.test(navigator.userAgent.toLowerCase());//ie11
+	    if(!msie && !msie11){
+	        alert('验签只能在IE中使用');
+	        return false;
+	    }
+		var params = {"params":{"order_id":order_id}};
+		var strJson = createJson("getSubmitSaleOrder", "bank_sign", params);
+		var _this = this;    
+	    //获取订单签名数据
+	    $.ajax({
+	        url: "/admin/BankSignModel.php",
+	        data: strJson,
+	        dataType: 'text',
+	        type: 'POST',
+	        success: function(response){
+	            try{
+	                tempResponse = JSON.parse(response);
+	            }catch(e){
+	                tempResponse = {};
+	            }
+	            if(tempResponse.error != 0 || !tempResponse.content){
+	                alert('获取订单签名数据失败');
+	                return false;
+	            }
+	            //生成签名数据
+	            var signData = that.getSignData(step, tempResponse.content.signRawData);
+	            var sign_id = tempResponse.content.signId
+	            console.log(sign_id)
+	            if(!signData.success){
+	                alert('生成签名数据失败！' + signData.errorInfo);
+	                return false;
+	            }
+
+	            var submitSignUrl = '/admin/BankSignModel.php';
+
+	            var params = {"params":{"sign_id":sign_id, "saler_sign":signData.data}};
+	            var strJson = createJson("submitOrder", "bank_sign", params);
+	            var __this = _this;
+	            $.ajax({
+	                url: submitSignUrl,
+	                data: strJson,
+	                dataType: 'text',
+	                type: 'POST',
+	                success: function(response){
+	                    try{
+	                        response = JSON.parse(response);
+	                    }catch(e){
+	                        response = {};
+	                    }
+	                    if (response.error != 0) {
+	                        alert(response.message);
+	                        return false;
+	                    }
+	                    alert('签名成功！');
+	                    console.log(__this.url)
+	                    var params = {"params":{"order_id":order_id, "button":button_name}};
+						var strJson = createJson("updateChilderStatus", this.entity, params);
+						$.post(__this.url, strJson, function(obj){
+							if(obj.error == -1){
+								$('#message_area').html(createError(obj.message));
+								return false;
+							}else{
+								$('#message_area').html(createTip(obj.message));
+								that.updateButtonStatus();
+							}
+						}, "json");
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+	                    alert('签名失败！');
+	                    return false;
+	                }
+	            });
+	        },
+	        error:function(xhr, textStatus, errorThrown){
+	            alert('获取签名数据失败！');
+	            return false;
+	        }
+	    })
+	},
+
+	//生成签名数据
+	getSignData: function(step, data) {
+	    var result = {};
+	    if(typeof doit == 'undefined'){
+	        doit = document.getElementById('doit');
+	    }
+	    if(typeof doit == 'undefined'){
+	        result.success = false;
+	        result.errorInfo = '请插入object标签';
+	        return result;
+	    }
+	    var signData;
+	    switch (step) {
+	        case 1: //提交合同签名 flag：0买方，1卖方
+	            signData = koalSign4submitContract(1, data);
+	        break;
+	        case 2: //取消合同签名 flag：0买方，1卖方
+	            signData = koalSign4cancelContract(1, data);
+	        break;
+	        case 3: // 内部数据签名
+	            signData = koalSign4zjwcCheck(data);
+	        break;
+	        default:
+	            console.log(step)
+	        break;
+	    }
+	    if(!signData.success) {
+	        result.success = false;
+	        result.errorInfo = signData.msg;
+	        result.data = "";
+	    } else {
+	        result.success = true,
+	        result.errorInfo = "";
+	        result.data = signData.data;
+	    }
+
+	    return result;
 	}
 }
