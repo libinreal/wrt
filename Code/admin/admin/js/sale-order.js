@@ -726,8 +726,8 @@ var SaleOrder = {
 		}
 		$("input[name=order_id]").val(order_id);
 		var params = {"params":{"order_id":order_id}};
-		strJson = createJson("initPriceArr", this.entity, params);
-		that = this
+		var strJson = createJson("initPriceArr", this.entity, params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -754,7 +754,7 @@ var SaleOrder = {
 								row += appendOption(v[key_arr[key].id], v[key_arr[key].name]);
 							});
 						}
-						$("select[name='"+key+"']").append(row);		
+						$("select[name='"+key+"']").append(row);
 					}
 
 					if($("input[name="+key+"]").length){
@@ -770,9 +770,9 @@ var SaleOrder = {
 					}
 				});
 
-				$('#message_area').html('');		
+				$('#message_area').html('');
 			}
-		}, "json");		
+		}, "json");
 	},
 
 	updatePriceArr: function(){
@@ -800,8 +800,8 @@ var SaleOrder = {
 			return false;
 		}
 		var params = {"params":{"order_id":order_id}};
-		strJson = createJson("childerDetail", this.entity, params);
-		that = this
+		var strJson = createJson("childerDetail", this.entity, params);
+		var that = this;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
