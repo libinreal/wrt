@@ -961,7 +961,6 @@ var SaleOrder = {
 	            //生成签名数据
 	            var signData = that.getSignData(step, tempResponse.content.signRawData);
 	            var sign_id = tempResponse.content.signId
-	            console.log(sign_id)
 	            if(!signData.success){
 	                alert('生成签名数据失败！' + signData.errorInfo);
 	                return false;
@@ -987,8 +986,7 @@ var SaleOrder = {
 	                        alert(response.message);
 	                        return false;
 	                    }
-	                    alert('签名成功！');
-	                    console.log(__this.url)
+	                    alert("签名成功！")
 	                    var params = {"params":{"order_id":order_id, "button":button_name}};
 						var strJson = createJson("updateChilderStatus", this.entity, params);
 						$.post(__this.url, strJson, function(obj){
@@ -997,7 +995,7 @@ var SaleOrder = {
 								return false;
 							}else{
 								$('#message_area').html(createTip(obj.message));
-								that.updateButtonStatus();
+								__this.updateButtonStatus();
 							}
 						}, "json");
 	                },
