@@ -1777,12 +1777,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				        $submit_purchase_send['extraData'] = '0:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_send_saler'] . ':' . $order_status['goods_number_send_saler'];//采购发货
 				        $submit_purchase_arr['extraData'] = '1:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_arr_saler'] . ':' . $order_status['goods_number_arr_saler'];//采购到货
 
-						$submit_sale_send = serialize($submit_sale_send);
-						$submit_sale_arr = serialize($submit_sale_arr);
-						$submit_purchase_send = serialize($submit_purchase_send);
-						$submit_purchase_arr = serialize($submit_purchase_arr);
-
-						$sign_filed = array(
+						$sign_field = array(
 						    'signVersion',
 						    'timeTamp',
 						    'contractNo',
@@ -1797,17 +1792,24 @@ require(dirname(__FILE__) . '/includes/init.php');
 						    'tranID',
 						    'extraData',
 						);
-						foreach($sign_filed as $sf) {
+						foreach($sign_field as $sf) {
 						    $sign_sale_send[$sf] = $submit_sale_send[$sf];
 						    $sign_sale_arr[$sf] = $submit_sale_arr[$sf];
 						    $sign_purchase_send[$sf] = $submit_purchase_send[$sf];
 						    $sign_purchase_arr[$sf] = $submit_purchase_arr[$sf];
 						}
 						
+						//签名相关序列化（取签名数据）
 						$sign_sale_send = serialize( $sign_sale_send );
 					    $sign_sale_arr = serialize( $sign_sale_arr );
 					    $sign_purchase_send = serialize( $sign_purchase_send );
 					    $sign_purchase_arr = serialize( $sign_purchase_arr );
+					    
+					    //签名数据序列化
+					    $submit_sale_send = serialize($submit_sale_send);
+						$submit_sale_arr = serialize($submit_sale_arr);
+						$submit_purchase_send = serialize($submit_purchase_send);
+						$submit_purchase_arr = serialize($submit_purchase_arr);
 
 					    //销售发货签名
 					    $ss_ss['order_sn'] = $order_status['order_sn'];

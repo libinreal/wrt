@@ -480,6 +480,47 @@ class BankController extends ControllerBase {
     }
 
     /**
+     * 用户发货(到货)验签,获取签名相关信息
+     * 
+     * @return code 0:正常 其它:失败
+     */
+    public function getSubmitSaleOrderAction() {
+        
+        $orderId = $this->request->getPost('orderId', 'int');
+        if(!$orderId) {
+            ResponseApi::send(null, Message::$_ERROR_LOGIC, '订单ID不能为空！');
+        }
+        $orderInfo = OrderInfo::findFirst("id = '{$orderId}'");
+        if(!$orderInfo) {
+            ResponseApi::send(null, Message::$_ERROR_LOGIC, '订单不存在！');
+        }
+
+        if( $orderInfo->childOrderStatus < SOS_SEND_CC ){
+            $signType = 1;
+        }else{
+            $signType = 2;
+        }
+
+        $sign = BankSign::findFirst(
+                array( 'conditions' => 'signType = ?1 AND orderSn =?2 ',
+                                            'bind'      => array(1 => $signType, 2 => $orderInfo->orderSn)
+                )
+
+            );
+        if(!is_object($sign) || !$sign) {
+            return ResponseApi::send(null, Message::$_ERROR_LOGIC, '系统异常，请联系管理员！');
+        }
+        //签名原始数据
+        $signRawData = unserialize($sign->signData);
+        $signData = array(
+            'signId' => $sign->signId,
+            'orderSn' => $sign->orderSn,
+            'signRawData' => $signRawData,
+        );
+        return ResponseApi::send($signData);
+    }
+
+    /**
      * 用户发货(到货)验签,保存签名
      * 
      * @return code 0:正常 其它:失败
