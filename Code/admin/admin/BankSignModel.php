@@ -18,6 +18,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		//
 		protected $command = false;
 		//
+		
+		const B2BPAY_URL = 'https://60.191.15.92:465/B2BPAY';
+
 		public function __construct($content){
 			$this->content = $content;
 			$this->command = $content['command'];
@@ -153,7 +156,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$bank_sign_table = $GLOBALS['ecs']->table('bank_sign');
 
-			$sign_sql = 'SELECT `sign_id` FROM ' . $bank_sign_table . ' WHERE `sign_id` = ' . $sign_id;
+			$sign_sql = 'SELECT `sign_id`,`` FROM ' . $bank_sign_table . ' WHERE `sign_id` = ' . $sign_id;
 			$sign_data = $GLOBALS['db']->getOne( $sign_sql );
 
 			if( !$sign_data ){
@@ -165,6 +168,18 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bank_sign = $GLOBALS['db']->query( $bank_sign_sql );
 
 			if( $bank_sign ){
+
+				//发送数据到银行
+		        $submitData = unserialize($sign_data['submit_data']);
+		        $submitData['buyerSign'] = $sign_data['buyer_sign'];
+		        $submitData['salerSign'] = $sign_data['saler_sign'];
+		        $rs = submit_order_bank($submitData, self::B2BPAY_URL . '/SubmitContract');
+		        
+		        $rs = json_decode($rs, true);
+		        if($rs['errno'] != '000000') {
+		           	make_json_response( '', '-1', $rs['errmsg'] );
+		        }
+
 				make_json_response('', '0', '签名数据保存成功');
 			}else{
 				make_json_response('', '-1', '签名数据保存失败');

@@ -1096,4 +1096,33 @@ function get_supplier( $supplier_id )
     $val = $GLOBALS['db']->getRow( $sql );
     return $val;
 }
+
+/**
+ * 提交订单给银行
+ * @param  [type] $post_data [订单内容]
+ * @param  [type] $url       [银行API地址]
+ * @return [type]            
+ */
+function submit_order_bank($post_data, $url)
+{
+    ob_start();
+    $post_data = http_build_query($post_data);
+    $post_data = iconv('utf-8', 'gbk', $post_data);
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($ch, CURLOPT_TIMEOUT, self::TIMEOUT);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data);
+    if(curl_exec($ch) === false) {
+        return curl_error($ch);
+    }
+    curl_close($ch);
+    $result = ob_get_contents();
+    ob_end_clean();
+    $result = iconv('gbk', 'utf-8', $result);
+    return $result;  
+}
 ?>
