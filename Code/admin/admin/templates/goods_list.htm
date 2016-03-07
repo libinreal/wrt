@@ -1,6 +1,6 @@
 {if $full_page}
 {include file="pageheader.htm"}
-{insert_scripts files="../js/utils.js,listtable.js"}
+{insert_scripts files="../js/utils.js,listtable.js,ajaxfileupload.js,ajax.js"}
 <!-- 商品搜索 -->
 {include file="goods_search.htm"}
 <!-- 商品列表 -->
@@ -171,16 +171,42 @@
         frm.elements['target_cat'].style.display = frm.elements['type'].value == 'move_to' ? '' : 'none';
 
         {if $suppliers_list > 0}
-            frm.elements['suppliers_id'].style.display = frm.elements['type'].value == 'suppliers_move_to' ? '' : 'none';
-            {/if}
+        frm.elements['suppliers_id'].style.display = frm.elements['type'].value == 'suppliers_move_to' ? '' : 'none';
+        {/if}
 
-                if (!document.getElementById('btnSubmit').disabled &&
-                        confirmSubmit(frm, false))
-                {
-                    frm.submit();
+        if (!document.getElementById('btnSubmit').disabled &&
+                confirmSubmit(frm, false))
+        {
+            frm.submit();
+        }
+    }
+
+    function getUploadFile(){
+        if($("#excel_file").val() == ""){
+            alert("选择导入文件!");
+            return false;
+        }
+        var strJson = createJson("importExcel", "excel_file", {}, "object");
+        $.ajaxFileUpload({
+            url:"goods_manage.php",
+            fileElementId:'excel_file',//file标签的id
+            dataType: 'json',//返回数据的类型  
+            data:strJson,//一同上传的数据
+            success: function (data, status) {
+                if(data.error == -1){
+                    alert(data.message);
+                    return false;
+                }else{
+                    $('#message_area').html(createTip('上传成功'));
+                    that.getList();
                 }
+            },
+            error: function (data, status, e) {
+                console.log(e);
             }
-            {/literal}
+        });
+    }
+    {/literal}
 </script>
 {include file="pagefooter.htm"}
 {/if}

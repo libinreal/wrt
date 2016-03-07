@@ -26,6 +26,15 @@
         <input type="submit" value="{$lang.button_search}" class="button" />
     </form>
 </div>
+{if $smarty.get.act neq "trash"}
+<div class="form-div">
+    &nbsp;&nbsp;
+    <input type="file" name="excel_file"  id="excel_file"> 
+    <input type="button" value="导入商品" class="button" onclick="getUploadFile()" />
+    &nbsp;&nbsp;|&nbsp;&nbsp;
+    <span class="action-span"><a href="/admin/excel.php?action=goodslist" target="_blank">导出商品</a></span>
+</div>
+{/if}
 
 {literal}
 <script language="JavaScript">

@@ -73,7 +73,6 @@ define(function(require) {
                 }catch(e){
                     tempResponse = {};
                 }
-
                 if(tempResponse.code != 0 || !tempResponse.body){
                     alert('获取订单签名数据失败');
                     return;

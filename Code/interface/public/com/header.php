@@ -3,8 +3,9 @@
     <div class="page-vertical">
         <a class="icon-logo" href="../"></a>
         <div class="header-left">
-            <span style="font-weight:bold;">所在地区：</span>
+            <!--<span style="font-weight:bold;">所在地区：</span>
             <span class="value">上海市</span><a class="operate" href="#">更换</a>
+            -->
         </div>
         <div class="header-left">
             <ul>
