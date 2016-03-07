@@ -1684,6 +1684,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 		}
 
+	
 		/**
 		 * 接口名称:子订单详情- 平台操作按钮对应的接口("确认"  "发货验签" "取消验签"...)
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
@@ -1804,7 +1805,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					    $sign_sale_arr = serialize( $sign_sale_arr );
 					    $sign_purchase_send = serialize( $sign_purchase_send );
 					    $sign_purchase_arr = serialize( $sign_purchase_arr );
-					    
+
 					    //签名数据序列化
 					    $submit_sale_send = serialize($submit_sale_send);
 						$submit_sale_arr = serialize($submit_sale_arr);
