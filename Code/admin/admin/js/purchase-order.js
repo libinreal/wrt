@@ -169,9 +169,11 @@ var PurchaseOrder = {
 				if(obj.content.order_status != 3){
 					$.each(obj.content.buttons, function(k, v){
 						if(v == "发货改价"){
-							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=purchase_order_manage&act=send_price&order_id='+order_id+'\')" value="'+v+'" >';
+							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
 						}else if(v == "到货改价"){
-							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=purchase_order_manage&act=receive_price&order_id='+order_id+'\')" value="'+v+'" >';
+							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
+						}else if(v == "发货验签" || v == "到货验签"){
+							button += '<input type="button" class="button" onclick="PurchaseOrder.getSign(this, 1)" value="'+v+'" >';
 						}else{
 							button += '<input type="button" class="button" onclick="PurchaseOrder.updateChilderStatus(this)" value="'+v+'" >';
 						}
@@ -296,26 +298,6 @@ var PurchaseOrder = {
 			}
 		}, "json");
 		popupLayer();
-	},
-
-	updateChilderStatus: function(handle){
-		var order_id = getQueryStringByName('id');
-		if(order_id===""||!validateNumber(order_id)){
-			return false;
-		}
-		var button_name = $(handle).val();
-		var params = {"params":{"order_id":order_id, "button":button_name}};
-		var strJson = createJson("updateChilderStatus", this.entity, params);
-		var that = this
-		$.post(this.url, strJson, function(obj){
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				$('#message_area').html(createTip(obj.message));
-				that.updateButtonStatus();
-			}
-		}, "json");
 	},
 
 	initPriceSend: function(){
@@ -517,6 +499,8 @@ var PurchaseOrder = {
 						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
 					}else if(v == "到货改价"){
 						button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
+					}else if(v == "发货验签" || v == "到货验签"){
+						button += '<input type="button" class="button" onclick="PurchaseOrder.getSign(this, 1)" value="'+v+'" >';
 					}else{
 						button += '<input type="button" class="button" onclick="PurchaseOrder.updateChilderStatus(this)" value="'+v+'" >';
 					}
@@ -525,5 +509,152 @@ var PurchaseOrder = {
 			}
 			$('#message_area').html('');
 		}, "json");
+	},
+
+	updateChilderStatus: function(handle){
+		var order_id = getQueryStringByName('id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var button_name = $(handle).val();
+        var params = {"params":{"order_id":order_id, "button":button_name}};
+		var strJson = createJson("updateChilderStatus", this.entity, params);
+		var _this = this
+		$.post(_this.url, strJson, function(obj){
+			console.log(obj)
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip(obj.message));
+				_this.updateButtonStatus();
+			}
+		}, "json");
+	},
+
+	getSign: function(handle, step){
+		var order_id = getQueryStringByName('id');
+		if(order_id===""||!validateNumber(order_id)){
+			return false;
+		}
+		var button_name = $(handle).val();
+	    //检测浏览器，当前只在ie可用
+	    var msie = /msie/.test(navigator.userAgent.toLowerCase());
+	    var msie11 = /rv:11/.test(navigator.userAgent.toLowerCase());//ie11
+	    if(!msie && !msie11){
+	        alert('验签只能在IE中使用');
+	        return false;
+	    }
+		var params = {"params":{"order_id":order_id}};
+		var strJson = createJson("getSubmitSaleOrder", "bank_sign", params);
+		var _this = this;    
+	    //获取订单签名数据
+	    $.ajax({
+	        url: "/admin/BankSignModel.php",
+	        data: strJson,
+	        dataType: 'text',
+	        type: 'POST',
+	        success: function(response){
+	            try{
+	                tempResponse = JSON.parse(response);
+	            }catch(e){
+	                tempResponse = {};
+	            }
+	            if(tempResponse.error != 0 || !tempResponse.content){
+	                alert('获取订单签名数据失败');
+	                return false;
+	            }
+	            //生成签名数据
+	            var signData = _this.getSignData(step, tempResponse.content.signRawData);
+	            var sign_id = tempResponse.content.signId
+	            if(!signData.success){
+	                alert('生成签名数据失败！' + signData.errorInfo);
+	                return false;
+	            }
+
+	            var submitSignUrl = '/admin/BankSignModel.php';
+
+	            var params = {"params":{"sign_id":sign_id, "saler_sign":signData.data}};
+	            var strJson = createJson("submitOrder", "bank_sign", params);
+	            var __this = _this;
+	            $.ajax({
+	                url: submitSignUrl,
+	                data: strJson,
+	                dataType: 'text',
+	                type: 'POST',
+	                success: function(response){
+	                    try{
+	                        response = JSON.parse(response);
+	                    }catch(e){
+	                        response = {};
+	                    }
+	                    if (response.error != 0) {
+	                        alert(response.message);
+	                        return false;
+	                    }
+	                    alert("签名成功！")
+	                    var params = {"params":{"order_id":order_id, "button":button_name}};
+						var strJson = createJson("updateChilderStatus", __this.entity, params);
+						$.post(__this.url, strJson, function(obj){
+							console.log(obj)
+							if(obj.error == -1){
+								$('#message_area').html(createError(obj.message));
+								return false;
+							}else{
+								$('#message_area').html(createTip(obj.message));
+								__this.updateButtonStatus();
+							}
+						}, "json");
+	                },
+	                error: function(jqXHR, textStatus, errorThrown){
+	                    alert('签名失败！');
+	                    return false;
+	                }
+	            });
+	        },
+	        error:function(xhr, textStatus, errorThrown){
+	            alert('获取签名数据失败！');
+	            return false;
+	        }
+	    })
+	},
+
+	//生成签名数据
+	getSignData: function(step, data) {
+	    var result = {};
+	    if(typeof doit == 'undefined'){
+	        doit = document.getElementById('doit');
+	    }
+	    if(typeof doit == 'undefined'){
+	        result.success = false;
+	        result.errorInfo = '请插入object标签';
+	        return result;
+	    }
+	    var signData;
+	    switch (step) {
+	        case 1: //提交合同签名 flag：0买方，1卖方
+	            signData = koalSign4submitContract(1, data);
+	        break;
+	        case 2: //取消合同签名 flag：0买方，1卖方
+	            signData = koalSign4cancelContract(1, data);
+	        break;
+	        case 3: // 内部数据签名
+	            signData = koalSign4zjwcCheck(data);
+	        break;
+	        default:
+	            console.log(step)
+	        break;
+	    }
+	    if(!signData.success) {
+	        result.success = false;
+	        result.errorInfo = signData.msg;
+	        result.data = "";
+	    } else {
+	        result.success = true,
+	        result.errorInfo = "";
+	        result.data = signData.data;
+	    }
+
+	    return result;
 	}
 }
