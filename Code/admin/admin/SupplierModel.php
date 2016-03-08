@@ -188,6 +188,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif( $this->command == 'getSubmitPurchaseOrder'){
 				//
 				$this->getSubmitPurchaseOrderAction();
+			}elseif( $this->command == 'submitOrder'){
+				//
+				$this->submitOrderAction();
 			}
 
 		}
@@ -2225,7 +2228,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$bank_sign_table = $GLOBALS['ecs']->table('bank_sign');
-
+			$order_info_table = $GLOBALS['ecs']->table('order_info');
 			$sign_sql = 'SELECT bank.`sign_id`, odr.`suppers_id` FROM ' . $bank_sign_table . 
 						' AS bank LEFT JOIN ' . $order_info_table . ' AS odr ON bank.`order_sn` = odr.`order_sn` WHERE bank.`sign_id` = ' . $sign_id;
 			$sign_data = $GLOBALS['db']->getOne( $sign_sql );
@@ -2248,7 +2251,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 	$content = jsonAction( 
 				array( 'orderPage', 'orderDetail', 'updateChilderStatus', 'addShippingLog', 'addShippingInfo', 'initcategoryShipping',
 						'addCategoryShippingFee', 'removeCategoryShipping', 'saveCategorShipping', 'categoryShippingDetail','createOrderPay',
-						'completeList', 'orderPayDetail', 'orderPayList', 'initOrderPay', 'upload', 'delUpload', 'getSubmitPurchaseOrder'
+						'completeList', 'orderPayDetail', 'orderPayList', 'initOrderPay', 'upload', 'delUpload', 'getSubmitPurchaseOrder',
+						'submitOrder'
 			 	) 
 			);
 	$supplierModel = new SupplierModel($content);

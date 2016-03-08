@@ -58,7 +58,8 @@ define(function(require) {
         return host + param;
     });
 
-    var area = Storage.get(Storage.AREA) || config.defaultArea,
+    //var area = Storage.get(Storage.AREA) || config.defaultArea,
+    var area = {"id":"1", "name":""},
         status, //用户登录标志
         flag = {}; //标志某分类下的品牌是否已获取
 

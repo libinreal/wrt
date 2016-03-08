@@ -39,7 +39,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'getSubmitPurchaseOrder'){
 				//
 				$this->getSubmitPurchaseOrderAction();
+			}elseif ($this->command == 'submitPurchaseOrder'){
+				//
+				$this->submitPurchaseOrderAction();
 			}
+
 		}
 
 		/**
@@ -159,6 +163,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$sign_sql = 'SELECT `sign_id`,`submit_data`,`buyer_sign`,saler_sign FROM ' . $bank_sign_table . ' WHERE `sign_id` = ' . $sign_id;
 			$sign_data = $GLOBALS['db']->getOne( $sign_sql );
 
+			$sign_data['saler_sign'] = $saler_sign;
+
 			if( !$sign_data ){
 				make_json_response('', '-1', '签名数据获取失败');
 			}
@@ -263,9 +269,81 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}		
 		}
 
+
+		/**
+		 * 接口名称:子订单验签数据保存
+		 * 接口地址：http://admin.zj.dev/admin/BankSignModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
+	     *  {
+	     *      "entity": "bank_sign",
+	     *      "command": "submitPurchaseOrder",
+	     *      "parameters": {
+	     *          "params": {
+	     *          	"sign_id":101,//签名ID
+	     *          	"buyer_sign":"xxxxxx",//买家签名
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "保存签名成功",
+		 *	    "content": {}
+		 *  }
+		 * @return [type] [description]
+		 */
+		public function submitPurchaseOrderAction()
+		{
+			$params = $this->content['parameters']['params'];
+			$sign_id = $params['sign_id'];
+			$buyer_sign = $params['buyer_sign'];
+
+			if( !$sign_id ){
+				make_json_response('', '-1', '签名ID错误');
+			}
+
+			if( !$buyer_sign ){
+				make_json_response('', '-1', '签名数据错误');
+			}
+
+			$bank_sign_table = $GLOBALS['ecs']->table('bank_sign');
+
+			$sign_sql = 'SELECT `sign_id`,`submit_data`,`buyer_sign`,saler_sign FROM ' . $bank_sign_table . ' WHERE `sign_id` = ' . $sign_id;
+			$sign_data = $GLOBALS['db']->getOne( $sign_sql );
+
+			if( !$sign_data ){
+				make_json_response('', '-1', '签名数据获取失败');
+			}
+
+			$sign_data['buyer_sign'] = $buyer_sign;
+
+			$bank_sign_sql = 'UPDATE ' . $bank_sign_table . ' SET `buyer_sign` = \'' . $buyer_sign . '\',' .
+							 ' `buyer_sign_time` = ' . time() . ' WHERE `sign_id` = ' . $sign_id . ' LIMIT 1';
+			$bank_sign = $GLOBALS['db']->query( $bank_sign_sql );
+
+			if( $bank_sign ){
+
+				//发送数据到银行
+		        /*$submitData = unserialize($sign_data['submit_data']);
+		        $submitData['buyerSign'] = $sign_data['buyer_sign'];
+		        $submitData['salerSign'] = $sign_data['saler_sign'];
+		        $rs = submit_order_bank($submitData, self::B2BPAY_URL . '/SubmitContract');
+		        
+		        $rs = json_decode($rs, true);
+		        if($rs['errno'] != '000000') {
+		           	make_json_response( '', '-1', $rs['errmsg'] );
+		        }*/
+
+				make_json_response('', '0', '签名数据保存成功');
+			}else{
+				make_json_response('', '-1', '签名数据保存失败');
+			}	
+		}
+
 	}
 
-$content = jsonAction( array( 'getSubmitSaleOrder', 'submitOrder', 'getSubmitPurchaseOrder'
+$content = jsonAction( array( 'getSubmitSaleOrder', 'submitOrder', 'getSubmitPurchaseOrder', 'submitPurchaseOrder'
 	)
 	);
 $bankSignModel = new BankSignModel($content);
