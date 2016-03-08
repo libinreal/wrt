@@ -93,7 +93,8 @@ class cls_image
 
                 return false;
             }
-        }/* else {
+        }
+        /* else {
         	if (!chmod($dir, 0777)) 
         	{
         		$this->error_msg = sprintf($GLOBALS['_LANG']['directory_readonly'], $dir);
