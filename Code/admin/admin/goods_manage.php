@@ -36,8 +36,6 @@ class Goods extends ManageModel
 		$dirPath = $upload->upload_image($_FILES[$entity], 'goodsExcel', $fileName);
 		if ($dirPath === false) return failed_json('文件上传失败');
 		
-		
-		
 		//读取excel
 		$data = $this->readExcel('../'.$dirPath);
 		//$data = $this->readExcel('../data/goodsExcel/20160304103136.xlsx');
@@ -51,9 +49,11 @@ class Goods extends ManageModel
 			return failed_json('当前登录用户不是供应商');
 		}
 		
+		/* 
 		//管理员id
 		$userId = $_SESSION['admin_id'];
 		if (!$userId) return failed_json('请登录');
+		 */
 		
 		//查询供应商下的商品
 		$this->table = 'goods';

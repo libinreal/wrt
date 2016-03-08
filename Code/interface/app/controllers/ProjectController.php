@@ -54,6 +54,65 @@ class ProjectController extends ControllerBase
         }
         return ResponseApi::send($arr);
 	}
+	
+	
+	/**
+	 * 相关商品推荐接口
+	 * @todo http://www.zj.dev/project/recommendGoods
+	 */
+	public function recommendGoodsAction() 
+	{
+		$userId = $this->get_user()->id;
+		
+		if (!$userId) return ResponseApi::send(null, -1, '用户没有登录');
+		$suppliers = ContractModel::query()
+					->leftjoin('ContractSuppliers', 'S.contract_id=ContractModel.id', 'S')
+					->where('ContractModel.customerId='.$userId)
+					->andWhere('ContractModel.type=1')
+					->columns('S.suppliers_id')
+					->execute()
+					->toArray();
+		
+		if (!$suppliers) {
+			//订单登录用户合同没有绑定供应商时
+			$goods = Goods::query()
+					->where('isDelete=0 AND isBest=1 AND storeNum<>0')
+					->orderby('sort_order DESC')
+					->limit(6)
+					->columns('
+							id goods_id, 
+							name goods_name, 
+							vipPrice, 
+							goods_img
+						')
+					->execute()
+					->toArray();
+			return ResponseApi::send($goods);
+		}
+		
+		//当前登录用户合同绑定的供应商
+		foreach ($suppliers as $k=>&$v) {
+			$v = $v['suppliers_id'];
+			if (!$v) unset($suppliers[$k]);
+		}
+		
+		$goods = Goods::query()
+				->where('isDelete=0 AND storeNum<>0')
+				->andWhere('suppliersId IN('.implode(',', $suppliers).')')
+				->orderby('sort_order DESC,isBest DESC')
+				->limit(6)
+				->columns('
+						id goods_id,
+						name goods_name,
+						vipPrice,
+						goods_img
+					')
+				->execute()
+				->toArray();
+		
+		return ResponseApi::send($goods);
+	}
+	
 
 
 	/**
