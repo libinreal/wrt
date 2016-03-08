@@ -1,7 +1,7 @@
 <?php include("../web.php");?>
 <div class="header">
     <div class="page-vertical">
-        <a class="icon-logo" href="../"></a>
+        <a class="icon-logo" href="../mall/"></a>
         <div class="header-left">
             <!--<span style="font-weight:bold;">所在地区：</span>
             <span class="value">上海市</span><a class="operate" href="#">更换</a>
@@ -9,7 +9,7 @@
         </div>
         <div class="header-left">
             <ul>
-                <li><a class="icon link icon-home" href="../">首页</a></li>
+                <li><a class="icon link icon-home" href="../mall/">首页</a></li>
                 <li>
                     <form class="search" action="../mall/search.html">
                 <input type="text" class="search_input" name="key" placeholder="请输入关键字">

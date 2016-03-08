@@ -92,19 +92,6 @@
 	<!--[}]-->
 	<!--[}]-->
 	</div>
-	<div class="nowarea"><span id="area-name"><!--[= area.name]--></span><a class="operate" href="#">更换</a></div>
-	<div class="fl nowlink" style="padding-left: 30px;">
-		<a class="link" href="../personal/">个人中心</a>
-	</div>
-	<div id="settleup-2013" class="fl">
-		<dl class="settleup">
-			<dt class="ld"><s></s><span class="shopping1"><span id="cart-no">0</span></span><a class="auth" href="cart.html">去购物车结算</a><b></b></dt>
-			<dd>
-				<div id="settleup-empty" class="prompt" style="display:none;"><div class="nogoods"><b></b>购物车中还没有商品，赶紧选购吧！</div></div>
-				<div id="settleup-content"></div>
-			</dd>
-		</dl>
-	</div>
 
 	<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 </script>
