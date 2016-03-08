@@ -7,6 +7,7 @@ require_once(ROOT_PATH . '/' . ADMIN_PATH . '/includes/lib_goods.php');
 include_once(ROOT_PATH . '/includes/cls_image.php');
 $image = new cls_image($_CFG['bgcolor']);
 $exc = new exchange($ecs->table('goods'), $db, 'goods_id', 'goods_name');
+
 //顶部菜单导航
 if($_REQUEST['act'] == 'list_arr') {
     admin_priv('order_view');

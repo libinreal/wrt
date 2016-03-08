@@ -902,7 +902,6 @@ var Supplier = {
 		var strJson = createJson("updateChilderStatus", this.entity, params);
 		var _this = this
 		$.post(_this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -927,11 +926,11 @@ var Supplier = {
 	        return false;
 	    }
 		var params = {"params":{"order_id":order_id}};
-		var strJson = createJson("getSubmitSaleOrder", "bank_sign", params);
+		var strJson = createJson("getSubmitPurchaseOrder", "bank_sign", params);
 		var _this = this;
 	    //获取订单签名数据
 	    $.ajax({
-	        url: "/admin/BankSignModel.php",
+	        url: "/admin/SupplierModel.php",
 	        data: strJson,
 	        dataType: 'text',
 	        type: 'POST',
@@ -946,14 +945,14 @@ var Supplier = {
 	                return false;
 	            }
 	            //生成签名数据
-	            var signData = _this.getSignData(step, tempResponse.content.signRawData);
+	            var signData = _this.getSignData(step, tempResponse.content.signData);
 	            var sign_id = tempResponse.content.signId
 	            if(!signData.success){
 	                alert('生成签名数据失败！' + signData.errorInfo);
 	                return false;
 	            }
 
-	            var submitSignUrl = '/admin/BankSignModel.php';
+	            var submitSignUrl = '/admin/SupplierModel.php';
 
 	            var params = {"params":{"sign_id":sign_id, "saler_sign":signData.data}};
 	            var strJson = createJson("submitOrder", "bank_sign", params);

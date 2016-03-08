@@ -57,11 +57,12 @@ define(function(require) {
 
         return host + param;
     });
-
+    Storage.set(Storage.AREA, {"id":"1", "name":""});
     //var area = Storage.get(Storage.AREA) || config.defaultArea,
-    var area = {"id":"1", "name":""},
+    var area = Storage.get(Storage.AREA),
         status, //用户登录标志
         flag = {}; //标志某分类下的品牌是否已获取
+    
 
     //回填用户相关数据
     config.afterCheckAccount = function(account) {
