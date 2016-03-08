@@ -477,7 +477,6 @@ elseif ($_REQUEST['act'] == 'main')
     $smarty->assign('new_repay', $db->getOne('SELECT COUNT(*) FROM ' . $ecs->table('user_account') . ' WHERE process_type = ' . SURPLUS_RETURN . ' AND is_paid = 0 '));
 
 
-
     assign_query_info();
     $smarty->assign('ecs_version',  VERSION);
     $smarty->assign('ecs_release',  RELEASE);

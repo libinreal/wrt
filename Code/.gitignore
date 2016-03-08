@@ -1,3 +1,9 @@
+
+admin/data
+admin/temp
+admin/includes/lib_base.php
+admin/includes/cls_image.php
+
 admin/includes/cls_template.php
 admin/admin/includes/lib_template.php
 interface/app/config/config.php
@@ -20,7 +26,10 @@ interface/.swp
 interface/app/cache/
 interface/public/apply_attachment/
 
-admin/data
+admin/images
+
+
+
 admin/temp
 admin/includes/lib_base.php
 admin/includes/cls_template.php
