@@ -522,7 +522,7 @@ var Contract = {
 						}
 					}
 				});
-				$("select[name=customer_id]").html(row);
+				$("select[name=customer_id]").append(row);
 			}
 		}, "json");
 		$('#message_area').html('');
