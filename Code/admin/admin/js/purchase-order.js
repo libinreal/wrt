@@ -565,7 +565,7 @@ var PurchaseOrder = {
 	                return false;
 	            }
 	            //生成签名数据
-	            var signData = _this.getSignData(step, tempResponse.content.signRawData);
+	            var signData = _this.getSignData(step, tempResponse.content.signData);
 	            var sign_id = tempResponse.content.signId
 	            if(!signData.success){
 	                alert('生成签名数据失败！' + signData.errorInfo);

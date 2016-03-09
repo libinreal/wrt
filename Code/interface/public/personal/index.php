@@ -72,9 +72,9 @@
 <script id="zj-list-tmpl" type="text/html">
 	<!--[for(i = 0; i < list.length; i ++) {]-->
 		<li class="product-border">
-			<div class="product-name"><a href="../mall/detail.html?id=<!--[= list[i].id]-->" title="<!--[= list[i].name]-->"><!--[= list[i].name || '--']--></a></div>
+			<div class="product-name"><a href="../mall/detail.html?id=<!--[= list[i].goods_id]-->" title="<!--[= list[i].goods_name]-->"><!--[= list[i].goods_name || '--']--></a></div>
 			<div class="product-img0">
-				<a href="../mall/detail.html?id=<!--[= list[i].id]-->" title="<!--[= list[i].name]-->"><img alt="" src="<!--[= $absImg(list[i].thumb)]-->"/></a>
+				<a href="../mall/detail.html?id=<!--[= list[i].goods_id]-->" title="<!--[= list[i].goods_name]-->"><img alt="" src="<!--[= $absImg(list[i].goods_img)]-->"/></a>
 			</div>
 			<div class="product-infos">
 				<div class="product-price clearfix">
@@ -83,15 +83,10 @@
 						class="price-value"><!--[== $formatCurrency(list[i].vipPrice)]--></span><span 
 						class="price-unit">&nbsp;信用B</span>
 					</div>
-					<div class="default">
-						<span class="price-label factory">挂牌单价</span><span 
-						class="price-value"><!--[== $formatCurrency(list[i].price)]--></span><span 
-						class="price-unit">&nbsp;信用B</span>
-					</div>
 				</div>
 				<div class="product-operate">
-					<button class="operate-shoucang <!--[= (list[i].hasFavorites == '1' ? 'active' : '')]-->" data-id="<!--[= list[i].id]-->"><span>收藏</span></button>
-					<button class="shop-product operate-cart" data-id="<!--[= list[i].id]-->">加入购物车</button>
+					<button class="operate-shoucang <!--[= (list[i].hasFavorites == '1' ? 'active' : '')]-->" data-id="<!--[= list[i].goods_id]-->"><span>收藏</span></button>
+					<button class="shop-product operate-cart" data-id="<!--[= list[i].goods_id]-->">加入购物车</button>
 				</div>
 			</div>
 		</li>

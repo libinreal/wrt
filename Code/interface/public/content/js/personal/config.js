@@ -65,6 +65,8 @@ define(function(require, exports, module) {
 
     config.newsList = config.server + '/notice/getannouncelist'; //获取公告
     config.userInfo = config.server + '/credit/userinfo'; //获取个人资料
+
+    config.recommendGoods = config.server + '/project/recommendGoods'; //获取默认发票信息
     
     
     //订单状态（二期）
