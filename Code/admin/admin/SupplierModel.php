@@ -2231,7 +2231,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 			$sign_sql = 'SELECT bank.`sign_id`, odr.`suppers_id` FROM ' . $bank_sign_table . 
 						' AS bank LEFT JOIN ' . $order_info_table . ' AS odr ON bank.`order_sn` = odr.`order_sn` WHERE bank.`sign_id` = ' . $sign_id;
-			$sign_data = $GLOBALS['db']->getOne( $sign_sql );
+			$sign_data = $GLOBALS['db']->getRow( $sign_sql );
 
 			if( !$sign_data || $suppliers_id != $sign_data['suppers_id'] ){
 				make_json_response('', '-1', '签名数据获取失败');
