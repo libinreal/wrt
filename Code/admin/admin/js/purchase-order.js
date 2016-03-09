@@ -479,8 +479,8 @@ var PurchaseOrder = {
 			return false;
 		}
 		var params = {"params":{"order_id":order_id}};
-		strJson = createJson("childerDetail", this.entity, params);
-		that = this
+		var strJson = createJson("childerDetail", this.entity, params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -546,8 +546,8 @@ var PurchaseOrder = {
 	        return false;
 	    }
 		var params = {"params":{"order_id":order_id}};
-		var strJson = createJson("getSubmitSaleOrder", "bank_sign", params);
-		var _this = this;    
+		var strJson = createJson("getSubmitPurchaseOrder", "bank_sign", params);
+		var _this = this;
 	    //获取订单签名数据
 	    $.ajax({
 	        url: "/admin/BankSignModel.php",
@@ -574,8 +574,8 @@ var PurchaseOrder = {
 
 	            var submitSignUrl = '/admin/BankSignModel.php';
 
-	            var params = {"params":{"sign_id":sign_id, "saler_sign":signData.data}};
-	            var strJson = createJson("submitOrder", "bank_sign", params);
+	            var params = {"params":{"sign_id":sign_id, "buyer_sign":signData.data}};
+	            var strJson = createJson("submitPurchaseOrder", "bank_sign", params);
 	            var __this = _this;
 	            $.ajax({
 	                url: submitSignUrl,
