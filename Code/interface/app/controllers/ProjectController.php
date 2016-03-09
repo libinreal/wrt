@@ -65,16 +65,19 @@ class ProjectController extends ControllerBase
 		$userId = $this->get_user()->id;
 		
 		if (!$userId) return ResponseApi::send(null, -1, '用户没有登录');
+		$userId = 4;
+		//查询用户合同下的供应商
 		$suppliers = ContractModel::query()
 					->leftjoin('ContractSuppliers', 'S.contract_id=ContractModel.id', 'S')
 					->where('ContractModel.customerId='.$userId)
 					->andWhere('ContractModel.type=1')
+					->andWhere('S.suppliers_id iS NOT NULL OR S.suppliers_id > 0')
 					->columns('S.suppliers_id')
 					->execute()
 					->toArray();
 		
 		if (!$suppliers) {
-			//订单登录用户合同没有绑定供应商时
+			//当前用户合同下没有供应商时，返回推荐商品信息
 			$goods = Goods::query()
 					->where('isDelete=0 AND isBest=1 AND storeNum<>0')
 					->orderby('sort_order DESC')
@@ -90,12 +93,12 @@ class ProjectController extends ControllerBase
 			return ResponseApi::send($goods);
 		}
 		
-		//当前登录用户合同绑定的供应商
 		foreach ($suppliers as $k=>&$v) {
 			$v = $v['suppliers_id'];
 			if (!$v) unset($suppliers[$k]);
 		}
 		
+		//当前用户合同下有供应商时，返回相关供应商下的商品信息
 		$goods = Goods::query()
 				->where('isDelete=0 AND storeNum<>0')
 				->andWhere('suppliersId IN('.implode(',', $suppliers).')')

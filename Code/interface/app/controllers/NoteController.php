@@ -157,59 +157,82 @@ class NoteController extends ControllerBase
 					receive_bank_id, 
 					receive_account
 				'
-		))->toArray();
-		if ($data === false) return ResponseApi::send(null, -1, '查询失败');
-		if (!$data) return ResponseApi::send(array());
+		));
+		if ($data === false) 
+			return ResponseApi::send(null, -1, '查询失败');
+		$data = $data->toArray();
 		
-		//用户
-		$users = array(
-				$data['customer_id'], 
-				$data['pay_user_id'], 
-				$data['receive_user_id']
-				
-		);
-		$users = array_unique($users);
-		$users = Users::find(array(
-				'conditions' => 'id IN('.implode(',', $users).')', 
-				'columns' => 'id,account'
-		))->toArray();
-		if ($users === false) return ResponseApi::send(null, -1, '查询用户失败');
-		if (!$users) return ResponseApi::send(null, -1, '用户数据不正确');
+		if (!$data) return ResponseApi::send(null, -1, '没有相关数据');
 		
-		//银行
-		$banks = array(
-				$data['pay_bank_id'], 
-				$data['receive_bank_id']
-				
-		);
-		$banks = array_unique($banks);
-		$banks = Bank::find(array(
-				'conditions' => 'bank_id IN('.implode(',', $banks).')', 
-				'columns' => 'bank_id,bank_name'
-		))->toArray();
-		if ($banks === false) return ResponseApi::send(null, -1, '查询银行失败');
-		if (!$banks) return ResponseApi::send(null, -1, '银行数据不正确');
-
-		foreach ($users as $v) {
-			if ($data['customer_id'] == $v['id']) {
-				$data['customer'] = $v['account'];
-			} elseif(!isset($data['customer'])) {
-				$data['customer'] = '';
-			}
+		//查询用户
+		$users = array();
+		
+		if (!$data['customer_id']) $users[] = $data['customer_id'];
+		if (!$data['pay_user_id']) $users[] = $data['pay_user_id'];
+		if (!$data['receive_user_id']) $users[] = $data['receive_user_id'];
+		
+		if (!$users) 
+		{
+			$data['customer'] = '';
+			$data['pay_user'] = '';
+			$data['receive_user'] = '';
+		} 
+		else {
+			$users = array_unique($users);
+			$users = Users::find(array(
+					'conditions' => 'id IN('.implode(',', $users).')',
+					'columns' => 'id,account'
+			));
+			if ($users === false) return ResponseApi::send(null, -1, '查询用户失败');
+			$users = $users->toArray();
+			if (!$users) return ResponseApi::send(null, -1, '用户数据不正确');
 			
-			if ($data['pay_user_id'] == $v['id']) {
-				$data['pay_user'] = $v['account'];
-			} elseif (!isset($data['pay_user'])) {
-				$data['pay_user'] = '';
-			}
+			foreach ($users as $v) {
+				if ($data['customer_id'] == $v['id']) {
+					$data['customer'] = $v['account'];
+				} elseif(!isset($data['customer'])) {
+					$data['customer'] = '';
+				}
 			
-			if ($data['receive_user_id'] == $v['id']) {
-				$data['receive_user'] = $v['account'];
-			} elseif (!isset($data['receive_user'])) {
-				$data['receive_user'] = '';
+				if ($data['pay_user_id'] == $v['id']) {
+					$data['pay_user'] = $v['account'];
+				} elseif (!isset($data['pay_user'])) {
+					$data['pay_user'] = '';
+				}
+			
+				if ($data['receive_user_id'] == $v['id']) {
+					$data['receive_user'] = $v['account'];
+				} elseif (!isset($data['receive_user'])) {
+					$data['receive_user'] = '';
+				}
 			}
 		}
 		
+		$banks = array();
+		
+		if ($data['pay_bank_id']) $banks[] = $data['pay_bank_id'];
+		if ($data['receive_bank_id']) $banks[] = $data['receive_bank_id'];
+		
+		//票据信息不关联银行
+		if (!$banks) 
+		{
+			$data['pay_bank'] = '';
+			$data['receive_bank'] = '';
+			return ResponseApi::send($data);
+		}
+		
+		//查询银行
+		$banks = array_unique($banks);
+		$banks = Bank::find(array(
+				'conditions' => 'bank_id IN('.implode(',', $banks).')',
+				'columns' => 'bank_id,bank_name'
+		));
+		
+		if ($banks === false) return ResponseApi::send(null, -1, '查询银行失败');
+		$banks = $banks->toArray();
+		if (!$banks) return ResponseApi::send(null, -1, '银行数据不正确');
+		
+		//绑定银行名称
 		foreach ($banks as $v) {
 			if ($data['pay_bank_id'] == $v['bank_id']) {
 				$data['pay_bank'] = $v['bank_name'];
