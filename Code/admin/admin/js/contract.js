@@ -95,7 +95,7 @@ var Contract = {
 								var edit = createLink(that.url+"?act=contractView&id="+value.contract_id, "查看");
 								edit += createLink(that.url+"?act=contractEdit&id="+value.contract_id, "编辑");
 								if(value.contract_type == "销售合同"){
-									edit += createLink(that.url+"?act=supplierSet&id="+value.contract_id, "绑定供应商");
+									edit += createLink(that.url+"?act=supplierSetEdit&id="+value.contract_id, "绑定供应商");
 								}
 								row += createTd(edit);
 							}
@@ -524,7 +524,13 @@ var Contract = {
 				});
 				$("select[name=customer_id]").append(row);
 			}
-		}, "json");
+		}, "json").done(function(){
+			var contract_id = getQueryStringByName('id');
+			if(contract_id===""||!validateNumber(contract_id)){
+				return false;
+			}
+			that.getBuyCont(contract_id);
+		});
 		$('#message_area').html('');
 	},
 
@@ -559,15 +565,15 @@ var Contract = {
 	},
 
 	//下游客户的采购合同列表
-	getBuyCont: function(){
+	getBuyCont: function(contract_id){
 		var customer_id = $("select[name=customer_id]").val();
 		if(customer_id == ''){
 			$("select[name=contract_id]").html('<option value="">全部</option>');
 			return false;
 		}
 		var params = {"customer_id" : customer_id};
-		strJson = createJson("buyCont", "contract", params);
-		that = this;
+		var strJson = createJson("buyCont", "contract", params);
+		var that = this;
 		console.log(strJson);
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
@@ -577,7 +583,12 @@ var Contract = {
 				var row = '<option value="">全部</option>';
 				if(obj.content.length > 0){
 					$.each(obj.content, function(k,v){
-						row += appendOption(v.contract_id, v.contract_name);
+						if(v.contract_id == contract_id){
+							row += appendOption(v.contract_id, v.contract_name, 1);
+						}else{
+							row += appendOption(v.contract_id, v.contract_name);
+						}
+						
 					});
 				}
 				$("select[name=contract_id]").html(row);
@@ -675,6 +686,52 @@ var Contract = {
 			}
 			$('#message_area').html('');
 		}, "json");
+	},
+
+	getContToSup: function(contract_id,search){
+		var contract_id = getQueryStringByName('id');
+		if(contract_id===""||!validateNumber(contract_id)){
+			if($('select[name=contract_id]').val() != ''){
+				contract_id = $('select[name=contract_id]').val();
+			}
+		}
+		var condition = {};
+		condition["contract_id"] = contract_id;
+		if(search === true){
+			var region_id = $("select[name=region_id]").val();
+			var customer_id = $("select[name=customer_id]").val();
+			var contract_id = $("select[name=contract_id]").val();
+			if(region_id != 0){
+				condition["region_id"] = region_id;
+			}
+			if(customer_id != ''){
+				condition["customer_id"] = customer_id;
+				if(contract_id != ''){
+					condition["contract_id"] = contract_id;
+				}
+			}
+		}
+		var strJson = createJson("contToSup", "contract", condition);
+		var that = this;
+		var customer_id = 0;
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				customer_id = obj.content.customer_id
+				that.total_page = Math.ceil(obj.content.total/that.offset);
+				var row = '';
+				$.each(obj.content.suppliers, function(k,v){
+					row += appendOption(v.suppliers_id, v.suppliers_name);
+				});
+				$("select#liOptionms2side__dx").html(row);
+			}
+			$('#message_area').html('');
+		}, "json").done(function(){
+			that.getUserList(customer_id);
+			that.getRegionList();
+		});		
 	},
 
 	setContInSups: function(contract_id){

@@ -185,7 +185,6 @@ define(function(require) {
                     return;
                 }
                 location.href = 'my-order.html';
-
             });
         });
     });

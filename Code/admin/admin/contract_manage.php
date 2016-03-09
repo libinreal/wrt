@@ -45,6 +45,11 @@ elseif ( $_REQUEST['act'] == 'supplierSet' )
     $smarty->display('second/contract_supplier_link_set.html');
     exit;
 }
+
+elseif ( $_REQUEST['act'] == 'supplierSetEdit'){
+     $smarty->display('second/contract_supplier_link_set_edit.html');
+    exit;   
+}
 /**
  * 合同关联供应商列表
  */

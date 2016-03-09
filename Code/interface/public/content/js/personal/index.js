@@ -19,7 +19,6 @@ define(function(require) {
             return;
         }
         var data = response.body;
-        console.log(data)
         if (tempIcon) {
             data.icon = config.getUserIcon(tempIcon); //用户头像
         }
@@ -28,9 +27,9 @@ define(function(require) {
 
     });
 
-    //历史浏览记录
+    //获取商品推荐列表
     Ajax.custom({
-        url: config.historylist,
+        url: config.recommendGoods,
         data: {
             size: 6
         }
