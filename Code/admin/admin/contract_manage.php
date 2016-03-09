@@ -765,7 +765,7 @@ class Contract extends ManageModel
             
         $arr = array();
         foreach ($suppliersId as $k=>$v) {
-            $arr[] = '('.$contractId.','.$v.')';
+            $arr[] = '('.$contractId.','.$v.','.time().')';
         }
         $values = implode(',', $arr);
         $sql = 'INSERT INTO '.$this->table.' values'.$values;
@@ -781,7 +781,7 @@ class Contract extends ManageModel
     /**
      * 合同关联供应商列表
      * {
-     *      "command" : "ContSupsList", 
+     *      "command" : "contSupsList", 
      *      "entity"  : "contract_suppliers", 
      *      "parameters" : {
      *          "params" : {
@@ -825,9 +825,10 @@ class Contract extends ManageModel
         //page
         if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
             $page = intval($params['limit']);
-            if ($page < 0) $page = 0;
+            if ($page <= 0) $page = 0;
             $offset = intval($params['offset']);
             if ($offset < 0) $offset = 0;
+            //$page = ($page - 1)*$offset;
             $limit = 'limit '.$page.','.$offset;
         }
         
@@ -838,7 +839,7 @@ class Contract extends ManageModel
                 'c.contract_num', 
                 'c.contract_name', 
                 's.suppliers_name', 
-                'r.region_name'
+                'IF(s.region_id=0,s.area_name,r.region_name) region_name'
             ), 
             'as'   => 'cs', 
             'join' => 'LEFT JOIN contract AS c on cs.contract_id=c.contract_id'
@@ -846,7 +847,7 @@ class Contract extends ManageModel
                     .' LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
                     .' LEFT JOIN region AS r on s.region_id=r.region_id', 
             'where' => $where, 
-            'extend'=> 'ORDER BY cs.contract_id DESC,cs.suppliers_id DESC '.$limit
+            'extend'=> 'ORDER BY cs.create_time DESC,cs.contract_id DESC,cs.suppliers_id DESC '.$limit
         ));
         $res = $this->db->getAll($this->sql);
         
@@ -857,7 +858,7 @@ class Contract extends ManageModel
                       .' LEFT JOIN users AS u on c.customer_id=u.user_id'
                       .' LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id'
                       .' LEFT JOIN region AS r on s.region_id=r.region_id',
-            'where'  => $where            
+            'where'  => $where
         ));
         $total = $this->db->getOne($this->sql);
         make_json_result(array('total'=>$total, 'data'=>$res));
@@ -887,10 +888,10 @@ class Contract extends ManageModel
                 'contract_id', 
                 'customer_id'
             ), 
-            'where'  => 'contract_type=2 and contract_id='.$contractId
+            'where'  => 'contract_type=1 and contract_id='.$contractId //销售合同
         ));
-        $res = $this->db->getRow($this->sql);
-        if ($res === false) failed_json('没有此合同相关信息');
+        $contract = $this->db->getRow($this->sql);
+        if ($contract === false) failed_json('没有此合同相关信息');
         
         //合同下的所有供应商
         $this->table = 'contract_suppliers';
@@ -904,8 +905,8 @@ class Contract extends ManageModel
             'join'   => 'LEFT JOIN suppliers AS s on cs.suppliers_id=s.suppliers_id', 
             'where'  => 'cs.contract_id='.$contractId
         ));
-        $res['suppliers'] = $this->db->getAll($this->sql);
-        make_json_result($res);
+        $contract['suppliers'] = $this->db->getAll($this->sql);
+        make_json_result($contract);
     }
     
     

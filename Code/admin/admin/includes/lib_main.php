@@ -1052,7 +1052,7 @@ function suppliers_list_name()
 	if (!isset($json['command']) || !strlen($json['command'])) {
 		die('command not present in request') ;
 	}
-
+	
 	if (!in_array($json['command'], $command)) {
 		die('unknown command'.$json['command']);
 	}

@@ -115,7 +115,7 @@ class Credit extends ManageModel
     
     	//new code
     	$path = '../'.$result;
-    	$this->creditXML($path, $fileName);
+    	return $this->creditXML($path, $fileName);
     	
     	die;
     	
