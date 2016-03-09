@@ -65,7 +65,7 @@ class ProjectController extends ControllerBase
 		$userId = $this->get_user()->id;
 		
 		if (!$userId) return ResponseApi::send(null, -1, '用户没有登录');
-		$userId = 4;
+		
 		//查询用户合同下的供应商
 		$suppliers = ContractModel::query()
 					->leftjoin('ContractSuppliers', 'S.contract_id=ContractModel.id', 'S')

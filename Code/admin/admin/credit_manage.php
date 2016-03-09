@@ -116,117 +116,6 @@ class Credit extends ManageModel
     	//new code
     	$path = '../'.$result;
     	return $this->creditXML($path, $fileName);
-    	
-    	die;
-    	
-    	//old code
-    	$path = '../'.$res; //'../data/credit/'.$fileName;
-    	@$xml = simplexml_load_file($path);
-    	if ($xml == false) {
-    		failed_json('文件格式错误');
-    	}
-    
-    	$registrationNum = '01234567890'; //授信银行号
-    	//xml所有协议号
-    	$protocols = array();
-    	foreach ($xml->CZB2SINOT->Record as $v){
-    		$protocols[] = $v->Property->__toString();
-    	}
-    
-    	if (empty($protocols)) {
-    		make_json_result(true);
-    	}
-    
-    	//数据库所有协议号
-    	self::selectSql(array(
-    			'fields' => 'credit_num',
-    	));
-    	$had = $this->db->getAll($this->sql);
-    	if (empty($had)) {
-    		$diff = $protocols;
-    	} else {
-    		//获取一定格式的数组
-    		$exist = array();
-    		foreach ($had as $k=>$v) {
-    			$exist[] = $v['credit_num'];
-    		}
-    		unset($had);
-    
-    		$intersect = array_intersect($protocols, $exist);   //修改的交集数据
-    		$diff = array_diff($protocols, $exist);     //添加的差集数据
-    
-    		if (empty($intersect) && empty($diff)) {
-    			make_json_result(true);
-    		}
-    
-    	}
-    
-    	$update = array();  //需要修改的数据集合
-    	$insert = array();  //需要添加的数据集合
-    	$users  = array();  //需要创建或修改的用户集合
-    	$allowUser = array(
-    			'CUSTOMERID', 'CUSTOMERNAME', 'INPUTORG'
-    	);
-    
-    	//区分数据操作
-    	$cl = '';$n = 0;$i = 0;$j = 0;
-    	foreach ($xml->CZB2SINOT->Record as $v) {
-    		$cl = $v->Property->__toString();
-    
-    		foreach ($v->Property as $pv) {
-    			if (in_array($pv->attributes()->name->__toString(), $allowUser)) {
-    				$users[$j][] = $pv->__toString();
-    			}
-    		}
-    		$j++;
-    		//修改
-    		if (!empty($intersect)) {
-    			if (in_array($cl, $intersect)) {
-    				$str = '';
-    				foreach ($v->Property as $pv) {
-    					$str .= '"'.$pv->__toString().'",';
-    					$update[$n][] = $pv->__toString();
-    				}
-    				$n++;
-    			}
-    		}
-    
-    		//添加
-    		if (!empty($diff)) {
-    			if (in_array($cl, $diff)) {
-    				$str = '';
-    				foreach ($v->Property as $pv) {
-    					$str .= '"'.$pv->__toString().'",';
-    					$insert[$i] = "(".$str.'"'.$registrationNum.'","'.time().'"'.")";
-    				}
-    				$i++;
-    			}
-    		}
-    	}
-    
-    	//写入用户表
-    	if (!empty($users)) {
-    		$this->addCreditUser($users);
-    	}
-    
-    	//修改操作
-    	if (!empty($update)) {
-    		$this->updateBankCredit($update);
-    	}
-    
-    	//添加操作
-    	if (!empty($insert)) {
-    		$this->insertBankCredit($insert);
-    	}
-    
-    	$newDir = '../data/credit/used/';
-    	if (!file_exists($newDir) && mkdir($newDir)) {
-    		@rename($path, $newDir.$fileName);
-    	} elseif (file_exists($newDir)) {
-    		@rename($path, $newDir.$fileName);
-    	}
-    
-    	make_json_result(true);
     }
     
     
@@ -648,6 +537,140 @@ class Credit extends ManageModel
         $config = require_once('bankCredit_config.php');
         return $config;
     }
+    
+    
+    /**
+     * 导入授信文件副本
+     */
+    public function importXMLBAK() 
+    {
+    	self::init('bank_credit', 'bank_credit');
+    	 
+    	if (!$entity) return failed_json('没有传参`entity`');
+    	if (!$_FILES) return failed_json('上传文件为空');
+    	
+    	//限制文件格式 xml
+    	$extension = pathinfo($_FILES[$entity]['name'], PATHINFO_EXTENSION);
+    	if ($extension != 'xml') return failed_json('只允许上传xml格式的文件！');
+    	
+    	//上传文件
+    	require('../includes/cls_image.php');
+    	$upload = new cls_image();
+    	$fileName = date('YmdHis').'.xml';
+    	$result = $upload->upload_image($_FILES[$entity], 'credit', $fileName);
+    	if ($result === false) return failed_json('上传文件失败');
+    	
+    	//old code
+    	$path = '../'.$result; //'../data/credit/'.$fileName;
+    	@$xml = simplexml_load_file($path);
+    	if ($xml == false) {
+    		failed_json('文件格式错误');
+    	}
+    	
+    	$registrationNum = '01234567890'; //授信银行号
+    	//xml所有协议号
+    	$protocols = array();
+    	foreach ($xml->CZB2SINOT->Record as $v){
+    		$protocols[] = $v->Property->__toString();
+    	}
+    	
+    	if (empty($protocols)) {
+    		make_json_result(true);
+    	}
+    	
+    	//数据库所有协议号
+    	self::selectSql(array(
+    			'fields' => 'credit_num',
+    	));
+    	$had = $this->db->getAll($this->sql);
+    	if (empty($had)) {
+    		$diff = $protocols;
+    	} else {
+    		//获取一定格式的数组
+    		$exist = array();
+    		foreach ($had as $k=>$v) {
+    			$exist[] = $v['credit_num'];
+    		}
+    		unset($had);
+    	
+    		$intersect = array_intersect($protocols, $exist);   //修改的交集数据
+    		$diff = array_diff($protocols, $exist);     //添加的差集数据
+    	
+    		if (empty($intersect) && empty($diff)) {
+    			make_json_result(true);
+    		}
+    	
+    	}
+    	
+    	$update = array();  //需要修改的数据集合
+    	$insert = array();  //需要添加的数据集合
+    	$users  = array();  //需要创建或修改的用户集合
+    	$allowUser = array(
+    			'CUSTOMERID', 'CUSTOMERNAME', 'INPUTORG'
+    	);
+    	
+    	//区分数据操作
+    	$cl = '';$n = 0;$i = 0;$j = 0;
+    	foreach ($xml->CZB2SINOT->Record as $v) {
+    		$cl = $v->Property->__toString();
+    	
+    		foreach ($v->Property as $pv) {
+    			if (in_array($pv->attributes()->name->__toString(), $allowUser)) {
+    				$users[$j][] = $pv->__toString();
+    			}
+    		}
+    		$j++;
+    		//修改
+    		if (!empty($intersect)) {
+    			if (in_array($cl, $intersect)) {
+    				$str = '';
+    				foreach ($v->Property as $pv) {
+    					$str .= '"'.$pv->__toString().'",';
+    					$update[$n][] = $pv->__toString();
+    				}
+    				$n++;
+    			}
+    		}
+    	
+    		//添加
+    		if (!empty($diff)) {
+    			if (in_array($cl, $diff)) {
+    				$str = '';
+    				foreach ($v->Property as $pv) {
+    					$str .= '"'.$pv->__toString().'",';
+    					$insert[$i] = "(".$str.'"'.$registrationNum.'","'.time().'"'.")";
+    				}
+    				$i++;
+    			}
+    		}
+    	}
+    	
+    	//写入用户表
+    	if (!empty($users)) {
+    		$this->addCreditUser($users);
+    	}
+    	
+    	//修改操作
+    	if (!empty($update)) {
+    		$this->updateBankCredit($update);
+    	}
+    	
+    	//添加操作
+    	if (!empty($insert)) {
+    		$this->insertBankCredit($insert);
+    	}
+    	
+    	$newDir = '../data/credit/used/';
+    	if (!file_exists($newDir) && mkdir($newDir)) {
+    		@rename($path, $newDir.$fileName);
+    	} elseif (file_exists($newDir)) {
+    		@rename($path, $newDir.$fileName);
+    	}
+    	
+    	make_json_result(true);
+    }
+    
+    
 }
 if ($_POST['command'] == 'importCredit') {
     $credit = Credit::getIns();
