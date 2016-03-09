@@ -48,9 +48,23 @@ define(function(require) {
         }
     });
 
-    //更改状态
     $('#zj-detail').on('click', '#handle-button .change-status', function(e) {
+        $.get("/bank/signswitchstat", function(response){
+            if(response.code == 1){
+                alert('参数错误！')
+                return false;
+            }else{
+                if(response.body == 1){
+                    updateStatus();
+                }else{
+                    sign();
+                }
+            }
+        }, "json");
+    });
 
+    //更改状态
+    function sign(){
         //检测浏览器，当前只在ie可用
         var msie = /msie/.test(navigator.userAgent.toLowerCase());
         var msie11 = /rv:11/.test(navigator.userAgent.toLowerCase());//ie11
@@ -109,28 +123,7 @@ define(function(require) {
                             return;
                         }
                         alert('签名成功！');
-                        Ajax.custom({
-                            url: config.uchildstatus,
-                            data: {
-                                oid: id
-                            },
-                            type: 'GET'
-                        }, function(response) {
-                            if (response.code != 0) {
-                                Tools.showToast(response.message || '操作失败');
-                                return;
-                            }
-                            Ajax.detail({
-                                url: config.getchildreninfo,
-                                data: {
-                                    order_id: id
-                                }
-                            }, function(response) {
-                                if (response.code != 0) {
-                                    return;
-                                }
-                            });
-                        });
+                        updateStatus();
                     },
                     error: function(jqXHR, textStatus, errorThrown){
                         alert('签名失败！');
@@ -141,7 +134,32 @@ define(function(require) {
                 alert('获取签名数据失败！');
             }
         });
-    });
+    }
+
+    function updateStatus(){
+        Ajax.custom({
+            url: config.uchildstatus,
+            data: {
+                oid: id
+            },
+            type: 'GET'
+        }, function(response) {
+            if (response.code != 0) {
+                Tools.showToast(response.message || '操作失败');
+                return;
+            }
+            Ajax.detail({
+                url: config.getchildreninfo,
+                data: {
+                    order_id: id
+                }
+            }, function(response) {
+                if (response.code != 0) {
+                    return;
+                }
+            });
+        });
+    }
 
     //催办订单
     $('#zj-detail').on('click', '.btn-cuiban', function(e) {
