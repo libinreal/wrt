@@ -107,7 +107,7 @@ class NoteController extends ControllerBase
 	
 	
 	/**
-	 * 票据详情
+	 * 票据详情 - 前台接口
 	 */
 	public function noteinfoAction() 
 	{

@@ -99,10 +99,34 @@ class ManageModel
         return ;
     }
     
-    
 }
 
 function failed_json($msg) 
 {
     make_json_response('', -1, $msg);
+}
+
+class Response 
+{
+	public static function failure($message) 
+	{
+		return $this->send(null, -1, $message);
+	}
+	
+	
+	public static function success($body = array()) 
+	{
+		return $this->send($body);
+	}
+	
+	public static function send($body, $code = 0, $message = NULL) 
+	{
+		$json = json_encode(array(
+				'code' => $code, 
+				'message' => $message, 
+				'body' => $body
+		));
+		echo $json;
+		return ;
+	}
 }
