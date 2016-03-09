@@ -431,7 +431,7 @@ var SaleOrder = {
 				}
 			}
 			$('#message_area').html('');
-		}, "json");		
+		}, "json");
 	},
 
 	getSubOrderDetail: function(){
@@ -440,8 +440,8 @@ var SaleOrder = {
 			return false;
 		}
 		var params = {"params":{"order_id":order_id}};
-		strJson = createJson("childerDetail", this.entity, params);
-		that = this
+		var strJson = createJson("childerDetail", this.entity, params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -450,9 +450,6 @@ var SaleOrder = {
 				$.each(obj.content.info, function(k, v){
 					if($("#"+k).length){
 						$("#"+k).text(v);
-					}
-					if($("select[name="+k+"]").length){
-						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");
 					}
 					if($("."+k).length){
 						$("."+k).text(v);
@@ -936,7 +933,6 @@ var SaleOrder = {
 		var strJson = createJson("updateChilderStatus", this.entity, params);
 		var _this = this
 		$.post(_this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -948,6 +944,23 @@ var SaleOrder = {
 	},
 
 	getSign: function(handle, step){
+		var strJson = createJson("signSwitchStat", "bank_sign", {});
+		var that = this;
+        $.post("/admin/BankSignModel.php", strJson, function(obj){
+            if(obj.error == -1){
+                that.getSignProcess(handle, step);
+                return false;
+            }else{
+                if(obj.content == 1){
+                    that.updateChilderStatus(handle);
+                }else{
+                    that.getSignProcess(handle, step);
+                }
+            }
+        }, "json");		
+	},
+
+	getSignProcess: function(handle, step){
 		var order_id = getQueryStringByName('order_id');
 		if(order_id===""||!validateNumber(order_id)){
 			return false;
@@ -980,7 +993,7 @@ var SaleOrder = {
 	                return false;
 	            }
 	            //生成签名数据
-	            var signData = that.getSignData(step, tempResponse.content.signRawData);
+	            var signData = _this.getSignData(step, tempResponse.content.signRawData);
 	            var sign_id = tempResponse.content.signId
 	            if(!signData.success){
 	                alert('生成签名数据失败！' + signData.errorInfo);

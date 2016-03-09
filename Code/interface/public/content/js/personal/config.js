@@ -28,7 +28,7 @@ define(function(require, exports, module) {
     config.contractList   = config.server + '/contract/getList';//我的合同列表
     config.contractDetail = config.server + '/contract/getsingle';//我的合同详情
     config.getNoteList    = config.server + '/note/getlist';//我的票据列表
-    config.noteDetail     = config.server + '/note/getsingle';//我的票据详情 
+    config.noteDetail     = config.server + '/note/noteinfo';//我的票据详情 
     config.creditList     = config.server + '/applyCredit/creditList';//自有授信列表
     config.creditContractList   = config.server + '/applycredit/contractList';//自有授信列表
     config.getCreditDetail= config.server + '/applyCredit/creditSingle';//自有授信详情

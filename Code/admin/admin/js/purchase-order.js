@@ -533,6 +533,23 @@ var PurchaseOrder = {
 	},
 
 	getSign: function(handle, step){
+		var strJson = createJson("signSwitchStat", "bank_sign", {});
+		var that = this;
+        $.post("/admin/BankSignModel.php", strJson, function(obj){
+            if(obj.error == -1){
+                that.getSignProcess(handle, step);
+                return false;
+            }else{
+                if(obj.content == 1){
+                    that.updateChilderStatus(handle);
+                }else{
+                    that.getSignProcess(handle, step);
+                }
+            }
+        }, "json");		
+	},
+
+	getSignProcess: function(handle, step){
 		var order_id = getQueryStringByName('id');
 		if(order_id===""||!validateNumber(order_id)){
 			return false;

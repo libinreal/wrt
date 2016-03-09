@@ -56,12 +56,12 @@
 				<th>备注：</th><td colspan="20"><!--[= remark || '--']--></td>
 				</tr>
 				<tr>
-				<th colspan="2">付款人：</th><td colspan="2"><!--[= pay_user_id || '--']--></td>
-				<th colspan="2">收款人：</th><td colspan="2"><!--[= receive_user_id || '--']--></td>
+				<th colspan="2">付款人：</th><td colspan="2"><!--[= pay_user || '--']--></td>
+				<th colspan="2">收款人：</th><td colspan="2"><!--[= receive_user || '--']--></td>
 				</tr>
 				<tr>
-				<th colspan="2">付款银行：</th><td colspan="2"><!--[= pay_bank_id || '--']--></td>
-				<th colspan="2">收款银行：</th><td colspan="2"><!--[= receive_bank_id || '--']--></td>
+				<th colspan="2">付款银行：</th><td colspan="2"><!--[= pay_bank || '--']--></td>
+				<th colspan="2">收款银行：</th><td colspan="2"><!--[= receive_bank || '--']--></td>
 				</tr>
 				<tr>
 				<th colspan="2">付款账号：</th><td colspan="2"><!--[= pay_account || '--']--></td>
