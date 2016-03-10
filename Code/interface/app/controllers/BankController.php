@@ -611,6 +611,27 @@ class BankController extends ControllerBase {
         return ResponseApi::send();
     }
 
+    /**
+     * 是否需要验签
+     * 0 打开 1  关闭
+     * @return 
+     */
+    public function signSwitchStatAction(){
+
+        $signSwitch = ShopConfig::findFirst(array (
+            'conditions' => 'code = \'sign_switch\'',
+            'columns' => 'value'
+        ));
+
+        $stat = SIGN_SWITCH_OPEN;//默认打开
+
+        if( is_object($signSwitch) ){
+            $stat = intval( $signSwitch->value );
+        }
+        
+        return ResponseApi::send( $stat );
+
+    }
 
     private static function checkResult($rs, &$msg) {
         if(self::WITHOUT_ERROR) {

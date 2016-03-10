@@ -197,6 +197,7 @@ class Security extends Plugin
 			        'confirmcontract',
 			        'confirmcontractadmin',
 			        'getconfirmdata',
+                    'signswitchstat',
 			    ),
 				'task' => array(
 					'setshopprice'

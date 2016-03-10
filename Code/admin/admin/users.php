@@ -96,11 +96,24 @@ elseif ($_REQUEST['act'] == 'insert')
     $secondPhone = empty($_POST['secondPhone']) ? '' : trim($_POST['secondPhone']);
     
     $parentId = empty($_POST['parent_id']) ? '' : trim($_POST['parent_id']);
-    
+
     $customNo = empty($_POST['customNo']) ? '' : trim($_POST['customNo']);
     $customLevel = empty($_POST['customLevel']) ? '' : trim($_POST['customLevel']);
     $customerNo = empty($_POST['customerNo']) ? '' : trim($_POST['customerNo']);
     $customerAccount = empty($_POST['customerAccount']) ? '' : trim($_POST['customerAccount']);
+
+
+    $parent_bank_info = $GLOBALS['db']->getRow( 'SELECT `customerNo`,`customerAccount` FROM ' . $GLOBALS['ecs']->table( 'users' ) . ' WHERE `user_id` = ' . $parentId);
+    
+    // if( empty( $customerNo ) ){
+        $customerNo = $parent_bank_info['customerNo'];
+    // }
+
+    // if( empty( $customerAccount ) ){
+        $customerAccount = $parent_bank_info['customerAccount'];
+    // }
+
+    
     $privilege = $_POST['privilege'];
     if( !empty( $privilege ) ){
         $privilege = implode(',',$privilege);
@@ -219,6 +232,7 @@ elseif ($_REQUEST['act'] == 'edit')
     assign_query_info();
     
     $parents = parentList();
+
     $smarty->assign('parents', $parents);
     $smarty->assign('ur_here',          $_LANG['users_edit']);
     $smarty->assign('action_link',      array('text' => $_LANG['03_users_list'], 'href'=>'users.php?act=list&' . list_link_postfix()));
@@ -263,6 +277,17 @@ elseif ($_REQUEST['act'] == 'update')
     $customerNo = empty($_POST['customerNo']) ? '' : trim($_POST['customerNo']);
     $customerAccount = empty($_POST['customerAccount']) ? '' : trim($_POST['customerAccount']);
 
+    $parent_bank_sql =  'SELECT `customerNo`,`customerAccount` FROM ' . $GLOBALS['ecs']->table( 'users' ) . ' WHERE `user_id` = ' . $parentId;
+    $parent_bank_info = $GLOBALS['db']->getRow( $parent_bank_sql );
+    
+    // if( empty( $customerNo ) ){
+        $customerNo = $parent_bank_info['customerNo'];
+    // }
+
+    // if( empty( $customerAccount ) ){
+        $customerAccount = $parent_bank_info['customerAccount'];
+    // }
+
     $privilege = $_POST['privilege'];
     $privilege = implode(',',(array)$privilege);
 
@@ -279,10 +304,10 @@ elseif ($_REQUEST['act'] == 'update')
     }*/
     $sql4 = "select * from ".$GLOBALS['ecs']->table('users')." where contactsPhone='".$contactsPhone."' and user_id!=".$userId." ";
     $resCPhone = $GLOBALS['db']->getRow($sql4);
-    if($resCPhone['contactsPhone'] == $contactsPhone) {
+    /*if($resCPhone['contactsPhone'] == $contactsPhone) {
         sys_msg($_LANG['contactsPhone_exists']);
         exit();
-    }
+    }*/
     //libin 2016-02-02 编码重复暂不检查
     /*$sql5 = "select * from ".$GLOBALS['ecs']->table('users')." where customNo='".$customNo."' and user_id!=".$userId."  ";
     $res = $GLOBALS['db']->getRow($sql5);
@@ -303,6 +328,7 @@ elseif ($_REQUEST['act'] == 'update')
             " projectName='".$projectName."',projectBrief='".$projectBrief."',contacts='".$contacts."',contactsPhone='".$contactsPhone."',".
             " secondContacts='".$secondContacts."',secondPhone='".$secondPhone."',parent_id='".$parentId."',customNo='".$customNo."',customLevel='".$customLevel."',credit_rank='".$credit_rank."',department='".$department."',msn='".$privilege."',customerNo='".$customerNo."',customerAccount='".$customerAccount."' Where user_id=".$userId."";
     }
+
     $GLOBALS['db']->query($sql);
     /* 记录管理员操作 */
     admin_log($username, 'edit', 'users');
@@ -564,7 +590,7 @@ function user_list()
  */
 function parentList() 
 {
-	$sql = 'SELECT user_id,user_name FROM '.$GLOBALS['ecs']->table('users').' WHERE `user_name`!="" AND `parent_id` = 0';
+	$sql = 'SELECT user_id, user_name, customerAccount, customerNo FROM '.$GLOBALS['ecs']->table('users').' WHERE `user_name`!="" AND `parent_id` = 0';
 	$data = $GLOBALS['db']->getAll($sql);
 	return $data;
 }

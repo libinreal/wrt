@@ -42,6 +42,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif ($this->command == 'submitPurchaseOrder'){
 				//
 				$this->submitPurchaseOrderAction();
+			}elseif ($this->command == 'signSwitchStat'){
+				//
+				$this->signSwitchStatAction();
 			}
 
 		}
@@ -161,7 +164,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bank_sign_table = $GLOBALS['ecs']->table('bank_sign');
 
 			$sign_sql = 'SELECT `sign_id`,`submit_data`,`buyer_sign`,saler_sign FROM ' . $bank_sign_table . ' WHERE `sign_id` = ' . $sign_id;
-			$sign_data = $GLOBALS['db']->getOne( $sign_sql );
+			$sign_data = $GLOBALS['db']->getRow( $sign_sql );
 
 			$sign_data['saler_sign'] = $saler_sign;
 
@@ -174,17 +177,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bank_sign = $GLOBALS['db']->query( $bank_sign_sql );
 
 			if( $bank_sign ){
-
+				
 				//发送数据到银行
-		        /*$submitData = unserialize($sign_data['submit_data']);
+		        $submitData = unserialize($sign_data['submit_data']);
 		        $submitData['buyerSign'] = $sign_data['buyer_sign'];
-		        $submitData['salerSign'] = $sign_data['saler_sign'];
+		        $submitData['salerSign'] = $sign_data['saler_sign'];var_dump($submitData);exit;
 		        $rs = submit_order_bank($submitData, self::B2BPAY_URL . '/SubmitContract');
 		        
 		        $rs = json_decode($rs, true);
 		        if($rs['errno'] != '000000') {
 		           	make_json_response( '', '-1', $rs['errmsg'] );
-		        }*/
+		        }
 
 				make_json_response('', '0', '签名数据保存成功');
 			}else{
@@ -309,8 +312,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$bank_sign_table = $GLOBALS['ecs']->table('bank_sign');
 
-			$sign_sql = 'SELECT `sign_id`,`submit_data`,`buyer_sign`,saler_sign FROM ' . $bank_sign_table . ' WHERE `sign_id` = ' . $sign_id;
-			$sign_data = $GLOBALS['db']->getOne( $sign_sql );
+			$sign_sql = 'SELECT `sign_id`,`submit_data`,`buyer_sign`,`saler_sign` FROM ' . $bank_sign_table . ' WHERE `sign_id` = ' . $sign_id;
+			$sign_data = $GLOBALS['db']->getRow( $sign_sql );
 
 			if( !$sign_data ){
 				make_json_response('', '-1', '签名数据获取失败');
@@ -325,7 +328,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( $bank_sign ){
 
 				//发送数据到银行
-		        /*$submitData = unserialize($sign_data['submit_data']);
+		        $submitData = unserialize($sign_data['submit_data']);
 		        $submitData['buyerSign'] = $sign_data['buyer_sign'];
 		        $submitData['salerSign'] = $sign_data['saler_sign'];
 		        $rs = submit_order_bank($submitData, self::B2BPAY_URL . '/SubmitContract');
@@ -333,7 +336,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		        $rs = json_decode($rs, true);
 		        if($rs['errno'] != '000000') {
 		           	make_json_response( '', '-1', $rs['errmsg'] );
-		        }*/
+		        }
 
 				make_json_response('', '0', '签名数据保存成功');
 			}else{
@@ -341,9 +344,40 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}	
 		}
 
+		/**
+		 * 接口名称:银行验签开关状态
+		 * 接口地址：http://admin.zj.dev/admin/BankSignModel.php
+		 * 请求方法：POST
+		 *	{
+		 *	    "entity": "bank_sign",
+		 *	    "command": "signSwitchStat",
+		 *	    "parameters": {}
+	 	 *	}
+	 	 * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "",
+		 *	    "content": "0"  // "0" 银行验签开, "1" 银行验签关
+		 *  }
+		 * @return [type] [description]
+		 */
+		public function signSwitchStatAction()
+		{
+			$shop_config_table = $GLOBALS['ecs']->table('shop_config');
+			$shop_config_sql = 'SELECT `value` FROM ' . $shop_config_table . ' WHERE `code` = \'sign_switch\'';
+			$stat = $GLOBALS['db']->getOne( $shop_config_sql );
+
+			$content = SIGN_SWITCH_OPEN;
+			if( is_numeric( $stat ) ){
+				$content = $stat;
+			}
+
+			make_json_response($content, '0', '开关状态获取成功');
+		}
+
 	}
 
-$content = jsonAction( array( 'getSubmitSaleOrder', 'submitOrder', 'getSubmitPurchaseOrder', 'submitPurchaseOrder'
+$content = jsonAction( array( 'getSubmitSaleOrder', 'submitOrder', 'getSubmitPurchaseOrder', 'submitPurchaseOrder', 'signSwitchStat'
 	)
 	);
 $bankSignModel = new BankSignModel($content);
