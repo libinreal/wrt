@@ -93,7 +93,7 @@ class Credit extends ManageModel
      * 导入银行xml文件
      * {
      *      "command" : "importCredit",
-     *      "entity"  : "(input name)",
+     *      "entity"  : "(file name)",
      *      "parameters" : {}
      * }
      */
@@ -102,6 +102,9 @@ class Credit extends ManageModel
     	self::init('bank_credit', 'bank_credit');
     	
     	if (!$entity) return failed_json('没有传参`entity`');
+    	
+    	$path = C('CreditDir').'/'.$entity;
+    	/* 
     	if (!$_FILES) return failed_json('上传文件为空');
     
     	//限制文件格式 xml
@@ -117,6 +120,8 @@ class Credit extends ManageModel
     
     	//new code
     	$path = '../'.$result;
+    	 */
+    	
     	return $this->creditXML($path, $fileName);
     }
     
@@ -138,6 +143,9 @@ class Credit extends ManageModel
     	$data = $this->loadXML($oldname);
     	if (!$data) return failed_json('无数据');
     	if (!is_array($data)) return failed_json('数据错误');
+    	
+    	print_r($data);
+    	die;
     	
     	//数据库已经存在的授信记录
     	$this->table = 'bank_credit';
