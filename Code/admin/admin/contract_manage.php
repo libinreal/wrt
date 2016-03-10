@@ -823,9 +823,16 @@ class Contract extends ManageModel
         }
         if ($regionId > 0) {
             if (!empty($where)) $where .= ' and ';
+            $this->table = 'region';
+            self::selectSql(array(
+            		'fields' => 'region_name', 
+            		'where'  => 'region_id='.$regionId
+            ));
+            $regionName = $this->db->getOne($this->sql);
+            
             $where .= 's.region_id='.$regionId;
+            if ($regionName) $where .= ' OR s.area_name LIKE "%'.$regionName.'%"';
         }
-        
         
         //page
         if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
@@ -837,6 +844,7 @@ class Contract extends ManageModel
             $limit = 'limit '.$page.','.$offset;
         }
         
+        $this->table = 'contract_suppliers';
         self::selectSql(array(
             'fields' => array(
                 'c.contract_id', 
