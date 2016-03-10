@@ -1,61 +1,59 @@
 <?php 
-/**
- * 仿盗链
- */
-$jump = 'http://www.baidu.com'; //如：http://xxx.xxx.xx
-
-//允许访问的域名
-$domainArr = array(
-    'admin.zj.dev'
-);
 header('content-type:text/html;charset=utf-8');
 
-//域名信息
-$host = $_SERVER['REQUEST_SCHEME'];
-$domain = $_SERVER['SERVER_NAME'];
+//来源判断
+if (!isset($_SERVER['HTTP_REFERER'])) return NotFound('Refused access');
 
-//允许访问
-if (/* !in_array($domain, $domainArr) || */ !isset($_GET['act']) || !isset($_SERVER['HTTP_REFERER'])) {
-    //header('location:'.$jump);
-    die('文件不存在');
+$origin = pathinfo($_SERVER['HTTP_REFERER'], PATHINFO_FILENAME);
+if ($origin != 'contract_manage') return NotFound('Wrong origin');
+
+
+//可操作类型
+$actionList = array(
+		'view', 
+		'download'
+);
+
+//参数判断
+if (!isset($_GET['act']) or !$_GET['act'] or !in_array($_GET['act'], $actionList)) return NotFound('Unknown action');
+if (!isset($_GET['url']) or !$_GET['url']) return NotFound('None filename');
+
+//文件类型处理
+$extension = pathinfo($_GET['url'], PATHINFO_EXTENSION);
+if (!$extension or $extension != 'pdf') return NotFound('Wrong extension');
+
+//文件真假
+$filename = '../data/contract/'.$_GET['url'];
+if (!is_file($filename)) return NotFound();
+
+switch ($_GET['act']) {
+	case 'view':
+		header("Content-type: application/pdf");
+		echo file_get_contents($filename);
+		die;
+		break;
+		
+	case 'download':
+		$file = fopen($filename, 'r');
+		Header("Content-type: application/octet-stream");
+		Header("Accept-Ranges: bytes");
+		Header("Accept-Length: ".filesize($filename));
+		Header("Content-Disposition: attachment; filename=" . $_GET['url']);
+		echo fread($file, filesize($filename));
+		fclose($file);
+		die;
+		
+		break;
+		
+	default:
+		return NotFound('Error');
+		break;
 }
 
-//文件
-$fileName = $_GET['url'];
-
-if ($_GET['act'] == 'view') {
-	header("Content-type: application/pdf");
-	$dirName = '../data/contract/'.$fileName;
-	echo file_get_contents($dirName);
-	die;
-    
-    //获取pdf信息
-    $url = $host.'://'.$domain.'/data/contract/'.$fileName;
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
-    $data = curl_exec($ch);
-    curl_close($ch);
-    header("Content-type: application/pdf");
-    print( $data );
-    exit;
-}
-
-/**
- * 下载
- */
-elseif ($_GET['act'] == 'download') {
-    
-    $dirName = '../data/contract/'.$fileName;
-    if (!file_exists($dirName)){
-        exit('抱歉，文件不存在！');
-    }
-    $file = fopen($dirName, 'r');
-    Header("Content-type: application/octet-stream");
-    Header("Accept-Ranges: bytes");
-    Header("Accept-Length: ".filesize($dirName));
-    Header("Content-Disposition: attachment; filename=" . $fileName);
-    echo fread($file,filesize($dirName));
-    fclose($file);
-    exit;
+function NotFound($string = NULL) 
+{
+	header('HTTP/1.1 404 Not Found');
+	header("status: 404 Not Found");
+	if ($string) die($string);
+	die('404 Not Found');
 }
