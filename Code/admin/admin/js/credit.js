@@ -109,27 +109,38 @@ var Credit = {
 
 	// 授信文件上传
 	getUploadFile: function(){
-		if($("#file_form").valid()===false){
+		if($("#xml_field").valid()===false){
 			return false;
 		}
-		var strJson = createJson("importCredit", "credit_file", {}, "object");
-		that = this
-        $.ajaxFileUpload({
-            url:this.url,
-            fileElementId:'credit_file',//file标签的id
-            dataType: 'json',//返回数据的类型  
-            data:strJson,//一同上传的数据
-            success: function (data, status) {
-				if(data.error){
-					$('#message_area').html(createError(data.message));
-				}else{
-					$('#message_area').html(createTip('上传成功'));
-					that.getList();
-				}
-            },
-            error: function (data, status, e) {
-                console.log(e);
-            }
-        });
+		var filename = $("#xml_field option:selected").val();
+		var strJson = createJson("importCredit", filename, {});
+		var that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				$('#message_area').html(createTip('更新成功'));
+				that.getList();
+			}
+		},"json");
+	},
+
+	// 授信文件选择
+	getOptionXml: function(){
+		var strJson = createJson("optionXml", "xmlList", {});
+		var that = this
+		$.post(this.url, strJson, function(obj){
+			if(obj.error){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				var row = "";
+				$.each(obj.content.files, function(k,v){
+					row += appendOption(v, v);
+				});
+				$("#xml_field").append(row);
+			}
+		},"json");
 	}
 }

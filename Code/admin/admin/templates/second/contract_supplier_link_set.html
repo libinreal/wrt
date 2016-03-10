@@ -22,6 +22,7 @@
 		</script>
 	</head>
 	<body>
+	{include file="pagemenu.htm"}
 		<h1>
 		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
 		<span id="search_id" class="action-span1"> - 合同关联供应商</span>
@@ -58,6 +59,8 @@
 			</select>
 			<div align="center" class="clear"><input name="query" type="submit" class="button" onclick="Contract.setContInSups(getQueryStringByName('id'))" value=" 提交 "></div>
 		</div>
+	</div>
+	
 		<!-- 底部 -->
 		<div id="footer">
 			{$lang.copyright}

@@ -392,4 +392,68 @@ else
     ob_start();
 }
 
+    include_once('includes/inc_menu.php');
+
+// 权限对照表
+    include_once('includes/inc_priv.php');
+
+    foreach ($modules AS $key => $value)
+    {
+        ksort($modules[$key]);
+    }
+    ksort($modules);
+
+    foreach ($modules AS $key => $val)
+    {
+        $menus[$key]['label'] = $_LANG[$key];
+        if (is_array($val))
+        {
+            foreach ($val AS $k => $v)
+            {
+                if ( isset($purview[$k]))
+                {
+                    if (is_array($purview[$k]))
+                    {
+                        $boole = false;
+                        foreach ($purview[$k] as $action)
+                        {
+                             $boole = $boole || admin_priv($action, '', false);
+                        }
+                        if (!$boole)
+                        {
+                            continue;
+                        }
+
+                    }
+                    else
+                    {
+                        if (! admin_priv($purview[$k], '', false))
+                        {
+                            continue;
+                        }
+                    }
+                }
+                if ($k == 'ucenter_setup' && $_CFG['integrate_code'] != 'ucenter')
+                {
+                    continue;
+                }
+                $menus[$key]['children'][$k]['label']  = $_LANG[$k];
+                $menus[$key]['children'][$k]['action'] = $v;
+            }
+        }
+        else
+        {
+            $menus[$key]['action'] = $val;
+        }
+
+        // 如果children的子元素长度为0则删除该组
+        if(empty($menus[$key]['children']))
+        {
+            unset($menus[$key]);
+        }
+
+    }
+
+    $smarty->assign('menus',     $menus);
+
 ?>

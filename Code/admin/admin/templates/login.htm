@@ -58,15 +58,14 @@
         }
 
         .login_area{width: 351px;height: 275px;margin:10px auto 27px;}
-        .login_logo{width: 84px;height: 83px;background: url("/admin/images/login_logo.gif") no-repeat;margin: 0 auto 20px auto;}
+        .login_logo{width: 250px;height: 50px;background: url("/admin/images/login_logo.gif") no-repeat;margin: 25px auto;}
         .login_txt {height: 20px;line-height: 20px;font-size: 16px;font-weight: 600;text-align: center;}
         .input_text{width: 351px;height: 95px;overflow: hidden;margin-bottom: 18px;}
-        .input_text input{display: block;width: 349px;height: 38px;border: 1px solid #56bed3;border-radius:5px;margin-bottom: 15px;text-indent: 4em;}
+        .input_text input{display: block;width: 349px;height: 38px;border: 1px solid #56bed3;border-radius:5px;margin-bottom: 15px;padding-left: 45px;}
         .remember_pwd{display: block;width: 351px;height: 16px;line-height: 16px;margin-bottom: 22px;}
         .remember_pwd span{font-size: 14px;}
         .goLogin{width: 351px;height: 45px;background: url("/admin/images/subBtn.png") no-repeat;cursor: pointer;}
     </style>
-
 
 </head>
 <body>
@@ -102,31 +101,6 @@
     }
     if (window != top)
         top.location.href = location.href;
-//    $(function() {
-//        function chk_null(obj){
-//            if(!$.trim(obj.val())){
-//                obj.css('borderColor','red').focus();
-//                return false;
-//            }else{
-//                obj.css('borderColor','#ccc');
-//            }
-//        }
-//
-//        $('.goLogin').click(function(e){
-//            e.preventDefault();
-//            if(!$.trim($('.input_text input').eq(0).val())) {
-//                $('.input_text input').eq(0).css('borderColor','red').focus();
-//                return false;
-//            }
-//            if(!$.trim($('.input_text input').eq(1).val())) {
-//                $('.input_text input').eq(1).css('borderColor','red').focus();
-//                return false;
-//            }
-//            //chk_null($('.input_text input').eq(0));
-//            //chk_null($('.input_text input').eq(1));
-//            $(this).submit();
-//        });
-//    });
 
 </script>
 

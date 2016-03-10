@@ -83,6 +83,7 @@ h1 .action-span1 {
     color: #9CACAF;
     margin: 10px 0;
     text-align: center;
+    clear: both;
 }
 
 .main-div {
@@ -109,6 +110,129 @@ h1 .action-span1 {
 
 .form-div select, .form-div input, .form-div img {
     vertical-align: middle;
+}
+
+/*菜单样式*/
+.menuzero{
+    width:14%;
+    background:#616e80;
+    margin:0;
+    padding: 0;
+    float:left;
+    height: 600px;
+    position: relative;
+}
+.menuone{
+    height: 100%;
+    overflow-y:auto;
+    overflow-x:hidden;
+    padding-right: 15px;
+}
+.menutwo{
+    height:30px;
+    width:160px;
+    padding:15px;
+}
+.icon_00{
+    height:30px;
+    width:40px;
+    float:left; 
+}
+.icon_01_cat_and_goods{
+    background:url("/admin/images/icon11.png") no-repeat center center;
+}
+.icon_04_wrnews{
+    background:url("/admin/images/icon44.png") no-repeat center center;
+}
+.icon_05_baseData{
+    background:url("/admin/images/icon77.png") no-repeat center center;    
+}
+.icon_08_engineering{
+    background:url("/admin/images/icon_engineering.png") no-repeat center center; 
+}
+.icon_09_service{
+    background:url("/admin/images/icon_service.png") no-repeat center center; 
+}
+.icon_10_members{
+    background:url("/admin/images/icon_vip.png") no-repeat center center; 
+}
+.icon_11_priv_admin{
+    background:url("/admin/images/icon_priviliege.png") no-repeat center center; 
+}
+.icon_12_stats{
+    background:url("/admin/images/icon88.png") no-repeat center center; 
+}
+.icon_13_contract{
+    background:url("/admin/images/icon44.png") no-repeat center center;
+}
+.icon_14_credit{
+    background:url("/admin/images/icon66.png") no-repeat center center; 
+}
+.icon_15_bthPrice{
+    background:url("/admin/images/icon44.png") no-repeat center center;
+}
+.icon_16_applyCredit{
+    background:url("/admin/images/icon44.png") no-repeat center center;
+}
+.icon_17_bill_manage{
+    background:url("/admin/images/icon44.png") no-repeat center center;
+}
+.icon_18_sale_order{
+    background:url("/admin/images/icon22.png") no-repeat center center; 
+}
+.icon_19_bank_manage{
+    background:url("/admin/images/icon77.png") no-repeat center center;
+}
+.icon_21_order_pay{
+    background:url("/admin/images/icon77.png") no-repeat center center;
+}
+.icon_23_purchase_order_manage{
+    background:url("/admin/images/icon77.png") no-repeat center center;
+}
+.menuname1{
+    height:30px;
+    line-height:30px;
+    padding-left:10px;
+    color:#fff;
+    float:left;
+    display:inline-block;
+    width: 96px;
+    cursor: pointer;
+}
+.triangle{
+    float: right;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-right: 10px solid #e2ebea;
+    border-bottom: 10px solid transparent;
+    margin-top: 5px;
+    display:none;
+}
+.menudetail{
+    position: absolute;
+    left: 175px;
+    top: 0px;
+    width: 180px;
+    background: #e2ebea;
+    border: 1px solid #ccc;
+    border-left: none;
+    display: none;
+    z-index: 1000;
+}
+.menudetail ul{
+    margin: 0;
+    padding-left: 0px;
+}
+.menudetailone{
+    height:60px;
+    width:100%;
+    line-height:60px;
+    text-indent: 2em;
+}
+.menudetailone:hover{
+    background:rgb(96, 203, 225);
+    color: #fff;
 }
 
 /*

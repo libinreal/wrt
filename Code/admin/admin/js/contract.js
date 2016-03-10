@@ -468,7 +468,7 @@ var Contract = {
 							$.each(value, function(k, v){
 								if(k == that.contract_supplier_order[i]){
 									if(k == "contract_name"){
-										row += createTd(v, that.url+"?act=supplierSet&id="+value.contract_id);
+										row += createTd(v, that.url+"?act=supplierSetEdit&id="+value.contract_id);
 									}else{
 										row += createTd(v);
 									}

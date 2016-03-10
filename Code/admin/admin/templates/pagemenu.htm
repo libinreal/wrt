@@ -1,0 +1,21 @@
+<div class="menuzero">
+    <div class="menuone">
+        {foreach from=$menus item=menu key=k}
+        <div class="menutwo">
+            <div class="icon_00 icon_{$k}"></div>
+            <div class="menuname1">{$menu.label}</div>
+            <div class="triangle"></div>
+            <div class="menudetail">
+            {if $menu.children}
+            <ul>
+                {foreach from=$menu.children item=child}
+                <a href="{$child.action}" target="main-frame" style="text-decoration:none;"><div class="menudetailone">{$child.label}</div></a>
+                {/foreach}
+            </ul>
+            {/if}
+            </div>
+        </div>
+        {/foreach}
+    </div>
+</div>
+<div style="width:85%;float:right;">

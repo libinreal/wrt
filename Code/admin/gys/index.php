@@ -20,7 +20,6 @@
         input{
             border:none;background:none;outline:none;position:relative;
         }
-
         .bg {
             z-index:0;position:relative;width: 100%;height: 100%;
         }
@@ -58,16 +57,14 @@
         }
 
         .login_area{width: 351px;height: 275px;margin:27px auto 27px;}
-        .login_logo{width: 351px;height: 75px;background: url("../admin/images/login_logo.gif") no-repeat;}
+        .login_logo{width: 250px;height: 50px;background: url("/admin/images/login_logo.gif") no-repeat;margin: 25px auto;}
         .login_txt {height: 20px;line-height: 20px;font-size: 16px;font-weight: 600;text-align: center;}
         .input_text{width: 351px;height: 95px;overflow: hidden;margin-bottom: 18px;}
-        .input_text input{display: block;width: 349px;height: 38px;border: 1px solid #ccc;border-radius:5px;margin-bottom: 15px;text-indent: 13px;}
+        .input_text input{display: block;width: 349px;height: 38px;border: 1px solid #ccc;border-radius:5px;margin-bottom: 15px;padding-left: 45px;}
         .remember_pwd{display: block;width: 351px;height: 16px;line-height: 16px;margin-bottom: 22px;}
         .remember_pwd span{font-size: 14px;}
         .goLogin{width: 351px;height: 45px;background: url("../admin/images/subBtn.png") no-repeat;cursor: pointer;}
     </style>
-
-
 </head>
 <body>
 <div class="loginBox">
@@ -75,8 +72,8 @@
         <form id="login" action="../admin/privilege.php" method="post" name="myform" onsubmit="return fnGetLogin();">
             <div class="login_logo"></div>
             <div class="input_text">
-                <input name="username" type="text" placeholder="供应商账户"/>
-                <input name="password" type="password" placeholder="输入密码"/>
+                <input name="username" type="text" style="background:url('/admin/images/username_ico.jpg') no-repeat;" placeholder="供应商账户"/>
+                <input name="password" type="password" style="background:url('/admin/images/password_ico.jpg') no-repeat;" placeholder="输入密码"/>
             </div>
             <label class="remember_pwd"><input type="checkbox" name="remember" id="remember" value="1" /><span>记住密码</span></label>
             <input class="goLogin" type="submit" value="" />
@@ -86,7 +83,7 @@
     </div>
 </div>
 <div class="bg"><img src="../admin/images/bg-1920.png"></div>
-<div class="Copyright">Copyright <?php echo date('Y',time());?> 中交物融集成服务平台有限公司   版权所有</div>
+<div class="Copyright">Copyright <?php echo date('Y',time());?> 物融通集成服务平台有限公司   版权所有</div>
 <script type="text/javascript">
 
     function fnGetLogin() {

@@ -22,6 +22,24 @@ $(document).ajaxComplete(function(){
 });
 $(document).ajaxStop(function () {
 });
+$(document).ready(function(){
+    var menuzero=$(".menuzero").height();
+    $(".menudetail").css("height",(menuzero)+"px");
+    $(".menutwo").on("mouseover",function(){
+        $(".menutwo").css("background","none");
+        $(this).css("background","#60cbe1");
+        $(".triangle").css("display","none");
+        $(this).find(".triangle").css("display","block");
+        $(".menudetail").css("display","none");
+        $(this).find(".menudetail").css("display","block");
+    })
+    $(".menutwo").on("mouseover",function(){
+        $(this).find(".menudetail").css("display","block");
+    })
+    $(".menutwo").on("mouseout",function(){
+        $(this).find(".menudetail").css("display","none");
+    })
+});
 $.fn.FormtoJson = function(options) {
     options = jQuery.extend({}, options);
 
