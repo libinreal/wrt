@@ -443,6 +443,7 @@ var Contract = {
 				condition["region_id"] = region_id;
 			}
 			if(search == "search"){
+				this.current_page = 1;
 				this.limit = 0;
 			}
 		}
