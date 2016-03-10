@@ -98,6 +98,9 @@ $admin_config = array(
     'shipping_status' => array( 0 => '未发货', 1 => '已发货', 2 => '收货中', 3 => '已收货', 4 => '确认收货'),//发货状态
     'purchase_order_pay_status' => array( 0 => '已生成', 1 => '审核通过', 2 => '已付款', 3 => '驳回' ),//供应商的生成单付款状态
     'payment' => array( 1 => '现金', 2 => '支票'),//付款方式
+    
+	//授信文件目录
+	'CreditDir' => '/data/www/zj/Code/admin/data/credit/used'
 );
 
 //加载配置

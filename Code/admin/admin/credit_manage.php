@@ -55,7 +55,7 @@ class Credit extends ManageModel
     protected $db;
     protected $sql;
     
-    protected $creditDir = '/data/www/zj/Code/admin/data/credit/used';
+    protected $creditDir = '';
     
     
     /**
@@ -71,7 +71,7 @@ class Credit extends ManageModel
     	self::init($entity, 'xmlList');
     	
     	//SFTP 目录
-    	$dir = $this->creditDir;
+    	$dir = C('CreditDir');
     	if (!is_dir($dir)) return failed_json('SFTP目录不存在');
     	
     	//读取SFTP目录文件
