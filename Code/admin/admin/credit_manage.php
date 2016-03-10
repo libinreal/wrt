@@ -34,7 +34,8 @@ $ApiList = array(
     'creditInfo',
     'creditRemark', 
     'importCredit', 
-	'optionXml'
+	'optionXml', 
+	'access'
 );
 
 /**
@@ -54,6 +55,25 @@ class Credit extends ManageModel
     protected $table;
     protected $db;
     protected $sql;
+    
+    
+    public function access($entity, $params) 
+    {
+    	$secret = 'luolu@3tichina.com';
+    	
+    	$count = count($params);
+    	$key = array_keys($params);
+    	$string = '';
+    	foreach ($key as $v) {
+    		$string .= $v;
+    	}
+    	$strlen = strlen($string);
+    	
+    	$number = $count*$strlen*41;
+    	$token = md5($number);
+    	$token .= md5($secret);
+    	print_r($token);
+    }
     
     
     /**

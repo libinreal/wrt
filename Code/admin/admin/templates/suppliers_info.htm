@@ -14,9 +14,10 @@
                     <select name="area_name" id="area_name">
                         <option value="0">{$lang.suppliers_area_name}</option>
                         {foreach from=$arealist item=regions}
-                        <option value="{$regions.region_name}" {if $regions.region_name==$suppliers.area_name}selected {/if} >{$regions.region_name}</option>
+                        <option value="{$regions.region_name}" data-id="{$regions.region_id}" {if $regions.region_name==$suppliers.area_name}selected {/if} >{$regions.region_name}</option>
                         {/foreach}
                     </select>
+                    <input type="hidden" name="region_id" value="{$suppliers.region_id}"/>
                 </td>
             </tr>
             <tr>
@@ -65,16 +66,26 @@
 {insert_scripts files="../js/utils.js,validator.js"}
 {literal}
 <script language="JavaScript">
+	$(function () {
+		
+		$('#area_name').change(function (){
+			var self = $(this), 
+				regionId = self.find('option:selected').attr('data-id');
+			
+			$('input[name=region_id]').val(regionId);
+		});
+	})
+	
     <!--
     document.forms['theForm'].elements['suppliers_name'].focus();
 
     onload = function()
     {
-        // 开始检查订单
+        // 寮�濮嬫鏌ヨ鍗�
         startCheckOrder();
     }
     /**
-     * 检查表单输入的数据
+     * 妫�鏌ヨ〃鍗曡緭鍏ョ殑鏁版嵁
      */
     function validate()
     {

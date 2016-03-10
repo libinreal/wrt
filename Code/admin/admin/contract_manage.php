@@ -806,44 +806,23 @@ class Contract extends ManageModel
         self::init($entity, 'contract_suppliers');
         
         $params = $parameters['params'];
-        $where = 'c.contract_type=1';
-        
+		
         $customerId = intval($params['where']['customer_id']);
         $contractId = intval($params['where']['contract_id']);
         $regionId   = intval($params['where']['region_id']);
         
-        //where
-        if ($customerId > 0) {
-        	if (!empty($where)) $where .= ' and ';
-            $where .= 'c.customer_id='.$customerId;
-        }
-        if ($contractId > 0) {
-            if (!empty($where)) $where .= ' and ';
-            $where .= 'c.contract_id='.$contractId;
-        }
-        if ($regionId > 0) {
-            if (!empty($where)) $where .= ' and ';
-            $this->table = 'region';
-            self::selectSql(array(
-            		'fields' => 'region_name', 
-            		'where'  => 'region_id='.$regionId
-            ));
-            $regionName = $this->db->getOne($this->sql);
-            
-            $where .= 's.region_id='.$regionId;
-            if ($regionName) $where .= ' OR s.area_name LIKE "%'.$regionName.'%"';
-        }
+        //搜索条件
+        $where = 'c.contract_type=1';
+        if ($customerId > 0 ) $where .= ' AND c.customer_id='.$customerId;
+        if ($contractId > 0 ) $where .= ' AND c.contract_id='.$contractId;
+        if ($regionId > 0 ) $where .= ' AND s.region_id='.$regionId;
         
-        //page
-        if (is_numeric($params['limit']) && is_numeric($params['offset'])) {
-            $page = intval($params['limit']);
-            if ($page <= 0) $page = 0;
-            $offset = intval($params['offset']);
-            if ($offset < 0) $offset = 0;
-            //$page = ($page - 1)*$offset;
-            $limit = 'limit '.$page.','.$offset;
-        }
+        //分页参数
+        $start = ($params['limit'] < 0) ? 0 : $params['limit'];
+        $offset = ($params['offset'] < 0) ? 0 : $params['offset'];
+        $limit = 'LIMIT '.$start.','.$offset;
         
+        //查询
         $this->table = 'contract_suppliers';
         self::selectSql(array(
             'fields' => array(
@@ -864,6 +843,7 @@ class Contract extends ManageModel
         ));
         $res = $this->db->getAll($this->sql);
         
+        //总记录
         self::selectSql(array(
             'fields' => 'COUNT(cs.contract_id) AS num', 
             'as'     => 'cs',

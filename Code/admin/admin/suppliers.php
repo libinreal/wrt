@@ -309,6 +309,7 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
                            'suppliers_desc'   => trim($_POST['suppliers_desc']),
                            'parent_id'        => 0,
                             'area_name' => trim($_POST['area_name']),
+        					'region_id' => trim($_POST['region_id']), 
                             'suppliers_code' => trim($_POST['suppliers_code']),
                             'custom_no' => trim($_POST['custom_no']),
                             'account_no' => trim($_POST['account_no'])
@@ -357,6 +358,7 @@ elseif (in_array($_REQUEST['act'], array('insert', 'update')))
                            'suppliers_desc'   => trim($_POST['suppliers_desc']),
                             'suppliers_code' => trim($_POST['suppliers_code']),
                             'area_name' => trim($_POST['area_name']),
+        					'region_id' => trim($_POST['region_id']),
                             'custom_no' => trim($_POST['custom_no']),
                             'account_no' => trim($_POST['account_no'])
                            );
@@ -451,7 +453,7 @@ function suppliers_list()
         /* 查询 */
         $sql = "SELECT suppliers_id, suppliers_name, suppliers_desc, is_check,suppliers_code,area_name
                 FROM " . $GLOBALS['ecs']->table("suppliers") . " $where
-                ORDER BY " . $filter['sort_by'] . " " . $filter['sort_order']. "
+                ORDER BY suppliers_id DESC," . $filter['sort_by'] . " " . $filter['sort_order']. "
                 LIMIT " . ($filter['page'] - 1) * $filter['page_size'] . ", " . $filter['page_size'] . " ";
         set_filter($filter, $sql);
     }

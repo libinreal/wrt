@@ -1,27 +1,22 @@
 <?php
 header('Content-Type:text/html; charset=utf-8');
 
-//接收状态标示
-$action = '';
-if (array_key_exists('action', $_GET)) {
-	$action = $_GET['action'];
-}
-if (!$action) exit('未捕获到任何动作');
-
 define('IN_ECS', 1);
 require(dirname(__FILE__) . '/includes/init.php');
 
+$action = isset($_GET['action']) ? $_GET['action'] : '';
+if (!$action) return NotFound('Unknown action');
 
 $output = new OutputE();
+
 switch ($action) {
 	case 'goodslist':
 		
 		$output->opGoodsList();
+		return ;
 		break;
 	default:
-		header('HTTP/1.1 404 Not Found');
-		header("status: 404 Not Found");
-		exit('404 Not Found');
+		return NotFound();
 		break;
 }
 
@@ -30,6 +25,8 @@ class OutputE
 {
 	private $db;
 	private static $excel;
+	
+	
 	public function __construct() 
 	{
 		$this->db = $GLOBALS['db'];
@@ -150,6 +147,7 @@ class OutputE
 		header('Cache-Control: max-age=0');
 		$writer = PHPExcel_IOFactory::createWriter($excel, 'Excel2007');
 		$writer->save('php://output');
+		return ;
 	}
 	
 	
@@ -182,4 +180,12 @@ class OutputE
 		return $sql;
 	}
 	
+}
+
+function NotFound($message = NULL) 
+{
+	header('HTTP/1.1 404 Not Found');
+	header("status: 404 Not Found");
+	if ($message) die($message);
+	die('404 Not Found');
 }
