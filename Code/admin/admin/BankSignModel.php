@@ -181,7 +181,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				//发送数据到银行
 		        $submitData = unserialize($sign_data['submit_data']);
 		        $submitData['buyerSign'] = $sign_data['buyer_sign'];
-		        $submitData['salerSign'] = $sign_data['saler_sign'];var_dump($submitData);exit;
+		        $submitData['salerSign'] = $sign_data['saler_sign'];
 		        $rs = submit_order_bank($submitData, self::B2BPAY_URL . '/SubmitContract');
 		        
 		        $rs = json_decode($rs, true);
