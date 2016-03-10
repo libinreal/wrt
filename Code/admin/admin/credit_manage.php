@@ -69,7 +69,7 @@ class Credit extends ManageModel
     	self::init($entity, 'xmlList');
     	
     	//SFTP 目录
-    	$dir = 'E:\project';
+    	$dir = '/data/www/zj/Code/admin/data/credit/used';
     	if (!is_dir($dir)) return failed_json('SFTP目录不存在');
     	
     	//读取SFTP目录文件
