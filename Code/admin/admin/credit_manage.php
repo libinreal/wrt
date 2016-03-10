@@ -55,8 +55,6 @@ class Credit extends ManageModel
     protected $db;
     protected $sql;
     
-    protected $creditDir = '';
-    
     
     /**
      * 获取SFTP目录下的xml文件

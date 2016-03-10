@@ -136,7 +136,7 @@ class OrderController extends ControllerBase
 				C.id contid, 
 				C.name contName, 
 				C.num contNum, 
-				OrderInfo.invType, 
+				IF(OrderInfo.invType=0,"增值税专用发票","普通发票") invType, 
 				OrderInfo.invPayee, 
 				OrderInfo.invContent, 
 				OrderInfo.name consignee, 
