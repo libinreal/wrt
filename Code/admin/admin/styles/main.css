@@ -135,59 +135,59 @@ h1 .action-span1 {
 }
 .icon_00{
     height:30px;
-    width:40px;
+    width:20px;
     float:left; 
 }
 .icon_01_cat_and_goods{
-    background:url("/admin/images/icon11.png") no-repeat center center;
+    background:url("/admin/images/icon11_min.png") no-repeat center center;
 }
 .icon_04_wrnews{
-    background:url("/admin/images/icon44.png") no-repeat center center;
+    background:url("/admin/images/icon44_min.png") no-repeat center center;
 }
 .icon_05_baseData{
-    background:url("/admin/images/icon77.png") no-repeat center center;    
+    background:url("/admin/images/icon77_min.png") no-repeat center center;    
 }
 .icon_08_engineering{
-    background:url("/admin/images/icon_engineering.png") no-repeat center center; 
+    background:url("/admin/images/icon12_min.png") no-repeat center center; 
 }
 .icon_09_service{
-    background:url("/admin/images/icon_service.png") no-repeat center center; 
+    background:url("/admin/images/icon13_min.png") no-repeat center center; 
 }
 .icon_10_members{
-    background:url("/admin/images/icon_vip.png") no-repeat center center; 
+    background:url("/admin/images/icon14_min.png") no-repeat center center; 
 }
 .icon_11_priv_admin{
-    background:url("/admin/images/icon_priviliege.png") no-repeat center center; 
+    background:url("/admin/images/icon15_min.png") no-repeat center center; 
 }
 .icon_12_stats{
-    background:url("/admin/images/icon88.png") no-repeat center center; 
+    background:url("/admin/images/icon88_min.png") no-repeat center center; 
 }
 .icon_13_contract{
-    background:url("/admin/images/icon44.png") no-repeat center center;
+    background:url("/admin/images/icon44_min.png") no-repeat center center;
 }
 .icon_14_credit{
-    background:url("/admin/images/icon66.png") no-repeat center center; 
+    background:url("/admin/images/icon22_min.png") no-repeat center center; 
 }
 .icon_15_bthPrice{
-    background:url("/admin/images/icon44.png") no-repeat center center;
+    background:url("/admin/images/icon44_min.png") no-repeat center center;
 }
 .icon_16_applyCredit{
-    background:url("/admin/images/icon44.png") no-repeat center center;
+    background:url("/admin/images/icon44_min.png") no-repeat center center;
 }
 .icon_17_bill_manage{
-    background:url("/admin/images/icon44.png") no-repeat center center;
+    background:url("/admin/images/icon44_min.png") no-repeat center center;
 }
 .icon_18_sale_order{
-    background:url("/admin/images/icon22.png") no-repeat center center; 
+    background:url("/admin/images/icon44_min.png") no-repeat center center; 
 }
 .icon_19_bank_manage{
-    background:url("/admin/images/icon77.png") no-repeat center center;
+    background:url("/admin/images/icon55_min.png") no-repeat center center;
 }
 .icon_21_order_pay{
-    background:url("/admin/images/icon77.png") no-repeat center center;
+    background:url("/admin/images/icon77_min.png") no-repeat center center;
 }
 .icon_23_purchase_order_manage{
-    background:url("/admin/images/icon77.png") no-repeat center center;
+    background:url("/admin/images/icon77_min.png") no-repeat center center;
 }
 .menuname1{
     height:30px;

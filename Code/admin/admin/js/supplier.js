@@ -89,9 +89,8 @@ var Supplier = {
 		}else{
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
-		strJson = createJson("orderPage", this.entity, params);
+		var strJson = createJson("orderPage", this.entity, params);
 		var that = this
-		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -893,7 +892,7 @@ var Supplier = {
 	},
 
 	updateChilderStatus: function(handle){
-		var order_id = getQueryStringByName('order_id');
+		var order_id = getQueryStringByName('id');
 		if(order_id===""||!validateNumber(order_id)){
 			return false;
 		}
@@ -920,6 +919,7 @@ var Supplier = {
                 that.getSignProcess(handle, step);
                 return false;
             }else{
+
                 if(obj.content == 1){
                     that.updateChilderStatus(handle);
                 }else{
