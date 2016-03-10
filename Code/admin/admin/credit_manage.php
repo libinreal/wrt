@@ -144,9 +144,6 @@ class Credit extends ManageModel
     	if (!$data) return failed_json('无数据');
     	if (!is_array($data)) return failed_json('数据错误');
     	
-    	print_r($data);
-    	die;
-    	
     	//数据库已经存在的授信记录
     	$this->table = 'bank_credit';
     	self::selectSql(array(
