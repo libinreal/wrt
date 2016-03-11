@@ -334,26 +334,6 @@ if ((!isset($_SESSION['admin_id']) || intval($_SESSION['admin_id']) <= 0) &&
 
 $smarty->assign('token', $_CFG['token']);
 
-//if ($_REQUEST['act'] != 'login' && $_REQUEST['act'] != 'signin' &&
-//    $_REQUEST['act'] != 'forget_pwd' && $_REQUEST['act'] != 'reset_pwd' && $_REQUEST['act'] != 'check_order')
-//{
-//    $admin_path = preg_replace('/:\d+/', '', $ecs->url()) . ADMIN_PATH;
-//    if (!empty($_SERVER['HTTP_REFERER']) &&
-//        strpos(preg_replace('/:\d+/', '', $_SERVER['HTTP_REFERER']), $admin_path) === false)
-//    {
-//        if (!empty($_REQUEST['is_ajax']))
-//        {
-//            make_json_error($_LANG['priv_error']);
-//        }
-//        else
-//        {
-//            ecs_header("Location: privilege.php?act=login\n");
-//        }
-//
-//        exit;
-//    }
-//}
-
 /* 管理员登录后可在任何页面使用 act=phpinfo 显示 phpinfo() 信息 */
 if ($_REQUEST['act'] == 'phpinfo' && function_exists('phpinfo'))
 {
@@ -392,68 +372,68 @@ else
     ob_start();
 }
 
-    include_once('includes/inc_menu.php');
+include_once('includes/inc_menu.php');
 
 // 权限对照表
-    include_once('includes/inc_priv.php');
+include_once('includes/inc_priv.php');
 
-    foreach ($modules AS $key => $value)
-    {
-        ksort($modules[$key]);
-    }
-    ksort($modules);
+foreach ($modules AS $key => $value)
+{
+    ksort($modules[$key]);
+}
+ksort($modules);
 
-    foreach ($modules AS $key => $val)
+foreach ($modules AS $key => $val)
+{
+    $menus[$key]['label'] = $_LANG[$key];
+    if (is_array($val))
     {
-        $menus[$key]['label'] = $_LANG[$key];
-        if (is_array($val))
+        foreach ($val AS $k => $v)
         {
-            foreach ($val AS $k => $v)
+            if ( isset($purview[$k]))
             {
-                if ( isset($purview[$k]))
+                if (is_array($purview[$k]))
                 {
-                    if (is_array($purview[$k]))
+                    $boole = false;
+                    foreach ($purview[$k] as $action)
                     {
-                        $boole = false;
-                        foreach ($purview[$k] as $action)
-                        {
-                             $boole = $boole || admin_priv($action, '', false);
-                        }
-                        if (!$boole)
-                        {
-                            continue;
-                        }
+                         $boole = $boole || admin_priv($action, '', false);
+                    }
+                    if (!$boole)
+                    {
+                        continue;
+                    }
 
-                    }
-                    else
-                    {
-                        if (! admin_priv($purview[$k], '', false))
-                        {
-                            continue;
-                        }
-                    }
                 }
-                if ($k == 'ucenter_setup' && $_CFG['integrate_code'] != 'ucenter')
+                else
                 {
-                    continue;
+                    if (! admin_priv($purview[$k], '', false))
+                    {
+                        continue;
+                    }
                 }
-                $menus[$key]['children'][$k]['label']  = $_LANG[$k];
-                $menus[$key]['children'][$k]['action'] = $v;
             }
+            if ($k == 'ucenter_setup' && $_CFG['integrate_code'] != 'ucenter')
+            {
+                continue;
+            }
+            $menus[$key]['children'][$k]['label']  = $_LANG[$k];
+            $menus[$key]['children'][$k]['action'] = $v;
         }
-        else
-        {
-            $menus[$key]['action'] = $val;
-        }
-
-        // 如果children的子元素长度为0则删除该组
-        if(empty($menus[$key]['children']))
-        {
-            unset($menus[$key]);
-        }
-
+    }
+    else
+    {
+        $menus[$key]['action'] = $val;
     }
 
-    $smarty->assign('menus',     $menus);
+    // 如果children的子元素长度为0则删除该组
+    if(empty($menus[$key]['children']))
+    {
+        unset($menus[$key]);
+    }
+
+}
+
+$smarty->assign('menus',     $menus);
 
 ?>

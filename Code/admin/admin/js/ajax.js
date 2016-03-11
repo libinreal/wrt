@@ -1,3 +1,6 @@
+if(navigator.appVersion.indexOf("MSIE 7.")!=-1){
+    loadScript("//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js")
+}
 $(document).ajaxStart(function() {
     $("#message_area").fadeIn("slow");
 	$('#message_area').html(createLoading());
@@ -25,20 +28,20 @@ $(document).ajaxStop(function () {
 $(document).ready(function(){
     var menuzero=$(".menuzero").height();
     $(".menudetail").css("height",(menuzero)+"px");
-    $(".menutwo").on("mouseover",function(){
+    $(".menutwo").on("click",function(){
         $(".menutwo").css("background","none");
         $(this).css("background","#60cbe1");
         $(".triangle").css("display","none");
+        $(".menudetail").css('display', 'none');
         $(this).find(".triangle").css("display","block");
-        $(".menudetail").css("display","none");
-        $(this).find(".menudetail").css("display","block");
-    })
-    $(".menutwo").on("mouseover",function(){
-        $(this).find(".menudetail").css("display","block");
-    })
-    $(".menutwo").on("mouseout",function(){
-        $(this).find(".menudetail").css("display","none");
-    })
+        $(this).find(".menudetail").css('display', 'block');
+    });
+    $(".menudetail").on("mouseover",function(){
+        $(this).css('display', 'block');
+    });
+    $(".menudetail").on("mouseout",function(){
+        $(this).css('display', 'none');
+    });
 });
 $.fn.FormtoJson = function(options) {
     options = jQuery.extend({}, options);
@@ -126,6 +129,16 @@ $.event.special.valuechange = {
       element.data('previous', current)
     }
   }
+}
+function loadScript(url)
+{
+    // Adding the script tag to the head as suggested before
+    var head = document.getElementsByTagName('head')[0];
+    var script = document.createElement('script');
+    script.type = 'text/javascript';
+    script.src = url;
+    // Fire the loading
+    head.appendChild(script);
 }
 var getQueryStringByName = function(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
