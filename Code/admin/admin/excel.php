@@ -128,7 +128,7 @@ class OutputE
 		
 		
 		//excel数据
-		$filename = urlencode('物融通商品列表').' '.date('Y-m-d H:i:s');
+		$filename = date('Y-m-d').'_goodsList';
 		
 		$this->getxlsx($filename, $excel);
 		exit();
