@@ -4,7 +4,7 @@
 <div class="footer">
     <div class="nav">
         <ul class="page-vertical clearfix">
-            <li><a href="../">首页</a></li><li>
+            <li><a href="../mall/">首页</a></li><li>
             <a href="../credit/">信用池</a></li><li>
             <a href="../mall/">基建商城</a></li><li>
             <a href="../wrt/">物融通</a></li><li>

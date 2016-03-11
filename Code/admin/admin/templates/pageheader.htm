@@ -25,7 +25,6 @@
     </script>
 </head>
 <body>
-
 <div class="menuzero">
     <div class="menuone">
         {foreach from=$menus item=menu key=k}
@@ -47,7 +46,7 @@
     </div>
 </div>
 
-<div style="width:86%;padding-left:10px;float:left;">
+<div id="main_body" style="width:86%;padding-left:10px;float:left;">
 <h1>
     {if $action_link}
     <span class="action-span"><a href="{$action_link.href}">{$action_link.text}</a></span>
