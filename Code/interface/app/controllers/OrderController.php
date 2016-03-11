@@ -189,7 +189,7 @@ class OrderController extends ControllerBase
 		
 		//商品供应商信息
 		$goodsObj = Goods::query();
-		$goodsObj->leftjoin('suppliers', 'S.id=Goods.id', 'S');
+		$goodsObj->leftjoin('Suppliers', 'S.id=Goods.id', 'S');
 		$goodsObj->where('Goods.id IN('.implode(',', $goodsId).')');
 		$goodsObj->columns('
 				Goods.id, 
