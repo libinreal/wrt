@@ -500,7 +500,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 
-				$cash_amount_type = array_merge( C('cash_bill_amount_type') );
+				$cash_amount_type = C('cash_bill_amount_type');
 				$init['amount_type'] = $cash_amount_type;
 
 				$result['init'] = $init;
