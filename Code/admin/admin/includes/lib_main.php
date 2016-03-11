@@ -1040,12 +1040,12 @@ function suppliers_list_name()
 	}
 
 	$json = json_decode($content, true);
-
+	
 	if (json_last_error()) {
         make_json_response('', '-1', 'request content is not json: ' . json_last_error_msg());
         exit;
 	}
-
+	
 	if (!isset($json['entity']) || !strlen($json['entity'])) {
         make_json_response('', '-1', 'entity not present in request');
         exit;

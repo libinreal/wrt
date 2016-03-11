@@ -67,15 +67,16 @@ class ApplyCredit extends ManageModel
 	 * 		"command" : "applyCreditList", 
 	 * 		"entity"  : "apply_credit", 
 	 * 		"parameters" : {
-	 * 			"status" : 4, //移入回收站列表
+	 * 			"flag" : "(int)", //0平台授信回收站 1平台授信列表
 	 * 			"params" : {
 	 * 				"where" : {
 	 * 					"like" : {
 	 * 						"user_name"     : "(string)", 
 	 * 						"contract_name" : "(string)"
-	 * 					}
-	 * 					"start_time" : "(string)2016-01-20", 
-	 * 					"end_time"   : "(string)2016-01-20"
+	 * 					},
+	 * 					"state"     : "(int)",
+	 * 					"start" : "(string)2016-01-20", 
+	 * 					"end"   : "(string)2016-01-20"
 	 * 				}, 
 	 * 				"limit" : "(int)", 
 	 * 				"offset": "(int)"
@@ -86,48 +87,43 @@ class ApplyCredit extends ManageModel
 	public function applyCreditList($entity, $parameters) 
 	{
 		self::init($entity, 'apply_credit');
-		$status = $parameters['status'];
-		$limit = intval($parameters['params']['limit']);
-		$offset = intval($parameters['params']['offset']);
-
-		//where conditions
-		$userName = $parameters['params']['where']['like']['user_name'];
-		$contractName = $parameters['params']['where']['like']['contract_name'];
-		$startTime = $parameters['params']['where']['start_time'];
-		$endTime = $parameters['params']['where']['end_time'];
-		unset($parameters);
-		if (!$offset) 
-			make_json_result(array());
 		
-		//
-		$limit = ($limit < 0) ? 0 : $limit; 
-			
-		//where conditions
-		$where = '';
-		if ($userName) {
-			if (!empty($where)) $where .= ' AND ';
-			$where .= 'u.user_name LIKE "%'.$userName.'%"';
-		}
-		if ($contractName) {
-			if (!empty($where)) $where .= ' AND ';
-			$where .= 'c.contract_name LIKE "%'.$contractName.'%"';
-		}
-		if ($startTime) {
-			if (!empty($where)) $where .= ' AND ';
-			$where .= 'DATE_FORMAT(ac.create_date, "%Y-%m-%d")>="'.$startTime.'"';
-		}
-		if ($endTime) {
-			if (!empty($where)) $where .= ' AND ';
-			$where .= 'DATE_FORMAT(ac.create_date, "%Y-%m-%d")<="'.$endTime.'"';
-		}
-		if ($status == 4) {
-			if (!empty($where)) $where .= ' AND ';
-			$where .= 'ac.status=4';
+		//0回收站列表 	1列表
+		$flag = $parameters['flag'];
+		
+		//分页参数
+		$params = $parameters['params'];
+		$limit = $params['limit'] < 0 ? 0 : $params['limit'];
+		$offset = $params['offset'] < 0 ? 0 : $params['offset'];
+		if (!$offset) return make_json_result(array()); 
+		
+		//筛选条件
+		$conditions = $params['where'];
+		$state = $conditions['state'];
+		$start = $conditions['start'];
+		$end = $conditions['end'];
+		
+		//模糊查询条件
+		$like = $conditions['like'];
+		$username = $like['user_name'];
+		$name = $like['contract_name'];
+		
+		//搜索
+		if ($flag) {
+			$where = 'ac.status!=4 ';
+			if ($state) $where = 'ac.status='.$state.' ';
 		} else {
-			if (!empty($where)) $where .= ' AND ';
-			$where .= 'ac.status!=4';
+			$where = 'ac.status=4 ';
 		}
-		//获取数据
+		if ($username) $where .= 'AND u.user_name LIKE "%'.$username.'%" ';
+		if ($name) $where .= 'AND c.contract_name LIKE "%'.$name.'%" ';
+		if ($start) $where .= 'AND DATE_FORMAT(ac.create_date, "%Y-%m-%d")>="'.$start.'" ';
+		if ($end) $where .= 'AND DATE_FORMAT(ac.create_date, "%Y-%m-%d")<="'.$end.'" ';
+		
+		//分页
+		$limit = 'LIMIT '.$limit.','.$offset;
+		
+		//查询
 		self::selectSql(array(
 				'fields' => array(
 						'ac.*', 
@@ -139,11 +135,10 @@ class ApplyCredit extends ManageModel
 				'join'   => 'LEFT JOIN users AS u on ac.user_id=u.user_id'
 							.' LEFT JOIN contract AS c on ac.contract_id=c.contract_id', 
 				'where'  => $where, 
-				'extend' => 'ORDER BY apply_id ASC limit '.$limit.','.$offset
+				'extend' => 'ORDER BY apply_id ASC '.$limit
 		));
 		$data = $this->db->getAll($this->sql);
-		if ($result === false) 
-			failed_json('获取列表失败');
+		if ($result === false) return failed_json('获取列表失败');
 		
 		//总记录数
 		self::selectSql(array(
@@ -154,8 +149,7 @@ class ApplyCredit extends ManageModel
 				'where'  => $where
 		));
 		$total = $this->db->getOne($this->sql);
-		if ($total === false) 
-			failed_json('获取总记录数失败');
+		if ($total === false) return failed_json('获取总记录数失败');
 		
 		$status = array('审核中', '已审核', '审批通过', '审批失败', '已删除');
 		foreach ($data as $k=>$v) {
