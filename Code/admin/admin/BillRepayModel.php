@@ -118,7 +118,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$sql = 'SELECT br.`bill_repay_log_id`, br.`bill_id`, br.`repay_amount`, br.`create_time`, br.`create_by`,' .
 			       'br.`user_id` as `customer_id`, u.`user_name` as `customer_name` FROM ' .
 				   $bill_repay_table . ' AS br LEFT JOIN ' . $users_table .
-				   ' AS u ON u.`user_id` = br.`user_id`';
+				   ' AS u ON u.`user_id` = br.`user_id` ';
 			$total_sql = "SELECT COUNT(*) as `total` FROM $bill_repay_table";
 
 			$where = array();	
@@ -189,7 +189,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$where_str .= " WHERE `create_time` <= '" . $where['due_date2'] . "'";
 			}
 
-			$sql = $sql . $where_str . " LIMIT " . $params['limit'].",".$params['offset'];
+			$sql = $sql . $where_str . " ORDER BY br.`bill_repay_log_id` DESC LIMIT " . $params['limit'].",".$params['offset'];
 			$bill_repays = $GLOBALS['db']->getAll($sql);
 			
 			$total_sql = $total_sql . $where_str;

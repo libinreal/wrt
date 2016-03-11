@@ -196,7 +196,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$where_str .= " WHERE `amount_type` = '" . intval( $where['amount_type'] ) . "'";
 			}
 
-			$sql = $sql . $where_str . " LIMIT " . $params['limit'].",".$params['offset'];
+			$sql = $sql . $where_str . " ORDER BY ba.`bill_amount_log_id` DESC  LIMIT " . $params['limit'].",".$params['offset'];
 			$bills = $GLOBALS['db']->getAll( $sql );
 			
 			$total_sql = $total_sql . $where_str;
@@ -500,7 +500,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 
-				$cash_amount_type = array_merge( C('cash_bill_amount_type') );
+				$cash_amount_type = C('cash_bill_amount_type');
 				$init['amount_type'] = $cash_amount_type;
 
 				$result['init'] = $init;
