@@ -20,6 +20,9 @@ class ContractController extends ControllerBase
      */
     public function getListAction() 
     {
+    	$userinfo = $this->get_user();
+    	if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+    	
     	$customerId = $this->get_user()->id;
         $size = $this->request->get('size', 'int') ?: parent::SIZE;
         $currentId = $this->request->get('contract_id', 'int') ?: 0;
@@ -103,6 +106,9 @@ class ContractController extends ControllerBase
      */
     public function getSingleAction() 
     {
+    	$userinfo = $this->get_user();
+    	if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+    	
     	error_reporting(E_ALL^E_NOTICE);
     	$contractId = $this->request->get('contract_id', 'int') ?: 0;
     	$userId = $this->get_user()->id;
@@ -172,7 +178,11 @@ class ContractController extends ControllerBase
     /**
      * 合同详情附件下载
      */
-    public function downloadPdfAction() {
+    public function downloadPdfAction() 
+    {
+    	$userinfo = $this->get_user();
+    	if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+    	
     	$fileName = $this->request->get('url');
     	if (!$fileName) {
     		exit('抱歉，无法获取文件名！');

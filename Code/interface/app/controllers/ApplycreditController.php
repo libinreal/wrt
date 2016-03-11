@@ -13,6 +13,9 @@ class ApplycreditController extends ControllerBase
 	 * 上传申请附件
 	 */
 	public function uploadAttachAction() {
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		if ($this->request->hasFiles() == true) {
 			$dirAttach = getcwd().'/apply_attachment';
 			if (!is_dir($dirAttach)) {
@@ -84,6 +87,9 @@ class ApplycreditController extends ControllerBase
 	 */
 	public function creditListAction() 
 	{
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$userId = $this->get_user()->id;
 		if (!$userId) return ResponseApi::send(null, -1, '请登录');
 		
@@ -169,6 +175,9 @@ class ApplycreditController extends ControllerBase
 	 */
 	public function creditSingleAction() 
 	{
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$applyId = $this->request->get('apply_id', 'int', 0);
 		if (!$applyId) {
 			return ResponseApi::send(null, -1, '未获取到`apply_id`');
@@ -218,6 +227,9 @@ class ApplycreditController extends ControllerBase
 	 */
 	public function saveCreditAction() 
 	{
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$userId = $this->get_user()->id;
 		$action = $this->request->get('act', 'int', 0); //修改时传1
 		$applyId = $this->request->get('apply_id', 'int', 0); //修改时传apply_id
@@ -289,6 +301,9 @@ class ApplycreditController extends ControllerBase
 	 */
 	public function updateStatusAction() 
 	{
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$applyId = $this->request->get('apply_id', 'int', 0);
 		if (!$applyId) {
 			return ResponseApi::send(null, -1, '错误传参`apply_id`');
@@ -312,6 +327,9 @@ class ApplycreditController extends ControllerBase
 	 */
 	public function contractListAction() 
 	{
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$userId = $this->get_user()->id;
 		
 		$data = ContractModel::query()
@@ -337,6 +355,9 @@ class ApplycreditController extends ControllerBase
 	 */
 	public function creditAddAction()
 	{
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$userId      = $this->get_user()->id;
 		$contractId  = $this->request->get('contract_id', 'int', 0);
 		$applyAmount = $this->request->get('apply_amount', 'float', 0);

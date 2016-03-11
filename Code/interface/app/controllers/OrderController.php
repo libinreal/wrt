@@ -9,11 +9,17 @@ class OrderController extends ControllerBase
     {
     	$this->persistent->parameters = null;
     }
+    
 
+    
     /**
      * 我的订单 DDGL-01
      */
 	public function getListAction() {
+		
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$status = $this->request->get('status', 'int');
 		$createAt = $this->request->get('createAt', 'int') ?: time();
 		$size = $this->request->get('size', 'int') ?: parent::SIZE;
@@ -112,6 +118,13 @@ class OrderController extends ControllerBase
 	 * 订单详情
 	 */
 	public function getinfoAction() {
+		
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
+		$userId = $this->get_user()->id;
+		if (!$userId) return Response::success('');
+		
 		$orderId = $this->request->get('order_id');
 		$orderId = intval($orderId);
 		if (!isset($orderId) || !$orderId) {
@@ -256,6 +269,10 @@ class OrderController extends ControllerBase
 	 * 子订单列表
 	 */
 	public function childrenlistAction() {
+		
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$createAt = $this->request->get('createAt', 'int') ?: time();
 		$size = $this->request->get('size', 'int') ?: parent::SIZE;
 		$forward = $this->request->get('forward', 'int');
@@ -342,6 +359,10 @@ class OrderController extends ControllerBase
 	 * 子订单详情
 	 */
 	public function childreninfoAction() {
+		
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$childrenId = $this->request->get('order_id');
 		$childrenId = intval($childrenId);
 		if (!isset($childrenId) || !$childrenId) {

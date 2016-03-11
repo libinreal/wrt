@@ -62,6 +62,9 @@ class ProjectController extends ControllerBase
 	 */
 	public function recommendGoodsAction() 
 	{
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$userId = $this->get_user()->id;
 		
 		if (!$userId) return ResponseApi::send(null, -1, '用户没有登录');

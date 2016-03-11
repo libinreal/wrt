@@ -20,6 +20,9 @@ class NoteController extends ControllerBase
 	 */
 	public function getListAction() 
 	{
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$userId = $this->get_user()->id;
 		$size = $this->request->get('size', 'int') ?: parent::SIZE;
 		$currentId = $this->request->get('bill_id', 'int') ?: 0;
@@ -111,6 +114,9 @@ class NoteController extends ControllerBase
 	 */
 	public function noteinfoAction() 
 	{
+		$userinfo = $this->get_user();
+		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
+		
 		$userId = $this->get_user()->id;
 		$billId = $this->request->get('bill_id', 'int') ?: 0;
 		
