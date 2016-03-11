@@ -105,7 +105,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "bill_amount_valid": 100 ,//现有票据采购额度(type 为0)
 		 *                  "cash_amount_history":  20,//已分配现金采购额度(type 为1)
 		 *                  "cash_amount_valid": 100 ,//现有现金采购额度(type 为1)
-		 *                  "contract_id": "2015-12-12"//合同id
+		 *                  "contract_id": "2015-12-12",//合同id
+		 *                  "contract_num": "c20001"//合同号
 		 *           }
 		 *	         ],
 		 *	         "total":"3"
@@ -129,10 +130,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$where_str = ' WHERE `customer_id` = ' . $customer_id;//总帐号的所有合同
 			if( $type == 0 )//票据
-				$contract_sql = 'SELECT `bill_amount_history`, `bill_amount_valid`, `contract_id` FROM ' . $contract_table .
+				$contract_sql = 'SELECT `bill_amount_history`, `bill_amount_valid`, `contract_id`, `contract_num` FROM ' . $contract_table .
 				 				$where_str . ' ORDER BY `contract_id` ASC ';
 			else//现金
-				$contract_sql = 'SELECT `cash_amount_history`, `cash_amount_valid`, `contract_id` FROM ' . $contract_table .
+				$contract_sql = 'SELECT `cash_amount_history`, `cash_amount_valid`, `contract_id`,`contract_num` FROM ' . $contract_table .
 				 				$where_str . ' ORDER BY `contract_id` ASC ';
 			$contract_sql .= ' LIMIT ' . $params['limit'] . ',' . $params['offset'];				 				
 			$resultContract = $GLOBALS['db']->getAll($contract_sql);

@@ -19,7 +19,6 @@ var BillAssign = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				console.log(obj)
 				//客户信息
 				$.each(obj.content.info, function(k, v){
 					$("#"+k).text(v);
@@ -35,7 +34,7 @@ var BillAssign = {
 					var row = "";
 					$.each(obj.content.data,function(key, value){
 						row += "<tr>";
-						row += "<td class='title'>合同号：</td><td>"+value.contract_id+"</td>";
+						row += "<td class='title'>合同号：</td><td>"+value.contract_num+"</td>";
 						if(type == 0){
 							row += "<td class='title'>已分配采购额度：</td><td>"+value.bill_amount_history+"</td>";
 							row += "<td class='title'>现有采购额度：</td><td id='bill_amount_valid"+value.contract_id+"'>"+value.bill_amount_valid+"</td>";
