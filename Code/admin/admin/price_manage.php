@@ -677,15 +677,6 @@ class Price extends ManageModel
     
     
     /**
-     * 导出excel
-     */
-    private function exportExcel($data) {
-    	$excel = new PHPExcel();
-    }
-
-    
-    
-    /**
      * 所有下级物料类别
      * @param int $parentId 父级id
      * @param array $cateList
