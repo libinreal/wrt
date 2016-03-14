@@ -75,8 +75,8 @@ class ApplyCredit extends ManageModel
 	 * 						"contract_name" : "(string)"
 	 * 					},
 	 * 					"state"     : "(int)",
-	 * 					"start" : "(string)2016-01-20", 
-	 * 					"end"   : "(string)2016-01-20"
+	 * 					"start_time" : "(string)2016-01-20", 
+	 * 					"end_time"   : "(string)2016-01-20"
 	 * 				}, 
 	 * 				"limit" : "(int)", 
 	 * 				"offset": "(int)"
@@ -100,8 +100,8 @@ class ApplyCredit extends ManageModel
 		//筛选条件
 		$conditions = $params['where'];
 		$state = $conditions['state'];
-		$start = $conditions['start'];
-		$end = $conditions['end'];
+		$start = $conditions['start_time'];
+		$end = $conditions['end_time'];
 		
 		//模糊查询条件
 		$like = $conditions['like'];
@@ -115,10 +115,11 @@ class ApplyCredit extends ManageModel
 		} else {
 			$where = 'ac.status=4 ';
 		}
+		
 		if ($username) $where .= 'AND u.user_name LIKE "%'.$username.'%" ';
 		if ($name) $where .= 'AND c.contract_name LIKE "%'.$name.'%" ';
-		if ($start) $where .= 'AND DATE_FORMAT(ac.create_date, "%Y-%m-%d")>="'.$start.'" ';
-		if ($end) $where .= 'AND DATE_FORMAT(ac.create_date, "%Y-%m-%d")<="'.$end.'" ';
+		if ($start) $where .= 'AND ac.create_date>="'.date('Y-m-d H:i:s', strtotime($start)).'" ';
+		if ($end) $where .= 'AND ac.create_date<="'.date('Y-m-d H:i:s', strtotime($end)).'" ';
 		
 		//分页
 		$limit = 'LIMIT '.$limit.','.$offset;
