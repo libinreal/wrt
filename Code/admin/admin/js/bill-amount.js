@@ -120,7 +120,7 @@ var BillAmount = {
 				return false;
 			}else{
 				$('#message_area').html(createTip(obj.message));
-				redirectToUrl("demo_template.php?section=bill_manage&act=list");
+				redirectToUrl("demo_template.php?section=bill_manage&act=order_list");
 			}
 		}, "json");
 	},
