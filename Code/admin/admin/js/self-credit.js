@@ -50,10 +50,8 @@ var SelfCredit = {
 		}else{
 			var params = {"params":{"limit":this.limit, "offset":this.offset}};
 		}
-		if(check_status == 4){
-			params.status = 4;
-		}
-		strJson = createJson("applyCreditList", this.entity, params);
+		params.flag = check_status;
+		var strJson = createJson("applyCreditList", this.entity, params);
 		var that = this
 		console.log(strJson)
 		$.post(this.url, strJson, function(obj){

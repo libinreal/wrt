@@ -36,7 +36,7 @@
 			<input type="text" name="end_time" id="end_time" placeholder="结束日期" readonly>
 			&nbsp;
 			&nbsp;
-			<input type="button" class="button" value="查询" onclick="SelfCredit.getList('search', 4)">
+			<input type="button" class="button" value="查询" onclick="SelfCredit.getList('search', 0)">
 		</div>
 		</form>
 		<div class="list-div" id="listDiv">
@@ -82,25 +82,25 @@ $(document).ready(function(){
         elem: '#end_time'
     });
 });
-SelfCredit.getList(false, 4);
+SelfCredit.getList(false, 0);
 function first(){
 	SelfCredit.limit = 0;
-	SelfCredit.getList(true, 4);
+	SelfCredit.getList(true, 0);
 }
 function next(){
 	SelfCredit.current_page = SelfCredit.current_page + 1;
 	SelfCredit.limit = (SelfCredit.current_page - 1)*SelfCredit.offset;
-	SelfCredit.getList(true, 4);
+	SelfCredit.getList(true, 0);
 }
 function prev(){
 	SelfCredit.current_page = SelfCredit.current_page - 1;
 	SelfCredit.limit = (SelfCredit.current_page - 1)*SelfCredit.offset;
-	SelfCredit.getList(true, 4);
+	SelfCredit.getList(true, 0);
 }
 function last(){
 	SelfCredit.current_page = SelfCredit.total_page;
 	SelfCredit.limit = (SelfCredit.current_page - 1)*SelfCredit.offset;
-	SelfCredit.getList(true);
+	SelfCredit.getList(true, 0);
 }
 function checkbox_all(){
 	if($("#check_all:checkbox:checked").length == 1){
