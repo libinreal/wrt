@@ -36,7 +36,7 @@ var SelfCredit = {
 				condition.like['contract_name'] = contract_name
 			}
 			if(status != ''){
-				condition.status = status;
+				condition.state = status;
 			}
 			if(start_time != ''){
 				condition.start_time = start_time;
