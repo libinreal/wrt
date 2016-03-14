@@ -948,15 +948,13 @@ var SaleOrder = {
 		var that = this;
         $.post("/admin/BankSignModel.php", strJson, function(obj){
             if(obj.error == -1){
-                //that.getSignProcess(handle, step);
-                that.updateChilderStatus(handle);
+                that.getSignProcess(handle, step);
                 return false;
             }else{
                 if(obj.content == 1){
                     that.updateChilderStatus(handle);
                 }else{
-                	that.updateChilderStatus(handle);
-                    //that.getSignProcess(handle, step);
+                    that.getSignProcess(handle, step);
                 }
             }
         }, "json");		

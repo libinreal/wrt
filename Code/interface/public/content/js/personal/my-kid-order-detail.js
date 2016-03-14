@@ -57,8 +57,7 @@ define(function(require) {
                 if(response.body == 1){
                     updateStatus();
                 }else{
-                    updateStatus();
-                    //sign();
+                    sign();
                 }
             }
         }, "json");
