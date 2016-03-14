@@ -19,13 +19,11 @@ var SelfCredit = {
 	entity: "apply_credit",
 
 	getList: function(search, check_status){
-		console.log(check_status)
-		console.log(search)
-		if(search){
+		if(!search){
 			serach = false;
 		}else{
 			var condition = {};
-			var user_name = $('#search_form select[name=user_name]').val();
+			var user_name = $('#search_form input[name=user_name]').val();
 			var contract_name = $('#search_form input[name=contract_name]').val();
 			var status = $('#search_form select[name=status]').val();
 			var start_time = $('#search_form input[name=start_time]').val();

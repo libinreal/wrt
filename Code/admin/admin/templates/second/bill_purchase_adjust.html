@@ -93,8 +93,8 @@ $('#from_adjust_amount').on('valuechange', function (e, previous) {
 	}else{
 		$('#message_area').html(createError(''));
 		$('#to_adjust_amount').val(from_adjust_amount);
-		$('#from_remain_amount').text(from_amount_valid - from_adjust_amount);
-		$('#to_remain_amount').text(to_amount_valid + from_adjust_amount);
+		$('#from_remain_amount').text(parseFloat(from_amount_valid - from_adjust_amount).toFixed(2));
+		$('#to_remain_amount').text(parseFloat(to_amount_valid + from_adjust_amount).toFixed(2));
 		piliskys('from_adjust_amount','captial_currency');
 	}
 });
