@@ -982,6 +982,7 @@ class GoodsController extends ControllerBase {
 		$userInv->invType = $invType;
 		$userInv->invPayee = $invPayee;
 		$userInv->invAddress = $invAddress;
+		$userInv->inv_remark = ' ';
 		try {
 			if(!$userInv->save()) {
 				foreach($userInv->getMessages() as $message) {
@@ -1324,7 +1325,7 @@ class GoodsController extends ControllerBase {
 		$result = UserInv::findFirst(array(
 				'conditions' => 'userId = :userId:',
 				'bind' => compact('userId'),
-				'columns' => 'invType, invPayee, invAddress',
+				'columns' => 'invType, invPayee, invAddress, inv_remark',
 		));
 		$invInfo = array();
 		if(is_object($result) && $result) {
