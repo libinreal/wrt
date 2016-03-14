@@ -1,10 +1,10 @@
 var SelfCredit = {
 	order_arr: [
 		"apply_id",
-		"contract_name",
+		"user_name",
 		"create_date",
 		"apply_amount",
-		"user_name",
+		"contract_name",
 		"check_amount",
 		"apply_remark",
 		"check_remark",
