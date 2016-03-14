@@ -50,6 +50,7 @@ class UserInv extends \Phalcon\Mvc\Model
             'inv_type' => 'invType',
             'inv_company' => 'invPayee',
             'inv_address' => 'invAddress',
+        	'inv_remark' => 'inv_remark', 
             'updateAt' => 'updateAt'
         );
     }
