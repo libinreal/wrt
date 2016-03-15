@@ -1177,8 +1177,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_goods = array();
 
 				$order_goods['goods_number_send_saler'] = $goods_number_send_saler;
+				$order_goods['goods_number_arr_saler'] = $goods_number_send_saler;
 
 				$order_goods['goods_price_send_saler'] = $goods_price_send_saler;
+				$order_goods['goods_price_arr_saler'] = $goods_price_send_saler;
 
 				foreach ($order_goods as $cn => $cv) {
 					$order_goods_update_sql .= '`' . $cn . '` = ' . $cv . ',';

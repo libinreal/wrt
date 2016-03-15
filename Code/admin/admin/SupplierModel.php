@@ -401,6 +401,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$v['goods_price'] = $v['goods_price_arr_saler'];//到货
 					}
 
+					$v['order_sn'] .= '-cg';
 					$v['order_status'] = '';
 					//订单状态转换
 					if (!empty($childer_map)) {
@@ -1305,6 +1306,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$order_info['attr'] = implode('/', $attr_arr);
 				}
 				
+				$order_info['order_sn'] .= '-cg';
 				$order_info['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
 				//物流费
 				if( $order_info['child_order_status'] <= SOS_SEND_PC2){
