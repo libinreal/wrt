@@ -212,9 +212,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$bill_id_arr[] = $b['bill_id'];
 			}
 
-			$bill_check = $this->checkCreateAmount( $bill_id_arr );
-			foreach ($bills as &$b) {
-				$b['used'] = $bill_check[ $b['bill_id'] ];
+			if( !empty( $bill_id_arr ) ){
+				$bill_check = $this->checkCreateAmount( $bill_id_arr );
+				foreach ($bills as &$b) {
+					$b['used'] = $bill_check[ $b['bill_id'] ];
+				}
 			}
 
 			$total_sql = $total_sql . $where_str;

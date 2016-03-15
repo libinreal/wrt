@@ -116,12 +116,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			$bill_amount_table = $GLOBALS["ecs"]->table("bill_amount_log");
 			$users_table = $GLOBALS['ecs']->table( 'users' );
-			$sql = 'SELECT IFNULL( b.`issuing_date`, \'\') AS `make_date`, ba.`bill_amount_log_id`, ba.`amount_type`, ba.`amount`, ba.`user_id` as `customer_id`, u.`user_name` as `customer_name`, ba.`create_time`, ba.`create_by`' .
+			$sql = 'SELECT IFNULL( b.`issuing_date`, \'\') AS `make_date`, ba.`bill_amount_log_id`, ba.`amount_type`, ba.`amount`, ba.`user_id` as `customer_id`, u.`companyName` as `customer_name`, ba.`create_time`, ba.`create_by`' .
 			  	   ' FROM ' . $bill_amount_table . ' AS ba LEFT JOIN ' . $users_table .
 				   ' AS u ON u.`user_id` = ba.`user_id` ' .
 				   ' LEFT JOIN `bill` AS b ON b.`bill_id` = ba.`bill_id` ';
 
-			$total_sql = "SELECT COUNT(*) as `total` FROM $bill_amount_table";
+			$total_sql = "SELECT COUNT(*) as `total` FROM $bill_amount_table" . ' AS ba LEFT JOIN ' . $users_table .
+				         ' AS u ON u.`user_id` = ba.`user_id` ' .
+				         ' LEFT JOIN `bill` AS b ON b.`bill_id` = ba.`bill_id` ';
 
 			$where = array();	
 			if( isset($params['where']) )
@@ -155,7 +157,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						}
 						
 						$users_ids = implode(',', $users);
-						$where_str = ' WHERE `user_id` in(' . $users_ids . ')';
+						$where_str = ' WHERE u.`user_id` in(' . $users_ids . ')';
 					}
 				}
 			}
@@ -166,34 +168,34 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$where['due_date2'] = strtotime( $where['due_date2'] );
 
 				if( $where_str )
-					$where_str .= " AND `create_time` >= '" . $where['due_date1'] . "' AND `create_time` <= '" . $where['due_date2'] . "'";
+					$where_str .= " AND ba.`create_time` >= '" . $where['due_date1'] . "' AND ba.`create_time` <= '" . $where['due_date2'] . "'";
 				else
-					$where_str .= " WHERE `create_time` >= '" . $where['due_date1'] . "' AND `create_time` <= '" . $where['due_date2'] . "'";
+					$where_str .= " WHERE ba.`create_time` >= '" . $where['due_date1'] . "' AND ba.`create_time` <= '" . $where['due_date2'] . "'";
 			}
 			else if( isset( $where["due_date1"] ) )
 			{
 				$where['due_date1'] = strtotime( $where['due_date1'] );
 
 				if( $where_str )
-					$where_str .= " AND `create_time` >= '" . $where['due_date1'] . "'";
+					$where_str .= " AND ba.`create_time` >= '" . $where['due_date1'] . "'";
 				else
-					$where_str .= " WHERE `create_time` >= '" . $where['due_date1'] . "'";
+					$where_str .= " WHERE ba.`create_time` >= '" . $where['due_date1'] . "'";
 			}
 			else if( isset( $where["due_date2"] ) )
 			{
 				$where['due_date2'] = strtotime( $where['due_date2'] );
 
 				if( $where_str )
-					$where_str .= " AND `create_time` <= '" . $where['due_date2'] . "'";
+					$where_str .= " AND ba.`create_time` <= '" . $where['due_date2'] . "'";
 				else
-					$where_str .= " WHERE `create_time` <= '" . $where['due_date2'] . "'";
+					$where_str .= " WHERE ba.`create_time` <= '" . $where['due_date2'] . "'";
 			}
 
 			if( isset( $where["amount_type"] ) ){
 				if( $where_str )
-					$where_str .= " AND `amount_type` = '" . intval( $where['amount_type'] ) . "'";
+					$where_str .= " AND ba.`amount_type` = '" . intval( $where['amount_type'] ) . "'";
 				else
-					$where_str .= " WHERE `amount_type` = '" . intval( $where['amount_type'] ) . "'";
+					$where_str .= " WHERE ba.`amount_type` = '" . intval( $where['amount_type'] ) . "'";
 			}
 
 			$sql = $sql . $where_str . " ORDER BY ba.`bill_amount_log_id` DESC  LIMIT " . $params['limit'].",".$params['offset'];
@@ -496,7 +498,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$result['info'] = $bill; 		
 			} elseif ( $type == 1) {//现金
-				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `companyName` IS NOT NULL GROUP BY `companyName`';
+				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `companyName` IS NOT NULL AND `parent_id` = 0';
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 
