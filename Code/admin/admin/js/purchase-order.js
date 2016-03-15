@@ -169,9 +169,9 @@ var PurchaseOrder = {
 				if(obj.content.order_status != 3){
 					$.each(obj.content.buttons, function(k, v){
 						if(v == "发货改价"){
-							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_send_price&order_id='+order_id+'\')" value="'+v+'" >';
+							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=purchase_order_manage&act=send_price&order_id='+order_id+'\')" value="'+v+'" >';
 						}else if(v == "到货改价"){
-							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
+							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=purchase_order_manage&act=receive_price&order_id='+order_id+'\')" value="'+v+'" >';
 						}else if(v == "发货验签" || v == "到货验签"){
 							button += '<input type="button" class="button" onclick="PurchaseOrder.getSign(this, 1)" value="'+v+'" >';
 						}else{
