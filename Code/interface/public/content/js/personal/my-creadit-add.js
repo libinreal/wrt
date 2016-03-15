@@ -34,7 +34,14 @@ define(function(require)
 		            data.messages.maxFileSize = '上传文件太大，限制' + data.maxFileSize / 1000 + 'K以内.';
 		        },
 		        done: function(e, data) {
-		            $('#apply_img').val(data.result.body[0]);
+		        	if (data.result.code == -1) {
+		        		alert(data.result.message);
+		        		$(this).val('');
+		        		$('#apply_img').val('');
+		        	} else {
+		        		$('#apply_img').val(data.result.body[0]);
+		        	}
+		            
 		        }
 		    });
 			
