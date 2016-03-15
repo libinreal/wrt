@@ -15,7 +15,7 @@
 		<?php include '../com/nav-left.php'; ?>
 		<div class="content-right">
 			<div class="breadcrumbs">
-				<a href="../">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-credit.html">自有授信</a> &gt; <span id="type-name">申请自有授信</span>
+				<a href="../mall/">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-credit.html">自有授信</a> &gt; <span id="type-name">申请自有授信</span>
 				<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 			</div>
 			<div class="add-address gray-box">

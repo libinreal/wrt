@@ -17,7 +17,7 @@
 		<div class="content-right">
 			<div class="breadcrumbs">
 				<!-- <a href="../">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <span id="type-name" ><a href="my-project.html">我的项目</a></span> &gt; <span id="type-name" >查看工程订单详情</span> -->
-				<a href="../">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <span id="type-name" ><a href="my-order.html">我的订单</a></span> &gt; <span id="type-name" >查看工程订单详情</span>
+				<a href="../mall/">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <span id="type-name" ><a href="my-order.html">我的订单</a></span> &gt; <span id="type-name" >查看工程订单详情</span>
 				<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 			</div>				
 			<div class="gray-box project-detail" id="zj-detail"></div>

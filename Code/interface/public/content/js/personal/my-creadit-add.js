@@ -25,9 +25,6 @@ define(function(require)
 		        replaceFileInput : false, 
 		        acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
 		        maxFileSize: 5000000,
-		        done: function(e, data) {
-		            $('#apply_img').val(data.result.body[0]);
-		        },
 		        process: function(e, data) {
 		            for (var i = 0, l = data.processQueue.length; i < l; i++) {
 		                if (data.processQueue[i].action == 'validate') {
@@ -35,6 +32,9 @@ define(function(require)
 		                }
 		            }
 		            data.messages.maxFileSize = '上传文件太大，限制' + data.maxFileSize / 1000 + 'K以内.';
+		        },
+		        done: function(e, data) {
+		            $('#apply_img').val(data.result.body[0]);
 		        }
 		    });
 			

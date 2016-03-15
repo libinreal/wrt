@@ -16,7 +16,7 @@
 <?php include '../com/header.php'; ?>
 <div class="section page-vertical">
 	<div class="breadcrumbs">
-		<a href="../">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-note.html">我的票据</a> &gt; <span id="type-name">票据详情</span>
+		<a href="../mall/">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-note.html">我的票据</a> &gt; <span id="type-name">票据详情</span>
 		<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 	</div>
 	<div class="order" id="zj-detail"></div>

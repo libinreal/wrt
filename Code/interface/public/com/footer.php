@@ -114,8 +114,8 @@
                             <label><a href="javascrip:void(0);" id="findPwd">找回密码</a></label>
                         </div>
                         <div class="login-btn">
-                            <button type="submit" class="button btn-secondary big">登录</button><button 
-                            class="button btn-reg big" id="registerBtn">注册</button>
+                            <button type="submit" class="button btn-secondary big">登录</button><!--<button 
+                            class="button btn-reg big" id="registerBtn">注册</button>-->
                         </div>
                     </form>
                 </div>

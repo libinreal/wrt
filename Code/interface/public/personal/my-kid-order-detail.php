@@ -71,7 +71,7 @@
 <?php include '../com/footer.php'; ?>
 <script id="zj-detail-tmpl" type="text/html">
 	<div class="breadcrumbs">
-		<a href="../">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-order.html">我的订单</a> &gt; <a href="my-kid-order.html?id=<!--[= parentId ]-->">子订单</a> &gt; <span id="type-name">子订单详情</span>
+		<a href="../mall/">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-order.html">我的订单</a> &gt; <a href="my-kid-order.html?id=<!--[= parentId ]-->">子订单</a> &gt; <span id="type-name">子订单详情</span>
 		<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 	</div>
 	<div class="order">

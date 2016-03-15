@@ -15,7 +15,7 @@
 	<?php include '../com/nav-left.php'; ?>
 		<div class="content-right">
 			<div class="breadcrumbs">
-				<a href="../">首页</a> &gt; <a href="my-customize.html">工程定制</a> &gt; <span>定制详情</span>
+				<a href="../mall/">首页</a> &gt; <a href="my-customize.html">工程定制</a> &gt; <span>定制详情</span>
 				<a href="javascript:history.go(-1)" class="return">返回 &gt;</a>
 			</div>
 			<div class="apply-form apply-3">
