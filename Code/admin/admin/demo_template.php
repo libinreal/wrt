@@ -172,7 +172,7 @@ if($section == "purchase_order"){
 			break;
 
 		case 'suborder_check_first':
-			$smarty->display('second/purchase_suborder_check_first.html');		
+			$smarty->display('second/purchase_suborder_check_first.html');
 			break;
 
 		case 'check_second':
@@ -182,7 +182,7 @@ if($section == "purchase_order"){
 		case 'suborder_check_second':
 			$smarty->display('second/purchase_suborder_check_second.html');
 			break;
-		
+
 		default:
 			exit;
 			break;
