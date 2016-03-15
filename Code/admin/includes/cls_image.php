@@ -81,7 +81,7 @@ class cls_image
                 $img_name = $dir . $img_name; // 将图片定位到正确地址
             }
         }
-        
+
         /* 如果目标目录不存在，则创建它 */
         if (!file_exists($dir))
         {
