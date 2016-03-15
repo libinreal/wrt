@@ -20,7 +20,7 @@
 		<?php include '../com/nav-left.php'; ?>
 			<div class="content-right">
 				<div class="breadcrumbs">
-					<a href="../">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-creditb.html">我的信用B</a> &gt; <span id="type-name">信用流水历史记录</span>
+					<a href="../mall/">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <a href="my-creditb.html">我的信用B</a> &gt; <span id="type-name">信用流水历史记录</span>
 					<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 				</div>
 				<div id="zj-list"></div>

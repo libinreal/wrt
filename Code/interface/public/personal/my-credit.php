@@ -20,7 +20,7 @@
 		<?php include '../com/nav-left.php'; ?>
 		<div class="content-right">
 			<div class="breadcrumbs">
-				<a href="../">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <span id="type-name">自有授信</span>
+				<a href="../mall/">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <span id="type-name">自有授信</span>
 				<a href="my-credit-add.html" class="button btn-secondary small">新增</a><a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 			</div>
 			<div class="order-list-header clearfix">
