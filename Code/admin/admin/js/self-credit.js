@@ -161,7 +161,7 @@ var SelfCredit = {
 					}
 					if($("img#"+key).length){
 						if(value != ''){
-							$("img#"+key).attr("src",value);
+							$("img#"+key).attr("src","transfer.php?act=attach&url="+value);
 						}
 					}
 				});
