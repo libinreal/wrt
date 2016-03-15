@@ -26,7 +26,10 @@ class Transfer
 		$filename = $str.'/interface/public/apply_attachment/'.$url;
 		if (!is_file($filename)) return Response::notFound();
 		
-		header("Content-Type:image/jpg");
+		$allow = array('jpg', 'jpeg', 'png', 'gif');
+		$extension = pathinfo($filename, PATHINFO_EXTENSION);
+		if (!in_array($extension, $allow) || !$extension) return Response::notFound();
+		header("Content-Type:image/".$extension);
 		echo file_get_contents($filename);
 		die;
 	}
