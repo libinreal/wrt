@@ -46,6 +46,10 @@ class ApplycreditController extends ControllerBase
 			// Print the real file names and sizes
 			foreach ($this->request->getUploadedFiles() as $file) {
 				//Move the file into the application
+				if ($file->getSize() > 2097152) {
+					return ResponseApi::send(null, -1, '请上传2M以内大小的文件');
+				}
+				
 				$fileType = '';
 				if ($fileType == null) {
 					$fileType= $file->getType();
@@ -54,7 +58,13 @@ class ApplycreditController extends ControllerBase
 				if (is_array($tmp)) {
 					$fileType = $tmp[count($tmp)-1];
 				}
-	
+				
+				$allow = array('jpg', 'jpeg', 'png', 'gif');
+				if (!in_array($fileType, $allow)){
+					return ResponseApi::send(null, -1, '请上传jpg、jpeg、png格式文件');
+				}
+				
+				
 				if ($fileType != null) {
 					$filename = time().\PhpRudder\CommonUtil::random(2, '123456789').".".$fileType;
 				} else {
