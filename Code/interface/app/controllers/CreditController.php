@@ -166,7 +166,7 @@ class CreditController extends ControllerBase
     	if (!$userId) {
     		return ResponseApi::send(null, -1, 'does not get `user_id`');
     	}
-    	
+    	/* 
     	//用户合同
     	$valid = ContractModel::find(array(
     			'conditions' => 'userId='.$userId, 
@@ -179,16 +179,16 @@ class CreditController extends ControllerBase
     		$billValid += $v['billValid'];
     		$cashValid += $v['cashValid'];
     	}
-    	
+    	 */
     	//查询用户信息
     	$data = Users::findFirst(array(
     			'conditions' => 'id='.$userId, 
     			'columns' => 'id,account,companyName,companyAddress,billAmountValid,cashAmountValid'
     	))->toArray();
-    	
+    	/* 
     	$data['billAmountValid'] = $billValid;
     	$data['cashAmountValid'] = $cashValid;
-    	
+    	 */
     	return ResponseApi::send($data);
     }
 
