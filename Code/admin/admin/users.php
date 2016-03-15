@@ -102,16 +102,14 @@ elseif ($_REQUEST['act'] == 'insert')
     $customerNo = empty($_POST['customerNo']) ? '' : trim($_POST['customerNo']);
     $customerAccount = empty($_POST['customerAccount']) ? '' : trim($_POST['customerAccount']);
 
+    if( !empty( $parentId ) ){
 
-    $parent_bank_info = $GLOBALS['db']->getRow( 'SELECT `customerNo`,`customerAccount` FROM ' . $GLOBALS['ecs']->table( 'users' ) . ' WHERE `user_id` = ' . $parentId);
-    
-    // if( empty( $customerNo ) ){
+        $parent_bank_info = $GLOBALS['db']->getRow( 'SELECT `customerNo`,`customerAccount` FROM ' . $GLOBALS['ecs']->table( 'users' ) . ' WHERE `user_id` = ' . $parentId);
+
         $customerNo = $parent_bank_info['customerNo'];
-    // }
-
-    // if( empty( $customerAccount ) ){
+    
         $customerAccount = $parent_bank_info['customerAccount'];
-    // }
+    }
 
     
     $privilege = $_POST['privilege'];
@@ -277,16 +275,15 @@ elseif ($_REQUEST['act'] == 'update')
     $customerNo = empty($_POST['customerNo']) ? '' : trim($_POST['customerNo']);
     $customerAccount = empty($_POST['customerAccount']) ? '' : trim($_POST['customerAccount']);
 
-    $parent_bank_sql =  'SELECT `customerNo`,`customerAccount` FROM ' . $GLOBALS['ecs']->table( 'users' ) . ' WHERE `user_id` = ' . $parentId;
-    $parent_bank_info = $GLOBALS['db']->getRow( $parent_bank_sql );
-    
-    // if( empty( $customerNo ) ){
-        $customerNo = $parent_bank_info['customerNo'];
-    // }
+    if( !empty( $parentId ) ){
 
-    // if( empty( $customerAccount ) ){
+        $parent_bank_sql =  'SELECT `customerNo`,`customerAccount` FROM ' . $GLOBALS['ecs']->table( 'users' ) . ' WHERE `user_id` = ' . $parentId;
+        $parent_bank_info = $GLOBALS['db']->getRow( $parent_bank_sql );
+
+        $customerNo = $parent_bank_info['customerNo'];
+    
         $customerAccount = $parent_bank_info['customerAccount'];
-    // }
+    }
 
     $privilege = $_POST['privilege'];
     $privilege = implode(',',(array)$privilege);
