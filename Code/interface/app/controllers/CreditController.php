@@ -167,14 +167,29 @@ class CreditController extends ControllerBase
     		return ResponseApi::send(null, -1, 'does not get `user_id`');
     	}
     	
-    	//查询
+    	//用户合同
+    	$valid = ContractModel::find(array(
+    			'conditions' => 'userId='.$userId, 
+    			'columns' => 'billValid,cashValid'
+    	))->toArray();
+    	
+    	//用户合同的总采购额度和现金额度
+    	$billValid = 0;$cashValid = 0;
+    	foreach ($valid as $v) {
+    		$billValid += $v['billValid'];
+    		$cashValid += $v['cashValid'];
+    	}
+    	
+    	//查询用户信息
     	$data = Users::findFirst(array(
     			'conditions' => 'id='.$userId, 
     			'columns' => 'id,account,companyName,companyAddress,billAmountValid,cashAmountValid'
     	))->toArray();
     	
+    	$data['billAmountValid'] = $billValid;
+    	$data['cashAmountValid'] = $cashValid;
+    	
     	return ResponseApi::send($data);
-    	die;
     }
 
     /**
