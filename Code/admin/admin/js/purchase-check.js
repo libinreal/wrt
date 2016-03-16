@@ -25,7 +25,7 @@ var PurchaseCheck = {
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 	// 第二次验签列表
@@ -47,7 +47,7 @@ var PurchaseCheck = {
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -69,7 +69,7 @@ var PurchaseCheck = {
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -91,7 +91,7 @@ var PurchaseCheck = {
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	}
 }

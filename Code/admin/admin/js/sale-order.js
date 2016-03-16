@@ -139,7 +139,7 @@ var SaleOrder = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -193,7 +193,7 @@ var SaleOrder = {
 				});
 				$("#sale_order_detail_list>tbody").html(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -256,7 +256,7 @@ var SaleOrder = {
 					$("#handle_button").append('<input type="button" class="button" value=" 确定 " onclick="SaleOrder.setSplit()">')
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -344,7 +344,7 @@ var SaleOrder = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -430,7 +430,7 @@ var SaleOrder = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -519,14 +519,14 @@ var SaleOrder = {
 					$("#logistics_operate").html(createLink("javascript:void(0);", "添加物流信息", "SaleOrder.addShippingLogInit("+order_id+",'"+obj.content.shipping.shipping_num+"')"));
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");		
 	},
 
 	addShippingInfoInit: function(order_id){
 		$("#popupLayer").load("templates/second/addShippingInfo.html?order_id="+order_id);
 		popupLayer();
-		$('#message_area').html('');
+		
 	},
 
 	addShippingInfo: function(){
@@ -568,7 +568,7 @@ var SaleOrder = {
 	addShippingLogInit: function(order_id,shipping_num){
 		$("#popupLayer").load("templates/second/addShippingLog.html?order_id="+order_id+"&num="+shipping_num);
 		popupLayer();
-		$('#message_area').html('');
+		
 	},
 
 	addShippingLog: function(){
@@ -661,7 +661,7 @@ var SaleOrder = {
 					$("#price_log_list>tbody").html(row);
 				});
 
-				$('#message_area').html('');		
+						
 			}
 		}, "json");
 	},
@@ -713,7 +713,7 @@ var SaleOrder = {
 					row += "</tr>";
 					$("#price_log_list>tbody").html(row);
 				});
-				$('#message_area').html('');		
+						
 			}
 		}, "json");
 	},
@@ -769,7 +769,7 @@ var SaleOrder = {
 					}
 				});
 
-				$('#message_area').html('');
+				
 			}
 		}, "json");
 	},
@@ -827,7 +827,7 @@ var SaleOrder = {
 				});
 				$("#handle_button>span").html(button);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 

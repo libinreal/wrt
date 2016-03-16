@@ -74,7 +74,7 @@ var BillRepay = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -106,7 +106,7 @@ var BillRepay = {
 				});
 				$("input[name=repay_amount]").val(obj.content.info.need_repay);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -153,7 +153,7 @@ var BillRepay = {
 					}
 				});
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	}
 }

@@ -55,7 +55,7 @@ var Credit = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -81,7 +81,7 @@ var Credit = {
 					}
 				});
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 

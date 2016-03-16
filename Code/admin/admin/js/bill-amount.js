@@ -95,7 +95,7 @@ var BillAmount = {
 					$("#bill_amount_list>tbody").html(row);
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -153,7 +153,7 @@ var BillAmount = {
 				$("#amount").val(bill_amount*discount_rate/100);
 				$("#operate_button").html(createButton('BillAmount.getCreateAction()', '添加'));
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -179,7 +179,7 @@ var BillAmount = {
 				$("#user_id").html(row);
 				$("#operate_button").html(createButton('BillAmount.getCreateAction()', '添加'));
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -241,7 +241,7 @@ var BillAmount = {
 				});
 				$("#operate_button").html(createButton('BillAmount.getUpdateAction()', '保存'));
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -283,7 +283,7 @@ var BillAmount = {
 				});
 				$("#operate_button").html(createButton('BillAmount.getUpdateAction()', '保存'));
 			}
-			$('#message_area').html('');
+			
 		}, "json");		
 	}
 }

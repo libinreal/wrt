@@ -120,7 +120,7 @@ var Price = {
 					$("#purchase_price_increase_list>tbody").html(row);
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 	// 获取厂家列表
@@ -138,7 +138,7 @@ var Price = {
 				});
 				$("select[name=brand_id]").append(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 	// 获取物料类别列表
@@ -180,7 +180,7 @@ var Price = {
 				});
 				$("select[name=cat_id]").append(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 	// 获取供应商列表
@@ -198,7 +198,7 @@ var Price = {
 				});
 				$("select[name=suppliers_id]").append(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 	// 获取物料属性
@@ -228,7 +228,7 @@ var Price = {
 				});
 				$("#sub_search").html(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 	// 获取批量加价列表
@@ -282,7 +282,7 @@ var Price = {
 				});
 				$("#purchase_price_increase_table>tbody").html(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json");		
 	},
 	//批量加价
@@ -375,7 +375,7 @@ var Price = {
 				});
 				$("#final_price").text(parseFloat(obj.content.shop_price)+parseFloat(obj.content.price_num));
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 

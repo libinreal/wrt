@@ -98,7 +98,7 @@ var Payment = {
 					$("#payment_order_list>tbody").html(row);
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -160,7 +160,7 @@ var Payment = {
 					$("#handle_button>span").html(button);
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -182,7 +182,7 @@ var Payment = {
 					$("#paginate").html(createPaginate(that.url, obj.content.total, that.limit, that.offset));
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -224,7 +224,7 @@ var Payment = {
 				});
 				$("#handle_button>span").html(button);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	}
 }

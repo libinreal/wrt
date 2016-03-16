@@ -18,7 +18,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -36,7 +36,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -59,7 +59,7 @@ var TypeMode = {
 					})
 					$('#'+select_id).append(row);
 				}
-				$('#message_area').html('');
+				
 			},
 			complete: function(){
 				if(func){
@@ -88,7 +88,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -124,7 +124,7 @@ var TypeMode = {
 					$("#user_list>tbody").html(row);
 				});
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -150,7 +150,7 @@ var TypeMode = {
 				})
 				$("#"+select_id).html(row);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -175,7 +175,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -193,7 +193,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -218,7 +218,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -239,7 +239,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -257,7 +257,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).append(row);
 			}
-			$('#message_area').html('');
+			
 		},"json").done(function(){
 			if(func){
 				window[func]();
@@ -279,7 +279,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).append(row);
 			}
-			$('#message_area').html('');
+			
 		},"json").done(function(){
 			if(func){
 				window[func]();
@@ -306,7 +306,7 @@ var TypeMode = {
 					})
 					$('#'+select_id).append(row);
 				}
-				$('#message_area').html('');
+				
 			},
 			complete: function(){
 				if(func){
@@ -330,7 +330,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).append(row);
 			}
-			$('#message_area').html('');
+			
 		},"json").done(function(){
 			if(func){
 				window[func]();
@@ -352,7 +352,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).append(row);
 			}
-			$('#message_area').html('');
+			
 		},"json").done(function(){
 			if(func){
 				window[func]();
@@ -378,7 +378,7 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	}
 

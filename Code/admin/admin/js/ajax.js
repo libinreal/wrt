@@ -2,11 +2,11 @@ if(navigator.appVersion.indexOf("MSIE 7.")!=-1){
     loadScript("//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js")
 }
 $(document).ajaxStart(function() {
-    $("#message_area").fadeIn("slow");
-	$('#message_area').html(createLoading());
     $('input[type=button]').each(function(index, e){
         $(e).attr("disabled",true);
     });
+    $("#message_area").fadeIn();
+    $('#message_area').html(createLoading());
 });
 $(document).ajaxSend(function(){
 });
@@ -14,14 +14,15 @@ $(document).ajaxSuccess(function(){
     $('input[type=button]').each(function(index, e){
         $(e).attr("disabled",false);
     });
-    $("#error").fadeIn();
 });
 $(document).ajaxError(function(event, jqxhr, settings, thrownError){
 	$("#error").html(settings.url +" error: "+ thrownError);
 	$("#error").fadeIn();
 });
 $(document).ajaxComplete(function(){
-    $("#message_area").fadeOut("slow");
+    setTimeout(function(){
+        $("#message_area").fadeOut();
+    }, 1000);
 });
 $(document).ajaxStop(function () {
 });
@@ -214,7 +215,7 @@ var createTip = function(text){
 	return str;
 }
 var createLoading = function(){
-	var str = '<div id="loading" align="center">Loading ...</div>';
+	var str = '<div id="loading" align="center" style="color:#f57900">加载中 ...</div>';
 	return str;
 }
 var redirectToUrl = function(url){

@@ -97,7 +97,7 @@ var Bill = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -191,7 +191,7 @@ var Bill = {
 				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.pay_bank_id);
 				TypeMode.getAdminUserBanksAccounts("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.receive_bank_id);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -246,7 +246,7 @@ var Bill = {
 				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id);
 				TypeMode.getAdminUserBanksAccounts("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.receive_bank_id);
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 

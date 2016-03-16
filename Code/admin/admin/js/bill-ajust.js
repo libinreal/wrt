@@ -81,7 +81,7 @@ var BillAjust = {
 					$("#user_list>tbody").html(row);
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -147,7 +147,7 @@ var BillAjust = {
 				$("#from_adjust_amount").val(0);
 				$("#to_adjust_amount").val(0);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -172,7 +172,7 @@ var BillAjust = {
 				$('#message_area').html(createTip(obj.message));
 				return false;
 			}
-			$('#message_area').html('');
+			
 		}, "json");	
 	}
 }

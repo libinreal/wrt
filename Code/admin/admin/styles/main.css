@@ -1413,6 +1413,7 @@ table.t_1{
     background: #fff;
     padding: 5px;
     border: 2px solid #ccc;
+    display: none;
 }
 .error{
     color:red;

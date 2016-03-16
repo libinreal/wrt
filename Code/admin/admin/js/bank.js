@@ -53,7 +53,7 @@ var Bank = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -103,7 +103,7 @@ var Bank = {
 					}
 				});
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 

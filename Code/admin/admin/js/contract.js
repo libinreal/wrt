@@ -105,7 +105,7 @@ var Contract = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
@@ -177,7 +177,7 @@ var Contract = {
 				row += "</ul>";
 				$('#goods_type_list').html(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -259,7 +259,7 @@ var Contract = {
 				var goods_type = obj.content.cat;
 			}
 			that.getGoodsType(goods_type);
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 	// 合同更新
@@ -396,7 +396,7 @@ var Contract = {
 					$('#goods_type_list').html(row);
 				}
 			}
-			$('#message_area').html('');
+			
 		}, 'json');
 	},
 
@@ -481,7 +481,7 @@ var Contract = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -532,7 +532,7 @@ var Contract = {
 			}
 			that.getBuyCont(contract_id);
 		});
-		$('#message_area').html('');
+		
 	},
 
 	getKidUser: function(parent_id, user_id){
@@ -562,7 +562,7 @@ var Contract = {
 				$("select[name=user_id]").html(row);
 			}
 		}, "json");
-		$('#message_area').html('');
+		
 	},
 
 	//下游客户的采购合同列表
@@ -595,7 +595,7 @@ var Contract = {
 				$("select[name=contract_id]").html(row);
 			}
 		}, "json");
-		$('#message_area').html('');
+		
 	},
 
 	getRegionList: function(){
@@ -614,7 +614,7 @@ var Contract = {
 				$("select[name=region_id]").append(row);
 			}
 		}, "json");
-		$('#message_area').html('');
+		
 	},
 
 	getSuppliers: function(contract_id, search){
@@ -643,7 +643,7 @@ var Contract = {
 				$("#liOptionms2side__sx").html(row);
 			}
 		}, "json");
-		$('#message_area').html('');
+		
 	},
 
 	getContIdSupsList: function(contract_id, search){
@@ -685,7 +685,7 @@ var Contract = {
 				});
 				$("select#liOptionms2side__dx").html(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -728,7 +728,7 @@ var Contract = {
 				});
 				$("select#liOptionms2side__dx").html(row);
 			}
-			$('#message_area').html('');
+			
 		}, "json").done(function(){
 			that.getUserList(customer_id);
 			that.getRegionList();

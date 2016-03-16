@@ -94,7 +94,7 @@ var SelfCredit = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -106,7 +106,7 @@ var SelfCredit = {
 			$('#message_area').html(createError('请选择ID'));
 			return false;
 		}else{
-			$('#message_area').html('');
+			
 		}
 		if(formData.apply_id.length == 1){
 			params.apply_id = parseInt(formData.apply_id[0]);			
@@ -166,7 +166,7 @@ var SelfCredit = {
 					}
 				});
 			}
-			$('#message_area').html('');
+			
 		},"json");	
 	},
 
@@ -199,7 +199,7 @@ var SelfCredit = {
 				}
 				return false;
 			}
-			$('#message_area').html('');
+			
 		},"json");		
 	},
 
@@ -214,7 +214,7 @@ var SelfCredit = {
 				$('#message_area').html(createError('请选择ID'));
 				return false;
 			}else{
-				$('#message_area').html('');
+				
 			}
 			if(formData.apply_id.length == 1){
 				params.apply_id = parseInt(formData.apply_id[0]);			
