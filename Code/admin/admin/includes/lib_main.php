@@ -1084,8 +1084,6 @@ function get_shop_config_item($code = '')
 
     }
     return $val;
-
-    return $val;
 }
 
 /**
