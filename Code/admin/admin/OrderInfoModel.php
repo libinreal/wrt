@@ -1611,7 +1611,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_ARR_CC://客户已验签(到货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_UNRECEIVE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
-						$buttons = array('到货验签', '到货改价');
+						$buttons = array('到货验签');
 						break;
 					case SOS_ARR_PC://平台已验签(到货)
 						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
@@ -2587,7 +2587,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$order_sn = $order_status['order_sn'];
 
-			if( $order_status['child_order_status'] > SOS_SEND_PC ){//平台已验签(发货)
+			if( $order_status['child_order_status'] > SOS_SEND_CC ){//客户已验签(发货)
 				make_json_response('', '-1', '发货验签完毕，无法发货改价');
 			}
 
@@ -2708,7 +2708,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					// 销售订单.发货验签价格更新
 					
-					$sign_find_sql = 'SELECT `submit_data`, `sign_data`, `sign_id` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 1 AND `order_sn` = ' . $order_sn;
+					$sign_find_sql = 'SELECT `submit_data`, `sign_data`, `sign_id` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 1 AND `order_sn` = \'' . $order_sn . '\'';
 					$sign_find = $GLOBALS['db']->getRow( $sign_find_sql );
 
 					if( $sign_find ){
@@ -2724,7 +2724,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$sign_data = serialize( $sign_data );
 
 						$update_sign_sql = 'UPDATE ' . $bank_sign_table . ' SET `submit_data` = \'' . $submit_data .
-										   '\', `sign_data` = \'' . $sign_data . '\' WHERE `sign_id` = ' . $sign_id . 'LIMIT 1';
+										   '\', `sign_data` = \'' . $sign_data . '\' WHERE `sign_id` = ' . $sign_id . ' LIMIT 1';
 						$GLOBALS['db']->query( $update_sign_sql );
 					}
 
@@ -3067,7 +3067,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '尚未进行采购下单，无法到货改价');
 			}
 
-			if( $order_status['child_order_status'] >= SOS_ARR_PC2 ){//到货验签（平台验签完）
+			if( $order_status['child_order_status'] >= SOS_ARR_CC ){//到货验签（平台验签完）
 				make_json_response('', '-1', '到货验签完毕，无法到货改价');
 			}
 
@@ -3129,7 +3129,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				if ( $order_goods_update ) {
 
-					$sign_find_sql = 'SELECT `sign_id`, `submit_data`, `sign_data` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 2 AND `order_sn` = ' . $order_sn;
+					$sign_find_sql = 'SELECT `sign_id`, `submit_data`, `sign_data` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 2 AND `order_sn` = \'' . $order_sn . '\'';
 					$sign_find = $GLOBALS['db']->getRow( $sign_find_sql );
 
 					if( $sign_find ){
@@ -3139,15 +3139,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 						$sign_data['extraData'] = $submit_data['extraData'] = '1:' . $order_sn . ':' . $goods_price_arr_buyer . ':' . $goods_number_arr_buyer;//销售到货						
 						$sign_data['allGoodsMoney'] = $submit_data['allGoodsMoney'] = sprintf('%0.2f', $order_amount_arr_buyer);//销售金额
-						
+
 						$submit_data = serialize( $submit_data );
 						$sign_data = serialize( $sign_data );
 
 						$update_sign_sql = 'UPDATE ' . $bank_sign_table . ' SET `submit_data` = \'' . $submit_data .
-										   '\', `sign_data` = \'' . $sign_data . '\' WHERE `sign_id` = ' . $sign_id . 'LIMIT 1';
+										   '\', `sign_data` = \'' . $sign_data . '\' WHERE `sign_id` = ' . $sign_id . ' LIMIT 1';
 						$GLOBALS['db']->query( $update_sign_sql );
 					}
-
+					
 
 					make_json_response('', '0', '到货改价成功');
 				}else{

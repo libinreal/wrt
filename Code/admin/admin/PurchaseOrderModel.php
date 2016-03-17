@@ -543,7 +543,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_ARR_SC://供应商已验签(到货)
 						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_UNCOMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_SC];
-						$buttons = array('到货验签','到货改价');
+						$buttons = array('到货验签');
 						break;
 					case SOS_ARR_PC2://平台已验签(到货)
 						$order_info['order_status'] = $purchase_status[PURCHASE_ORDER_COMPLETE];
@@ -1252,7 +1252,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$GLOBALS['db']->query( $price_log_sql );//保存到历史报价
 					*/
 
-					$sign_find_sql = 'SELECT `sign_id`, `submit_data`, `sign_data` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 3 AND `order_sn` = ' . $order_sn;
+					$sign_find_sql = 'SELECT `sign_id`, `submit_data`, `sign_data` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 3 AND `order_sn` = \'' . $order_sn . '\'';
 					$sign_find = $GLOBALS['db']->getRow( $sign_find_sql );
 
 					if( $sign_find ){
@@ -1267,7 +1267,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$sign_data = serialize( $sign_data );
 
 						$update_sign_sql = 'UPDATE ' . $bank_sign_table . ' SET `submit_data` = \'' . $submit_data .
-										   '\', `sign_data` = \'' . $sign_data . '\' WHERE `sign_id` = ' . $sign_id . 'LIMIT 1';
+										   '\', `sign_data` = \'' . $sign_data . '\' WHERE `sign_id` = ' . $sign_id . ' LIMIT 1';
 						$GLOBALS['db']->query( $update_sign_sql );
 					}
 
@@ -1393,7 +1393,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				if ( $order_goods_update ) {
 
-					$sign_find_sql = 'SELECT `sign_id`, `submit_data`, `sign_data` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 4 AND `order_sn` = ' . $order_sn;
+					$sign_find_sql = 'SELECT `sign_id`, `submit_data`, `sign_data` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 4 AND `order_sn` = \'' . $order_sn . '\'';
 					$sign_find = $GLOBALS['db']->getRow( $sign_find_sql );
 
 					if( $sign_find ){
@@ -1403,12 +1403,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 						$sign_data['extraData'] = $submit_data['extraData'] = '1:' . $order_sn . ':' . $goods_price_arr_saler . ':' . $goods_number_arr_saler;//采购到货						
 						$sign_data['allGoodsMoney'] = $submit_data['allGoodsMoney'] = sprintf('%0.2f', $order_amount_arr_saler);//采购金额
-						
+
 						$submit_data = serialize( $submit_data );
 						$sign_data = serialize( $sign_data );
 
 						$update_sign_sql = 'UPDATE ' . $bank_sign_table . ' SET `submit_data` = \'' . $submit_data .
-										   '\', `sign_data` = \'' . $sign_data . '\' WHERE `sign_id` = ' . $sign_id . 'LIMIT 1';
+										   '\', `sign_data` = \'' . $sign_data . '\' WHERE `sign_id` = ' . $sign_id . ' LIMIT 1';
 						$GLOBALS['db']->query( $update_sign_sql );
 					}
 

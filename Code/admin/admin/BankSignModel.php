@@ -183,7 +183,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		        $submitData['buyerSign'] = $sign_data['buyer_sign'];
 		        $submitData['salerSign'] = $sign_data['saler_sign'];
 		        $rs = submit_order_bank($submitData, self::B2BPAY_URL . '/SubmitContract');
-		        
+		       
 		        $rs = json_decode($rs, true);
 		        if($rs['errno'] != '000000') {
 		           	make_json_response( '', '-1', $rs['errmsg'] );
