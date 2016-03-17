@@ -115,7 +115,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bank_sign_sql = 'SELECT `sign_id` AS `signId`, `sign_data` AS `signRawData` FROM ' . $bank_sign_table .
 							 ' WHERE `order_sn` = \'' . $order_info['order_sn'] . '\' AND `sign_type` = ' . $signType;
 			$bank_sign = $GLOBALS['db']->getRow( $bank_sign_sql );
-
+			
 			if( $bank_sign ){
 				$bank_sign['signRawData'] = unserialize( $bank_sign['signRawData'] );
 				make_json_response($bank_sign, '0', '获取订单成功');
