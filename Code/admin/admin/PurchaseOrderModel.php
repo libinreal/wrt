@@ -1261,7 +1261,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$sign_data = unserialize( $sign_find['sign_data'] );
 
 						$sign_data['extraData'] = $submit_data['extraData'] = '0:' . $order_sn . ':' . $goods_price_send_saler . ':' . $goods_number_send_saler;//采购发货						
-
+						$sign_data['allGoodsMoney'] = $submit_data['allGoodsMoney'] = sprintf('%0.2f', $order_amount_send_saler);//采购金额
+								
 						$submit_data = serialize( $submit_data );
 						$sign_data = serialize( $sign_data );
 
@@ -1401,7 +1402,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$sign_data = unserialize( $sign_find['sign_data'] );
 
 						$sign_data['extraData'] = $submit_data['extraData'] = '1:' . $order_sn . ':' . $goods_price_arr_saler . ':' . $goods_number_arr_saler;//采购到货						
-
+						$sign_data['allGoodsMoney'] = $submit_data['allGoodsMoney'] = sprintf('%0.2f', $order_amount_arr_saler);//采购金额
+						
 						$submit_data = serialize( $submit_data );
 						$sign_data = serialize( $sign_data );
 

@@ -1774,9 +1774,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$submit_purchase_send['allGoodsMoney'] = $submit_purchase_arr['allGoodsMoney'] = sprintf('%0.2f', $order_status['order_amount_send_saler']);//采购金额
 
 				        $submit_sale_send['extraData'] = '0:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_send_buyer'] . ':' . $order_status['goods_number_send_buyer'];//销售发货
-				        $submit_sale_arr['extraData'] = '1:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_arr_buyer'] . ':' . $order_status['goods_number_arr_buyer'];//销售到货
+				        $submit_sale_arr['extraData'] = '1:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_send_buyer'] . ':' . $order_status['goods_number_send_buyer'];//销售到货
 				        $submit_purchase_send['extraData'] = '0:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_send_saler'] . ':' . $order_status['goods_number_send_saler'];//采购发货
-				        $submit_purchase_arr['extraData'] = '1:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_arr_saler'] . ':' . $order_status['goods_number_arr_saler'];//采购到货
+				        $submit_purchase_arr['extraData'] = '1:' . $order_status['goods_sn'] . ':' . $order_status['goods_price_send_saler'] . ':' . $order_status['goods_number_send_saler'];//采购到货
 
 						$sign_field = array(
 						    'signVersion',
@@ -2712,11 +2712,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$sign_find = $GLOBALS['db']->getRow( $sign_find_sql );
 
 					if( $sign_find ){
+
 						$sign_id = $sign_find['sign_id'];
 						$submit_data = unserialize( $sign_find['submit_data'] );
 						$sign_data = unserialize( $sign_find['sign_data'] );
 
 						$sign_data['extraData'] = $submit_data['extraData'] = '0:' . $order_sn . ':' . $goods_price_send_buyer . ':' . $goods_number_send_buyer;//销售发货
+						$sign_data['allGoodsMoney'] = $submit_data['allGoodsMoney'] = sprintf('%0.2f', $order_amount_send_buyer);//销售金额
 
 						$submit_data = serialize( $submit_data );
 						$sign_data = serialize( $sign_data );
@@ -3136,7 +3138,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$sign_data = unserialize( $sign_find['sign_data'] );
 
 						$sign_data['extraData'] = $submit_data['extraData'] = '1:' . $order_sn . ':' . $goods_price_arr_buyer . ':' . $goods_number_arr_buyer;//销售到货						
-
+						$sign_data['allGoodsMoney'] = $submit_data['allGoodsMoney'] = sprintf('%0.2f', $order_amount_arr_buyer);//销售金额
+						
 						$submit_data = serialize( $submit_data );
 						$sign_data = serialize( $sign_data );
 
