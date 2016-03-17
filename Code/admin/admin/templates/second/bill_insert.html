@@ -109,10 +109,10 @@
 					</tr>
 					<tr>
 						<td class="title">付款银行：</td><td>
-						<select id="pay_bank_id" name="pay_bank_id" onchange="TypeMode.getUserBanksAccounts('pay_user_id');"></select>
+						<select id="pay_bank_id" name="pay_bank_id"></select>
 						</td>
 						<td class="title">收款银行：</td><td>
-						<select name="receive_bank_id"></select>
+						<select id="receive_bank_id" name="receive_bank_id"></select>
 						</td>
 					</tr>
 					<tr>
@@ -199,9 +199,6 @@ function parseDate(str) {
 }
 function daydiff(first, second) {
     return Math.round((second-first)/(1000*60*60*24));
-}
-function expireAmount(){
-	
 }
 </script>
 	</body>

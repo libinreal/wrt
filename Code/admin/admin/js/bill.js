@@ -106,13 +106,10 @@ var Bill = {
 		TypeMode.getBillType("bill_type");
 		TypeMode.getBillType("bill_status");
 		TypeMode.getParentUsers("customer_id");
-		// 调用收付款列表
+		// 调用付款列表
 		TypeMode.getUsers("pay_user_id");
+		// 调用收款列表
 		TypeMode.getAdminUsers("receive_user_id");
-		TypeMode.getUserBanks("pay_bank_id", $("#pay_user_id").val());
-		TypeMode.getAdminUserBanks("receive_bank_id", $("#receive_user_id").val());
-		TypeMode.getUserBanksAccounts("pay_account", $("#pay_user_id").val(), $("#pay_bank_id").val());
-		TypeMode.getAdminUserBanksAccounts("receive_bank_id", $("#receive_user_id").val(), $("#receive_bank_id").val());
 	},
 
 	getCreate: function(){
@@ -234,16 +231,29 @@ var Bill = {
 				// 绑定数据
 				// 调用收付款列表
 				$.each(obj.content.info, function(key, value){
-					if($("#"+key).length){
-						$("#"+key).text(value)
+					if($("td#"+key).length){
+						$("td#"+key).text(value)
+					}
+					if($("input[name="+key+"]").length){
+						var o = "input[name="+key+"]";
+						if($(o).attr("type") == "text"){
+							$(o).val(value);
+						}
+						if($(o).attr("type") == "radio"){
+							$("input[name="+key+"][value="+value+"]").attr("checked","1");
+						}
+					}
+					if($("textarea[name="+key+"]").length){
+						$("textarea[name="+key+"]").text(value);
 					}
 					if($("select[name="+key+"]").length){
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}
 				});
-				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id);
-				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
-				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id);
+				TypeMode.getParentUsers("customer_id", obj.content.info.customer_id);
+				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
+				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id, obj.content.info.pay_account);
+				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.pay_bank_id);
 				TypeMode.getAdminUserBanksAccounts("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.receive_bank_id);
 			}
 			

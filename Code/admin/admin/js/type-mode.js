@@ -70,7 +70,7 @@ var TypeMode = {
 		return false;
 	},
 
-	getUsers: function(select_id, check_id){
+	getUsers: function(select_id, check_id, func){
 		var strJson = createJson("users", "users", {});
 		that = this;
 		$.post(that.url, strJson, function(object){
@@ -86,10 +86,14 @@ var TypeMode = {
 						row += appendOption(v.user_id, v.companyName);
 					}
 				})
-				$('#'+select_id).html(row);
+				$('#'+select_id).append(row);
 			}
 			
-		},"json");
+		},"json").done(function(){
+			if(func){
+				window[func]();
+			}
+		});
 	},
 
 	getUserList: function(){
@@ -140,7 +144,7 @@ var TypeMode = {
 				$('#message_area').html(createError(object.message));
 				return false;
 			}else{
-				var row = appendOption("", "全部");
+				var row = appendOption("", "选择付款银行");
 				$.each(object.content, function(k, v){
 					if(v.bank_id == check_id){
 						row += appendOption(v.bank_id, v.bank_name, 1);
@@ -165,7 +169,7 @@ var TypeMode = {
 				$('#message_area').html(createError(object.message));
 				return false;
 			}else{
-				var row = appendOption("", "全部");
+				var row = appendOption("", "选择付款账号");
 				$.each(object.content, function(k, v){
 					if(check_id == v.account){
 						row += appendOption(v.account, v.account, 1);
@@ -191,9 +195,8 @@ var TypeMode = {
 				$.each(object.content, function(k, v){
 					row += appendOption(v.user_id, v.user_name);
 				})
-				$('#'+select_id).html(row);
+				$('#'+select_id).append(row);
 			}
-			
 		},"json");
 	},
 
@@ -208,7 +211,7 @@ var TypeMode = {
 				$('#message_area').html(createError(object.message));
 				return false;
 			}else{
-				var row = appendOption("", "选择银行");
+				var row = appendOption("", "选择收款银行");
 				$.each(object.content, function(k, v){
 					if(k == check_id){
 						row += appendOption(k, v, true);
@@ -218,7 +221,6 @@ var TypeMode = {
 				})
 				$('#'+select_id).html(row);
 			}
-			
 		},"json");
 	},
 

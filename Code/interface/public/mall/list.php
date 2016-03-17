@@ -93,7 +93,7 @@
 
 <script id="zj-navi-tmpl" type="text/html">
 	<div class="navi">
-	<a href="../">首页</a> &gt; <a href="index.html">基建商城</a> &gt;
+	<a href="../mall/">首页</a> &gt; <a href="index.html">基建商城</a> &gt;
 	<!--[for(i = 0; i < list.length; i++){]-->
 	<!--[if(i == list.length - 1){]-->
 	<span><!--[= list[i].name]--></span>

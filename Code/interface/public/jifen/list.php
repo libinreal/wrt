@@ -18,7 +18,7 @@
     	</div>
     	<div class="content-right jifen_right">
             <div class="breadcrumbs">
-                <a href="../">首页</a> &gt; <a href="index.html">积分商城</a> &gt; <span id="type-name">...</span>
+                <a href="../mall/">首页</a> &gt; <a href="index.html">积分商城</a> &gt; <span id="type-name">...</span>
                 <a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
             </div>
 			<div class="list category_product clearfix">

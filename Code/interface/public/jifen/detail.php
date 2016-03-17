@@ -13,7 +13,7 @@
     <div class="section detail_bottom">
     	<div class="page-vertical">
 	        <div class="breadcrumbs">
-	            <a href="../">首页</a> &gt; <a href="index.html">积分商城</a> &gt; <span>积分详情</span>
+	            <a href="../mall/">首页</a> &gt; <a href="index.html">积分商城</a> &gt; <span>积分详情</span>
 	            <a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 	        </div>
 	        <div class="detail_start" id="zj-detail"></div>

@@ -115,7 +115,7 @@
 </script>
 
 <script id="zj-navi-tmpl" type="text/html">
-	<a href="../">首页</a> &gt; <a href="index.html">基建商城</a> &gt;
+	<a href="../mall/">首页</a> &gt; <a href="index.html">基建商城</a> &gt;
 	<!--[for(i = 0; i < list.length; i++){]-->
 	<a href="list.html?code=<!--[= list[i].code]-->"><!--[= list[i].name]--></a> &gt; 
 	<!--[}]-->

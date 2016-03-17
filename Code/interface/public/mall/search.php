@@ -50,7 +50,7 @@
     		</div>
     		<div class="operate large-operate">
     			<a class="operate-shoucang <!--[= (list[i].hasFavorites == '1' ? 'active' : '')]-->" data-id="<!--[= list[i].id]-->" href="#"><span>收藏</span></a>
-    			<a class="operate-dingzhi" href="../customize/apply.html?goodsId=<!--[= list[i].id]-->"><span>定制</span></a>
+    			<!--<a class="operate-dingzhi" href="../customize/apply.html?goodsId=<!--[= list[i].id]-->"><span>定制</span></a>-->
     			<a class="operate-cart" data-id="<!--[= list[i].id]-->" href="#"><span>加入购物车</span></a>
     		</div>
     	</li>

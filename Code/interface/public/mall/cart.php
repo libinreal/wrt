@@ -13,7 +13,7 @@
 <div class="section">
 	<div class="page-vertical clearfix">
 		<div class="breadcrumbs">
-			<a href="../">首页</a> &gt; <a href="index.html">基建商城</a> &gt; <span>购物车</span>
+			<a href="../mall/">首页</a> &gt; <a href="index.html">基建商城</a> &gt; <span>购物车</span>
 			<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
 		</div>
 		<div class="shopping">
