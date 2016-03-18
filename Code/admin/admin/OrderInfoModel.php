@@ -3163,20 +3163,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 						if( $cash_used - $adjust_count > 0 ){//返还现金
 							$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $adjust_count . ' WHERE `contract_num` = \'' .
 										  $contract_sn . '\' LIMIT 1';
-							$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` - ' .$adjust_count . ' WHERE `contract_sn` = \'' .
-										  $contract_sn . '\' LIMIT 1'; 
+							$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` - ' .$adjust_count . ' WHERE `order_id` = ' .
+										  $order_id . ' LIMIT 1'; 
 						}else{//返还票据（现金）
 							if( $cash_used == 0 ){//只有票据
 								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_valid` = `bill_amount_valid` + ' . $adjust_count . ' WHERE `contract_num` = \'' .
 										  	  $contract_sn . '\' LIMIT 1';
-								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `bill_used` = `bill_used` - ' .$adjust_count . ' WHERE `contract_sn` = \'' .
-										  $contract_sn . '\' LIMIT 1'; 
+								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `bill_used` = `bill_used` - ' .$adjust_count . ' WHERE `order_id` = ' .
+										  $order_id . ' LIMIT 1'; 
 							}else{//票据 + 现金
 								$adjust_bill = $adjust_count - $cash_used;
 								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $cash_used . ', `bill_amount_valid` = `bill_amount_valid` + ' . $adjust_bill . ' WHERE `contract_num` = \'' .
 										  	  $contract_sn . '\' LIMIT 1';
-								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` - ' .$cash_used . ',`bill_used` = `bill_used` - ' . $adjust_bill . ' WHERE `contract_sn` = \'' .
-										  $contract_sn . '\' LIMIT 1';										  	 
+								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` - ' .$cash_used . ',`bill_used` = `bill_used` - ' . $adjust_bill . ' WHERE `order_id` = ' .
+										  $order_id . ' LIMIT 1';										  	 
 							}
 						}	
 						
@@ -3189,20 +3189,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 						if( $contract_amount['cash_amount_valid'] + $adjust_count > 0 ){//追加现金
 							$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` - ' . abs( $adjust_count ) . ' WHERE `contract_num` = \'' .
 										  $contract_sn . '\' LIMIT 1';
-							$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` + ' . abs( $adjust_count ) . ' WHERE `contract_sn` = \'' .
-										  $contract_sn . '\' LIMIT 1'; 			  
+							$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` + ' . abs( $adjust_count ) . ' WHERE `order_id` = ' .
+										  $order_id . ' LIMIT 1'; 			  
 						}else{//追加票据（现金）
 							if( $contract_amount['cash_amount_valid'] == 0 ){//只有票据
 								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_valid` = `bill_amount_valid` - ' . abs( $adjust_count ) . ' WHERE `contract_num` = \'' .
 										  	  $contract_sn . '\' LIMIT 1';
-								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `bill_used` = `bill_used` + ' . abs( $adjust_count ) . ' WHERE `contract_sn` = \'' .
-										  $contract_sn . '\' LIMIT 1'; 		  	  
+								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `bill_used` = `bill_used` + ' . abs( $adjust_count ) . ' WHERE `order_id` = ' .
+										  $order_id . ' LIMIT 1'; 		 
 							}else{//票据 + 现金
 								$adjust_bill = abs( $contract_amount['cash_amount_valid'] + $adjust_count );
 								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = 0 ' . ', `bill_amount_valid` = `bill_amount_valid` - ' . $adjust_bill . ' WHERE `contract_num` = \'' .
 										  	  $contract_sn . '\' LIMIT 1';
-								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` + ' . $contract_amount['cash_amount_valid'] . ',`bill_used` = `bill_used` + ' . $adjust_bill . ' WHERE `contract_sn` = \'' .
-										  $contract_sn . '\' LIMIT 1';										  	 			  	  
+								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` + ' . $contract_amount['cash_amount_valid'] . ',`bill_used` = `bill_used` + ' . $adjust_bill . ' WHERE `order_id` = ' .
+										  $order_id . ' LIMIT 1';										  	 			  	  
 							}
 						}
 					}
