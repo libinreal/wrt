@@ -3052,7 +3052,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bank_sign_table = $GLOBALS['ecs']->table('bank_sign');//银行签名
 
 			//检查订单状态
-			$order_info_sql = 'SELECT o.`child_order_status`, o.`order_sn` FROM ' .
+			$order_info_sql = 'SELECT o.`child_order_status`, o.`order_sn`, o.`order_amount_arr_buyer`,  o.`bill_used`, o.`cash_used`, o.`contract_sn` FROM ' .
 				 			  $order_info_table . ' AS o LEFT JOIN ' . $order_goods_table . ' AS og ON o.`order_id` = og.`order_id` ' .
 				 			  ' LEFT JOIN ' . $goods_table . ' AS g ON g.`goods_id` = og.`goods_id` ' .
 					 		  ' WHERE o.`order_id` = ' . $order_id;
@@ -3062,6 +3062,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$order_sn = $order_status['order_sn'];
+			$order_amount_arr_buyer_origin = $order_status['order_amount_arr_buyer'];
+
+			$bill_used = $order_status['bill_used'];
+			$cash_used = $order_status['cash_used'];
+			$contract_sn = $order_status['contract_sn'];
 
 			if( $order_status['child_order_status'] < SOS_SEND_PP ){//未发货
 				make_json_response('', '-1', '尚未进行采购下单，无法到货改价');
@@ -3147,7 +3152,65 @@ require(dirname(__FILE__) . '/includes/init.php');
 										   '\', `sign_data` = \'' . $sign_data . '\' WHERE `sign_id` = ' . $sign_id . ' LIMIT 1';
 						$GLOBALS['db']->query( $update_sign_sql );
 					}
-					
+
+					//合同额度调整
+					$adjust_count = $order_amount_arr_buyer_origin - $order_amount_arr_buyer;
+					$adjust_sql = '';
+					$amount_used_sql = '';
+
+					if( $adjust_count > 0){//返还
+
+						if( $cash_used - $adjust_count > 0 ){//返还现金
+							$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $adjust_count . ' WHERE `contract_num` = \'' .
+										  $contract_sn . '\' LIMIT 1';
+							$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` - ' .$adjust_count . ' WHERE `contract_sn` = \'' .
+										  $contract_sn . '\' LIMIT 1'; 
+						}else{//返还票据（现金）
+							if( $cash_used == 0 ){//只有票据
+								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_valid` = `bill_amount_valid` + ' . $adjust_count . ' WHERE `contract_num` = \'' .
+										  	  $contract_sn . '\' LIMIT 1';
+								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `bill_used` = `bill_used` - ' .$adjust_count . ' WHERE `contract_sn` = \'' .
+										  $contract_sn . '\' LIMIT 1'; 
+							}else{//票据 + 现金
+								$adjust_bill = $adjust_count - $cash_used;
+								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $cash_used . ', `bill_amount_valid` = `bill_amount_valid` + ' . $adjust_bill . ' WHERE `contract_num` = \'' .
+										  	  $contract_sn . '\' LIMIT 1';
+								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` - ' .$cash_used . ',`bill_used` = `bill_used` - ' . $adjust_bill . ' WHERE `contract_sn` = \'' .
+										  $contract_sn . '\' LIMIT 1';										  	 
+							}
+						}	
+						
+					}else if( $adjust_count < 0 ) {//追加
+
+						$contract_amount_sql = 'SELECT `cash_amount_valid`, `bill_amount_valid` FROM ' . $contract_table . ' WHERE `contract_num` = \'' .
+										  	  $contract_sn . '\'';
+						$contract_amount = $GLOBALS['db']->getRow( $contract_amount_sql );
+
+						if( $contract_amount['cash_amount_valid'] + $adjust_count > 0 ){//追加现金
+							$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` - ' . abs( $adjust_count ) . ' WHERE `contract_num` = \'' .
+										  $contract_sn . '\' LIMIT 1';
+							$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` + ' . abs( $adjust_count ) . ' WHERE `contract_sn` = \'' .
+										  $contract_sn . '\' LIMIT 1'; 			  
+						}else{//追加票据（现金）
+							if( $contract_amount['cash_amount_valid'] == 0 ){//只有票据
+								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_valid` = `bill_amount_valid` - ' . abs( $adjust_count ) . ' WHERE `contract_num` = \'' .
+										  	  $contract_sn . '\' LIMIT 1';
+								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `bill_used` = `bill_used` + ' . abs( $adjust_count ) . ' WHERE `contract_sn` = \'' .
+										  $contract_sn . '\' LIMIT 1'; 		  	  
+							}else{//票据 + 现金
+								$adjust_bill = abs( $contract_amount['cash_amount_valid'] + $adjust_count );
+								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = 0 ' . ', `bill_amount_valid` = `bill_amount_valid` - ' . $adjust_bill . ' WHERE `contract_num` = \'' .
+										  	  $contract_sn . '\' LIMIT 1';
+								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` + ' . $contract_amount['cash_amount_valid'] . ',`bill_used` = `bill_used` + ' . $adjust_bill . ' WHERE `contract_sn` = \'' .
+										  $contract_sn . '\' LIMIT 1';										  	 			  	  
+							}
+						}
+					}
+
+					if( $adjust_sql ){
+						$GLOBALS['db']->query( $adjust_sql );//改价验签后更新合同额度
+						$GLOBALS['db']->query( $amount_used_sql );//改价验签后更新订单使用的金额
+					}
 
 					make_json_response('', '0', '到货改价成功');
 				}else{
