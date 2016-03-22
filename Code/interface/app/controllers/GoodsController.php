@@ -1022,6 +1022,9 @@ class GoodsController extends ControllerBase {
 		//签名额外数据
 		$submitData['extraData'] = array();
 		foreach($cartResults as $cartResult) {
+
+			$goods = Goods::findFirst($cartResult->goodsId);
+
 			$orderGoods = new OrderGoods();
 			$orderGoods->setTransaction($transaction);
 			$orderGoods->orderId = $orderInfo->id;
@@ -1046,6 +1049,9 @@ class GoodsController extends ControllerBase {
 			$orderGoods->contractPrice = $price;//销售价格
 
 			$orderGoods->nums = $cartResult->nums;
+
+			$orderGoods->cat_code = $goods->code;
+
 			//签名额外数据
 			$submitData['extraData'][] = implode(':', array(/* $orderGoods->goodsName, */ $orderGoods->goodsSn, $orderGoods->goodsPrice));
 			try {
@@ -1059,7 +1065,6 @@ class GoodsController extends ControllerBase {
 				return ResponseApi::send(null, Message::$_ERROR_SYSTEM, $ex->getMessage());
 			}
 			//减少商品库存
-			$goods = Goods::findFirst($cartResult->goodsId);
 			$goods->setTransaction($transaction);
 			$goods->storeNum -= $cartResult->nums;
 			try {

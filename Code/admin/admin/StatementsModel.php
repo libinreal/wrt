@@ -1,0 +1,645 @@
+<?php
+/**
+ * 报表查看，导出
+ * @date 2016-03-22
+ */
+
+define('IN_ECS', true);
+//
+require(dirname(__FILE__) . '/includes/init.php');
+	
+	/**
+	 * 主要作用是：仅仅只做模板输出。具体数据需要POST调用 class里面的方法。
+	 */
+	if ($_REQUEST['act'] == 'edit' || $_REQUEST['act'] == 'add' ) {
+		exit;
+	}
+
+	class StatementsModel {
+		
+		//$_POST
+		protected $content = false;
+		//
+		protected $command = false;
+		
+		//
+		public function __construct($content){
+			$this->content = $content;
+			$this->command = $content['command'];
+		}
+		
+		/**
+		 * 
+		 */
+		public function run(){
+			if ($this->command == 'customPage') {
+				//
+				$this->customPageAction();
+			}elseif ($this->command == 'suppliersPage'){
+				//
+				$this->suppliersPageAction();
+			}elseif ($this->command == 'contractPage'){
+				//
+				$this->contractPageAction();
+			}elseif ($this->command == 'customPagePrint'){
+				//
+				$this->customPagePrintAction();
+			}elseif ($this->command == 'suppliersPagePrint'){
+				//
+				$this->suppliersPagePrintAction();
+			}elseif ($this->command == 'contractPagePrint'){
+				//
+				$this->contractPagePrintAction();
+			}elseif ($this->command == 'customPageExport'){
+				//
+				$this->customPageExportAction();
+			}elseif ($this->command == 'suppliersPageExport'){
+				//
+				$this->suppliersPageExportAction();
+			}elseif ($this->command == 'contractPageExport'){
+				//
+				$this->contractPageExportAction();
+			}
+		}
+		
+		
+		/**
+		 * 接口名称：下游客户对帐单  
+		 * 接口地址：http://admin.zj.dev/admin/StatementsModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+	     *  {
+	     *      "entity": 'order_info',
+	     *      "command": 'customPage',
+	     *      "parameters": {
+	     *          "params": {
+	     *              "where": {
+	     *              "like":{
+	     *              	"contract_name":"no11232",//合同名称
+	     *              	"contract_sn":"no11232",//合同编号
+	     *                  "due_date1": 2015-01-01,//起始日期
+	     *                  "due_date2": 2015-01-01//结束日期
+	     *              },
+	     *              "limit": 0,//起始行号
+	     *              "offset": 2//返回的行数
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "报表查询成功",
+		 *	    "content": { 
+		 *	    	"data":[
+		 *	        {
+		 *                  "order_sn":2 ,//订单号
+		 *                  "goods_name": 'xxx' ,//产品名称
+		 *                  "goods_sn": "ad11223", //产品编号
+		 *                  "attr": "1mm/1m/3m/" ,//型号
+		 *                  "goods_number_arr_buyer": 6,//发货数量
+		 *                  "goods_price_arr_buyer": 1200 ,  //单价
+		 *                  "shipping_fee_arr_buyer": 1000 ,//物流费
+		 *                  "financial_arr": 1000 ,//金融费
+		 *                  "order_amount_arr_buyer": 8200 ,//贷款额度
+		 *                  "remark": "2323123dsd",//备注
+		 *           }
+		 *	         ],
+		 *	         "count_total":100,//合计数量
+		 *	         "amount_total":3,//合计金额
+		 *	         "total":3
+		 *	}
+		 */
+		public	function customPageAction(){
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+			
+			$contract_table = $GLOBALS["ecs"]->table("contract");
+			$user_table = $GLOBALS["ecs"]->table("users");
+			$order_table = $GLOBALS['ecs']->table('order_info');
+
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+			$category_table = $GLOBALS['ecs']->table('category');
+
+			$sql = 'SELECT odr.`order_sn`, odr.`order_amount_arr_buyer`, odr.`shipping_fee_arr_buyer`, odr.`financial_arr`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
+				   ' odr.`inv_content` AS remark, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit` ' .
+				   ' FROM ' . $order_table . ' AS odr ' .
+				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
+				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
+				   ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
+
+			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr' .
+						 ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
+				         ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
+				         ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
+
+			$where = array();	
+			if( isset($params['where']) )
+				$where = $params['where'];
+
+			$where_str = '';
+
+			$order_ids = '';
+			$contract_ids = '';
+			$user_ids = '';
+
+			if( isset( $where["like"] ) )
+			{
+				$like = $where["like"];
+				if( isset( $like["contract_name"] ) && $like['contract_name'] ){
+					
+					if( $where_str )
+						$where_str .= ' AND crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
+					else
+						$where_str .= ' WHERE crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
+				}
+
+				if( isset( $like["contract_sn"] ) && $like['contract_sn'] ){
+					
+					if( $where_str )
+						$where_str .= ' AND crt.`contract_num` LIKE \'%' . $like['contract_sn'] . '%\'';
+					else
+						$where_str .= ' WHERE crt.`contract_num` LIKE \'%' . $like['contract_sn'] . '%\'';
+				}
+			}
+
+			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+			}
+			else if( isset( $where["due_date1"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "'";
+			}
+			else if( isset( $where["due_date2"] ) )
+			{
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` <= '" . $where['due_date2'] . "'";
+			}
+
+			//过滤子订单
+			if( $where_str ){
+				$where_str .= ' AND odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` = ' .
+								SOS_ARR_PC2;
+			}else{
+				$where_str .= ' WHERE odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` = ' .
+								SOS_ARR_PC2;
+			}
+
+			$sql = $sql . $where_str . ' ORDER BY odr.`add_time` ASC' .
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];
+			$orders = $GLOBALS['db']->getAll($sql);
+			
+			$total_sql = $total_sql . $where_str;
+			$resultTotal = $GLOBALS['db']->getRow($total_sql);
+			$count_total = $amount_total = 0;
+
+			if( $resultTotal )
+			{
+				$orders = $orders ? $orders : array();
+				//订单是否可取消
+				foreach ($orders as &$v) {
+
+					//规格、型号、材质
+					$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $v['goods_id'];
+					$goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
+					if( empty( $goods_attr ) ){
+						$v['attr'] = '';
+					}else{
+						$attr_arr = array();
+						foreach ($goods_attr as $value) {
+							$attr_arr[] = $value['attr_value'];
+						}
+						$v['attr'] = implode('/', $attr_arr);
+					}
+					$count_total += $v['goods_number_arr_buyer'];
+					$amount_total += $v['order_amount_arr_buyer'];
+
+					$v['goods_number_arr_buyer'] .= $v['unit'];
+
+				}
+				unset( $v );
+
+				$content = array();
+				$content['data'] = $orders;
+				$content['total'] = $resultTotal['total'];
+
+				$content['count_total'] = $count_total;
+				$content['amount_total'] = $amount_total;
+				make_json_response( $content, "0", "帐单查询成功");
+			}else{
+				make_json_response("", "-1", "帐单查询失败");
+			}
+		}
+
+		/**
+		 * 接口名称： 供应商对帐单  
+		 * 接口地址：http://admin.zj.dev/admin/StatementsModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+	     *  {
+	     *      "entity": 'order_info',
+	     *      "command": 'suppliersPage',
+	     *      "parameters": {
+	     *          "params": {
+	     *              "where": {
+	     *              "like":{
+	     *              	"customer_name":"no11232",//客户名称
+	     *                  "due_date1": 2015-01-01,//起始日期
+	     *                  "due_date2": 2015-01-01//结束日期
+	     *              },
+	     *              "limit": 0,//起始行号
+	     *              "offset": 2//返回的行数
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "报表查询成功",
+		 *	    "content": { 
+		 *	    	"data":[
+		 *	        {
+		 *                  "order_sn":2 ,//订单号
+		 *                  "goods_name": 'xxx' ,//产品名称
+		 *                  "goods_sn": "ad11223", //产品编号
+		 *                  "attr": "3mm/1m/20m" ,//型号
+		 *                  "goods_number_arr_saler": 2,//发货数量
+		 *                  "goods_price_arr_saler": 62 ,  //单价
+		 *                  "order_amount_arr_saler": 10000,//贷款额度
+		 *                  "shipping_fee_arr_saler": 1000,//物流
+		 *                  "remark": 200,//备注
+		 *           }
+		 *	         ],
+		 *	         "count_total":100,//合计数量
+		 *	         "amount_total":3,//合计金额
+		 *	         "total":3
+		 *	}
+		 */
+		public	function suppliersPageAction(){
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+			
+			$contract_table = $GLOBALS["ecs"]->table("contract");
+			$user_table = $GLOBALS["ecs"]->table("users");
+			$order_table = $GLOBALS['ecs']->table('order_info');
+
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+			$category_table = $GLOBALS['ecs']->table('category');
+
+			$sql = 'SELECT odr.`order_sn`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
+				   ' odr.`inv_content` AS remark, og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit` ' .
+				   ' FROM ' . $order_table . ' AS odr ' .
+				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
+				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
+				   ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = crt.`customer_id` ' .
+				   ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
+
+			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr' .
+						 ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
+				         ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
+				         ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = crt.`customer_id` ' .
+				         ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
+			$where = array();	
+			if( isset($params['where']) )
+				$where = $params['where'];
+
+			$where_str = '';
+
+			$order_ids = '';
+			$contract_ids = '';
+			$user_ids = '';
+
+			if( isset( $where["like"] ) )
+			{
+				$like = $where["like"];
+				if( isset( $like["contract_name"] ) && $like['contract_name'] ){
+					
+					if( $where_str )
+						$where_str .= ' AND crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
+					else
+						$where_str .= ' WHERE crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
+				}
+
+				if( isset( $like["contract_sn"] ) && $like['contract_sn'] ){
+					
+					if( $where_str )
+						$where_str .= ' AND crt.`contract_num` LIKE \'%' . $like['contract_sn'] . '%\'';
+					else
+						$where_str .= ' WHERE crt.`contract_num` LIKE \'%' . $like['contract_sn'] . '%\'';
+				}
+
+				if( isset( $like["customer_name"] ) && $like['customer_name'] ){
+					
+					if( $where_str )
+						$where_str .= ' AND usr.`companyName` LIKE \'%' . $like['customer_name'] . '%\'';
+					else
+						$where_str .= ' WHERE usr.`companyName` LIKE \'%' . $like['customer_name'] . '%\'';
+				}
+			}
+
+			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+			}
+			else if( isset( $where["due_date1"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "'";
+			}
+			else if( isset( $where["due_date2"] ) )
+			{
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` <= '" . $where['due_date2'] . "'";
+			}
+
+			//过滤子订单
+			if( $where_str ){
+				$where_str .= ' AND odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` = ' .
+								SOS_ARR_PC2;
+			}else{
+				$where_str .= ' WHERE odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` = ' .
+								SOS_ARR_PC2;
+			}
+
+			$sql = $sql . $where_str . ' ORDER BY odr.`add_time` ASC' .
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];
+			$orders = $GLOBALS['db']->getAll($sql);
+			
+			$total_sql = $total_sql . $where_str;
+			$resultTotal = $GLOBALS['db']->getRow($total_sql);
+			$count_total = $amount_total = 0;
+
+			if( $resultTotal )
+			{
+				$orders = $orders ? $orders : array();
+				//订单是否可取消
+				foreach ($orders as &$v) {
+
+					//规格、型号、材质
+					$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $v['goods_id'];
+					$goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
+					if( empty( $goods_attr ) ){
+						$v['attr'] = '';
+					}else{
+						$attr_arr = array();
+						foreach ($goods_attr as $value) {
+							$attr_arr[] = $value['attr_value'];
+						}
+						$v['attr'] = implode('/', $attr_arr);
+					}
+
+					$count_total += $v['goods_number_arr_saler'];
+					$amount_total += $v['order_amount_arr_saler'];
+					$v['order_sn'] .= '-cg';
+
+					$v['goods_number_arr_saler'] .= $v['unit'];
+				}
+				unset( $v );
+
+				$content = array();
+				$content['data'] = $orders;
+				$content['total'] = $resultTotal['total'];
+
+				$content['count_total'] = $count_total;
+				$content['amount_total'] = $amount_total;
+				make_json_response( $content, "0", "账单查询成功");
+			}else{
+				make_json_response("", "-1", "账单查询失败");
+			}
+		}
+		
+		/**
+		 * 接口名称： 供应商对帐单  
+		 * 接口地址：http://admin.zj.dev/admin/StatementsModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+	     *  {
+	     *      "entity": 'order_info',
+	     *      "command": 'contractPage',
+	     *      "parameters": {
+	     *          "params": {
+	     *              "where": {
+	     *              "like":{
+	     *              	"contract_name":"no11232",//项目名称
+	     *              },
+	     *              "limit": 0,//起始行号
+	     *              "offset": 2//返回的行数
+	     *          }
+	     *      }
+	     *  }
+	     * 返回数据格式如下 :
+	     *  {
+		 *		"error": "0",("0": 成功 ,"-1": 失败)
+		 *	    "message": "报表查询成功",
+		 *	    "content": { 
+		 *	    	"data":[
+		 *	        {
+		 *                  "order_sn":2 ,//订单号
+		 *                  "goods_name": 'xxx' ,//商品名称
+		 *                  "goods_sn": "ad11223", //商品编号
+		 *                  "attr": "3mm/1m/20m" ,//型号
+		 *                  
+		 *                  "goods_number_arr_buyer": 6,//销售数量
+		 *                  "goods_price_arr_buyer": 1200 ,  //销售价格
+		 *                  "shipping_fee_arr_buyer": 1000 ,//销售订单物流费
+		 *                  "financial_arr": 1000 ,//金融费
+		 *                  "order_amount_arr_buyer": 8200 ,//销售金额
+		 *                  "purchase_sn":"2-cg",//销售订单编号
+		 *                  "goods_number_arr_saler": 2,//采购数量
+		 *                  "goods_price_arr_saler": 62 ,  //采购价格
+		 *                  "order_amount_arr_saler": 10000,//采购金额
+		 *                  "shipping_fee_arr_saler": 1000,//采购订单物流
+		 *                  "suppliers_name":"申通"//供应商名称
+		 *                  "differential"：300,//交易差价
+		 *                  "remark": 200,//备注
+		 *           }
+		 *	         ],
+		 *	         "buyer_count_total":100,//销售订单 合计数量
+		 *	         "buyer_amount_total":3,//销售订单 合计金额
+		 *	         
+		 *	         "saler_count_total":100,//采购订单 合计数量
+		 *	         "saler_amount_total":3,//采购订单 合计金额
+		 *	         "total":3
+		 *	}
+		 */
+		public	function contractPageAction(){
+			$content = $this->content;
+			$params = $content['parameters']['params'];
+			
+			$contract_table = $GLOBALS["ecs"]->table("contract");
+			$user_table = $GLOBALS["ecs"]->table("users");
+			$order_table = $GLOBALS['ecs']->table('order_info');
+
+			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
+			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+			$suppliers_table = $GLOBALS['ecs']->table('suppliers');
+
+			$goods_table = $GLOBALS['ecs']->table('goods');
+			$category_table = $GLOBALS['ecs']->table('category');
+
+			$sql = 'SELECT odr.`order_sn`, spl.`suppliers_name`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
+				   ' odr.`inv_content` AS remark, og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit` ' .
+				   ' FROM ' . $order_table . ' AS odr ' .
+				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
+				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
+				   ' LEFT JOIN ' . $suppliers_table . ' AS spl ON spl.`suppliers_id` = odr.`suppers_id` ' .
+				   ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
+
+			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr' .
+						 ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
+				         ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
+				         ' LEFT JOIN ' . $suppliers_table . ' AS spl ON spl.`suppliers_id` = odr.`suppers_id` ' .
+				   		 ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
+
+			$where = array();	
+			if( isset($params['where']) )
+				$where = $params['where'];
+
+			$where_str = '';
+
+			$order_ids = '';
+			$contract_ids = '';
+			$user_ids = '';
+
+			if( isset( $where["like"] ) )
+			{
+				$like = $where["like"];
+				if( isset( $like["contract_name"] ) && $like['contract_name'] ){
+					
+					if( $where_str )
+						$where_str .= ' AND crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
+					else
+						$where_str .= ' WHERE crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
+				}
+
+				if( isset( $like["contract_sn"] ) && $like['contract_sn'] ){
+					
+					if( $where_str )
+						$where_str .= ' AND crt.`contract_num` LIKE \'%' . $like['contract_sn'] . '%\'';
+					else
+						$where_str .= ' WHERE crt.`contract_num` LIKE \'%' . $like['contract_sn'] . '%\'';
+				}
+			}
+
+			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "' AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+			}
+			else if( isset( $where["due_date1"] ) )
+			{
+				$where['due_date1'] = strtotime( $where['due_date1'] );
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` >= '" . $where['due_date1'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` >= '" . $where['due_date1'] . "'";
+			}
+			else if( isset( $where["due_date2"] ) )
+			{
+				$where['due_date2'] = strtotime( $where['due_date2'] );
+				if( $where_str )
+					$where_str .= " AND odr.`add_time` <= '" . $where['due_date2'] . "'";
+				else
+					$where_str .= " WHERE odr.`add_time` <= '" . $where['due_date2'] . "'";
+			}
+
+			//过滤子订单
+			if( $where_str ){
+				$where_str .= ' AND odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` = ' .
+								SOS_ARR_PC2;
+			}else{
+				$where_str .= ' WHERE odr.`parent_order_id` IS NOT NULL AND odr.`parent_order_id` <> 0 AND odr.`child_order_status` = ' .
+								SOS_ARR_PC2;
+			}
+
+			$sql = $sql . $where_str . ' ORDER BY odr.`add_time` ASC' .
+				   ' LIMIT ' . $params['limit'].','.$params['offset'];
+			$orders = $GLOBALS['db']->getAll($sql);
+			
+			$total_sql = $total_sql . $where_str;
+			$resultTotal = $GLOBALS['db']->getRow($total_sql);
+			$count_total = $amount_total = 0;
+
+			if( $resultTotal )
+			{
+				$orders = $orders ? $orders : array();
+				//订单是否可取消
+				foreach ($orders as &$v) {
+
+					//规格、型号、材质
+					$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $v['goods_id'];
+					$goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
+					if( empty( $goods_attr ) ){
+						$v['attr'] = '';
+					}else{
+						$attr_arr = array();
+						foreach ($goods_attr as $value) {
+							$attr_arr[] = $value['attr_value'];
+						}
+						$v['attr'] = implode('/', $attr_arr);
+					}
+
+					$saler_count_total += $v['goods_number_arr_saler'];
+					$saler_amount_total += $v['order_amount_arr_saler'];
+
+					$buyer_count_total += $v['goods_number_arr_buyer'];
+					$buyer_amount_total += $v['order_amount_arr_buyer'];
+
+					$v['order_sn'] .= '-cg';
+
+					$v['goods_number_arr_saler'] .= $v['unit'];
+					$v['goods_number_arr_buyer'] .= $v['unit'];
+				}
+				unset( $v );
+
+				$content = array();
+				$content['data'] = $orders;
+				$content['total'] = $resultTotal['total'];
+
+				$content['saler_count_total'] = $saler_count_total;
+				$content['saler_amount_total'] = $saler_amount_total;
+
+				$content['buyer_count_total'] = $buyer_count_total;
+				$content['buyer_amount_total'] = $buyer_amount_total;
+
+				make_json_response( $content, "0", "账单查询成功");
+			}else{
+				make_json_response("", "-1", "账单查询失败");
+			}
+		}		
+		
+	}
+	$content = jsonAction( array( "customPage", "suppliersPage", "contractPage", "customPagePrint", "suppliersPagePrint", "contractPagePrint",
+								 "customPageExport", "suppliersPageExport", "contractPageExport"
+						 ) );
+	$statementsModel = new StatementsModel($content);
+	$statementsModel->run();
