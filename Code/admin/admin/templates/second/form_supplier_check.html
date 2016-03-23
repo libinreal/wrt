@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 供应商对账单</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+	{include file="pagemenu.htm"}
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1">- 供应商对账单</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div id="message_area"></div>
+		<form id="search_form">
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>客户名称：</labe>
+			<input type="text" name="customer_name">
+		</div>
+		<div class="form-div">
+			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>对账日期：</labe>
+			<input type="text" name="due_date1" id="due_date1" readonly>
+			&nbsp;至&nbsp;
+			<input type="text" name="due_date2" id="due_date2" readonly>
+			&nbsp;
+			<input type="button" class="button" value="搜索" onclick="Forms.getSupplier('search')" />
+		</div>
+		</form>
+		<div class="list-div" id="listDiv">
+			<table cellspacing="1" cellpadding="0" id="list">
+				<thead><tr>
+					<th>订单编号</th>
+					<th>产品编号</th>
+					<th>产品名称</th>
+					<th>型号</th>
+					<th>发货数量</th>
+					<th>单位(人民币：元)</th>
+					<th>贷款额(人民币：元)</th>
+					<th>备注</th>
+				</tr></thead>
+				<tbody></tbody>
+				<tfoot>
+					<tr><td>&nbsp;</td></tr>
+					<tr>
+						<td colspan="7" class="bottom_info text-right"><span class="title">合计发货数量: </span></td>
+						<td class="bottom_info text-left"><span class="price" id="count_total">0</span></td>
+					</tr>
+					<tr>
+						<td colspan="7" class="bottom_info text-right"><span class="title">合计发货金额(元):</span></td>
+						<td class="bottom_info text-left"><span class="price" id="amount_total">0</span></td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+		<!-- 分页 -->
+		<div id="paginate"></div>
+	</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+
+<script src="js/laydate/laydate.dev.js"></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/type-mode.js" type="text/javascript" ></script>
+<script src="js/forms.js" type="text/javascript" ></script>
+<script type="text/javascript">
+$(document).ready(function(){
+	laydate({
+        elem: '#due_date1'
+    });
+	laydate({
+        elem: '#due_date2'
+    });
+});
+Forms.getSupplier();
+function first(){
+	Forms.current_page = 1;
+	Forms.limit = 0;
+	Forms.getSupplier(true);
+}
+function next(){
+	Forms.current_page = Forms.current_page + 1;
+	Forms.limit = (Forms.current_page - 1)*Forms.offset;
+	Forms.getSupplier(true);
+}
+function prev(){
+	Forms.current_page = Forms.current_page - 1;
+	Forms.limit = (Forms.current_page - 1)*Forms.offset;
+	Forms.getSupplier(true);
+}
+function last(){
+	Forms.current_page = Forms.total_page;
+	Forms.limit = (Forms.current_page - 1)*Forms.offset;
+	Forms.getSupplier(true);
+}
+</script>
+	</body>
+</html>

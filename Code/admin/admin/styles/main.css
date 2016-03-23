@@ -126,10 +126,10 @@ h1 .action-span1 {
     height: 100%;
     overflow-y:auto;
     overflow-x:hidden;
-    padding:20px 15px 0 0;
+    padding:12px 15px 0 0;
 }
 .menutwo{
-    height:36px;
+    height:35px;
     width:160px;
     padding:0 15px;
 }
@@ -261,7 +261,8 @@ h1 .action-span1 {
 
 .list-div td {
     background: #FFF;
-    line-height: 22px;
+    line-height: 25px;
+    height: 25px;
     max-width: 260px;
     min-width: 60px;
     word-break: break-all;
@@ -281,6 +282,24 @@ h1 .action-span1 {
     padding-left: 10px;
 }
 
+.list-div tfoot td.bottom_info{
+    line-height:30px;
+    font-size:16px;
+    padding-right: 15px;
+}
+.list-div tfoot td.text-left{
+    text-align:left;
+}
+.list-div tfoot td.text-right{
+    text-align:right;
+}
+.list-div tfoot span.title{
+    font-weight: bold;
+}
+.list-div tfoot span.price{
+    color:#F00;
+    font-weight: bold;
+}
 .list-div input {
     vertical-align: middle;
 }
@@ -1490,4 +1509,8 @@ input.error{
     background: #f90;
     color: #fff;
     padding: 5px;
+}
+
+#paginate{
+    margin-top: 10px;
 }

@@ -213,6 +213,26 @@ if($section == "purchase_order_manage"){
 	}
 }
 
+if($section == "form_manage"){
+	switch ($act) {
+		case 'customer':
+			$smarty->display('second/form_customer_check.html');
+			break;
+
+		case 'supplier':
+			$smarty->display('second/form_supplier_check.html');		
+			break;
+
+		case 'project':
+			$smarty->display('second/form_project_check.html');		
+			break;
+		
+		default:
+			exit;
+			break;
+	}
+}
+
 if($section == "payment"){
 	switch ($act) {
 		case 'list':
