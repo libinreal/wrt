@@ -189,7 +189,7 @@ class OrderGoods extends \PhpRudder\Mvc\ModelBase
     			'contractNums',
     			'checkPrice', //验收单价
     			'checkNums', //验收数
-    			'cat_code',
+    			// 'cat_code',
     			'wcode'
     	);
     	$this->skipAttributesOnCreate($attributes);
