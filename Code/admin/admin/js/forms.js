@@ -264,5 +264,72 @@ var Forms = {
 			}
 			
 		}, "json");
+	},
+
+	customPageExport: function(){
+		var act = "customPageExport";
+		var params = {"limit":this.limit, "offset":this.offset};
+		var formData = $("#search_form").FormtoJson();
+		$.each(formData, function(k, v){
+			if(v != ""){
+				params[k] = v;
+			}
+		});
+		var postData = {"act":act, "params":JSON.stringify(params)};
+		var that = this
+		$.post(this.url, postData, function(obj){
+			console.log(obj)
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				//window.open(document.URL, '_blank')
+				console.log(obj)
+			}
+		});		
+	},
+
+	suppliersPageExport: function(){
+		var act = "suppliersPageExport";
+		var params = {"limit":this.limit, "offset":this.offset};
+		var formData = $("#search_form").FormtoJson();
+		$.each(formData, function(k, v){
+			if(v != ""){
+				params[k] = v;
+			}
+		});
+		var postData = {"act":act, "params":JSON.stringify(params)};
+		var that = this
+		$.post(this.url, postData, function(obj){
+			console.log(obj)
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				console.log(obj)
+			}
+		});		
+	},
+
+	contractPageExport: function(){
+		var act = "contractPageExport";
+		var params = {"limit":this.limit, "offset":this.offset};
+		var formData = $("#search_form").FormtoJson();
+		$.each(formData, function(k, v){
+			if(v != ""){
+				params[k] = v;
+			}
+		});
+		var postData = {"act":act, "params":JSON.stringify(params)};
+		var that = this
+		$.post(this.url, postData, function(obj){
+			console.log(obj)
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				console.log(obj)
+			}
+		});		
 	}
 }

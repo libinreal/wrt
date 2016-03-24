@@ -223,7 +223,7 @@ if($section == "form_manage"){
 			$smarty->display('second/form_supplier_check.html');		
 			break;
 
-		case 'project':
+		case 'contract':
 			$smarty->display('second/form_project_check.html');		
 			break;
 		

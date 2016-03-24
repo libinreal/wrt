@@ -6,17 +6,44 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<link href="styles/general.css" rel="stylesheet" type="text/css" />
 		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<style type="text/css">
+		@media print
+		{
+			.noprint, .printbutton
+			{
+				display:none;
+			}
+			.print
+			{
+				display:block;
+				width: 1000px;
+			}
+			table th{
+				font-weight: bold;
+				font-size: 16px;
+				background: #ddd;
+				border-bottom: 1px solid #ccc;
+				height: 50px;
+			}
+			table td{
+				border: 1px solid #ccc;
+				font-size: 16px;
+				height: 50px;
+			}
+		}
+		</style>
 		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+		<script src="js/print_sections.js" type="text/javascript"></script>
 	</head>
 	<body>
 	{include file="pagemenu.htm"}
-		<h1>
+		<h1 class="noprint">
 		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
 		<span id="search_id" class="action-span1">- 下游客户对账单</span>
 		<div style="clear:both"></div>
 		</h1>
-		<div id="message_area"></div>
-		<form id="search_form">
+		<div id="message_area" class="noprint"></div>
+		<form id="search_form" class="noprint">
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
 			<labe>合同名称：</labe>
@@ -33,12 +60,14 @@
 			<input type="text" name="due_date2" id="due_date2" readonly>
 			&nbsp;
 			<input type="button" class="button" value="搜索" onclick="Forms.getCustomer('search')" />
+			<input type="button" class="button" value="导出" onclick="Forms.customPageExport()" />
 		</div>
 		</form>
-		<div class="list-div" id="listDiv">
+		<div id="sect1" class="print_section">
+			<div class="list-div" id="listDiv">
 			<table cellspacing="1" cellpadding="0" id="list">
 				<thead><tr>
-					<th>订单编号</th>
+					<th class="ordersn">订单编号</th>
 					<th>产品编号</th>
 					<th>产品名称</th>
 					<th>型号</th>
@@ -60,20 +89,22 @@
 					</tr>
 				</tfoot>
 			</table>
+			</div>
 		</div>
 		<!-- 分页 -->
-		<div id="paginate"></div>
+		<div id="paginate" class="noprint"></div>
 	</div>
 	
 		<!-- 底部 -->
-		<div id="footer">
+		<div id="footer" class="noprint">
 			{$lang.copyright}
 		</div>
 
-<script src="js/laydate/laydate.dev.js"></script>
-<script src="js/ajax.js" type="text/javascript" ></script>
-<script src="js/type-mode.js" type="text/javascript" ></script>
-<script src="js/forms.js" type="text/javascript" ></script>
+
+<script src="js/laydate/laydate.dev.js" type="text/javascript"></script>
+<script src="js/ajax.js" type="text/javascript"></script>
+<script src="js/type-mode.js" type="text/javascript"></script>
+<script src="js/forms.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function(){
 	laydate({
