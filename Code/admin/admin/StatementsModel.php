@@ -680,8 +680,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
 			$category_table = $GLOBALS['ecs']->table('category');
 
-			$sql = 'SELECT odr.`order_sn`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
-				   ' odr.`inv_content` AS remark, og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit` ' .
+			$sql = 'SELECT odr.`order_sn`, odr.`add_time`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
+				   ' odr.`inv_content` AS remark, og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
+				   ' usr.`companyName` As customer_name ' .
 				   ' FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
@@ -777,6 +778,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( $resultTotal )
 			{
 				$orders = $orders ? $orders : array();
+
+				$dates1 = $params['due_date1'] ? $params['due_date1'] : '';
+				$dates2 = $params['due_date2'] ? $params['due_date2'] : '';
+
 				//订单是否可取消
 				foreach ($orders as &$v) {
 
@@ -804,6 +809,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$content = array();
 				$content['data'] = $orders;
 				$content['total'] = $resultTotal['total'];
+
+				if( $content['total'] > 0 ){
+					if( $dates1 && !$dates2){
+						$dates = $dates1 . '—' . date('Y年m月d日', $content['data'][ $content['total'] - 1 ]['add_time']);
+					}else if(!$dates1 && $dates2 ){
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . $dates2;
+					}else if($dates1 && $dates2){
+						$dates = $dates1 . '—' . $dates2;
+					}else{
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $content['data'][ $content['total'] - 1 ]['add_time']);
+					}
+				}
+				$content['dates'] = $dates;
 
 				$content['count_total'] = $count_total;
 				$content['amount_total'] = $amount_total;

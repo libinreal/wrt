@@ -45,7 +45,7 @@ class MyExcel
 		$objWorkSheet->getRowDimension('2')->setRowHeight(30.7);
 		// $objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A1'), 'B1:J'.$data_row );
 		
-		// $objWorkSheet->mergeCells('A1:J2');
+		$objWorkSheet->mergeCells('A1:J1');
 		
 		//对齐方式
 
@@ -174,14 +174,14 @@ class MyExcel
 	public function suppliersStatements( $statements ) {
 		$this->_excel->getProperties()->setCreator('3tichina') //创建人
 	        ->setLastModifiedBy('3tichina') //最后修改人
-	        ->setTitle('物融通下游客户对账单') //标题
-	        ->setSubject('物融通下游客户对账单') //题目
-	        ->setDescription('物融通下游客户对账单，导出excel') //描述
-	        ->setKeywords('物融通下游客户对账单导出') //关键字
-	        ->setCategory('物融通下游客户对账单导出'); //种类
+	        ->setTitle('物融通供应商对账单') //标题
+	        ->setSubject('物融通供应商对账单') //题目
+	        ->setDescription('物融通供应商对账单，导出excel') //描述
+	        ->setKeywords('物融通供应商对账单导出') //关键字
+	        ->setCategory('物融通供应商对账单导出'); //种类
 		
 	    $data_row = $statements['total'] + 2;
-	    $data_col = 'J';
+	    $data_col = 'I';
 
 	    $objWorkSheet = $this->_excel->setActiveSheetIndex(0);
 	    //宽高
@@ -194,29 +194,28 @@ class MyExcel
 		$objWorkSheet->getColumnDimension('G')->setWidth(21);
 		$objWorkSheet->getColumnDimension('H')->setWidth(21);
 		$objWorkSheet->getColumnDimension('I')->setWidth(21);
-		$objWorkSheet->getColumnDimension('J')->setWidth(21);
 
 
 		$objWorkSheet->getRowDimension('1')->setRowHeight(48);
 		$objWorkSheet->getRowDimension('2')->setRowHeight(30.7);
 		// $objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A1'), 'B1:J'.$data_row );
 		
-		// $objWorkSheet->mergeCells('A1:J2');
+		$objWorkSheet->mergeCells('A1:I1');
 		
 		//对齐方式
 
 		//标题 、表头、数据 对齐
 		$objWorkSheet->getStyle('A1')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
   		$objWorkSheet->getStyle('A1')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-  		$objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A1'), 'B1:J1' );
+  		$objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A1'), 'B1:I1' );
 
   		$objWorkSheet->getStyle('A2')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
   		$objWorkSheet->getStyle('A2')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-		$objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A2'), 'B2:J2' );
+		$objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A2'), 'B2:I2' );
 
 		$objWorkSheet->getStyle('A3')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
   		$objWorkSheet->getStyle('A3')->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-		$objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A3'), 'A3:J'.($data_row + 2) );
+		$objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A3'), 'A3:I'.($data_row + 2) );
 
 		//字体
 		$objWorkSheet->getStyle('A1')->getFont()->setName('宋体');
@@ -240,14 +239,14 @@ class MyExcel
 
 
 
-		$objWorkSheet->getStyle( 'A2:J2' )->applyFromArray($styleThinBlackBorderOutline);
+		$objWorkSheet->getStyle( 'A2:I2' )->applyFromArray($styleThinBlackBorderOutline);
 
 		//背景填充
-		$objWorkSheet->getStyle( 'A2:J2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
-		$objWorkSheet->getStyle( 'A2:J2')->getFill()->getStartColor()->setARGB('00C0C0C0');
-		$objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A2'), 'B2:J2');
+		$objWorkSheet->getStyle( 'A2:I2')->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID);
+		$objWorkSheet->getStyle( 'A2:I2')->getFill()->getStartColor()->setARGB('00C0C0C0');
+		$objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('A2'), 'B2:I2');
 
-		$objWorkSheet->setCellValue('A1',"\"对账单" . $statements['contract_name'] ."—".$statements['contract_sn']."\r\n对账日期".$statements['dates'] . "\"");
+		$objWorkSheet->setCellValue('A1',"\"" . $statements['data'][0]['customer_name'] ."对账单\r\n对账日期".$statements['dates'] . "\"");
 
 		//文本格式
 		$objWorkSheet->getStyle('B3')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_TEXT);
@@ -256,7 +255,6 @@ class MyExcel
 		$objWorkSheet->getStyle('F3')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
 		$objWorkSheet->getStyle('G3')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
 		$objWorkSheet->getStyle('H3')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
-		$objWorkSheet->getStyle('I3')->getNumberFormat()->setFormatCode(PHPExcel_Style_NumberFormat::FORMAT_NUMBER_00);
 
 		if( $data_row > 3 )
 			$objWorkSheet->duplicateStyle( $objWorkSheet->getStyle('B3'), 'B3:B'.$data_row );
@@ -278,10 +276,9 @@ class MyExcel
             ->setCellValue('D2','型号')
             ->setCellValue('E2','发货数量')
             ->setCellValue('F2','单价(人民币：元)')
-            ->setCellValue('G2','金融费(人民币：元)')
-            ->setCellValue('H2','物流费(人民币：元)')
-            ->setCellValue('I2','贷款额(人民币：元)')
-            ->setCellValue('J2','备注');
+            ->setCellValue('G2','物流费(人民币：元)')
+            ->setCellValue('H2','贷款额(人民币：元)')
+            ->setCellValue('I2','备注');
 
         
 
@@ -292,30 +289,29 @@ class MyExcel
 			$objWorkSheet->setCellValue('B'.$k, $row['goods_sn']);	
 			$objWorkSheet->setCellValue('C'.$k, $row['goods_name']);	
 			$objWorkSheet->setCellValue('D'.$k, $row['attr']);	
-			$objWorkSheet->setCellValue('E'.$k, $row['goods_number_arr_buyer']);	
-			$objWorkSheet->setCellValue('F'.$k, $row['goods_price_arr_buyer']);	
-			$objWorkSheet->setCellValue('G'.$k, $row['shipping_fee_arr_buyer']);	
-			$objWorkSheet->setCellValue('H'.$k, $row['financial_arr']);	
-			$objWorkSheet->setCellValue('I'.$k, $row['order_amount_arr_buyer']);	
-			$objWorkSheet->setCellValue('J'.$k, $row['remark']);	
+			$objWorkSheet->setCellValue('E'.$k, $row['goods_number_arr_saler']);	
+			$objWorkSheet->setCellValue('F'.$k, $row['goods_price_arr_saler']);	
+			$objWorkSheet->setCellValue('G'.$k, $row['shipping_fee_arr_saler']);	
+			$objWorkSheet->setCellValue('H'.$k, $row['order_amount_arr_saler']);	
+			$objWorkSheet->setCellValue('I'.$k, $row['remark']);	
 		}
 		
 		$k++;
-		$objWorkSheet->mergeCells('A'.$k.':H'.$k);	
+		$objWorkSheet->mergeCells('A'.$k.':G'.$k);	
 		$objWorkSheet->setCellValue('A'.$k, '合计发货数量');
-		$objWorkSheet->setCellValue('I'.$k, '发货数量');
-		$objWorkSheet->setCellValue('J'.$k, $statements['count_total']);
+		$objWorkSheet->setCellValue('H'.$k, '发货数量');
+		$objWorkSheet->setCellValue('I'.$k, $statements['count_total']);
 		$objWorkSheet->getRowDimension($k)->setRowHeight(24);
 
 		$k++;
-		$objWorkSheet->mergeCells('A'.$k.':H'.$k);
+		$objWorkSheet->mergeCells('A'.$k.':G'.$k);
 		$objWorkSheet->setCellValue('A'.$k, '合计发货金额');
-		$objWorkSheet->setCellValue('I'.$k, '¥');
-		$objWorkSheet->setCellValue('J'.$k, $statements['amount_total']);
+		$objWorkSheet->setCellValue('H'.$k, '¥');
+		$objWorkSheet->setCellValue('I'.$k, $statements['amount_total']);
 		$objWorkSheet->getRowDimension($k)->setRowHeight(24);
 
 		$this->_excel->setActiveSheetIndex(0);
-		$objWorkSheet->setTitle('物融通下游客户对账单');
+		$objWorkSheet->setTitle('物融通供应商对账单');
 		//excel数据
 		$filename = $statements['dates'].'_customer_stat';
 		
