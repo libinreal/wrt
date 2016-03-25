@@ -88,6 +88,10 @@ $modules['12_stats']['report_sell']                 = 'sale_general.php?act=list
 $modules['12_stats']['sale_list']                   = 'sale_list.php?act=list';
 $modules['12_stats']['credit_analysis']             = 'credit_analysis.php?act=list';// 信用
 $modules['12_stats']['sales_analysis']              = 'sales_analysis.php?act=list';
+//报表统计 二期
+$modules['12_stats']['13_custom_stats']              = 'demo_template.php?section=form_manage&act=customer';
+$modules['12_stats']['14_suppliers_stats']              = 'demo_template.php?section=form_manage&act=supplier';
+$modules['12_stats']['15_contract_stats']              = 'demo_template.php?section=form_manage&act=contract';
 
 //合同管理
 $modules['13_contract']['01_contract_insert']          = 'contract_manage.php?act=contractInsert';

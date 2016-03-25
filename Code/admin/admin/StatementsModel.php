@@ -56,6 +56,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 							'params' => $my_params
 							);
 
+		require './MyExcel.php';
 		$statementsModel = new StatementsModel($content);
 		$statementsModel->$action();
 		exit;
@@ -341,7 +342,18 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	}
 		 */
 		public function customPageExportAction(){
-			
+
+			$data = $this->calCustomPage();
+			if( $data ){
+				if( $data['total'] == 0 ){
+					echo '没有数据';
+				}else{
+					$myExcel = new MyExcel();
+					$myExcel->customerStatements( $data );
+				}
+			}else{
+				echo '导出失败';
+			}
 		}		
 		
 
@@ -391,7 +403,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	}
 		 */
 		public function suppliersPageExportAction(){
+			$data = $this->calSuppliersPage();
+			if( $data ){
 
+				if( $data['total'] != 0 ){
+					$myExcel = new MyExcel();
+					$myExcel->suppliersStatements( $data );
+				}else{
+					echo '没有数据';
+				}
+				
+			}else{
+				echo '导出失败';
+			}
 		}
 
 
@@ -454,8 +478,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	}
 		 */
 		public function contractPageExportAction(){
-
-			$this->calContractPage();
+			$data = $this->calContractPage();
+			if( $data ){
+				if( $data['total'] == 0 ){
+					echo '没有数据';
+				}else{
+					$myExcel = new MyExcel();
+					$myExcel->contractStatements( $data );
+				}
+			}else{
+				echo '导出失败';
+			}
 		}
 
 		/**
@@ -476,8 +509,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$category_table = $GLOBALS['ecs']->table('category');
 
 			$sql = 'SELECT odr.`order_sn`, odr.`order_amount_arr_buyer`, odr.`shipping_fee_arr_buyer`, odr.`financial_arr`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
-				   ' odr.`inv_content` AS remark, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit` ' .
-				   ' FROM ' . $order_table . ' AS odr ' .
+				   ' odr.`inv_content` AS remark, odr.`add_time`, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
+				   ' crt.`contract_name`, crt.`contract_num` FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
 				   ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
@@ -563,6 +596,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( $resultTotal )
 			{
 				$orders = $orders ? $orders : array();
+				$contract_name_arr = array();
+				$contract_sn_arr = array();
+
+				$dates1 = $params['due_date1'] ? $params['due_date1'] : '';
+				$dates2 = $params['due_date2'] ? $params['due_date2'] : '';
+
 				//订单是否可取消
 				foreach ($orders as &$v) {
 
@@ -581,17 +620,42 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$count_total += $v['goods_number_arr_buyer'];
 					$amount_total += $v['order_amount_arr_buyer'];
 
+					if( !in_array($v['contract_name'], $contract_name_arr) ){
+						$contract_name_arr[] = '《' . $v['contract_name'] . '》';
+						$contract_sn_arr[] = '《' . $v['contract_num'] . '》';
+					}
+
+					unset($v['contract_name']);
+					unset($v['contract_sn']);
 					$v['goods_number_arr_buyer'] .= $v['unit'];
 
 				}
 				unset( $v );
 
 				$content = array();
+
 				$content['data'] = $orders;
 				$content['total'] = $resultTotal['total'];
+				$content['contract_name'] = implode(',', $contract_name_arr);
+
+				$content['contract_sn'] = implode(',', $contract_sn_arr);
 
 				$content['count_total'] = $count_total;
 				$content['amount_total'] = $amount_total;
+
+				if( $content['total'] > 0 ){
+					if( $dates1 && !$dates2){
+						$dates = $dates1 . '—' . date('Y年m月d日', $content['data'][ $content['total'] - 1 ]['add_time']);
+					}else if(!$dates1 && $dates2 ){
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . $dates2;
+					}else if($dates1 && $dates2){
+						$dates = $dates1 . '—' . $dates2;
+					}else{
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $content['data'][ $content['total'] - 1 ]['add_time']);
+					}
+				}
+				$content['dates'] = $dates;
+
 				return $content;
 			}else{
 				return false;

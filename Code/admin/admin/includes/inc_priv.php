@@ -91,6 +91,10 @@ $purview['report_sell']      = 'sale_general_stats';
 $purview['sale_list']		 = 'sale_list_info_stats';
 $purview['sales_analysis']   = 'credit_analysis_stats';
 
+$purview['13_custom_stats']   = 'custom_stats';
+$purview['14_suppliers_stats']   = 'suppliers_stats';
+$purview['15_contract_stats']   = 'contract_stats';
+
 $purview['01_contract_insert'] = 'contract_insert';
 $purview['02_contract_list'] = 'contract_list';
 $purview['05_contract_supplier_add'] = 'contract_supplier_add';

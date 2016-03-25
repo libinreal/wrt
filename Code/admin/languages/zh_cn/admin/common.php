@@ -2,9 +2,9 @@
 
 //管理中心共用语言文件
 $time = date('Y',time());
-$_LANG['app_name'] = '物融通集成服务平台有限公司';
-$_LANG['cp_home'] = '物融通平台 管理中心';
-$_LANG['copyright'] = '版权所有 &copy; '.$time.' 物融通集成服务平台有限公司，并保留所有权利。';
+$_LANG['app_name'] = '中交物融集成服务平台有限公司';
+$_LANG['cp_home'] = '中交物融平台 管理中心';
+$_LANG['copyright'] = '版权所有 &copy; '.$time.' 中交物融集成服务平台有限公司，并保留所有权利。';
 $_LANG['query_info'] = '共执行 %d 个查询，用时 %s 秒';
 $_LANG['memory_info'] = '，内存占用 %0.3f MB';
 $_LANG['gzip_enabled'] = '，Gzip 已启用';
@@ -308,6 +308,10 @@ $_LANG['visit_buy_per'] = '访问购买率';
 $_LANG['z_clicks_stats'] = '站外投放JS';
 $_LANG['credit_analysis'] = '信用分析';
 $_LANG['sales_analysis'] = '销售分析';
+
+$_LANG['13_custom_stats'] = '下游客户对账单';
+$_LANG['14_suppliers_stats'] = '供应商对账单';
+$_LANG['15_contract_stats'] = '项目内部对账单';
 
 /* 文章管理 */
 $_LANG['02_articlecat_list'] = '分类';

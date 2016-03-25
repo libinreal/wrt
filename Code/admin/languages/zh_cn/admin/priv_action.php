@@ -80,6 +80,10 @@ $_LANG['sale_order_stats'] = '销售统计';
 $_LANG['sale_general_stats'] = '销售概况';
 $_LANG['sale_list_info_stats'] = '订单明细';
 $_LANG['credit_analysis_stats'] = '销售分析';
+
+$_LANG['custom_stats'] = '下游客户对账单';
+$_LANG['suppliers_stats'] = '供应商对账单';
+$_LANG['contract_stats'] = '项目内部对账单';
 // 权限管理
 //权限管理部分的权限
 $_LANG['users_manage'] = '会员管理';
