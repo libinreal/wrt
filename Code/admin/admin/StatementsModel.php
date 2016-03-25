@@ -599,8 +599,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$contract_name_arr = array();
 				$contract_sn_arr = array();
 
-				$dates1 = $params['due_date1'] ? $params['due_date1'] : '';
-				$dates2 = $params['due_date2'] ? $params['due_date2'] : '';
+				$dates1 = $where['due_date1'] ? $where['due_date1'] : '';
+				$dates2 = $where['due_date2'] ? $where['due_date2'] : '';
 
 				//订单是否可取消
 				foreach ($orders as &$v) {
@@ -642,16 +642,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$content['count_total'] = $count_total;
 				$content['amount_total'] = $amount_total;
+				$cur_row = count( $content['data'] );
 
 				if( $content['total'] > 0 ){
 					if( $dates1 && !$dates2){
-						$dates = $dates1 . '—' . date('Y年m月d日', $content['data'][ $content['total'] - 1 ]['add_time']);
+						$dates = date('Y年m月d日', $dates1) . '—' . date('Y年m月d日', $content['data'][ $cur_row - 1 ]['add_time']);
 					}else if(!$dates1 && $dates2 ){
-						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . $dates2;
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $dates2);
 					}else if($dates1 && $dates2){
-						$dates = $dates1 . '—' . $dates2;
+						$dates = date('Y年m月d日', $dates1) . '—' .date('Y年m月d日', $dates2);
 					}else{
-						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $content['data'][ $content['total'] - 1 ]['add_time']);
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $content['data'][ $cur_row - 1 ]['add_time']);
 					}
 				}
 				$content['dates'] = $dates;
@@ -682,7 +683,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$sql = 'SELECT odr.`order_sn`, odr.`add_time`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
 				   ' odr.`inv_content` AS remark, og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
-				   ' usr.`companyName` As customer_name ' .
+				   ' usr.`companyName` AS customer_name ' .
 				   ' FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
@@ -779,8 +780,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			{
 				$orders = $orders ? $orders : array();
 
-				$dates1 = $params['due_date1'] ? $params['due_date1'] : '';
-				$dates2 = $params['due_date2'] ? $params['due_date2'] : '';
+				$dates1 = $where['due_date1'] ? $where['due_date1'] : '';
+				$dates2 = $where['due_date2'] ? $where['due_date2'] : '';
 
 				//订单是否可取消
 				foreach ($orders as &$v) {
@@ -810,15 +811,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$content['data'] = $orders;
 				$content['total'] = $resultTotal['total'];
 
+				$cur_row = count( $content['data'] );
+
 				if( $content['total'] > 0 ){
 					if( $dates1 && !$dates2){
-						$dates = $dates1 . '—' . date('Y年m月d日', $content['data'][ $content['total'] - 1 ]['add_time']);
+						$dates = date('Y年m月d日', $dates1) . '—' . date('Y年m月d日', $content['data'][ $cur_row - 1 ]['add_time']);
 					}else if(!$dates1 && $dates2 ){
-						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . $dates2;
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $dates2);
 					}else if($dates1 && $dates2){
-						$dates = $dates1 . '—' . $dates2;
+						$dates = date('Y年m月d日', $dates1) . '—' .date('Y年m月d日', $dates2);
 					}else{
-						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $content['data'][ $content['total'] - 1 ]['add_time']);
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $content['data'][ $cur_row - 1 ]['add_time']);
 					}
 				}
 				$content['dates'] = $dates;
@@ -852,7 +855,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$sql = 'SELECT odr.`order_sn`, odr.`add_time`, spl.`suppliers_name`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
 				   ' odr.`inv_content` AS remark, odr.`order_amount_arr_buyer`, odr.`financial_arr`, odr.`shipping_fee_arr_buyer`, ' .
-				   ' og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit` ' .
+				   ' og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
+				   ' crt.`contract_name` ' .
 				   ' FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
@@ -941,6 +945,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( $resultTotal )
 			{
 				$orders = $orders ? $orders : array();
+
+				$dates1 = $where['due_date1'] ? $where['due_date1'] : '';
+				$dates2 = $where['due_date2'] ? $where['due_date2'] : '';
+				
 				//订单是否可取消
 				foreach ($orders as &$v) {
 
@@ -963,7 +971,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$buyer_count_total += $v['goods_number_arr_buyer'];
 					$buyer_amount_total += $v['order_amount_arr_buyer'];
 
-					$v['order_sn'] .= '-cg';
+					$v['purchase_sn'] = $v['order_sn'] . '-cg';
 
 					$v['goods_number_arr_saler'] .= $v['unit'];
 					$v['goods_number_arr_buyer'] .= $v['unit'];
@@ -985,12 +993,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$content['buyer_amount_total'] = $buyer_amount_total;
 				$content['differential_total'] = $differential_total;
 
-				$content['dates'] = '';
-
-				$order_count = $resultTotal['total'];
-				if( $order_count ){
-					$content['dates'] = date('Y年m月d日', $orders[0]['add_time']) . '——' . date('Y年m月d日' ,$orders[ $order_count - 1 ]['add_time']);
+				$cur_row = count( $content['data'] );
+				if( $content['total'] > 0 ){
+					if( $dates1 && !$dates2){
+						$dates = date('Y年m月d日', $dates1) . '—' . date('Y年m月d日', $content['data'][ $cur_row - 1 ]['add_time']);
+					}else if(!$dates1 && $dates2 ){
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $dates2);
+					}else if($dates1 && $dates2){
+						$dates = date('Y年m月d日', $dates1) . '—' .date('Y年m月d日', $dates2);
+					}else{
+						$dates = date('Y年m月d日', $content['data'][ 0 ]['add_time']) . '—' . date('Y年m月d日', $content['data'][ $cur_row - 1 ]['add_time']);
+					}
 				}
+				$content['dates'] = $dates;
 
 				return $content;
 			}else{
