@@ -119,14 +119,14 @@ h1 .action-span1 {
     margin:0;
     padding: 0;
     float:left;
-    height: 650px;
+    height: 620px;
     position: relative;
 }
 .menuone{
     height: 100%;
     overflow-y:auto;
     overflow-x:hidden;
-    padding:12px 15px 0 0;
+    padding:15px 15px 0 0;
 }
 .menutwo{
     height:35px;

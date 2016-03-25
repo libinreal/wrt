@@ -275,18 +275,8 @@ var Forms = {
 				params[k] = v;
 			}
 		});
-		var postData = {"act":act, "params":JSON.stringify(params)};
-		var that = this
-		$.post(this.url, postData, function(obj){
-			console.log(obj)
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				//window.open(document.URL, '_blank')
-				console.log(obj)
-			}
-		});		
+		var getData = "?act="+encodeURI(act)+"&params="+encodeURI(JSON.stringify(params));
+		window.open(this.url + getData, '_blank')
 	},
 
 	suppliersPageExport: function(){
@@ -298,17 +288,8 @@ var Forms = {
 				params[k] = v;
 			}
 		});
-		var postData = {"act":act, "params":JSON.stringify(params)};
-		var that = this
-		$.post(this.url, postData, function(obj){
-			console.log(obj)
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				console.log(obj)
-			}
-		});		
+		var getData = "?act="+encodeURI(act)+"&params="+encodeURI(JSON.stringify(params));
+		window.open(this.url + getData, '_blank')		
 	},
 
 	contractPageExport: function(){
@@ -320,16 +301,7 @@ var Forms = {
 				params[k] = v;
 			}
 		});
-		var postData = {"act":act, "params":JSON.stringify(params)};
-		var that = this
-		$.post(this.url, postData, function(obj){
-			console.log(obj)
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				console.log(obj)
-			}
-		});		
+		var getData = "?act="+encodeURI(act)+"&params="+encodeURI(JSON.stringify(params));
+		window.open(this.url + getData, '_blank')
 	}
 }
