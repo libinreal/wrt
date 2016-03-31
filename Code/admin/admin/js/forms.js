@@ -45,16 +45,15 @@ var Forms = {
 			serach = false;
 		}else{
 			var condition = {};
+			condition.like = {};
 			var contract_name = $('#search_form input[name=contract_name]').val();
 			var contract_sn= $('#search_form input[name=contract_sn]').val();
 			var due_date1 = $('#search_form input[name=due_date1]').val();
 			var due_date2 = $('#search_form input[name=due_date2]').val();
 			if(contract_name != ''){
-				condition.like = {};
 				condition.like['contract_name'] = contract_name
 			}
 			if(contract_sn != ''){
-				condition.like = {};
 				condition.like['contract_sn'] = contract_sn
 			}
 			if(due_date1 != ''){
