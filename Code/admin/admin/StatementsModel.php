@@ -539,6 +539,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$where_str .= ' AND crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
 					else
 						$where_str .= ' WHERE crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
+				}else{
+					make_json_response('', -1, '没有填写项目名称');
 				}
 
 				if( isset( $like["contract_sn"] ) && $like['contract_sn'] ){
@@ -548,6 +550,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 					else
 						$where_str .= ' WHERE crt.`contract_num` LIKE \'%' . $like['contract_sn'] . '%\'';
 				}
+			}else{
+				make_json_response('', -1, '没有填写项目名称');
 			}
 
 			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
@@ -730,7 +734,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$where_str .= ' AND usr.`companyName` LIKE \'%' . $like['customer_name'] . '%\'';
 					else
 						$where_str .= ' WHERE usr.`companyName` LIKE \'%' . $like['customer_name'] . '%\'';
+				}else{
+					make_json_response('', -1, '没有填写客户名称');
 				}
+			}else{
+				make_json_response('', -1, '没有填写客户名称');
 			}
 
 			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
@@ -888,6 +896,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$where_str .= ' AND crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
 					else
 						$where_str .= ' WHERE crt.`contract_name` LIKE \'%' . $like['contract_name'] . '%\'';
+				}else{
+					make_json_response('', -1, '没有填写项目名称');
 				}
 
 				if( isset( $like["contract_sn"] ) && $like['contract_sn'] ){
@@ -897,6 +907,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 					else
 						$where_str .= ' WHERE crt.`contract_num` LIKE \'%' . $like['contract_sn'] . '%\'';
 				}
+			}else{
+				make_json_response('', -1, '没有填写项目名称');
 			}
 
 			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
