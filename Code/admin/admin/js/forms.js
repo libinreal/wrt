@@ -66,6 +66,9 @@ var Forms = {
 		}
 		if(search != false){
 			if(search == 'search'){
+				if($("#search_form").valid() == false){
+					return false;
+				}
 				this.limit = 0;
 			}
 			var params = {"params":{"where":condition,"limit":this.limit, "offset":this.offset}};
@@ -139,6 +142,9 @@ var Forms = {
 		}
 		if(search != false){
 			if(search == 'search'){
+				if($("#search_form").valid() == false){
+					return false;
+				}
 				this.limit = 0;
 			}
 			var params = {"params":{"where":condition,"limit":this.limit, "offset":this.offset}};
@@ -213,6 +219,9 @@ var Forms = {
 		}
 		if(search != false){
 			if(search == 'search'){
+				if($("#search_form").valid() == false){
+					return false;
+				}
 				this.limit = 0;
 			}
 			var params = {"params":{"where":condition,"limit":this.limit, "offset":this.offset}};
