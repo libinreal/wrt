@@ -624,7 +624,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$count_total += $v['goods_number_arr_buyer'];
 					$amount_total += $v['order_amount_arr_buyer'];
 
-					if( !in_array($v['contract_name'], $contract_name_arr) ){
+					if( !in_array('《' .$v['contract_name']. '》', $contract_name_arr) ){
 						$contract_name_arr[] = '《' . $v['contract_name'] . '》';
 						$contract_sn_arr[] = '《' . $v['contract_num'] . '》';
 					}
