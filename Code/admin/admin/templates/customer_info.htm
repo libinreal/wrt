@@ -1,0 +1,436 @@
+﻿{include file="pageheader.htm"}
+<div class="main-div">
+    <form method="post" action="users.php" name="theForm" onsubmit="return validate()">
+        <input type="hidden" id="Action" name="act" value="{$form_action}" />
+        <input type="hidden" name="id" value="{$user.user_id}" />
+        <table width="100%" >
+            <tr>
+                <td class="label">{$lang.username}:</td>
+                <td>
+                    {if $form_action eq "update"}<!-- {$user.user_name} --><input type="text" name="username" id="username" onblur="fnUserName();" maxlength="60" value="{$user.user_name}" /><span class="require-field" id="field-name">*</span>
+                    {else}<input type="text" name="username" id="username" onblur="fnUserName();" maxlength="60" value="{$user.user_name}" />
+                    <span class="require-field" id="field-name">*</span>
+                    {/if}
+                </td>
+            </tr>
+            {if $form_action eq "insert"}
+            <tr>
+                <td class="label">{$lang.password}:</td>
+                <td>
+                    <input type="password" id="password" name="password" maxlength="20" size="20" onblur="fnPassword();" />
+                    <span class="require-field" id="field-password">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.confirm_password}:</td>
+                <td><input type="password" id="confirm-password" onblur="fnPassTo();" name="confirm_password" maxlength="20" size="20" />
+                    <span class="require-field" id="field-confirm-password">*</span></td>
+            </tr>
+            {elseif  $form_action eq "update"}
+            <tr>
+                <td class="label">{$lang.newpass}:</td>
+                <td>
+                    <input type="password" id="password" name="password" maxlength="20" size="20" />
+                    <span class="require-field" id="field-password"></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.confirm_password}:</td>
+                <td>
+                    <input type="password" id="confirm-password" name="confirm_password" maxlength="20" size="20" />
+                    <span class="require-field" id="field-confirm-password"></span>
+                </td>
+            </tr>
+            {/if}
+            <tr>
+                <td class="label">{$lang.gender}:</td>
+                <td>{html_radios name="sex" options=$lang.sex checked=$user.sex }</td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.qq}:</td>
+                <td>
+                    <input name="qq" type="text" size="40" class="inputBg" value="{$user.qq}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.weixin}:</td>
+                <td>
+                    <input name="weixin" type="text" size="40" class="inputBg" value="{$user.weixin}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.companyName}:</td>
+                <td>
+                    <input name="companyName" id="companyName" onblur="fncompanyName();" type="text" size="40" class="inputBg" value="{$user.companyName}"/>
+                    <span class="require-field" id="field-companyName">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.department}:</td>
+                <td>
+                    <input name="department" id="department" onblur="fndepartment();" type="text" size="40" class="inputBg" value="{$user.department}"/>
+                    <span class="require-field" id="field-department">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.position}:</td>
+                <td>
+                    <input name="position" id="position" onblur="fnposition();" type="text" size="40" class="inputBg" value="{$user.position}"/>
+                    <span class="require-field" id="field-position">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.companyAddress}:</td>
+                <td>
+                    <input name="companyAddress" id="companyAddress" onblur="fncompanyAddress();" type="text" size="40" class="inputBg" value="{$user.companyAddress}"/>
+                    <span class="require-field" id="field-companyAddress">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.officePhone}:</td>
+                <td>
+                    <input name="officePhone" id="officePhone" onblur="fnofficePhone();" type="text" size="40" class="inputBg" value="{$user.officePhone}"/>
+                    <span class="require-field" id="field-officePhone">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.fax}:</td>
+                <td>
+                    <input name="fax" type="text" id="fax" onblur="fnfax();" size="40" class="inputBg" value="{$user.fax}"/>
+                    <span class="require-field" id="field-fax">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.credit_rank}:</td>
+                <td>
+                    <select id="rank" name="credit_rank" onchange="fnRank();">
+                        {html_options name=credit_rank options=$lang.rank selected=$user.credit_rank}
+                    </select><span class="require-field" id="field-rank">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.contacts}:</td>
+                <td>
+                    <input name="contacts" id="contacts" onblur="fncontacts();" type="text" size="40" class="inputBg" value="{$user.contacts}"/>
+                    <span class="require-field" id="field-contacts">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.contactsPhone}:</td>
+                <td>
+                    <input name="contactsPhone" id="contactsPhone" onblur="fncontactsPhone();" type="text" size="40" class="inputBg" value="{$user.contactsPhone}"/>
+                    <span class="require-field" id="field-contactsPhone">*</span>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.email}:</td>
+                <td>
+                    <input type="text" name="email" maxlength="60" size="40" value="{$user.email}" />
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.secondContacts}:</td>
+                <td>
+                    <input name="secondContacts" type="text" size="40" class="inputBg" value="{$user.secondContacts}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.secondPhone}:</td>
+                <td>
+                    <input name="secondPhone" type="text" size="40" class="inputBg" value="{$user.secondPhone}"/>
+                </td>
+            </tr>
+            <input name="parent_id"  type="hidden" value="0"/>
+            <!--<tr>
+            	<td class="label">总帐户:</td>
+            	<td>
+            		<select name="parent_id">
+            			<option value="0">请选择</option>
+                        {if $form_action == "insert" || $user.parent_id != "0"}
+            			{foreach from=$parents item=v}
+            				{if $user.parent_id eq $v.user_id}
+            					<option value="{$v.user_id}" selected="seleced">{$v.user_name}</option>
+            				{else}
+            					<option value="{$v.user_id}">{$v.user_name}</option>
+            				{/if}
+            			{/foreach}
+                        {/if}
+            		</select>
+                    {if $form_action == "insert" || $user.parent_id != "0"}
+                    <span class="require-field" id="field-parentId">*</span>
+                    {/if}
+            	</td>
+            </tr> -->
+            <tr>
+                <td class="label">{$lang.customLevel}:</td>
+                <td id="customLevel">
+                    {html_radios name="customLevel" options=$lang.customLevelNo checked=$user.customLevel }
+                </td>
+            </tr>
+            <tr id="user_privilege" style="display: none;">
+                <td class="label">{$lang.user_privilege}:</td>
+                <td>
+                    <input type="checkbox" name="privilege[]" value="1" {if $user.msn eq '1'} checked{/if}/>{$lang.privilege[1]}
+                    <input type="checkbox" name="privilege[]" value="2" {if $user.msn eq '2'} checked{/if}/>{$lang.privilege[2]}
+                    <input type="checkbox" name="privilege[]" value="3" {if $user.msn eq '3'} checked{/if}/>{$lang.privilege[3]}
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.customNo}:</td>
+                <td>
+                    <input name="customNo" type="text" size="40" class="inputBg" value="{$user.customNo}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.customerNo}:</td>
+                <td>
+                    <input name="customerNo" type="text" size="40" class="inputBg" value="{$user.customerNo}"/>
+                </td>
+            </tr>
+            <tr>
+                <td class="label">{$lang.customerAccount}:</td>
+                <td>
+                    <input name="customerAccount" type="text" size="40" class="inputBg" value="{$user.customerAccount}"/>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">
+                    <input type="submit" value="{$lang.button_submit}" class="button" />
+                    <input type="reset" value="{$lang.button_reset}" class="button" />    </td>
+            </tr>
+        </table>
+    </form>
+</div>
+{insert_scripts files="../js/utils.js,validator.js"}
+<script language="JavaScript">
+    {literal}
+    $(document).ready(function(){
+        var custVal = $("#customLevel").find("input:checked").val();
+        $("#customLevel input").each(function(){
+            $(this).click(function(){
+                var Val = $(this).val();
+                if(Val>0) {
+                    $("#user_privilege").css('display',"");
+                }else {
+                    $("#user_privilege").css('display',"none");
+                }
+            });
+        });
+        if(custVal>0) {
+            $("#user_privilege").css('display',"");
+        }else {
+            $("#user_privilege").css('display',"none");
+        }
+    });
+
+    function fnUserName() {
+        if($("#username").val()=='') {
+            $('#field-name').html('用户名必须填写');
+        }else {
+            $('#field-name').html('*');
+        }
+    }
+
+    function fnPassword() {
+        if($("#password").val()=='') {
+            $('#field-password').html('密码必须填写');
+        }else if(/ /.test($("#password").val()) == true) {
+            $('#field-password').html('密码中不能包含空格');
+        } else if($("#password").val().length<6){
+            $('#field-password').html('密码长度不能小于6位');
+        }else {
+            $('#field-password').html('*');
+        }
+    }
+    function fnPassTo() {
+        if($("#confirm-password").val()=='') {
+            $("#field-confirm-password").html('确认密码必须填写');
+        }else if($('#confirm-password').val()!=$("#password").val()){
+            $("#field-confirm-password").html('密码和确认密码必须相同');
+        }else {
+            $('#field-confirm-password').html('*');
+        }
+    }
+    function fncompanyName() {
+        if($("#companyName").val()=='') {
+            $("#field-companyName").html("单位名称必须填写");
+        }else {
+            $("#field-companyName").html("*");
+        }
+
+    }
+    function fndepartment() {
+        if($("#department").val()=='') {
+            $("#field-department").html("部门名称必须填写");
+        }else {
+            $("#field-department").html("*");
+        }
+    }
+    function fnposition() {
+        if($("#position").val()=='') {
+            $("#field-position").html("职位名称必须填写");
+        } else {
+            $("#field-position").html("*");
+        }
+    }
+    function fncompanyAddress() {
+        if($("#companyAddress").val()=='') {
+            $("#field-companyAddress").html("单位地址必须填写");
+        } else {
+            $("#field-companyAddress").html("*");
+        }
+    }
+    function fnofficePhone() {
+        if($("#officePhone").val()=='') {
+            $("#field-officePhone").html("办公电话必须填写");
+        }else {
+            $("#field-officePhone").html("*");
+        }
+    }
+    function fnfax() {
+        if($("#fax").val()=='') {
+            $("#field-fax").html("办公传真必须填写");
+        }else {
+            $("#field-fax").html("*");
+        }
+    }
+    function fncontacts() {
+        if($("#contacts").val()=='') {
+            $("#field-contacts").html("联系人必须填写");
+        } else {
+            $("#field-contacts").html("*");
+        }
+    }
+    function fnRank() {
+        var docRank = document.getElementById("rank");
+        var objIndex = docRank.options.selectedIndex;
+        var objVal = docRank.options[objIndex].value;
+        if(objVal=='') {
+            $("#field-rank").html("信用等级必须选择");
+        } else {
+            $("#field-rank").html("*");
+        }
+    }
+    function fncontactsPhone() {
+        if($("#contactsPhone").val()=='') {
+            $("#field-contactsPhone").html("联系人电话必须填写");
+        } else {
+            $("#field-contactsPhone").html("*");
+        }
+    }
+
+    <!--
+    if (document.forms['theForm'].elements['act'].value == "insert")
+    {
+        document.forms['theForm'].elements['username'].focus();
+    }
+    else
+    {
+        document.forms['theForm'].elements['username'].focus();
+    }
+    onload = function()
+    {
+        // 开始检查订单
+        startCheckOrder();
+    }
+    /**
+     * 检查表单输入的数据
+     */
+    function validate()
+    {
+        {/literal}
+        {if $form_action eq "insert"}
+        {literal}
+        if($("#username").val()=='') {
+            $('#field-name').html('用户名必须填写');
+            return false;
+        }
+        if($("#password").val()=='') {
+            $('#field-password').html('密码必须填写');
+            return false;
+        }else if(/ /.test($("#password").val()) == true) {
+            $('#field-password').html('密码中不能包含空格');
+            return false
+        } else if($("#password").val().length<6){
+            $('#field-password').html('密码长度不能小于6位');
+            return false;
+        }
+        if($("#confirm-password").val()=='') {
+            $("#field-confirm-password").html('确认密码必须填写');
+            return false;
+        }else if($('#confirm-password').val()!=$("#password").val()){
+            $("#field-confirm-password").html('密码和确认密码必须相同');
+            return false;
+        }
+        {/literal}
+        {/if}
+        {if $form_action eq "update"}
+        {literal}
+        if($("#username").val()=='') {
+            $('#field-name').html('用户名必须填写');
+            return false;
+        }
+        if($("#password").val().length > 0) {
+            if(/ /.test($("#password").val()) == true) {
+                $('#field-password').html('密码中不能包含空格');
+                return false
+            } else if($("#password").val().length<6){
+                $('#field-password').html('密码长度不能小于6位');
+                return false;
+            }
+            //确认密码
+            if($('#confirm-password').val()!=$("#password").val()){
+                $("#field-confirm-password").html('密码和确认密码必须相同');
+                return false;
+            }
+        }
+        {/literal}
+        {/if}
+
+        {literal}
+        if($("#companyName").val()=='') {
+            $("#field-companyName").html("单位名称必须填写");
+            return false;
+        }
+        if($("#department").val()=='') {
+            $("#field-department").html("部门名称必须填写");
+            return false;
+        }
+        if($("#position").val()=='') {
+            $("#field-position").html("职位名称必须填写");
+            return false;
+        }
+        if($("#companyAddress").val()=='') {
+            $("#field-companyAddress").html("单位地址必须填写");
+            return false;
+        }
+        if($("#officePhone").val()=='') {
+            $("#field-officePhone").html("办公电话必须填写");
+            return false;
+        }
+        if($("#fax").val()=='') {
+            $("#field-fax").html("办公传真必须填写");
+            return false;
+        }
+
+        var docRank = document.getElementById("rank");
+        var objIndex = docRank.options.selectedIndex;
+        var objVal = docRank.options[objIndex].value;
+        if(objVal=='') {
+            $("#field-rank").html("信用等级必须选择");
+            return false;
+        }
+        if($("#contacts").val()=='') {
+            $("#field-contacts").html("联系人必须填写");
+            return false;
+        }
+        if($("#contactsPhone").val()=='') {
+            $("#field-contactsPhone").html("联系人电话必须填写");
+            return false;
+        }
+        return true;
+    }
+    {/literal}
+    //-->
+</script>
+{include file="pagefooter.htm"}
