@@ -264,6 +264,11 @@ elseif ($_REQUEST['act'] == 'add' || $_REQUEST['act'] == 'edit')
     $smarty->assign('cat_list', cat_list(0, $goods['cat_id']));
     $smarty->assign('cat_list2', $cat_list2);
     $smarty->assign('brand_list', get_brand_list());
+    /** @var 厂商列表 */
+    $code = $_REQUEST['code'];
+    $brand_sql = "SELECT brand_name, brand_id from ".$GLOBALS['ecs']->table('brand');
+    $brand_list = $GLOBALS['db'] -> getAll($brand_sql);
+    /** @var 厂商列表 */
     $smarty->assign('unit_list', get_unit_list());
     $smarty->assign('user_rank_list', get_user_rank_list());
     $smarty->assign('weight_unit', $is_add ? '1' : ($goods['goods_weight'] >= 1 ? '1' : '0.001'));
@@ -582,7 +587,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
             }
         }
     }
-
+    
     /* 删除下载的外链原图 */
     if (!empty($is_url_goods_img))
     {
@@ -602,7 +607,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         $goods_sn   = $_POST['goods_sn'];
     }
 
-
+    
     /* 处理商品数据 */
     $shop_price = !empty($_POST['shop_price']) ? $_POST['shop_price'] : 0;
     $market_price = !empty($_POST['market_price']) ? $_POST['market_price'] : 0;
@@ -996,7 +1001,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
     {
         $db->query("UPDATE " . $ecs->table('goods') . " SET goods_thumb = '$goods_thumb' WHERE goods_id='$goods_id'");
     }
-
+    
     /* 如果有图片，把商品图片加入图片相册 */
     if (isset($img))
     {
@@ -1017,7 +1022,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
             "VALUES ('$goods_id', '$gallery_img', '', '$gallery_thumb', '$img')";
         $db->query($sql);
     }
-
+    
     /* 处理相册图片 */
     handle_gallery_image($goods_id, $_FILES['img_url'], $_POST['img_desc'], $_POST['img_file']);
 
@@ -1030,7 +1035,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
             $db->query($sql);
         }
     }
-
+    
     /* 不保留商品原图的时候删除原图 */
     if ($proc_thumb && !$_CFG['retain_original_img'] && !empty($original_img))
     {
@@ -1060,7 +1065,7 @@ elseif ($_REQUEST['act'] == 'insert' || $_REQUEST['act'] == 'update')
         $link[0] = add_link($code);
     }
     $link[1] = list_link($is_insert, $code);
-
+    
     //$key_array = array_keys($link);
     for($i=0;$i<count($link);$i++)
     {

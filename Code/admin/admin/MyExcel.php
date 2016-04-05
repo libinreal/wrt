@@ -133,7 +133,7 @@ class MyExcel
 			$k += 3;
 			$objWorkSheet->getRowDimension($k)->setRowHeight(24);
 			$objWorkSheet->setCellValue('A'.$k, $row['order_sn']);	
-			$objWorkSheet->setCellValue('B'.$k, $row['goods_sn']);	
+			$objWorkSheet->setCellValueExplicit('B'.$k, $row['goods_sn'], PHPExcel_Cell_DataType::TYPE_STRING);	
 			$objWorkSheet->setCellValue('C'.$k, $row['goods_name']);	
 			$objWorkSheet->setCellValue('D'.$k, $row['attr']);	
 			$objWorkSheet->setCellValue('E'.$k, $row['goods_number_arr_buyer']);	
@@ -286,7 +286,7 @@ class MyExcel
 			$k += 3;
 			$objWorkSheet->getRowDimension($k)->setRowHeight(24);
 			$objWorkSheet->setCellValue('A'.$k, $row['order_sn']);	
-			$objWorkSheet->setCellValue('B'.$k, $row['goods_sn']);	
+			$objWorkSheet->setCellValueExplicit('B'.$k, $row['goods_sn'], PHPExcel_Cell_DataType::TYPE_STRING);	
 			$objWorkSheet->setCellValue('C'.$k, $row['goods_name']);	
 			$objWorkSheet->setCellValue('D'.$k, $row['attr']);	
 			$objWorkSheet->setCellValue('E'.$k, $row['goods_number_arr_saler']);	
@@ -463,7 +463,7 @@ class MyExcel
 			$k += 3;
 			$objWorkSheet->getRowDimension($k)->setRowHeight(24);
 			$objWorkSheet->setCellValue('A'.$k, $row['goods_name']);
-			$objWorkSheet->setCellValue('B'.$k, $row['goods_sn']);
+			$objWorkSheet->setCellValueExplicit('B'.$k, $row['goods_sn'], PHPExcel_Cell_DataType::TYPE_STRING);
 			$objWorkSheet->setCellValue('C'.$k, $row['order_sn']);
 			$objWorkSheet->setCellValue('D'.$k, $row['goods_price_arr_buyer']);	
 			$objWorkSheet->setCellValue('E'.$k, $row['goods_number_arr_buyer']);	
