@@ -497,12 +497,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 
 		/**
-		 * 编辑初始化
+		 * 添加初始化
 		 * 接口地址：http://admin.zj.dev/admin/BillModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(主键bill_id)：
 		 *      {
-		 *		    "command": "editInit",
+		 *		    "command": "addInit",
 		 *		    "entity": "bill",
 		 *		    "parameters": {
 		 *                  "bill_id":2

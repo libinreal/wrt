@@ -87,6 +87,7 @@ $_LANG['contract_stats'] = '项目内部对账单';
 // 权限管理
 //权限管理部分的权限
 $_LANG['users_manage'] = '会员管理';
+$_LANG['users_add_total'] = '总账号添加';
 $_LANG['admin_manage'] = '管理员添加/编辑';
 $_LANG['admin_drop'] = '删除管理员';
 $_LANG['logs_manage'] = '管理日志列表';

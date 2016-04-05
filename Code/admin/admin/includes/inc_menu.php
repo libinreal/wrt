@@ -74,6 +74,7 @@ $modules['09_service']['service_appointment'] =  'appointment.php?act=list';
 // 会员管理 ok
 $modules['10_members']['03_users_list']             = 'users.php?act=list';
 $modules['10_members']['04_users_add']              = 'users.php?act=add';
+$modules['10_members']['05_users_add_total']        = 'users.php?act=add_total';
 
 // 权限管理 ok
 $modules['11_priv_admin']['admin_logs']             = 'admin_logs.php?act=list';

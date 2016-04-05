@@ -314,32 +314,35 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$sql = substr($sql, 0, -1) . ")";
-			$GLOBALS['db']->query("START TRANSACTION");//开启事务
+			// $GLOBALS['db']->query("START TRANSACTION");//开启事务
 			$createBill = $GLOBALS['db']->query($sql);
-			
+			//parentId
+			$parent_id_sql ='SELECT `parent_id` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `user_id` = ' . $data['user_id'];
+			$parent_id = $GLOBALS['db']->getOne( $parent_id_sql );
+
 			if( $createBill )
 			{
 				$users_table = $GLOBALS['ecs']->table('users');
 				if( $data['bill_id'] != '0' && is_numeric( $data['bill_id'] ))//额度生成类型(0:商票,1:现金,2:承兑)
 					$users_sql = 'UPDATE ' . $users_table . ' SET `bill_amount_history` = `bill_amount_history` + ' . $data['amount'] .
-							',`bill_amount_valid` = `bill_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'];
+							',`bill_amount_valid` = `bill_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'] . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
 				else
 					$users_sql = 'UPDATE ' . $users_table . ' SET `cash_amount_history` = `cash_amount_history` + ' . $data['amount'] .
-							',`cash_amount_valid` = `cash_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'];
+							',`cash_amount_valid` = `cash_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'] . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
 				
 				$updateUsers = $GLOBALS['db']->query($users_sql);
 
 				if( $updateUsers ) {
-					$GLOBALS['db']->query("COMMIT");//事务提交
+					// $GLOBALS['db']->query("COMMIT");//事务提交
 					make_json_response("", "0", "额度生成单添加成功");//暂不返回自增id
 				}else{
-					$GLOBALS['db']->query("ROLLBACK");//事务回滚
+					// $GLOBALS['db']->query("ROLLBACK");//事务回滚
 					make_json_response("", "-1", "额度生成单添加失败");//暂不返回自增id
 				}
 			}
 			else
 			{
-				$GLOBALS['db']->query("ROLLBACK");//事务回滚
+				// $GLOBALS['db']->query("ROLLBACK");//事务回滚
 				make_json_response("", "-1", "额度生成单添加失败");
 			}
 		}
@@ -498,7 +501,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$result['info'] = $bill; 		
 			} elseif ( $type == 1) {//现金
-				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `companyName` IS NOT NULL AND `parent_id` = 0';
+				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `companyName` IS NOT NULL AND ( `parent_id` <> 0 AND `parent_id` IS NOT NULL)';
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 

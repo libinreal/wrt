@@ -13,7 +13,7 @@
                     {/if}
                 </td>
             </tr>
-            {if $form_action eq "insert"}
+            {if $form_action eq "insert_total"}
             <tr>
                 <td class="label">{$lang.password}:</td>
                 <td>
@@ -184,13 +184,15 @@
             <tr>
                 <td class="label">{$lang.customerNo}:</td>
                 <td>
-                    <input name="customerNo" type="text" size="40" class="inputBg" value="{$user.customerNo}"/>
+                    <input name="customerNo" id="customerNo" type="text" size="40" class="inputBg" onblur="fnCustomerNo();"  value="{$user.customerNo}"/>
+                    <span class="require-field" id="field-customerNo">*</span>
                 </td>
             </tr>
             <tr>
                 <td class="label">{$lang.customerAccount}:</td>
                 <td>
-                    <input name="customerAccount" type="text" size="40" class="inputBg" value="{$user.customerAccount}"/>
+                    <input name="customerAccount" id="customerAccount" type="text" size="40" class="inputBg"  onblur="fnCustomerAccount();" value="{$user.customerAccount}"/>
+                    <span class="require-field" id="field-customerAccount">*</span>
                 </td>
             </tr>
             <tr>
@@ -228,6 +230,22 @@
             $('#field-name').html('用户名必须填写');
         }else {
             $('#field-name').html('*');
+        }
+    }
+
+    function fnCustomerNo() {
+        if($("#customerNo").val()=='') {
+            $('#field-customerNo').html('买方客户号必须填写');
+        }else {
+            $('#field-customerNo').html('*');
+        }
+    }
+
+    function fnCustomerAccount() {
+        if($("#customerAccount").val()=='') {
+            $('#field-customerAccount').html('买方账号必须填写');
+        }else {
+            $('#field-customerAccount').html('*');
         }
     }
 
@@ -320,7 +338,7 @@
     }
 
     <!--
-    if (document.forms['theForm'].elements['act'].value == "insert")
+    if (document.forms['theForm'].elements['act'].value == "insert_total")
     {
         document.forms['theForm'].elements['username'].focus();
     }
@@ -339,7 +357,7 @@
     function validate()
     {
         {/literal}
-        {if $form_action eq "insert"}
+        {if $form_action eq "insert_total"}
         {literal}
         if($("#username").val()=='') {
             $('#field-name').html('用户名必须填写');
@@ -360,6 +378,14 @@
             return false;
         }else if($('#confirm-password').val()!=$("#password").val()){
             $("#field-confirm-password").html('密码和确认密码必须相同');
+            return false;
+        }
+        if($("#customerNo").val()=='') {
+            $('#field-customerNo').html('买方客户号必须填写');
+            return false;
+        }
+        if($("#customerAccount").val()=='') {
+            $('#field-customerAccount').html('买方账号必须填写');
             return false;
         }
         {/literal}

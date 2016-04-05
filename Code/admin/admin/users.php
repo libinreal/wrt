@@ -69,6 +69,163 @@ elseif ($_REQUEST['act'] == 'add')
     $smarty->display('user_info.htm');
 }
 /*------------------------------------------------------ */
+//-- 添加会员总帐号
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'add_total')
+{
+    /* 检查权限 */
+    admin_priv('users_manage');
+
+    $user = array('sex'=> 0,'customLevel'=> 1);
+    $smarty->assign('ur_here',$_LANG['04_users_add']);
+    $smarty->assign('action_link',array('text' => $_LANG['03_users_list'], 'href'=>'users.php?act=list'));
+    $smarty->assign('form_action','insert_total');
+    $smarty->assign('user',$user);
+    assign_query_info();
+    $smarty->display('customer_info.htm');
+}
+/*------------------------------------------------------ */
+//-- 新增总帐号
+/*------------------------------------------------------ */
+elseif ($_REQUEST['act'] == 'insert_total')
+{
+    /* 检查权限 */
+    admin_priv('users_manage');
+    $username = empty($_POST['username']) ? '' : trim($_POST['username']);
+    $password = empty($_POST['password']) ? '' : trim($_POST['password']);
+    $email = empty($_POST['email']) ? '' : trim($_POST['email']);
+    $sex = empty($_POST['sex']) ? 0 : intval($_POST['sex']);
+    $sex = in_array($sex, array(0, 1)) ? $sex : 0;
+    //$birthday = $_POST['birthdayYear'] . '-' .  $_POST['birthdayMonth'] . '-' . $_POST['birthdayDay'];
+    $qq = empty($_POST['qq']) ? '':trim($_POST['qq']);
+    $weixin = empty($_POST['weixin']) ? '' : trim($_POST['weixin']);
+    $companyName = empty($_POST['companyName']) ? '' : trim($_POST['companyName']);
+    $companyAddress = empty($_POST['companyAddress']) ? '' : trim($_POST['companyAddress']);
+    $officePhone = empty($_POST['officePhone']) ? '' : trim($_POST['officePhone']);
+    $fax = empty($_POST['fax']) ? '' : trim($_POST['fax']);
+    $position = empty($_POST['position']) ? '' : trim($_POST['position']);
+    $projectName = empty($_POST['projectName']) ? '' : trim($_POST['projectName']);
+    $projectBrief = empty($_POST['projectBrief']) ? '' : trim($_POST['projectBrief']);
+    $contacts = empty($_POST['contacts']) ? '' : trim($_POST['contacts']);
+    $contactsPhone = empty($_POST['contactsPhone']) ? '' : trim($_POST['contactsPhone']);
+    $secondContacts = empty($_POST['secondContacts']) ? '' : trim($_POST['secondContacts']);
+    $secondPhone = empty($_POST['secondPhone']) ? '' : trim($_POST['secondPhone']);
+
+    $customNo = empty($_POST['customNo']) ? '' : trim($_POST['customNo']);
+    $customLevel = empty($_POST['customLevel']) ? '' : trim($_POST['customLevel']);
+    $customerNo = empty($_POST['customerNo']) ? '' : trim($_POST['customerNo']);
+    $customerAccount = empty($_POST['customerAccount']) ? '' : trim($_POST['customerAccount']);
+
+    if( empty( $customerNo ) || empty( $customerAccount )  ){
+       sys_msg($_LANG['customNo_not_empty']);
+        exit();
+    }
+
+    
+    $privilege = $_POST['privilege'];
+    if( !empty( $privilege ) ){
+        $privilege = implode(',',$privilege);
+    }else{
+        $privilege = '';
+    }
+
+    $customLevel = in_array($customLevel,array(0,1,2))? $customLevel : 0;
+    $credit_rank = trim($_POST['credit_rank']);
+    $department = trim($_POST['department']);
+    //唯一性校验 用户名 邮箱和联系人手机号码
+    $sql2 = "select * from ".$GLOBALS['ecs']->table('users')." where user_name='".$username."'";
+    $res = $GLOBALS['db']->getRow($sql2);
+    if($res['user_name']==$username) {
+        sys_msg($_LANG['username_exists']);
+        exit();
+    }
+//    $sql3 = "select * from ".$GLOBALS['ecs']->table('users')." where email='".$email."'";
+//    $resEmail = $GLOBALS['db']->getRow($sql3);
+//    if($resEmail['email']==$email) {
+//        sys_msg($_LANG['email_exists']);
+//        exit();
+//    }
+
+    $sql4 = "select * from ".$GLOBALS['ecs']->table('users')." where contactsPhone='".$contactsPhone."'";
+    $resCPhone = $GLOBALS['db']->getRow($sql4);
+    if($resCPhone['contactsPhone'] == $contactsPhone) {
+        sys_msg($_LANG['contactsPhone_exists']);
+        exit();
+    }
+    //libin 2016-02-02 不对会员编码做重复检查
+    /*$sql5 = "select * from ".$GLOBALS['ecs']->table('users')." where customNo='".$customNo."'";
+    $res = $GLOBALS['db']->getRow($sql5);
+    if($res['customNo']==$customNo) {
+        sys_msg($_LANG['customNo_exists']);
+        exit();
+    }*/
+
+    /*if( !$parentId ){//请选择总账号
+        sys_msg($_LANG['parentId_empty']);
+        exit();
+    }*/
+
+    $insert_data = array();
+    $insert_data['user_name'] = $username;
+    $insert_data['password'] = sha1($password);
+    $insert_data['email'] = $email;
+    $insert_data['sex'] = $sex;
+    $insert_data['qq'] = $qq;
+    $insert_data['weixin'] = $weixin;
+    $insert_data['companyName'] = $companyName;
+    $insert_data['companyAddress'] = $companyAddress;
+    $insert_data['officePhone'] = $officePhone;
+    $insert_data['fax'] = $fax;
+    $insert_data['position'] = $position;
+    $insert_data['projectName'] = $projectName;
+    $insert_data['projectBrief'] = $projectBrief;
+    $insert_data['contacts'] = $contacts;
+    $insert_data['contactsPhone'] = $contactsPhone;
+    $insert_data['secondContacts'] = $secondContacts;
+    $insert_data['secondPhone'] = $secondPhone;
+    $insert_data['customNo'] = $customNo;
+    $insert_data['customLevel'] = $customLevel;
+    $insert_data['reg_time'] = gmtime();
+    $insert_data['credit_rank'] = $credit_rank;
+    $insert_data['department'] = $department;
+    $insert_data['customerNo'] = $customerNo;
+    $insert_data['customerAccount'] = $customerAccount;
+    $insert_data['parent_id'] = $parentId;
+
+    $sql = 'INSERT INTO ' . $GLOBALS['ecs']->table('users') .'(';
+    $insert_keys = array_keys( $insert_data );
+    foreach ($insert_keys as $v) {
+        $sql .= '`' . $v .'`,';
+    }
+    $sql = substr($sql, 0, -1) . ") VALUES(";
+
+    foreach ($insert_data as $v) {
+        if( is_null( $v ) )
+            $v = '';
+        if(is_string( $v ) )
+            $v = '\'' . $v . '\'';
+
+        $sql = $sql . $v . ',';
+    }
+    $sql = substr($sql, 0, -1) . ")";
+
+    /*
+    
+     $sql = "INSERT INTO ".$GLOBALS['ecs']->table('users')."".
+        "(user_name,password,email,sex,qq,weixin,companyName,companyAddress,officePhone,fax,position,projectName,projectBrief,contacts,contactsPhone,secondContacts,secondPhone,customNo,customLevel,reg_time,credit_rank,department,msn,customerNo,customerAccount,parent_id)".
+        " VALUES('".$username."','".sha1($password)."','".$email."','".$sex."','".$qq."','".$weixin."','".$companyName."','".$companyAddress."','".$officePhone."','".$fax."','".$position."','".$projectName."','".$projectBrief."','".$contacts."','".$contactsPhone."','".$secondContacts."','".$secondPhone."','".$customNo."','".$customLevel."','".gmtime()."','".$credit_rank."','".$department."','".$privilege."','".$customerNo."','".$customerAccount."','".$parentId."')";
+    */
+    $res = $GLOBALS['db']->query($sql);
+    if($res) {// 添加用户成功记录日志，如果是Vip下单会员还要发送短息通知对方
+
+        /* 记录管理员操作 */
+        admin_log($_POST['username'], 'add', 'users');
+        /* 提示信息 */
+        $link[] = array('text' => $_LANG['go_back'], 'href'=>'users.php?act=list');
+        sys_msg(sprintf($_LANG['add_success'], htmlspecialchars(stripslashes($_POST['username']))), 0, $link);
+    }
+}
+/*------------------------------------------------------ */
 //-- 添加会员帐号
 /*------------------------------------------------------ */
 elseif ($_REQUEST['act'] == 'insert')

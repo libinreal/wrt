@@ -76,6 +76,7 @@ $purview['service_appointment'] = "appointment_state";
 //会员管理权限
 $purview['03_users_list']        = 'users_manage';
 $purview['04_users_add']         = 'users_manage';
+$purview['05_users_add_total']         = 'users_add_total';
 //权限管理
 $purview['admin_logs']           = array('logs_manage', 'logs_drop');
 $purview['admin_list']           = array('admin_manage', 'admin_drop');
