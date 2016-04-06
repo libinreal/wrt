@@ -337,15 +337,15 @@ function goodsAttrResponse(msg) {
 function get_shop_price() {
     var shop_price = document.getElementById("shop_price").value;
     if(shop_price=='') {
-        alert('Vip价格不能为空');
+        alert('交易价格不能为空');
         document.getElementById("shop_price").value = '0.00';
     }
     if(shop_price<0) {
-        alert('Vip价格不能小于0');
+        alert('交易价格不能小于0');
         document.getElementById("shop_price").value = '0.00';
     }
     if(!((/^[0-9]+(.[0-9]+)|[0-9]$/).test(shop_price))) {
-        alert('Vip价格格式不正确');
+        alert('交易价格格式不正确');
         document.getElementById("shop_price").value = '0.00';
     }
 }
@@ -379,17 +379,17 @@ function fnGoodsform() {
         return false;
     }
     if($("#shop_price").val()=='') {
-        alert('Vip价格不能为空');
+        alert('交易价格不能为空');
         $("#shop_price").val('0.00');
         return false;
     }
     if($("#shop_price").val()<0) {
-        alert('Vip价格不能小于0');
+        alert('交易价格不能小于0');
         $("#shop_price").val('0.00');
         return false;
     }
     if(!((/^[0-9]+(.[0-9]+)|[0-9]$/).test($("#shop_price").val()))) {
-        alert('Vip价格格式不正确');
+        alert('交易价格格式不正确');
         $("#shop_price").val('0.00');
         return false;
     }
@@ -532,42 +532,6 @@ var historyContainer = $('.brandsInfo'),
         si = 9,
         wi = 0,
         upCount = 0,downCount = 0;
-/*$("#tt").click(function(e){
-    var pinyin = $("#tt").val().toUpperCase();
-    
-    Ajax.call('goods.php?act=brands&code='+pinyin, "", fnBrandResponse, "GET", "JSON");
-})
-$("#tt").on('keyup', function(e) {
-    if(e.keyCode != 37 && e.keyCode != 38 && e.keyCode != 39 && e.keyCode != 40){
-        var pinyin = $("#tt").val().toUpperCase();
-        Ajax.call('goods.php?act=brands&code='+pinyin, "", fnBrandResponse, "GET", "JSON");
-    }else{
-        var max = historyContainer.children().length;
-        historyContainer.find('span').removeClass('active');
-        //down=40 up=38
-        if (e.keyCode == 40) {
-            if(typeof indexLI == 'undefined') indexLI = -1;
-            indexLI++;
-            downCount++;
-            upCount = 0;
-        } else if (e.keyCode == 38) {
-            if(typeof indexLI == 'undefined') indexLI = 0;
-            indexLI--;
-            upCount ++;
-            downCount = 0;
-        }
-        if (indexLI >= max - 1) {
-            indexLI = max - 1;
-        }
-        if (indexLI < 0) {
-            indexLI = 0;
-        }
-        var cur = historyContainer.find('span:eq(' + indexLI + ')');
-        cur.addClass('active');
-        $('#tt').val(cur.text());
-        $("#send_id").val(cur.attr('data-id'));
-    }
-});*/
 $('#shop_price').on('focusin', function(e) {
     closeHistoryContainer();
 });
