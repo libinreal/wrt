@@ -74,9 +74,9 @@
     		<td><!--[= list[i].createAt || '--']--></td>
     		<td><!--[= list[i].contract_name || '--']--></td>
     		<td><!--[= list[i].orderSn || '--']--></td>
-    		<td><!--[= list[i].goodsPrice || '--']--></td>
+            <td><!--[= list[i].goodsPriceFinal || '--']--></td>
     		<td><!--[= list[i].nums || '--']--></td>
-    		<td><!--[= $getStatus(list[i].status)]--></td>
+    		<td><!--[= $getStatus(list[i].childOrderStatus)]--></td>
     	</tr>
     	<tr>
     		<td colspan="4" style="text-align:left;border-right:1px solid #ccc;">
