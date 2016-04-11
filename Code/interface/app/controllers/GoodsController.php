@@ -578,6 +578,8 @@ class GoodsController extends ControllerBase {
 				GROUP_CONCAT(DISTINCT IF(p.imgOriginal LIKE 'http://%', p.imgOriginal, CONCAT('".$this->get_url()."', p.imgOriginal))) pics,
 				Goods.code,
 				s.supplier,
+				Goods.suppliersId,
+				cat.id catId,
 				Goods.shiplocal,
 				Goods.storeNum,
 				cat.unit,
@@ -630,6 +632,30 @@ class GoodsController extends ControllerBase {
 			unset($goodsDetail['code']);
 		}
 		$goodsDetail['vipPrice'] = $this->showShopPrice($goodsDetail);
+
+		$shipping_data = ShippingPrice::findFirst( 
+							array( 'columns' => 'shippingFee',
+									'bind' => array( 
+											$goodsDetail['catId'],
+											$goodsDetail['suppliersId']
+										),
+									'conditions' => ' catId = ?0 AND suppliersId = ?1'
+								)
+							);
+
+		if( $shipping_data ){
+			$shipping_fee = $shipping_data->shippingFee;
+			if( is_numeric( $shipping_fee ) ){
+				if( !$goodsDetail['unit'] )
+					$goodsDetail['shipping_fee'] = $shipping_fee . '元/' . '公里';
+				else
+					$goodsDetail['shipping_fee'] = $shipping_fee . '元/' . $goodsDetail['unit'] . '/公里';
+			}else{
+				$goodsDetail['shipping_fee'] = $shipping_fee;
+			}
+		}else{
+			$goodsDetail['shipping_fee'] = '0元/公里';
+		}	
 		
 		return ResponseApi::send(compact('goodsDetail', 'nav'));
     }
