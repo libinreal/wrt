@@ -38,24 +38,13 @@
 					<li class="msg-color">2.部分服务仅在物流配送区域提供，非配送区域无法选择！</li>
 				</ul>
 			</div>
-			<div class="order form-item">
-				<div class="order-no">
-					支付方式
-				</div>
-				<ul class="bank-info form-radio-group payfor-msg clearfix" style="padding: 0;">
-					<li>
-						<label class="active"><input type="radio" name="" value="01" checked />信用B支付</label>
-					</li>
-					<li><em>使用物融通平台的信用B进行物资采购支付</em></li>
-				</ul>
-			</div>
 			<div class="invoice">
 				<div class="info">发票信息：</div>
 				<div class="info-detail">
 					<div class="form-item invoice_info clearfix">
 						<div class="form-label"><span>*</span>发票信息：</div>
 						<div class="form-value form-radio-group">
-							<label class="active" id="invtype1"><input type="radio" name="invType" value="0" checked />增值税专用发票</label>
+							<label class="active" id="invtype1"><input type="radio" name="invType" value="0" checked>增值税专用发票</label>
 							<label id="invtype2"><input type="radio" name="invType" value="1" />普通发票</label>
 						</div>
 					</div>

@@ -133,11 +133,9 @@ var SelfCredit = {
 			return false;
 		}
 		var params = {"apply_id":id};
-		strJson = createJson("applyCreditSingle", this.entity, params);
-		that = this
-		console.log(strJson)
+		var strJson = createJson("applyCreditSingle", this.entity, params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -150,6 +148,9 @@ var SelfCredit = {
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}
 					if($("input[name="+key+"]").length){
+						if(obj.content.status==2||obj.content.status==3){
+							$("input[name="+key+"]").attr("disabled","disabled")	
+						}
 						if(key == 'check_amount'){
 							$("input[name="+key+"]").val(obj.content.apply_amount);
 							return;
@@ -157,6 +158,9 @@ var SelfCredit = {
 						$("input[name="+key+"]").val(value);
 					}
 					if($("textarea[name="+key+"]").length){
+						if(obj.content.status==2||obj.content.status==3){
+							$("textarea[name="+key+"]").attr("disabled","disabled")	
+						}
 						$("textarea[name="+key+"]").text(value);
 					}
 					if($("img#"+key).length){
@@ -165,6 +169,9 @@ var SelfCredit = {
 						}
 					}
 				});
+				if(obj.content.status==2||obj.content.status==3){
+					$("#handle_button span").html('')
+				}
 			}
 			
 		},"json");	

@@ -91,7 +91,10 @@
 			<div class="order-operate-btns">
 				<!--[if(status == '-1' || status == '0') {]-->
 				<div id="btn1">
+<<<<<<< HEAD
 					<!--<a class="button btn-cuiban<!--[= (isRemaind == '1' ? ' disabled' : '')]-->" href="#"><!--[= (isRemaind == '1' ? ' 已催办' : '催办订单')]--></a>-->
+=======
+>>>>>>> c0b71db731f15d642c11dd24093bcb112dfdba3a
 					<!--[if(cancelStatus == '1'){]-->
 					<a class="button btn-quxiao disabled" href="#">取消中</a>
 					<!--[}else{]-->
@@ -105,12 +108,17 @@
 				</div>
 				<!--[}else if(status == '1') {]-->
 				<div id="btn2">
+<<<<<<< HEAD
 					<!--<a class="button btn-cuiban<!--[= (isRemaind == '1' ? ' disabled' : '')]-->" href="#"><!--[= (isRemaind == '1' ? ' 已催办' : '催办订单')]--></a>-->
 					<a class="button" href="my-contract-detail.html?contract_id=<!--[= contid ]-->">查阅订单合同</a>
 					<a class="button btn-queren<!--[= (isAllCheck == '1' ? '' : ' disabled')]-->" href="#" style="display: none;">订单确认完成</a>
 					<!--[if(isAllCheck == '2'){]-->
 					<!--[}]-->
 					<!--<a class="button btn-primary btn-special" href="my-order-acceptance.html?orderSn=<!--[= orderSn]-->&id=<!--[= id]-->">我要验收部分订单批次</a>-->
+=======
+					<a class="button" href="my-contract-detail.html?contract_id=<!--[= contid ]-->">查阅订单合同</a>
+					<a class="button btn-queren<!--[= (isAllCheck == '1' ? '' : ' disabled')]-->" href="#" style="display: none;">订单确认完成</a>
+>>>>>>> c0b71db731f15d642c11dd24093bcb112dfdba3a
 				</div>
 				<!--[}else if(status == '2') {]-->
 				<div id="btn3">
