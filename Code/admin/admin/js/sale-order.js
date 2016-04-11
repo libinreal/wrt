@@ -60,7 +60,7 @@ var SaleOrder = {
 		"price_date"
 	],
 	limit: 0,
-	offset: 8,
+	offset: 20,
 	current_page: 1,
 	total_page: 0,
 	url: "OrderInfoModel.php",

@@ -2,7 +2,7 @@ var PurchaseCheck = {
 	order_arr: [
 	],
 	limit: 0,
-	offset: 8,
+	offset: 20,
 	total_page: 0,
 	url: "",
 	entity: "",

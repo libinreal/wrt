@@ -48,7 +48,7 @@ var Supplier = {
 	purchase_pay_status: {},
 	purchase_order_pay_status: {},
 	limit: 0,
-	offset: 8,
+	offset: 20,
 	total_page: 0,
 	current_page: 1,
 	url: "SupplierModel.php",

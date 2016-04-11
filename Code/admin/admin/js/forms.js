@@ -7,6 +7,7 @@ var Forms = {
 		"goods_number_arr_buyer",
 		"goods_price_arr_buyer",
 		"order_amount_arr_buyer",
+		"customer_name",
 		"remark"
 	],
 	supplier_arr: [
@@ -17,6 +18,7 @@ var Forms = {
 		"goods_number_arr_saler",
 		"goods_price_arr_saler",
 		"order_amount_arr_saler",
+		"customer_name",
 		"remark"
 	],
 	project_arr: [
@@ -28,13 +30,14 @@ var Forms = {
 		"order_amount_arr_buyer",
 		"purchase_sn",
 		"suppliers_name",
+		"customer_name",
 		"goods_price_arr_saler",
 		"goods_number_arr_saler",
 		"order_amount_arr_saler",
 		"differential"
 	],
 	limit: 0,
-	offset: 8,
+	offset: 20,
 	total_page: 0,
 	current_page: 1,
 	url: "StatementsModel.php",

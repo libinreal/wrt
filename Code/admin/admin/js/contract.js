@@ -22,7 +22,7 @@ var Contract = {
 		'region_name'
 	],
 	limit: 0,
-	offset: 8,
+	offset: 20,
 	total_page: 0,
 	current_page: 1,
 	url: "contract_manage.php",

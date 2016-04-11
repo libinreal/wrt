@@ -8,7 +8,7 @@ var BillRepay = {
 		"operate"
 	],
 	limit: 0,
-	offset: 8,
+	offset: 20,
 	total_page: 0,
 	current_page: 1,
 	url: "BillRepayModel.php",
