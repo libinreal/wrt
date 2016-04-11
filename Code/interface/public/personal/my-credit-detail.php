@@ -64,7 +64,7 @@
 		</div>
 		<div class="info-border">
 			<div class="info-head">申请附件</div>
-			<div><span><a href="/apply_attachment/<!--[= img ]-->" target="_blank"><img src="/apply_attachment/<!--[= img ]-->" width="450" ></a></span></div>
+			<div><span><a href="<!--[= img ]-->" target="_blank"><img src="<!--[= img ]-->" width="450" ></a></span></div>
 		</div>
 		<div class="info-border last-div" style="text-align:center"><div>
 		</div>

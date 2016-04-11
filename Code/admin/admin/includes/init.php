@@ -122,6 +122,7 @@ $GLOBALS['ecs'] = $ecs;
 define('DATA_DIR', $ecs->data_dir());
 define('IMAGE_DIR', $ecs->image_dir());
 define('PURCHASE_ORDER_DIR', 'purchase_order');
+define('APPLY_CREDIT_DIR', 'apply_attachment');
 
 /* 初始化数据库类 */
 require(ROOT_PATH . 'includes/cls_mysql.php');

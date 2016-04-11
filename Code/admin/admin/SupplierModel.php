@@ -61,8 +61,16 @@ require(dirname(__FILE__) . '/includes/init.php');
 	        
 	        //upload
 	        $upload = new cls_image();
+			$storedir = ROOT_PATH . DATA_DIR . '/'. PURCHASE_ORDER_DIR . '/' . date("Ym");
+			
+			if(!is_dir($storedir)) {
+				if(!mkdir($storedir, 0777)) {
+					make_json_response('', -1, '目录创建失败');
+				}
+			}
+
 	        $fileName = date('YmdHis') . '_s' . $suppliers_id . '.' . $file['extension'];
-	        $res = $upload->upload_image($_FILES[$entity], PURCHASE_ORDER_DIR, $fileName);
+	        $res = $upload->upload_image($_FILES[$entity], PURCHASE_ORDER_DIR . '/' . date('Ym'), $fileName);
 	        if ($res === false) {
 	        	;
 	        } else {
@@ -71,7 +79,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 	        	$data = array();
 	        	$data['upload_type'] = $type;
-	        	$data['upload_name'] = $fileName;
+	        	$data['upload_name'] = date('Ym') . '/' . $fileName;
 	        	// $data['order_pay_id'] = $order_pay_id;
 
 	        	$insert_sql = 'INSERT INTO ' . $upload_table . ' (';
@@ -1188,9 +1196,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					foreach ($files as $f) {
 						if( $f['upload_type'] == 0 )
-							$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+							$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => preg_replace( '/\d+\//', '', $f['upload_name'] ) );
 						else
-							$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => $f['upload_name']);
+							$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => preg_replace( '/\d+\//', '', $f['upload_name'] ));
 					}
 				}
 

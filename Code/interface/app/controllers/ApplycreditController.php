@@ -17,7 +17,10 @@ class ApplycreditController extends ControllerBase
 		if (!$userinfo) return ResponseApi::send(null, -1, '未登录');
 		
 		if ($this->request->hasFiles() == true) {
-			$dirAttach = getcwd().'/apply_attachment';
+
+			$doc_root = $this->request->getServer('DOCUMENT_ROOT');
+			$dirAttach = dirname( dirname( $doc_root ) ) . '/admin/data/apply_attachment';
+
 			if (!is_dir($dirAttach)) {
 				if (!mkdir($dirAttach, 0777)) {
 					return ResponseApi::send(null, -1, '`apply_attachment`目录创建失败');
@@ -26,7 +29,6 @@ class ApplycreditController extends ControllerBase
 			if (!is_writable($dirAttach)) {
 				return ResponseApi::send(null, -1, '`apply_attachment`目录没有写的权限');
 			}
-			
 			
 			$opath = "";
 			$filepath = date("Ym");
@@ -41,7 +43,7 @@ class ApplycreditController extends ControllerBase
 			if(!is_writable($storedir)) {
 				return ResponseApi::send(null, Message::$_ERROR_SYSTEM, '目录没有写的权限');
 			}
-	
+			
 			$files = array();
 			// Print the real file names and sizes
 			foreach ($this->request->getUploadedFiles() as $file) {
@@ -227,6 +229,7 @@ class ApplycreditController extends ControllerBase
 		$result['create_date'] = substr($result['create_date'], 0, 10);
 		$result['status'] = $status[$result['status']];
 		$result['action'] = $action;
+		$result['img'] = '/data/apply_attachment/' . $result['img'];
 		return ResponseApi::send($result);
 	}
 	

@@ -139,7 +139,7 @@ class ApplyCredit extends ManageModel
 				'extend' => 'ORDER BY apply_id ASC '.$limit
 		));
 		$data = $this->db->getAll($this->sql);
-		if ($result === false) return failed_json('获取列表失败');
+		if ($data === false) return failed_json('获取列表失败');
 		
 		//总记录数
 		self::selectSql(array(
@@ -155,6 +155,8 @@ class ApplyCredit extends ManageModel
 		$status = array('审核中', '已审核', '审批通过', '审批失败', '已删除');
 		foreach ($data as $k=>$v) {
 			$data[$k]['status'] = $status[$v['status']];
+
+			$data[$k]['upload_url'] =  '/' . DATA_DIR . '/' . APPLY_CREDIT_DIR . '/' .  $f['upload_name'];
 		}
 		make_json_result(array('total' => $total, 'data'=>$data));
 	}
