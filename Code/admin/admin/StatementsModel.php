@@ -508,11 +508,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
 			$category_table = $GLOBALS['ecs']->table('category');
 
-			$sql = 'SELECT odr.`order_sn`, odr.`order_amount_arr_buyer`, odr.`shipping_fee_arr_buyer`, odr.`financial_arr`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
+			$sql = 'SELECT odr.`order_sn`, odr.`order_amount_arr_buyer`, usr.`companyName` AS customer_name ,odr.`shipping_fee_arr_buyer`, odr.`financial_arr`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
 				   ' odr.`inv_content` AS remark, odr.`add_time`, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
 				   ' crt.`contract_name`, crt.`contract_num` FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
+                   ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = crt.`customer_id` '.
 				   ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
 
 			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr' .

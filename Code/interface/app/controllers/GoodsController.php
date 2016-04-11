@@ -998,6 +998,19 @@ class GoodsController extends ControllerBase {
 		$orderInfo->invPayee = $invPayee;
 		$orderInfo->invAddress = $invAddress;
 		$orderInfo->invContent = $invContent;
+
+
+        //增值发票添加字段
+        $orderInfo->invCompany = $invCompany;
+        $orderInfo->invBankName = $invBankName;
+        $orderInfo->invBankAccount = $invBankAccount;
+        $orderInfo->invContent = $invContent;
+        $orderInfo->invContent = $invContent;
+        $orderInfo->invContent = $invContent;
+        $orderInfo->invContent = $invContent;
+        $orderInfo->invContent = $invContent;
+
+
 		//银行相关
 		$orderInfo->payOrgcode = $payOrgcode;
 		//合同相关

@@ -91,7 +91,7 @@
 			<div class="order-operate-btns">
 				<!--[if(status == '-1' || status == '0') {]-->
 				<div id="btn1">
-					<a class="button btn-cuiban<!--[= (isRemaind == '1' ? ' disabled' : '')]-->" href="#"><!--[= (isRemaind == '1' ? ' 已催办' : '催办订单')]--></a>
+					<!--<a class="button btn-cuiban<!--[= (isRemaind == '1' ? ' disabled' : '')]-->" href="#"><!--[= (isRemaind == '1' ? ' 已催办' : '催办订单')]--></a>-->
 					<!--[if(cancelStatus == '1'){]-->
 					<a class="button btn-quxiao disabled" href="#">取消中</a>
 					<!--[}else{]-->
@@ -105,12 +105,12 @@
 				</div>
 				<!--[}else if(status == '1') {]-->
 				<div id="btn2">
-					<a class="button btn-cuiban<!--[= (isRemaind == '1' ? ' disabled' : '')]-->" href="#"><!--[= (isRemaind == '1' ? ' 已催办' : '催办订单')]--></a>
+					<!--<a class="button btn-cuiban<!--[= (isRemaind == '1' ? ' disabled' : '')]-->" href="#"><!--[= (isRemaind == '1' ? ' 已催办' : '催办订单')]--></a>-->
 					<a class="button" href="my-contract-detail.html?contract_id=<!--[= contid ]-->">查阅订单合同</a>
 					<a class="button btn-queren<!--[= (isAllCheck == '1' ? '' : ' disabled')]-->" href="#" style="display: none;">订单确认完成</a>
 					<!--[if(isAllCheck == '2'){]-->
 					<!--[}]-->
-					<a class="button btn-primary btn-special" href="my-order-acceptance.html?orderSn=<!--[= orderSn]-->&id=<!--[= id]-->">我要验收部分订单批次</a>
+					<!--<a class="button btn-primary btn-special" href="my-order-acceptance.html?orderSn=<!--[= orderSn]-->&id=<!--[= id]-->">我要验收部分订单批次</a>-->
 				</div>
 				<!--[}else if(status == '2') {]-->
 				<div id="btn3">
@@ -147,7 +147,7 @@
 				<tr>
 				<th>公司名称：</th><td><!--[= companyName || '--']--></td>
 				<th>下单人：</th><td><!--[= companyName || '--']--></td>
-				<th>下单时间：</th><td><!--[= createAt || '--']--></td>
+				<th>下单时间：</th><td><!--[= $formatDate(createAt, 'yyyy-MM-dd hh:mm:ss') || '--']--></td>
 				</tr>
 				<tr>
 				<th>订单状态：</th><td colspan="20"><!--[= $getStatus(status) || '--']--></td>
