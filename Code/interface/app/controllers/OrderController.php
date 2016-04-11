@@ -304,9 +304,12 @@ class OrderController extends ControllerBase
 				OrderInfo.id, 
 				OrderInfo.createAt, 
 				OrderInfo.orderSn, 
-				OrderInfo.status, 
-				OrderInfo.contractSn, 
-				OG.goodsPrice, 
+				OrderInfo.status,
+				OrderInfo.childOrderStatus,
+				OrderInfo.contractSn,
+				OG.goodsPrice,
+				OG.goodsPriceSendBuyer,
+				OG.goodsPriceArrBuyer,
 				OG.nums, 
 				G.id goodsId, 
 				G.name, 
@@ -349,7 +352,15 @@ class OrderController extends ControllerBase
 				}
 			}
 			$info[$k]['createAt'] = date('Y/m/d', $v['createAt']);
+
+            if ($info[$k]['childOrderStatus'] > SOS_SEND_PC2) {
+                $info[$k]['goodsPriceFinal'] = $v['goodsPriceArrBuyer'];
+            }else{
+                $info[$k]['goodsPriceFinal']= $v['goodsPriceSendBuyer'];
+            }
 		}
+
+
 		return ResponseApi::send($info);
 	}
 	

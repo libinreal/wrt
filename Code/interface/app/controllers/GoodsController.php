@@ -345,7 +345,9 @@ class GoodsController extends ControllerBase {
 				    goods.goods_number storeNum,
 				    brand.brand_name factoryName,
 				    suppliers.suppliers_name supplier,
+				    suppliers.suppliers_id,
 				    category.measure_unit unit,
+				    category.cat_id,
 				    GROUP_CONCAT(DISTINCT CONCAT(goods_attr.goods_attr_id,
 				                ':',
 				                IF(attribute.attr_name IS NULL,
@@ -427,8 +429,32 @@ class GoodsController extends ControllerBase {
 				$goods = array_reverse($goods);
 			}
 		}
+
 		foreach ($goods as $k=>$v) {
 			$goods[$k]['vipPrice'] = $this->showShopPrice($v);
+			$shipping_data = ShippingPrice::findFirst( 
+								array( 'columns' => 'shippingFee',
+										'bind' => array( 
+												$v['cat_id'],
+												$v['suppliers_id']
+											),
+										'conditions' => ' catId = ?0 AND suppliersId = ?1'
+									)
+								);
+
+			if( $shipping_data ){
+				$shipping_fee = $shipping_data->shippingFee;
+				if( is_numeric( $shipping_fee ) ){
+					if( !$v['unit'] )
+						$goods[$k]['shipping_fee'] = $shipping_fee . '元/' . '公里';
+					else
+						$goods[$k]['shipping_fee'] = $shipping_fee . '元/' . $v['unit'] . '/公里';
+				}else{
+					$goods[$k]['shipping_fee'] = $shipping_fee;
+				}
+			}else{
+				$goods[$k]['shipping_fee'] = '0元/公里';
+			}
 		}
     
 		$nav = $this->getNavigate($code);
@@ -518,6 +544,7 @@ class GoodsController extends ControllerBase {
     	}
     	foreach ($goods as $k=>$v) {
     		$goods[$k]['vipPrice'] = $this->showShopPrice($v);
+    		$goods[$k][''] = $this->showShopPrice($v);
     	}
     
     	$nav = $this->getNavigate($code);
@@ -551,6 +578,8 @@ class GoodsController extends ControllerBase {
 				GROUP_CONCAT(DISTINCT IF(p.imgOriginal LIKE 'http://%', p.imgOriginal, CONCAT('".$this->get_url()."', p.imgOriginal))) pics,
 				Goods.code,
 				s.supplier,
+				Goods.suppliersId,
+				cat.id catId,
 				Goods.shiplocal,
 				Goods.storeNum,
 				cat.unit,
@@ -603,6 +632,30 @@ class GoodsController extends ControllerBase {
 			unset($goodsDetail['code']);
 		}
 		$goodsDetail['vipPrice'] = $this->showShopPrice($goodsDetail);
+
+		$shipping_data = ShippingPrice::findFirst( 
+							array( 'columns' => 'shippingFee',
+									'bind' => array( 
+											$goodsDetail['catId'],
+											$goodsDetail['suppliersId']
+										),
+									'conditions' => ' catId = ?0 AND suppliersId = ?1'
+								)
+							);
+
+		if( $shipping_data ){
+			$shipping_fee = $shipping_data->shippingFee;
+			if( is_numeric( $shipping_fee ) ){
+				if( !$goodsDetail['unit'] )
+					$goodsDetail['shipping_fee'] = $shipping_fee . '元/' . '公里';
+				else
+					$goodsDetail['shipping_fee'] = $shipping_fee . '元/' . $goodsDetail['unit'] . '/公里';
+			}else{
+				$goodsDetail['shipping_fee'] = $shipping_fee;
+			}
+		}else{
+			$goodsDetail['shipping_fee'] = '0元/公里';
+		}	
 		
 		return ResponseApi::send(compact('goodsDetail', 'nav'));
     }
@@ -998,6 +1051,19 @@ class GoodsController extends ControllerBase {
 		$orderInfo->invPayee = $invPayee;
 		$orderInfo->invAddress = $invAddress;
 		$orderInfo->invContent = $invContent;
+
+
+        //增值发票添加字段
+        $orderInfo->invCompany = $invCompany;
+        $orderInfo->invBankName = $invBankName;
+        $orderInfo->invBankAccount = $invBankAccount;
+        $orderInfo->invContent = $invContent;
+        $orderInfo->invContent = $invContent;
+        $orderInfo->invContent = $invContent;
+        $orderInfo->invContent = $invContent;
+        $orderInfo->invContent = $invContent;
+
+
 		//银行相关
 		$orderInfo->payOrgcode = $payOrgcode;
 		//合同相关
