@@ -363,26 +363,46 @@ class ApplyCredit extends ManageModel
 			failed_json('审批失败');
 		}
 		
-		/* //获取合同id
+		//获取合同id
 		$this->selectSql(array(
-				'fields' => 'contract_id', 
+				'fields' => array( 'contract_id','user_id' ), 
 				'where'  => 'apply_id='.$applyId
 		));
-		$contractId = $this->db->getOne($this->sql);
-		if (!$contractId) {
+		$contract_data = $this->db->getRow($this->sql);
+		if (!$contract_data) {
 			failed_json('获取合同失败');
 		}
+
+		$contractId = $contract_data['contract_id'];
+		$user_id = $contract_data['user_id'];
 		
 		//增加合同的现金额度
-		$this->table = 'contract';
-		$sql = 'UPDATE '.$this->table.' SET cash_amount_valid=cash_amount_valid+'.$amount.' WHERE contract_id='.$contractId;
+		$sql = 'UPDATE '. $GLOBALS['ecs']->table('contract') . ' SET cash_amount_history=cash_amount_history+' . $amount . ',cash_amount_valid=cash_amount_valid+'.$amount.' WHERE contract_id='.$contractId;
 		$result = $this->db->query($sql);
 		if ($result === false) {
 			failed_json('设置额度失败');
 		}
-		 */
 		
-		make_json_result($result);
+		//总账号的id
+		$sql ='SELECT `parent_id` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `user_id` = ' . $user_id;
+		$parentId = $this->db->getOne($sql);
+
+		$uid_arr = array( $user_id );
+		if($parentId){//总账号同步增加现金额度
+			$uid_arr = array($user_id, $parentId);
+		}
+		$uids = implode(',', $uid_arr);
+
+		//增加帐号的现金额度
+		$sql = 'UPDATE '. $GLOBALS['ecs']->table('users') . ' SET cash_amount_history=cash_amount_history+' . $amount . ',cash_amount_valid=cash_amount_valid+'.$amount.' WHERE user_id IN('.$uids.') ' .
+				' LIMIT 2';
+		
+		$result = $this->db->query($sql);
+		if ($result === false) {
+			failed_json('设置额度失败');
+		}	
+		
+		make_json_response($result, 0, '审核成功');
 	}
 }
 $json = jsonAction($ApiList);
