@@ -165,6 +165,7 @@
 		<!--<div class="comment"><span class="c-gray">商品评论：</span>(已有<!--[= total || '--']-->人参与)</div>-->
 		<div class="distribution">
 			<div class="distribution-name">配送至：<a class="distribution-choose operate" href="javascript:;"><!--[= salesArea || '--']--></a></div>
+			<div class="distribution-name">物流费用：<span style="color:#ed1c24;"><!--[= shipping_fee || '--']--></span></div>
 			<div class="distribution-desc"><span style="color:#7cb234;" id="quality-status"><!--[= (storeNum > 0 ? '有货' : '无货')]--></span> 可售数量：<span id="quality-num" style="color:#00a651;"><!--[= storeNum || '--']--></span><!--[= unit]--> 由<!--[= supplier || '--']-->负责配送从 <span style="color:#448ccb;"><!--[= shiplocal || '--']--></span> 发货，并提供售后服务。</div>
 		</div>
 		<div class="num-apply clearfix">
