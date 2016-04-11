@@ -345,7 +345,9 @@ class GoodsController extends ControllerBase {
 				    goods.goods_number storeNum,
 				    brand.brand_name factoryName,
 				    suppliers.suppliers_name supplier,
+				    suppliers.suppliers_id,
 				    category.measure_unit unit,
+				    category.cat_id,
 				    GROUP_CONCAT(DISTINCT CONCAT(goods_attr.goods_attr_id,
 				                ':',
 				                IF(attribute.attr_name IS NULL,
@@ -427,8 +429,32 @@ class GoodsController extends ControllerBase {
 				$goods = array_reverse($goods);
 			}
 		}
+
 		foreach ($goods as $k=>$v) {
 			$goods[$k]['vipPrice'] = $this->showShopPrice($v);
+			$shipping_data = ShippingPrice::findFirst( 
+								array( 'columns' => 'shippingFee',
+										'bind' => array( 
+												$v['cat_id'],
+												$v['suppliers_id']
+											),
+										'conditions' => ' catId = ?0 AND suppliersId = ?1'
+									)
+								);
+
+			if( $shipping_data ){
+				$shipping_fee = $shipping_data->shippingFee;
+				if( is_numeric( $shipping_fee ) ){
+					if( !$v['unit'] )
+						$goods[$k]['shipping_fee'] = $shipping_fee . '元/' . '公里';
+					else
+						$goods[$k]['shipping_fee'] = $shipping_fee . '元/' . $v['unit'] . '/公里';
+				}else{
+					$goods[$k]['shipping_fee'] = $shipping_fee;
+				}
+			}else{
+				$goods[$k]['shipping_fee'] = '0元/公里';
+			}
 		}
     
 		$nav = $this->getNavigate($code);
@@ -518,6 +544,7 @@ class GoodsController extends ControllerBase {
     	}
     	foreach ($goods as $k=>$v) {
     		$goods[$k]['vipPrice'] = $this->showShopPrice($v);
+    		$goods[$k][''] = $this->showShopPrice($v);
     	}
     
     	$nav = $this->getNavigate($code);
