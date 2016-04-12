@@ -573,7 +573,12 @@ class OrderInfo extends \PhpRudder\Mvc\ModelBase
         	'inv_tel' => 'invTel', 
         	'inv_bank_name' => 'invBankName', 
         	'inv_bank_account' => 'invBankAccount', 
-        	'inv_bank_address' => 'invBankAddress', 
+        	'inv_bank_address' => 'invBankAddress',
+            'inv_company' => 'invCompany',
+            'inv_company_addr' => 'invCompanyAddr',
+            'inv_license' => 'invLicense',
+            'bill_used_days' => 'billUsedDays',
+
         	'shipping_info'    => 'shippingInfo', 
         	'shipping_log'     => 'shippingLog', 
         	'child_order_status' => 'childOrderStatus', 
