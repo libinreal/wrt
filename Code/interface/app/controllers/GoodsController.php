@@ -432,9 +432,9 @@ class GoodsController extends ControllerBase {
 
 		foreach ($goods as $k=>$v) {
 			$goods[$k]['vipPrice'] = $this->showShopPrice($v);
-			$shipping_data = ShippingPrice::findFirst( 
+			$shipping_data = ShippingPrice::findFirst(
 								array( 'columns' => 'shippingFee',
-										'bind' => array( 
+										'bind' => array(
 												$v['cat_id'],
 												$v['suppliers_id']
 											),
@@ -456,7 +456,7 @@ class GoodsController extends ControllerBase {
 				$goods[$k]['shipping_fee'] = '0元/公里';
 			}
 		}
-    
+
 		$nav = $this->getNavigate($code);
 		return ResponseApi::send(compact('goods', 'nav'));
     }
@@ -526,8 +526,8 @@ class GoodsController extends ControllerBase {
     			IF(Goods.thumb LIKE 'http://%', Goods.thumb, CONCAT('" . $this->get_url() . "', Goods.thumb)) thumb,
     			Goods.price,
     			Goods.vipPrice,
-    			Goods.price_num, 
-    			Goods.price_rate, 
+    			Goods.price_num,
+    			Goods.price_rate,
     			IF(c.recId>0, 1, 0) hasFavorites,
     			Goods.createAt");
     	$builder->where($conditions);
@@ -546,7 +546,7 @@ class GoodsController extends ControllerBase {
     		$goods[$k]['vipPrice'] = $this->showShopPrice($v);
     		$goods[$k][''] = $this->showShopPrice($v);
     	}
-    
+
     	$nav = $this->getNavigate($code);
     	return ResponseApi::send(compact('goods', 'nav'));
     }
@@ -585,8 +585,8 @@ class GoodsController extends ControllerBase {
 				cat.unit,
 				Goods.price,
 				Goods.vipPrice,
-				Goods.price_num, 
-				Goods.price_rate, 
+				Goods.price_num,
+				Goods.price_rate,
 				Goods.createAt,
 				Goods.des,
 				Goods.spec,
@@ -633,9 +633,9 @@ class GoodsController extends ControllerBase {
 		}
 		$goodsDetail['vipPrice'] = $this->showShopPrice($goodsDetail);
 
-		$shipping_data = ShippingPrice::findFirst( 
+		$shipping_data = ShippingPrice::findFirst(
 							array( 'columns' => 'shippingFee',
-									'bind' => array( 
+									'bind' => array(
 											$goodsDetail['catId'],
 											$goodsDetail['suppliersId']
 										),
@@ -655,8 +655,8 @@ class GoodsController extends ControllerBase {
 			}
 		}else{
 			$goodsDetail['shipping_fee'] = '0元/公里';
-		}	
-		
+		}
+
 		return ResponseApi::send(compact('goodsDetail', 'nav'));
     }
 
@@ -771,8 +771,8 @@ class GoodsController extends ControllerBase {
 					Cart.goodsName name,
 					IF(g.thumb LIKE "http://%", g.thumb, CONCAT("'.$this->get_url().'", g.thumb)) thumb,
 					g.vipPrice price,
-					g.price_num, 
-					g.price_rate, 
+					g.price_num,
+					g.price_rate,
 					Cart.nums,
 					c.unit,
 					GROUP_CONCAT(DISTINCT CONCAT(a.goodsAttrId, ":", ab.name,":",a.attr_value,":",a.attrId,":",ab.sort)) attr');
@@ -804,7 +804,7 @@ class GoodsController extends ControllerBase {
 		foreach ($cartList as $k=>$v) {
 			$cartList[$k]['price'] = $this->showShopPrice($v, 'price');
 		}
-	
+
 		return ResponseApi::send($cartList);
 
 	}
@@ -865,7 +865,7 @@ class GoodsController extends ControllerBase {
 	 */
 	public function getContractsAction() {
 		$customerId = $this->get_user()->id;
-		
+
 		//如果是总账号 会选择旗下的所有子帐号
 		$result = Users::find(array(
 				'conditions' => 'parent_id = '.$customerId.' or id='.$customerId,
@@ -875,7 +875,7 @@ class GoodsController extends ControllerBase {
 		if(is_object($result) && $result->count()) {
 			$user = $result->toArray();
 		}
-		
+
 		//所有用户id
 		$userId = array();
 		foreach ($user as $v) {
@@ -884,7 +884,7 @@ class GoodsController extends ControllerBase {
 		if (!$userId) {
 			return ResponseApi::send(array());
 		}
-		
+
 		//查看总账号下的所有合同 包括子帐号
 		$result = ContractModel::find(array(
 
@@ -914,6 +914,15 @@ class GoodsController extends ControllerBase {
 		$invPayee = $this->request->getPost('invPayee');
 		$invAddress = $this->request->getPost('invAddress');
 		$invContent = $this->request->getPost('invContent');
+        //增值发票
+        $invCompany = $this->request->getPost('invCompany');
+        $invBankName = $this->request->getPost('invBankName');
+        $invBankAccount = $this->request->getPost('invBankAccount');
+        $invLicense = $this->request->getPost('invLicense');
+        $invCompanyAddr = $this->request->getPost('invCompanyAddr');
+        $invTel = $this->request->getPost('invTel');
+        $invFax = $this->request->getPost('invFax');
+
 		$addressId = $this->request->getPost('addressId', 'int');
 		$payOrgcode = $this->request->getPost('payOrgcode');
 		$contractSn = $this->request->getPost('contractSn');
@@ -939,9 +948,9 @@ class GoodsController extends ControllerBase {
 				Cart.goodsId,
 				Cart.goodsName,
 				Cart.goodsSn,
-				G.vipPrice price, 
-				G.price_num, 
-				G.price_rate, 
+				G.vipPrice price,
+				G.price_num,
+				G.price_rate,
 				Cart.nums
 				')->execute();
 		if(!is_object($cartResults) || !$cartResults->count()) {
@@ -956,17 +965,17 @@ class GoodsController extends ControllerBase {
 			} else {
 				$cartResult->price = $cartResult->price * (1+($cartResult->price_rate/100));
 			}
-		
+
 			$buyGoods[$cartResult->goodsId] = $cartResult->nums;
 			$totalAmt += $cartResult->nums * $cartResult->price;
 		}
-		
+
 		//从金蝶接口得到采购额度
 		$api = new ApiController();
 		$cmt = $api->getCreAmt();	//得到采购额度 #bug#
-		
+
 		$cmt = '1000000';
-		
+
 		if($cmt === false) {
 			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, "您的订单暂时无法提交！");
 		}
@@ -975,13 +984,13 @@ class GoodsController extends ControllerBase {
 		}
 
 		//检查合同的现金额度 + 票据折后额度 >= 总额
-		$contract_info = ContractModel::findFirst( array( 
+		$contract_info = ContractModel::findFirst( array(
 					'num = ?1 AND userId = ?2',
 					'bind' => array(
 							1 => $contractSn,
 							2 => $userId
 							)
-					
+
 						) );
 		if( !$contract_info ){
 			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, "合同不存在！");
@@ -990,7 +999,7 @@ class GoodsController extends ControllerBase {
 		if( $contract_info->billValid + $contract_info->cashValid < $totalAmt ){
 			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, "您的合同可用采购额度不足，可取消重下单或追加申请额度后下单！");
 		}
-		
+
 		//得到所要购买商品的库存
 		$ids = implode(', ', array_keys($buyGoods));
 		$goodsObjs = Goods::find(array(
@@ -1030,11 +1039,22 @@ class GoodsController extends ControllerBase {
 		if(!is_object($userInv) || !$userInv) {
 			$userInv = new UserInv();
 			$userInv->userId = $userId;
+
 		}
+
 		$userInv->setTransaction($transaction);
 		$userInv->invType = $invType;
 		$userInv->invPayee = $invPayee;
 		$userInv->invAddress = $invAddress;
+        //增值发票添加字段
+        $userInv->invCompany = $invCompany;
+        $userInv->invBankName = $invBankName;
+        $userInv->invBankAccount = $invBankAccount;
+        $userInv->invLicense = $invLicense;
+        $userInv->invCompanyAddr = $invCompanyAddr;
+        $userInv->invTel = $invTel;
+        $userInv->invFax = $invFax;
+
 		$userInv->inv_remark = ' ';
 		try {
 			if(!$userInv->save()) {
@@ -1052,19 +1072,18 @@ class GoodsController extends ControllerBase {
 		$orderInfo->invAddress = $invAddress;
 		$orderInfo->invContent = $invContent;
 
-
         //增值发票添加字段
         $orderInfo->invCompany = $invCompany;
         $orderInfo->invBankName = $invBankName;
         $orderInfo->invBankAccount = $invBankAccount;
-        $orderInfo->invContent = $invContent;
-        $orderInfo->invContent = $invContent;
-        $orderInfo->invContent = $invContent;
-        $orderInfo->invContent = $invContent;
-        $orderInfo->invContent = $invContent;
+        $orderInfo->invLicense = $invLicense;
+        $orderInfo->invCompanyAddr = $invCompanyAddr;
+        $orderInfo->invTel = $invTel;
+        $orderInfo->invFax = $invFax;
 
 
-		//银行相关
+
+        //银行相关
 		$orderInfo->payOrgcode = $payOrgcode;
 		//合同相关
 		$orderInfo->contractSn = $contractSn;
