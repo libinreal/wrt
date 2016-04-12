@@ -1196,9 +1196,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					foreach ($files as $f) {
 						if( $f['upload_type'] == 0 )
-							$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => preg_replace( '/\d+\//', '', $f['upload_name'] ) );
+							$file_0[] = array('upload_id' => $f['upload_id'], 'upload_name' => preg_replace( '/\d+\//', '', $f['upload_name'] ), 'upload_url' => '/' . DATA_DIR . '/' . PURCHASE_ORDER_DIR . '/' . $f['upload_name'] );
 						else
-							$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => preg_replace( '/\d+\//', '', $f['upload_name'] ));
+							$file_1[] = array('upload_id' => $f['upload_id'], 'upload_name' => preg_replace( '/\d+\//', '', $f['upload_name'] ), 'upload_url' => '/' . DATA_DIR . '/' . PURCHASE_ORDER_DIR . '/' . $f['upload_name'] );
 					}
 				}
 

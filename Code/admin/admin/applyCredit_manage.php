@@ -262,6 +262,9 @@ class ApplyCredit extends ManageModel
 		if (!$contracts) 
 			failed_json('获取合同名称失败');
 		
+
+		$data['img'] = '/data/apply_attachment/' . $data['img'];//preg_replace( '/\d+\//', '', $data['img']);
+		$data['upload_url'] = '/data/apply_attachment/' . $data['img'];
 		$data['account']      = $users['user_name'];
 		$data['companyName']  = $users['companyName'];
 		$data['contractName'] = $contracts['contract_name'];
