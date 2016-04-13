@@ -1020,6 +1020,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *      	"goods_id":993,//商品id
 	     *      	"send_number":1,//拆单数量
 	     *      	"goods_price":20,//物料单价
+	     *      	"bill_used_days":2.0,//票据使用天数
 	     *      	"shipping_fee_send_buyer":120,//物流费用
 	     *      	"shipping_fee_send_saler":120,//物流费用
 	     *      	"financial_send_rate":0.0001,//金融费率
@@ -1043,6 +1044,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$send_number = ( double )( $content['parameters']['send_number'] );
 			$goods_price = ( double )( $content['parameters']['goods_price'] );
 			$shipping_fee = ( double )( $content['parameters']['shipping_fee'] );
+			$bill_used_days = ( double )( $content['parameters']['bill_used_days'] );//金融费率
 			$finance_rate = ( double )( $content['parameters']['financial_send_rate'] / 100);//金融费率
 			$suppliers_id = intval( $content['parameters']['suppliers'] );//供应商id
 			$finance_manual = $finance = ( double )( $content['parameters']['financial_send'] );
@@ -1103,7 +1105,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					}else{
 						$goods_total_price -= $contract_amount['cash_amount_valid'];
-						$finance = round( ( $goods_total_price * $finance_rate ) / 100 , 2);
+						$finance = round( ( $goods_total_price * $bill_used_days * $finance_rate ) / 100 , 2);
 					}
 					
 				}
@@ -1981,7 +1983,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case '到货验签':
 					if( $order_status['child_order_status'] == SOS_ARR_CC ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC, SALE_ORDER_COMPLETE);
+
+						$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `order_time` = %f WHERE `order_id` = ' . $order_id;
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC, SALE_ORDER_COMPLETE, gmtime() );
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						if( $childer_order_update )
@@ -3341,6 +3345,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *          	"price":101,//商品价格
 	     *          	"number":1,//商品数量
 	     *          	"rate":1,//金融费比率
+	     *          	"bill_used_days":2.0,//票据使用天数
 	     *          	"contract_sn":"ht20"//合同编号
 	     *          }
 	     *      }
@@ -3359,6 +3364,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		{
 			$content = $this->content;
 			$params = $content['parameters']['params'];
+
+			$bill_used_days = (double)( $params['bill_used_days'] );
 
 			$price = (double)( $params['price'] );
 			$number = (double)( $params['number'] );
@@ -3387,12 +3394,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				}else{
 					$total -= $amount['cash_amount_valid'];
-					$finance = round( ( $total * $rate ) / 100 , 2);
+					$finance = round( ( $total * $bill_used_days * $rate ) / 100 , 2);
 				}
 				
 			}
 
 			$content['finance'] = $finance;
+			
 			make_json_response( $content, '0', '获取金融费成功' );
 		}
 
