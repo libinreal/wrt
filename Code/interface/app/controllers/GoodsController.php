@@ -1042,6 +1042,9 @@ class GoodsController extends ControllerBase {
 
 		}
 
+
+
+
 		$userInv->setTransaction($transaction);
 		$userInv->invType = $invType;
 		$userInv->invPayee = $invPayee;
