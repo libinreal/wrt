@@ -1392,11 +1392,12 @@ class GoodsController extends ControllerBase {
 	 * 得到当前用户发票信息JJSC-22
 	 */
 	public function getInvAction() {
+		$invType = $this->request->get('inv_type', 'int');
+
 		$userId = $this->get_user()->id;
 		$result = UserInv::findFirst(array(
-				'conditions' => 'userId = :userId:',
-				'bind' => compact('userId'),
-				'columns' => 'invType, invPayee, invAddress, inv_remark',
+				'conditions' => 'userId = ?0 AND invType = ?1',
+				'bind' => array($userId, $invType)
 		));
 		$invInfo = array();
 		if(is_object($result) && $result) {

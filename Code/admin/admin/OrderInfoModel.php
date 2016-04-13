@@ -2283,6 +2283,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    		   "suppliers_name":"天津天佑"//供应商名字
 		 *	    	    }
 		 *	    	    ],
+		 *	    	    "bill_used_days":2.0,//票据使用天数
 		 *	    	    "default_suppliers_id":1,//供应商id
 		 *	    	    "financial_send_rate":0.0001,//客户价格.金融费率 (数字)
 		 *	    	    "shipping_fee_send_buyer":82,//客户价格.物流费用
@@ -2344,7 +2345,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			//子订单+商品信息
 			$order_sql = 'SELECT og.`goods_id`, og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`,' .
-						 ' o.`suppers_id` as `default_suppliers_id`, g.`cat_id`, ' .
+						 ' o.`suppers_id` as `default_suppliers_id`, g.`cat_id`, o.`bill_used_days`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
 						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
 						 ' o.`shipping_fee_send_buyer`, o.`financial_send`, o.`financial_send_rate`, o.`order_amount_send_buyer`,' .
@@ -2536,6 +2537,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		        "order_amount_send_saler": "20000.00",//供应商价格.发货总价
 		 *		        "suppers_id":1,//客户价格.实际供应商id
 		 *		        "shipping_fee_send_buyer": "999.99",//客户价格.物流费用
+		 *		        "bill_used_days":2.0,//票据使用天数
 		 *		        "financial_send": "0.00",//客户价格.金融费用
 		 *		        "financial_send_rate": "0.00",//客户价格.金融费率 (小数数字)
 		 *		        "pay_id":0//支付方式id
@@ -2591,6 +2593,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '发货验签完毕，无法发货改价');
 			}
 
+			$bill_used_days = (double)( $params['bill_used_days'] );
 			$goods_number_send_buyer = $params['goods_number_send_buyer'];
 			$goods_price_send_buyer = (double)( $params['goods_price_send_buyer'] );
 			$goods_number_send_saler = $params['goods_number_send_saler'];
@@ -2611,6 +2614,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info = array();
 			$order_info['suppers_id'] = $suppers_id;
 			$order_info['financial_send_rate'] = (double)( $params['financial_send_rate'] );
+
+			$order_info['bill_used_days'] = $bill_used_days;
 
 			$order_info['financial_send'] = $financial_send;
 			$order_info['shipping_fee_send_buyer'] = $shipping_fee_send_buyer;
@@ -2769,7 +2774,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	        	"contract_name":"钢材销售",//合同名称
 		 *	        	"company_name":"中铁一局",//公司名称
 		 *          	"check_status":"",//验签状态
-		 * 
+		 *
 		 *	        	"consignee":"aa",//收货人
 		 *	        	"address":"xx地址",//收货地址
 		 *	        	"mobile":"13011111111",//手机号码
@@ -2792,6 +2797,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    		   "suppliers_name":"天津天佑"//供应商名字
 		 *	    	    }
 		 *	    	    ],
+		 * 				"bill_used_days":2.0,//票据使用天数
 		 *	    	    "default_suppliers_id":1,//供应商id
 		 *	    	    "financial_arr_rate":0.0001,//客户价格.金融费率 (数字)
 		 *	    	    "shipping_fee_arr_buyer":82,//客户价格.物流费用
@@ -2838,7 +2844,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_sql = 'SELECT og.`goods_id`, og.`goods_price_arr_buyer`, og.`goods_number_arr_buyer`, og.`goods_price_arr_saler`, og.`goods_number_arr_saler`,' .
 						 ' o.`order_amount_arr_saler`,o.`order_amount_arr_buyer`,o.`suppers_id` as `default_suppliers_id`, g.`cat_id`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
-						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
+						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`, o.`bill_used_days`, ' .
 						 ' o.`shipping_fee_arr_buyer`, o.`financial_arr`, o.`financial_arr_rate`, o.`shipping_fee_arr_saler` ' .
 						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' . 
 						 $order_goods_table . ' AS og ON og.`order_id` = o.`order_id` LEFT JOIN ' .
@@ -3004,7 +3010,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *      "parameters": {
 	     *          "params": {
 	     *	    	    "order_id":142,
-		*          	"order_id":101,//订单ID
+		 *          	"order_id":101,//订单ID
+		 *          	"bill_used_days":2.0,//票据使用天数
 	     *           	"goods_price_arr_buyer": 20200,//客户价格.物料单价
 	     *           	"goods_number_arr_buyer": 20200,//客户价格.物料数量
 	     *           	"order_amount_arr_buyer": 20200,//客户价格.发货总价
@@ -3083,6 +3090,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$suppers_id = intval( $params['suppers_id'] );//销售信息.供货商id
 
+			$bill_used_days = ( double )( $params['bill_used_days'] );//票据使用天数
+
 			$shipping_fee_arr_buyer = ( double )( $params['shipping_fee_arr_buyer'] );//销售信息.发货物流费用
 			$financial_arr = $params['financial_arr'] ? (double)($params['financial_arr']) : 0;//销售信息.发货金融费
 			$financial_arr_rate = ( double )( $params['financial_arr_rate'] / 100 );//销售信息.发货金融费
@@ -3096,6 +3105,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info = array();
 			$order_info['suppers_id'] = $suppers_id;
 			$order_info['financial_arr_rate'] = (double)( $params['financial_arr_rate'] );
+
+			$order_info['bill_used_days'] = $bill_used_days;
 
 			$order_info['financial_arr'] = $financial_arr;
 			$order_info['shipping_fee_arr_buyer'] = $shipping_fee_arr_buyer;

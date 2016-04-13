@@ -147,6 +147,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "goods_number_arr_buyer": 6,//发货数量
 		 *                  "goods_price_arr_buyer": 1200 ,  //单价
 		 *                  "shipping_fee_arr_buyer": 1000 ,//物流费
+		 *                  "customer_name":"客户名称1",
+		 *                  "user_account":"操作帐号1",
+		 *                  "bill_used_days":2.0,//票据使用天数
 		 *                  "financial_arr": 1000 ,//金融费
 		 *                  "order_amount_arr_buyer": 8200 ,//贷款额度
 		 *                  "remark": "2323123dsd",//备注
@@ -202,6 +205,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "goods_sn": "ad11223", //产品编号
 		 *                  "attr": "3mm/1m/20m" ,//型号
 		 *                  "goods_number_arr_saler": 2,//发货数量
+		 *                  "customer_name":"客户名称1",
 		 *                  "goods_price_arr_saler": 62 ,  //单价
 		 *                  "order_amount_arr_saler": 10000,//贷款额度
 		 *                  "shipping_fee_arr_saler": 1000,//物流
@@ -255,6 +259,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "goods_name": 'xxx' ,//商品名称
 		 *                  "goods_sn": "ad11223", //商品编号
 		 *                  "attr": "3mm/1m/20m" ,//型号
+		 *                  "customer_name":"客户名称1",
 		 *                  
 		 *                  "goods_number_arr_buyer": 6,//销售数量
 		 *                  "goods_price_arr_buyer": 1200 ,  //销售价格
@@ -329,9 +334,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "goods_sn": "ad11223", //产品编号
 		 *                  "attr": "1mm/1m/3m/" ,//型号
 		 *                  "goods_number_arr_buyer": 6,//发货数量
+		 *                  "customer_name":"客户名称1",
+		 *                  "user_account":"操作帐号1",
 		 *                  "goods_price_arr_buyer": 1200 ,  //单价
 		 *                  "shipping_fee_arr_buyer": 1000 ,//物流费
 		 *                  "financial_arr": 1000 ,//金融费
+		 *                  "bill_used_days":2.0,//票据使用天数
 		 *                  "order_amount_arr_buyer": 8200 ,//贷款额度
 		 *                  "remark": "2323123dsd",//备注
 		 *           }
@@ -390,6 +398,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "goods_name": 'xxx' ,//产品名称
 		 *                  "goods_sn": "ad11223", //产品编号
 		 *                  "attr": "3mm/1m/20m" ,//型号
+		 *                  "customer_name":"客户名称1",
 		 *                  "goods_number_arr_saler": 2,//发货数量
 		 *                  "goods_price_arr_saler": 62 ,  //单价
 		 *                  "order_amount_arr_saler": 10000,//贷款额度
@@ -450,7 +459,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "goods_name": 'xxx' ,//商品名称
 		 *                  "goods_sn": "ad11223", //商品编号
 		 *                  "attr": "3mm/1m/20m" ,//型号
-		 *                  
+		 *                  "customer_name":"客户名称1",
 		 *                  "goods_number_arr_buyer": 6,//销售数量
 		 *                  "goods_price_arr_buyer": 1200 ,  //销售价格
 		 *                  "shipping_fee_arr_buyer": 1000 ,//销售订单物流费
@@ -508,17 +517,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
 			$category_table = $GLOBALS['ecs']->table('category');
 
-			$sql = 'SELECT odr.`order_sn`, odr.`order_amount_arr_buyer`, usr.`companyName` AS customer_name ,odr.`shipping_fee_arr_buyer`, odr.`financial_arr`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
+			$sql = 'SELECT odr.`order_sn`, odr.`order_amount_arr_buyer`, usr.`user_name` AS `user_account`, usr.`companyName` AS customer_name ,odr.`shipping_fee_arr_buyer`, odr.`financial_arr`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
 				   ' odr.`inv_content` AS remark, odr.`add_time`, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
+				   ' odr.`bill_used_days`,' .
 				   ' crt.`contract_name`, crt.`contract_num` FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
-                   ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = crt.`customer_id` '.
+                   ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = odr.`user_id` ' .
 				   ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
 
 			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr' .
 						 ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				         ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
+				         ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = odr.`user_id` ' .
 				         ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
 
 			$where = array();	
@@ -633,6 +644,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					unset($v['contract_name']);
 					unset($v['contract_sn']);
 					$v['goods_number_arr_buyer'] .= $v['unit'];
+					$v['add_date'] = date('Y-m-d', $v['add_time'] );
 
 				}
 				unset( $v );
@@ -688,17 +700,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$sql = 'SELECT odr.`order_sn`, odr.`add_time`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
 				   ' odr.`inv_content` AS remark, og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
-				   ' usr.`companyName` AS customer_name ' .
+				   ' usr.`user_name` AS `user_account`, usr.`companyName` AS customer_name  ' .
 				   ' FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
-				   ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = crt.`customer_id` ' .
+				   ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = odr.`user_id` ' .
 				   ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
 
 			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr' .
 						 ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				         ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
-				         ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = crt.`customer_id` ' .
+				         ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = odr.`user_id` ' .
 				         ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
 			$where = array();	
 			if( isset($params['where']) )
@@ -865,17 +877,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$sql = 'SELECT odr.`order_sn`, odr.`add_time`, spl.`suppliers_name`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
 				   ' odr.`inv_content` AS remark, odr.`order_amount_arr_buyer`, odr.`financial_arr`, odr.`shipping_fee_arr_buyer`, ' .
 				   ' og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
+				   ' usr.`user_name` AS `user_account`, usr.`companyName` AS customer_name, ' .
 				   ' crt.`contract_name` ' .
 				   ' FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
 				   ' LEFT JOIN ' . $suppliers_table . ' AS spl ON spl.`suppliers_id` = odr.`suppers_id` ' .
+				   ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = odr.`user_id` ' .
 				   ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
 
 			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr' .
 						 ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				         ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
 				         ' LEFT JOIN ' . $suppliers_table . ' AS spl ON spl.`suppliers_id` = odr.`suppers_id` ' .
+				         ' LEFT JOIN ' . $user_table . ' AS usr ON usr.`user_id` = odr.`user_id` ' .
 				   		 ' LEFT JOIN ' . $category_table . ' AS cat ON cat.`code` = og.`cat_code` ';
 
 			$where = array();	
@@ -990,7 +1005,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$v['goods_number_arr_buyer'] .= $v['unit'];
 
 					$v['differential'] = $v['order_amount_arr_buyer'] - $v['order_amount_arr_saler'];
-
+					$v['add_date'] = date('Y-m-d', $v['add_time'] );
 					$differential_total += $v['differential'];
 				}
 				unset( $v );
