@@ -910,6 +910,7 @@ class GoodsController extends ControllerBase {
 			return ResponseApi::send(null, Message::$_ERROR_CODING, "只支持POST请求");
 		}
 		//发票信息
+		$invId = $this->request->getPost('invId');
 		$invType = $this->request->getPost('invType');
 		$invPayee = $this->request->getPost('invPayee');
 		$invAddress = $this->request->getPost('invAddress');
@@ -1035,16 +1036,9 @@ class GoodsController extends ControllerBase {
 		$orderInfo->address = $address->address;
 		$orderInfo->tag = $address->tag;
 		//保存发票信息
-		$userInv = UserInv::findFirst('userId = ' . $userId);
-		if(!is_object($userInv) || !$userInv) {
-			$userInv = new UserInv();
-			$userInv->userId = $userId;
-
-		}
-
-
-
-
+		$userInv = new UserInv();
+		if( $invId )
+			$userInv->invId = $invId;
 		$userInv->setTransaction($transaction);
 		$userInv->invType = $invType;
 		$userInv->invPayee = $invPayee;
@@ -1058,7 +1052,7 @@ class GoodsController extends ControllerBase {
         $userInv->invTel = $invTel;
         $userInv->invFax = $invFax;
 
-		$userInv->inv_remark = ' ';
+		$userInv->inv_remark = $invContent;
 		try {
 			if(!$userInv->save()) {
 				foreach($userInv->getMessages() as $message) {
