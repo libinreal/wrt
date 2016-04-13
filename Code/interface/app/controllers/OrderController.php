@@ -1214,6 +1214,8 @@ class OrderController extends ControllerBase
 				//。。。。
 				
 				$order->childOrderStatus = SOS_ARR_CC;//客户已验签(到货)
+
+				$order->contract_effect_time = time();//到货时间
 			} else {
 				return ResponseApi::send(null, Message::$_ERROR_LOGIC, "此订单当前不能验签");
 			}

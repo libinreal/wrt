@@ -519,7 +519,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$sql = 'SELECT odr.`order_sn`, odr.`order_amount_arr_buyer`, usr.`user_name` AS `user_account`, usr.`companyName` AS customer_name ,odr.`shipping_fee_arr_buyer`, odr.`financial_arr`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
 				   ' odr.`inv_content` AS remark, odr.`add_time`, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
-				   ' odr.`bill_used_days`,' .
+				   ' odr.`bill_used_days`, odr.`shipping_time`,' .
 				   ' crt.`contract_name`, crt.`contract_num` FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
 				   ' LEFT JOIN ' . $contract_table . ' AS crt ON crt.`contract_num` = odr.`contract_sn` ' .
@@ -643,6 +643,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					unset($v['contract_name']);
 					unset($v['contract_sn']);
+					$v['shipping_time'] = date('Y-m-d', $v['shipping_time']);
 					$v['goods_number_arr_buyer'] .= $v['unit'];
 					$v['add_date'] = date('Y-m-d', $v['add_time'] );
 
@@ -699,7 +700,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$category_table = $GLOBALS['ecs']->table('category');
 
 			$sql = 'SELECT odr.`order_sn`, odr.`add_time`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
-				   ' odr.`inv_content` AS remark, og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
+				   ' odr.`shipping_time`, odr.`inv_content` AS remark, og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
 				   ' usr.`user_name` AS `user_account`, usr.`companyName` AS customer_name  ' .
 				   ' FROM ' . $order_table . ' AS odr ' .
 				   ' LEFT JOIN ' . $order_goods_table . ' AS og ON og.`order_id` = odr.`order_id` ' .
@@ -823,7 +824,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$count_total += $v['goods_number_arr_saler'];
 					$amount_total += $v['order_amount_arr_saler'];
 					$v['order_sn'] .= '-cg';
-
+					$v['shipping_time'] = date('Y-m-d', $v['shipping_time']);
 					$v['goods_number_arr_saler'] .= $v['unit'];
 				}
 				unset( $v );
@@ -874,8 +875,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$goods_table = $GLOBALS['ecs']->table('goods');
 			$category_table = $GLOBALS['ecs']->table('category');
 
-			$sql = 'SELECT odr.`order_sn`, odr.`add_time`, spl.`suppliers_name`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
-				   ' odr.`inv_content` AS remark, odr.`order_amount_arr_buyer`, odr.`financial_arr`, odr.`shipping_fee_arr_buyer`, ' .
+			$sql = 'SELECT odr.`order_sn`, odr.`add_time`, odr.`shipping_time`, spl.`suppliers_name`, odr.`order_amount_arr_saler`, odr.`shipping_fee_arr_saler`, og.`goods_sn`, og.`goods_name`, og.`goods_id`, ' .
+				   ' odr.`inv_content` AS remark, odr.`order_amount_arr_buyer`, odr.`financial_arr`, odr.`shipping_fee_arr_buyer`, odr.`contract_effect_time`,' .
 				   ' og.`goods_number_arr_saler`, og.`goods_price_arr_saler`, og.`goods_number_arr_buyer`, og.`goods_price_arr_buyer`, IFNULL( cat.`measure_unit`, \'\' ) AS `unit`, ' .
 				   ' usr.`user_name` AS `user_account`, usr.`companyName` AS customer_name, ' .
 				   ' crt.`contract_name` ' .
@@ -1006,6 +1007,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					$v['differential'] = $v['order_amount_arr_buyer'] - $v['order_amount_arr_saler'];
 					$v['add_date'] = date('Y-m-d', $v['add_time'] );
+					$v['contract_effect_time'] = date('Y-m-d', $v['contract_effect_time'] );
+					$v['shipping_time'] = date('Y-m-d', $v['shipping_time'] );
 					$differential_total += $v['differential'];
 				}
 				unset( $v );

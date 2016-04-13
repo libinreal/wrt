@@ -1441,6 +1441,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$arr_data = array();
 						$arr_data['shipping_fee_arr_saler'] = $order_status['shipping_fee_send_saler'];
 						$arr_data['order_amount_arr_saler'] = $order_status['order_amount_send_saler']; 
+						$arr_data['shipping_time'] = gmtime(); 
 						
 						$arr_up_sql = 'UPDATE ' . $order_info_table . ' SET ';
 						foreach ($arr_data as $uk=>$uv) {
