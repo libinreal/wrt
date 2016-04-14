@@ -46,6 +46,9 @@
 		<form id="search_form" class="noprint">
 		<div class="form-div">
 			<img width="26" border="0" height="22" alt="SEARCH" src="images/icon_search.gif">
+			<labe>客户名称：</labe>
+			<input type="text" name="customer_name">
+			&nbsp;
 			<labe>合同名称：</labe>
 			<input type="text" name="contract_name" data-rule-required="true">
 			&nbsp;
@@ -77,15 +80,19 @@
 			</table>
 			<table cellspacing="1" cellpadding="0" id="list">
 				<thead><tr>
-					<th class="ordersn">订单编号</th>
-					<th>产品编号</th>
+					<th>下单日期</th>
+					<th>订单编号</th>
 					<th>产品名称</th>
 					<th>型号</th>
 					<th>发货数量</th>
-					<th>单价(人民币：元)</th>
-					<th>货款额(人民币：元)</th>
-					<th>客户名</th>
-					<th>备注</th>
+					<th>计量单位</th>
+					<th>单价(元)</th>
+					<th>票据占用天数</th>
+					<th>金融费(元)</th>
+					<th>物流费(元)</th>
+					<th>货款额(元)</th>
+					<th>客户名称</th>
+					<th>对应操作帐号</th>
 				</tr></thead>
 				<tbody></tbody>
 				<tfoot>

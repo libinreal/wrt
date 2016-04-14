@@ -884,10 +884,10 @@ var SaleOrder = {
 		popupLayer();
 	},
 
-	getFinaceFee: function(price, number, rate, contract_sn, func){
-		var params = {"params":{"price":price, "number":number, "rate":rate, "contract_sn":contract_sn}};
+	getFinaceFee: function(price, number, rate, bill_used_days, contract_sn,  func){
+		var params = {"params":{"price":price, "number":number, "rate":rate, "bill_used_days":bill_used_days, "contract_sn":contract_sn}};
 		var strJson = createJson("getFinaceFee", this.entity, params);
-		var that = this
+		var that = this;
 		var finance = 0;
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){

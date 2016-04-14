@@ -12,7 +12,6 @@ jQuery.extend({
                 }
                 else if(typeof uri== 'string'){
 					iframeHtml += ' src="' + uri + '"';
-
                 }	
 			}
 			iframeHtml += ' />';

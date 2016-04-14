@@ -17,9 +17,7 @@
 		<form class="form order-form" id="order-form" action="">
 			<div class="order-no number-o2">确认订单</div>
 			<div class="order clearfix" style='background:#fff;padding-bottom:22px'>
-				<div class="form-detail" id="shipping-detail">
-					
-				</div>
+				<div class="form-detail" id="shipping-detail"></div>
 				<div class="form-value form-radio-group" style="line-height:50px">
 					<div class="number-o2-time">
 						<label class="active">
@@ -38,152 +36,27 @@
 					<li class="msg-color">2.部分服务仅在物流配送区域提供，非配送区域无法选择！</li>
 				</ul>
 			</div>
-            <!--
-			<div class="invoice">
-				<div class="info">发票信息：</div>
-				<div class="info-detail">
-					<div class="form-item invoice_info clearfix">
-						<div class="form-label"><span>*</span>发票信息：</div>
-						<div class="form-value form-radio-group">
-							<label class="active" id="invtype1"><input type="radio" name="invType" value="0" checked>增值税专用发票</label>
-							<label id="invtype2"><input type="radio" name="invType" value="1" />普通发票</label>
-						</div>
-					</div>
-					<div class="form-item">
-						<div class="form-label"><span>*</span>发票抬头：</div>
-						<div class="form-value">
-							<input type="text" name="invPayee" maxlength="50" />
-						</div>
-					</div>
-					<div class="form-item">
-						<div class="form-label"><span>*</span>收票地址：</div>
-						<div class="form-value">
-							<input type="text" name="invAddress" maxlength="200" />
-						</div>
-					</div>
-					<div class="form-item">
-						<div class="form-label">备<em class="e2"></em>注：</div>
-						<div class="form-value">
-							<textarea class="textarea" name="invContent" maxlength="200"></textarea>
-						</div>
-					</div>
-				</div>
-			</div>
-            -->
             <div class="invoice">
                 <div class="info">发票信息：</div>
                 <div class="info-detail">
                     <div class="form-item invoice_info clearfix">
                         <div class="form-label"><span>*</span>发票信息：</div>
                         <div class="form-value form-radio-group">
-                            <label class="active" id="invtype1">
-                                <input type="radio" name="invType" value="0" id="Z" onclick="show()" checked>增值税专用发票
+                            <label id="invtype1">
+                                <input type="radio" name="invType" value="0" id="tax-invoice-radio">增值税专用发票
                             </label>
                             <label id="invtype2">
-                                <input type="radio" name="invType" value="1" id="P" onclick="show()" />普通发票
+                                <input type="radio" name="invType" value="1" id="invoice-radio" checked>普通发票
                             </label>
                         </div>
                     </div>
 
                     <!--增值税发票-->
-                    <div style="display:none" id="div1">
-                    <div class="form-item">
-                        <div class="form-label"><span>*</span>公司名称：</div>
-                        <div class="form-value">
-                            <input type="text" name="invCompany" maxlength="50" />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="form-label"><span>*</span>开户银行：</div>
-                        <div class="form-value">
-                            <input type="text" name="invBankName" maxlength="50" />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="form-label"><span>*</span>开户银行账户：</div>
-                        <div class="form-value">
-                            <input type="text" name="invBankAccount" maxlength="50" />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="form-label" style="width: 120px; margin-left: -10px;"><span>*</span>税务登记证号码：</div>
-                        <div class="form-value">
-                            <input type="text" name="invLicense" maxlength="50" />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="form-label"><span>*</span>公司注册地址：</div>
-                        <div class="form-value">
-                            <input type="text" name="invCompanyAddr" maxlength="50" />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="form-label"><span>*</span>电话号码：</div>
-                        <div class="form-value">
-                            <input type="text" name="invTel" maxlength="50" />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="form-label"><span></span>传真号码：</div>
-                        <div class="form-value">
-                            <input type="text" name="invFax" maxlength="50" />
-                        </div>
-                    </div>
-                    <div class="form-item">
-                        <div class="form-label">备<em class="e2"></em>注：</div>
-                        <div class="form-value">
-                            <textarea class="textarea" name="invContent" maxlength="200"></textarea>
-                        </div>
-                    </div>
-                    </div>
+                    <div id="tax-invoice" style="display:none"></div>
                     <!--普通发票-->
-                    <div  id="div2">
-                        <div class="form-item">
-                            <div class="form-label"><span>*</span>发票抬头：</div>
-                            <div class="form-value">
-                                <input type="text" name="invPayee" maxlength="50" />
-                            </div>
-                        </div>
-                        <div class="form-item">
-                            <div class="form-label"><span>*</span>收票地址：</div>
-                            <div class="form-value">
-                                <input type="text" name="invAddress" maxlength="200" />
-                            </div>
-                        </div>
-                        <div class="form-item">
-                            <div class="form-label">备<em class="e2"></em>注：</div>
-                            <div class="form-value">
-                                <textarea class="textarea" name="invContent" maxlength="200"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-
+                    <div id="invoice"></div>
                 </div>
             </div>
-
-
-
-
-
-
-
-            <script>
-                function show(){
-                    if(document.getElementById("Z").checked){
-                        document.getElementById("div1").style.display="block";
-                        document.getElementById("div2").style.display="none";
-                    }else if(document.getElementById("P").checked){
-                        document.getElementById("div2").style.display="block";
-                        document.getElementById("div1").style.display="none";
-                    };
-                };
-            </script>
-
-
-
 
 			<div class="look-shop-list">
 				<div class="info">查看商品清单：</div>
@@ -251,6 +124,82 @@
 		</div>
 		<span class="stock c-red">商品库存不足！</span>
 	</li>
+	<!--[}]-->
+</script>
+<script id="invoice-tmpl" type="text/html">
+    <div class="form-item">
+        <div class="form-label"><span>*</span>发票抬头：</div>
+        <div class="form-value">
+            <input type="text" name="invPayee" maxlength="50" value="<!--[= list.invPayee ]-->">
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label"><span>*</span>收票地址：</div>
+        <div class="form-value">
+            <input type="text" name="invAddress" maxlength="200" value="<!--[= list.invAddress ]-->">
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label">备<em class="e2"></em>注：</div>
+        <div class="form-value">
+            <textarea class="textarea" name="inv_remark" maxlength="200"><!--[= list.inv_remark ]--></textarea>
+        </div>
+    </div>
+    <!--[if(list.invId){]-->
+	<input type="hidden" name="invId" value="<!--[= list.invId ]-->">
+	<!--[}]-->
+</script>
+<script id="tax-invoice-tmpl" type="text/html">
+    <div class="form-item">
+        <div class="form-label"><span>*</span>公司名称：</div>
+        <div class="form-value">
+            <input type="text" name="invCompany" maxlength="50" value="<!--[= list.invCompany ]-->">
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label"><span>*</span>开户银行：</div>
+        <div class="form-value">
+            <input type="text" name="invBankName" maxlength="50" value="<!--[= list.invBankName ]-->">
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label"><span>*</span>开户银行账户：</div>
+        <div class="form-value">
+            <input type="text" name="invBankAccount" maxlength="50" value="<!--[= list.invBankAccount ]-->">
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label" style="width: 120px; margin-left: -10px;"><span>*</span>税务登记证号码：</div>
+        <div class="form-value">
+            <input type="text" name="invLicense" maxlength="50" value="<!--[= list.invLicense ]-->">
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label"><span>*</span>公司注册地址：</div>
+        <div class="form-value">
+            <input type="text" name="invCompanyAddr" maxlength="50" value="<!--[= list.invCompanyAddr ]-->">
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label"><span>*</span>电话号码：</div>
+        <div class="form-value">
+            <input type="text" name="invTel" maxlength="50" value="<!--[= list.invTel ]-->">
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label"><span></span>传真号码：</div>
+        <div class="form-value">
+            <input type="text" name="invFax" maxlength="50" value="<!--[= list.invFax ]-->" >
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label">备<em class="e2"></em>注：</div>
+        <div class="form-value">
+            <textarea class="textarea" name="inv_remark" maxlength="200"><!--[= list.inv_remark ]--></textarea>
+        </div>
+    </div>
+    <!--[if(list.invId){]-->
+	<input type="hidden" name="invId" value="<!--[= list.invId ]-->">
 	<!--[}]-->
 </script>
 

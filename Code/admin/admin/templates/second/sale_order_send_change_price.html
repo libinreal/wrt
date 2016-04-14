@@ -108,7 +108,8 @@
 					<td><select name="pay_id" style="width:80px;"></select></td>
 					<td class="title">发货总价：</td>
 					<td><input type="text" name="order_amount_send_saler" id="order_amount_send_saler"></td>
-					<td></td><td></td>
+					<td class="title">票据使用天数：</td>
+					<td><input type="text" name="bill_used_days" id="bill_used_days"></td>
 				</tr>
 			</tbody>
 			</table>
@@ -159,44 +160,17 @@ SaleOrder.initPriceSend();
 $(document).ready(function(){
 	// 客户价格-物料单价修改
 	$('#goods_price_send_buyer').on('valuechange', function (e, previous) {
-		var price = validateNumber(parseFloat($("#goods_price_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_send_buyer").val());
-		var number = validateNumber(parseFloat($("#goods_number_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_send_buyer").val());
-		var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());;
-		var contract_sn = $("#contract_sn").text();
-		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
-		if(financial_send == 0){
-			SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
-		}else{
-			customerPriceChange(financial_send);
-		}
+		financeFeeChange();
 	});
 	// 客户价格-物料数量修改
 	$('#goods_number_send_buyer').on('valuechange', function (e, previous) {
-		var price = validateNumber(parseFloat($("#goods_price_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_send_buyer").val());
-		var number = validateNumber(parseFloat($("#goods_number_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_send_buyer").val());
-		var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());;
-		var contract_sn = $("#contract_sn").text();
-		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
-		if(financial_send == 0){
-			SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
-		}else{
-			customerPriceChange(financial_send);
-		}
+		financeFeeChange();
 		$("#goods_number_send_saler").val(number);
 		supplierPriceChange();
 	});
 	// 客户价格-金融费用比率修改
 	$('#financial_send_rate').on('valuechange', function (e, previous) {
-		var price = validateNumber(parseFloat($("#goods_price_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_send_buyer").val());
-		var number = validateNumber(parseFloat($("#goods_number_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_send_buyer").val());
-		var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());;
-		var contract_sn = $("#contract_sn").text();
-		var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
-		if(financial_send == 0){
-			SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
-		}else{
-			customerPriceChange(financial_send);
-		}
+		financeFeeChange();
 	});
 	// 客户价格-物流费用改价
 	$('#shipping_fee_send_buyer').on('valuechange', function (e, previous) {
@@ -225,6 +199,20 @@ $(document).ready(function(){
 		supplierPriceChange()
 	});
 });
+// 金融价格 - 价格更新
+function financeFeeChange(){
+	var price = validateNumber(parseFloat($("#goods_price_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_send_buyer").val());
+	var number = validateNumber(parseFloat($("#goods_number_send_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_send_buyer").val());
+	var rate = validateNumber(parseFloat($("#financial_send_rate").val())) == 0 ? 0 : parseFloat($("#financial_send_rate").val());
+	var bill_used_days = validateNumber(parseFloat($("#bill_used_days").val())) == 0 ? 0 : parseFloat($("#bill_used_days").val());
+	var contract_sn = $("#contract_sn").text();
+	var financial_send = validateNumber(parseFloat($("#financial_send").val())) == 0 ? 0 : parseFloat($("#financial_send").val());
+	if(financial_send == 0){
+		SaleOrder.getFinaceFee(price, number, rate, bill_used_days, contract_sn, 'customerPriceChange');
+	}else{
+		customerPriceChange(financial_send);
+	}
+}
 // 客户价格 - 价格更新
 function customerPriceChange(finance){
 	// 客户价格-金融费用比率

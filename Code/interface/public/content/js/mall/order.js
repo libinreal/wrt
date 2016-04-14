@@ -46,6 +46,7 @@ define(function(require) {
         calculate(response.body);
     });
 
+
     //日期选择器
     $('.date').click(function() {
         var that = $(this),
@@ -59,9 +60,6 @@ define(function(require) {
             options.dateFmt = 'yyyy-MM-dd HH:mm:ss';
         }
 
-        //#F{$dp.$D(\'d4312\')
-        //#F{$dp.$D(\'d4312\')||\'2020-10-01\'}
-        //#F{$dp.$D(\'d4322\',{d:-3});}
         if (that.hasClass('start')) {
             var other = that.parent().find('.end');
             if (other) {
@@ -83,31 +81,6 @@ define(function(require) {
         return dom.val();
     }
 
-
-    //获取默认发票信息
-    Ajax.custom({
-        url: config.defInvoice
-    }, function(response) {
-        if (response.code != 0) {
-            return;
-        }
-        var data = response.body || {};
-        if(data.invType == '0'){
-            $('#invtype1').addClass('active');
-            $('#invtype2').removeClass('active');
-            $('#invtype1 input').attr('checked',true);
-            $('#invtype2 input').removeAttr('checked');
-        }else{
-            $('#invtype2').addClass('active');
-            $('#invtype1').removeClass('active');
-            //这里的顺序需要先添加attr在移除，否则firefox中不能设置上checked属性
-            $('#invtype2 input').attr('checked',true);
-            $('#invtype1 input').removeAttr('checked');
-        }
-        $('input[name="invPayee"]').val(data.invPayee);
-        $('input[name="invAddress"]').val(data.invAddress);
-    });
-
     //提交订单
     $('#order-form').validator({
         focusCleanup: true,
@@ -121,6 +94,27 @@ define(function(require) {
             },
             "invAddress": {
                 rule: "收票地址: required;"
+            },
+            "invCompany": {
+                rule: "公司名称: required;"
+            },
+            "invCompanyAddr": {
+                rule: "公司地址: required;"
+            },
+            "invBankName": {
+                rule: "开户银行: required;"
+            },
+            "invBankAccount": {
+                rule: "开户银行账户: required;"
+            },
+            "invLicense": {
+                rule: "税务登记证号码: required;"
+            },
+            "invCompanyAddr": {
+                rule: "公司注册地址: required;"
+            },
+            "invTel": {
+                rule: "电话号码: required;"
             }
         },
         //验证成功
@@ -207,5 +201,51 @@ define(function(require) {
             $('#goods-' + data[i].id).find('.stock').show();
         }
     }
-
+    //选择发票类型
+    showInv(0)
+    $("#tax-invoice-radio").click(function(){
+        showInv(1);
+    })
+    $("#invoice-radio").click(function(){
+        showInv(0);
+    })
+    // 发票信息
+    function showInv(type){
+        if(type == 1){
+            $("#invoice").hide();
+            $("#tax-invoice").show();
+            $('#invtype1').addClass('active');
+            $('#invtype2').removeClass('active');
+            $('#invtype1 input').attr('checked',true);
+            $('#invtype2 input').removeAttr('checked');           
+        }else{
+            $("#invoice").show();
+            $("#tax-invoice").hide();
+            $('#invtype1').removeClass('active');
+            $('#invtype2').addClass('active');
+            $('#invtype1 input').removeAttr('checked');
+            $('#invtype2 input').attr('checked',true);           
+        }
+        //发票信息
+        Ajax.custom({
+            url: config.defInvoice+"?inv_type="+type
+        }, function(response) {
+            if (response.code != 0) {
+                return;
+            }
+            if(type == '0'){
+                var result = template.render('invoice-tmpl', {
+                    'list': response.body || []
+                });
+                $('#tax-invoice').html('');
+                $('#invoice').html(result);
+            }else{
+                var result = template.render('tax-invoice-tmpl', {
+                    'list': response.body || []
+                });
+                $('#invoice').html('');
+                $('#tax-invoice').html(result);
+            }
+        });
+    }
 });

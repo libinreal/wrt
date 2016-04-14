@@ -17,7 +17,7 @@
 		</h1>
 		<div id="message_area"></div>
 		<div class="list-note-2">
-			<table cellpadding="3" cellspacing="1" id="bill_purchase_assign_list">
+			<table cellpadding="1" cellspacing="1" id="bill_purchase_assign_list">
 				<tr>
 					<th>订单id：</th><td id="order_id"></td>
 					<th>供应商id：</th><td id="suppliers_id"></td>
@@ -65,6 +65,10 @@
 					<td class="title">支付方式：</td>
 					<td><select name="pay_id"></select></td>
 				</tr>
+				<tr>
+					<td class="title">票据使用天数：</td>
+					<td colspan="6"><input type="text" id="bill_used_days" name="bill_used_days"></td>
+				</tr>
 			</tbody>
 			</table>
 			</form>
@@ -74,10 +78,10 @@
 			<input type="hidden" name="contract_sn">
 		</div>
 	</div>
-		<!-- 底部 -->
-		<div id="footer">
-			{$lang.copyright}
-		</div>
+	<!-- 底部 -->
+	<div id="footer">
+		{$lang.copyright}
+	</div>
 
 <script src="js/jquery.validate.js" type="text/javascript" ></script>
 <script src="js/ajax.js" type="text/javascript" ></script>
@@ -106,6 +110,9 @@ $(document).ready(function(){
 	$('#rate').on('valuechange', function (e, previous) {
 		changeFinanceFee();
 	});
+	$('#bill_used_days').on('valuechange', function (e, previous) {
+		changeFinanceFee();
+	});
 	$('#shipping_fee').on('valuechange', function (e, previous) {
 		var finance = validateNumber(parseFloat($("#finance_fee").val())) == 0 ? 0 : parseFloat($("#finance_fee").val());
 		changeTotalAmount(finance);
@@ -114,9 +121,10 @@ $(document).ready(function(){
 function changeFinanceFee(){
 	var price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());
 	var number = validateNumber(parseFloat($("#send_number").val())) == 0 ? 0 : parseFloat($("#send_number").val());
+	var bill_used_days = validateNumber(parseFloat($("#bill_used_days").val())) == 0 ? 0 : parseFloat($("#bill_used_days").val());
 	var rate = validateNumber(parseFloat($("#rate").val())) == 0 ? 0 : parseFloat($("#rate").val());;
 	var contract_sn = $("input[name=contract_sn]").val();
-	SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'changeTotalAmount');
+	SaleOrder.getFinaceFee(price, number, rate, bill_used_days, contract_sn, 'changeTotalAmount');
 }
 function changeTotalAmount(finance){
 	var goods_price = validateNumber(parseFloat($("#goods_price").val())) == 0 ? 0 : parseFloat($("#goods_price").val());

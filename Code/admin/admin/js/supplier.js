@@ -795,13 +795,13 @@ var Supplier = {
 				var row = "";
 				$.each(obj.content.file_0,function(key, value){
 					row += "<tr>";
-					row += createTd(value.upload_name);
+					row += createTd("<a href='."+value.upload_url+"' target='_blank'>"+value.upload_name+"</a>");
 				});
 				$("#left_list>tbody").html(row);
 				row ="";
 				$.each(obj.content.file_1,function(key, value){
 					row += "<tr>";
-					row += createTd(value.upload_name);
+					row += createTd("<a href='."+value.upload_url+"' target='_blank'>"+value.upload_name+"</a>");
 				});
 				$("#right_list>tbody").html(row);
 				row = "";

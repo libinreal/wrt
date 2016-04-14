@@ -1,38 +1,49 @@
 var Forms = {
 	customer_arr: [
+		"add_date",
 		"order_sn",
-		"goods_sn",
 		"goods_name",
 		"attr",
 		"goods_number_arr_buyer",
+		"unit",
 		"goods_price_arr_buyer",
+		"bill_used_days",
+		"financial_arr",
+		"shipping_fee_arr_buyer",
 		"order_amount_arr_buyer",
 		"customer_name",
-		"remark"
+		"user_account"
 	],
 	supplier_arr: [
+		"shipping_time",
 		"order_sn",
 		"goods_sn",
 		"goods_name",
 		"attr",
 		"goods_number_arr_saler",
-		"goods_price_arr_saler",
+		"unit",
 		"order_amount_arr_saler",
+		"shipping_fee_arr_saler",
+		"goods_price_arr_saler",
 		"customer_name",
 		"remark"
 	],
 	project_arr: [
+		"shipping_time",
 		"goods_name",
-		"goods_sn",
+		"customer_name",
 		"order_sn",
 		"goods_price_arr_buyer",
-		"goods_number_arr_buyer",
 		"order_amount_arr_buyer",
+		"financial_arr",
+		"shipping_fee_arr_buyer",
+		"order_amount_arr_buyer",
+		"contract_effect_time",
 		"purchase_sn",
 		"suppliers_name",
-		"customer_name",
 		"goods_price_arr_saler",
 		"goods_number_arr_saler",
+		"shipping_fee_arr_saler",
 		"order_amount_arr_saler",
 		"differential"
 	],
@@ -49,10 +60,14 @@ var Forms = {
 		}else{
 			var condition = {};
 			condition.like = {};
+			var customer_name = $('#search_form input[name=customer_name]').val();
 			var contract_name = $('#search_form input[name=contract_name]').val();
 			var contract_sn= $('#search_form input[name=contract_sn]').val();
 			var due_date1 = $('#search_form input[name=due_date1]').val();
 			var due_date2 = $('#search_form input[name=due_date2]').val();
+			if(customer_name != ''){
+				condition.like['customer_name'] = customer_name
+			}
 			if(contract_name != ''){
 				condition.like['contract_name'] = contract_name
 			}
@@ -205,12 +220,20 @@ var Forms = {
 			serach = false;
 		}else{
 			var condition = {};
+			condition.like = {};
+			var customer_name = $('#search_form input[name=customer_name]').val();
+			var goods_name = $('#search_form input[name=goods_name]').val();
 			var contract_name = $('#search_form input[name=contract_name]').val();
 			var due_date1 = $('#search_form input[name=due_date1]').val();
 			var due_date2 = $('#search_form input[name=due_date2]').val();
+			if(customer_name != ''){
+				condition.like['customer_name'] = customer_name;
+			}
+			if(goods_name != ''){
+				condition.like['goods_name'] = goods_name;
+			}
 			if(contract_name != ''){
-				condition.like = {};
-				condition.like['contract_name'] = contract_name
+				condition.like['contract_name'] = contract_name;
 			}
 			if(due_date1 != ''){
 				condition.due_date1 = due_date1;

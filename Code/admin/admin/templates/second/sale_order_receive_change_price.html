@@ -83,7 +83,8 @@
 					<td><input type="text" id="financial_arr" name="financial_arr" data-rule-required="true" data-rule-number="true"></td>
 					<td class="title">发货总价：</td>
 					<td><input type="text" name="order_amount_arr_buyer" id="order_amount_arr_buyer"></td>
-					<td></td><td></td>
+					<td class="title">票据使用天数：</td>
+					<td><input type="text" name="bill_used_days" id="bill_used_days"></td>
 				</tr>
 			</tbody>
 			</table>
@@ -137,44 +138,21 @@ SaleOrder.initPriceArr();
 $(document).ready(function(){
 	// 客户价格-物料单价修改
 	$('#goods_price_arr_buyer').on('valuechange', function (e, previous) {
-		var price = validateNumber(parseFloat($("#goods_price_arr_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_arr_buyer").val());
-		var number = validateNumber(parseFloat($("#goods_number_arr_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_arr_buyer").val());
-		var rate = validateNumber(parseFloat($("#financial_arr_rate").val())) == 0 ? 0 : parseFloat($("#financial_arr_rate").val());;
-		var contract_sn = $("#contract_sn").text();
-		var financial_arr = validateNumber(parseFloat($("#financial_arr").val())) == 0 ? 0 : parseFloat($("#financial_arr").val());
-		if(financial_arr == 0){
-			SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
-		}else{
-			customerPriceChange(financial_arr);
-		}
+		financeFeeChange();
 	});
 	// 客户价格-物料数量修改
 	$('#goods_number_arr_buyer').on('valuechange', function (e, previous) {
-		var price = validateNumber(parseFloat($("#goods_price_arr_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_arr_buyer").val());
-		var number = validateNumber(parseFloat($("#goods_number_arr_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_arr_buyer").val());
-		var rate = validateNumber(parseFloat($("#financial_arr_rate").val())) == 0 ? 0 : parseFloat($("#financial_arr_rate").val());;
-		var contract_sn = $("#contract_sn").text();
-		var financial_arr = validateNumber(parseFloat($("#financial_arr").val())) == 0 ? 0 : parseFloat($("#financial_arr").val());
-		if(financial_arr == 0){
-			SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
-		}else{
-			customerPriceChange(financial_arr);
-		}
+		financeFeeChange();
 		$("#goods_number_arr_saler").val(number);
 		supplierPriceChange();
 	});
 	// 客户价格-金融费用比率修改
 	$('#financial_arr_rate').on('valuechange', function (e, previous) {
-		var price = validateNumber(parseFloat($("#goods_price_arr_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_arr_buyer").val());
-		var number = validateNumber(parseFloat($("#goods_number_arr_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_arr_buyer").val());
-		var rate = validateNumber(parseFloat($("#financial_arr_rate").val())) == 0 ? 0 : parseFloat($("#financial_arr_rate").val());;
-		var contract_sn = $("#contract_sn").text();
-		var financial_arr = validateNumber(parseFloat($("#financial_arr").val())) == 0 ? 0 : parseFloat($("#financial_arr").val());
-		if(financial_arr == 0){
-			SaleOrder.getFinaceFee(price, number, rate, contract_sn, 'customerPriceChange');
-		}else{
-			customerPriceChange(financial_arr);
-		}
+		financeFeeChange()
+	});
+	// 客户价格-票据使用天数
+	$('#bill_used_days').on('valuechange', function (e, previous) {
+		financeFeeChange()
 	});
 	// 客户价格-物流费用改价
 	$('#shipping_fee_arr_buyer').on('valuechange', function (e, previous) {
@@ -203,6 +181,20 @@ $(document).ready(function(){
 		supplierPriceChange()
 	});
 });
+// 金融价格 - 价格更新
+function financeFeeChange(){
+	var price = validateNumber(parseFloat($("#goods_price_arr_buyer").val())) == 0 ? 0 : parseFloat($("#goods_price_arr_buyer").val());
+	var number = validateNumber(parseFloat($("#goods_number_arr_buyer").val())) == 0 ? 0 : parseFloat($("#goods_number_arr_buyer").val());
+	var rate = validateNumber(parseFloat($("#financial_arr_rate").val())) == 0 ? 0 : parseFloat($("#financial_arr_rate").val());
+	var bill_used_days = validateNumber(parseFloat($("#bill_used_days").val())) == 0 ? 0 : parseFloat($("#bill_used_days").val());
+	var contract_sn = $("#contract_sn").text();
+	var financial_arr = validateNumber(parseFloat($("#financial_arr").val())) == 0 ? 0 : parseFloat($("#financial_arr").val());
+	if(financial_arr == 0){
+		SaleOrder.getFinaceFee(price, number, rate, bill_used_days, contract_sn, 'customerPriceChange');
+	}else{
+		customerPriceChange(financial_arr);
+	}
+}
 // 客户价格 - 价格更新
 function customerPriceChange(finance){
 	// 客户价格-金融费用比率
