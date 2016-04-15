@@ -54,7 +54,7 @@ class NoteController extends ControllerBase
 		} else {
 			$condition = '';
 		}
-		
+        $condition .= ' AND NoteModel.review_status=1';//审核状态为已审核1
 		if ($forward || !$currentId) {
 			//上一页 或 第一页操作
 			if (!empty($condition)) $condition .= ' AND ';
@@ -96,14 +96,15 @@ class NoteController extends ControllerBase
 						NoteModel.bill_amount, 
 						U.companyName, 
 						NoteModel.drawer, 
-						NoteModel.acceptor, 
+						NoteModel.acceptor,
+						NoteModel.review_status,
 						IF(NoteModel.status=0,"未还","已还") status
 					')
 				->order('NoteModel.bill_id DESC')
 				->limit($size)
 				->execute()
 				->toArray();
-		
+
 		return ResponseApi::send($data);
 	}
 	
