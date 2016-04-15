@@ -77,6 +77,7 @@ var BillAmount = {
 							if(that.order_arr[i] == "operate"){
 								if(value.amount_type == 1 || value.amount_type == 2){
 									var edit = "";
+									var edit = createLink("demo_template.php?section=bill_manage&act=generate_cash_view&log_id="+value.bill_amount_log_id, "详情");
 								}else{
 									var edit = "";
 									var edit = createLink("demo_template.php?section=bill_manage&act=generate_view&log_id="+value.bill_amount_log_id, "详情");
@@ -274,16 +275,12 @@ var BillAmount = {
 					if($("select[name="+k+"]").length > 0){
 						$("select[name="+k+"]>option[value="+v+"]").attr("selected", "selected");
 					}
-					if($("input[name="+k+"]").length > 0){
-						$("input[name="+k+"]").val(v);
-					}
-					if($("textarea[name="+k+"]").length > 0){
-						$("textarea[name="+k+"]").text(v);
+					if($("td#"+k).length > 0){
+						$("td#"+k).text(v);
 					}
 				});
-				$("#operate_button").html(createButton('BillAmount.getUpdateAction()', '保存'));
+				$("#operate_button").html(createButton('alert("test")', '审核'));
 			}
-			
-		}, "json");		
+		}, "json");
 	}
 }

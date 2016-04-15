@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>{$lang.cp_home} - 额度生成详情（现金）</title>
+		<meta name="robots" content="noindex, nofollow">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link href="styles/general.css" rel="stylesheet" type="text/css" />
+		<link href="styles/main.css" rel="stylesheet" type="text/css" />
+		<script src="../js/jquery-1.8.3.min.js" type="text/javascript" ></script>
+	</head>
+	<body>
+	{include file="pagemenu.htm"}
+		<h1>
+		<span class="action-span1"><a href="index.php?act=main">{$lang.cp_home}</a> </span>
+		<span id="search_id" class="action-span1">- 额度生成详情（现金）</span>
+		<div style="clear:both"></div>
+		</h1>
+		<div id="message_area"></div>
+		<div class="table_info">
+			<table>
+				<thead>
+					<tr>
+						<th colspan="6"> 额度生成详情（现金） </th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="title">来往单位：</td>
+						<td><select id="user_id" style="width:150px;" disabled="disabled"></select></td>
+						<td class="title">单据类型：</td>
+						<td><select id="amount_type" disabled="disabled">
+							<option value="1">现金</option>
+							<option value="2">承兑</option>
+						</select></td>
+					</tr>
+					<tr>
+						<td class="title">录入金额：</td>
+						<td colspan="3" id="amount"></td>
+					</tr>
+					<tr>
+						<td class="title">备注:</td>
+						<td colspan="3" id="remark"></td>
+					</tr>
+				</tbody>
+			</table>
+			<div align="center" id="operate_button"></div>
+		</div>
+	</div>
+		<!-- 底部 -->
+		<div id="footer">
+			{$lang.copyright}
+		</div>
+
+<script src="js/jquery.validate.js" type="text/javascript" ></script>
+<script src="js/ajax.js" type="text/javascript" ></script>
+<script src="js/type-mode.js" type="text/javascript" ></script>
+<script src="js/bill-amount.js" type="text/javascript" ></script>
+<script type="text/javascript">
+BillAmount.getView(1);
+</script>
+	</body>
+</html>
