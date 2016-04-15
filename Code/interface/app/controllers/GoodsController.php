@@ -869,7 +869,8 @@ class GoodsController extends ControllerBase {
 		//如果是总账号 会选择旗下的所有子帐号
 		$result = Users::find(array(
 				'conditions' => 'parent_id = '.$customerId.' or id='.$customerId,
-				'columns' => 'id'
+				'columns' => 'id',
+                'reivew_status' => 'reivewStatus'
 		));
 		$user = array();
 		if(is_object($result) && $result->count()) {
@@ -888,8 +889,8 @@ class GoodsController extends ControllerBase {
 		//查看总账号下的所有合同 包括子帐号
 		$result = ContractModel::find(array(
 
-			'conditions' => 'userId = '.$customerId,//合同子帐号=当前登录用户
-			'columns' => 'id contract_id, name, num code'
+			'conditions' => 'userId = '.$customerId .' AND reivewStatus =1',//合同子帐号=当前登录用户 并且审核状态是1
+			'columns' => 'id contract_id, name,reivewStatus reivew_status, num code',
 /*
 			'conditions' => 'user_id in('.implode(',', $userId).')',
 			'columns' => 'contract_id, contract_name name, contract_num code'
@@ -927,7 +928,7 @@ class GoodsController extends ControllerBase {
 		$addressId = $this->request->getPost('addressId', 'int');
 		$payOrgcode = $this->request->getPost('payOrgcode');
 		$contractSn = $this->request->getPost('contractSn');
-		if(!$invPayee || !$invAddress || !$addressId || !$contractSn) {
+		if(!$addressId || !$contractSn) {
 			return ResponseApi::send(null, Message::$_ERROR_CODING, "数据格式错误");
 		}
 		$address = UserAddress::findFirst($addressId);
@@ -1036,9 +1037,15 @@ class GoodsController extends ControllerBase {
 		$orderInfo->address = $address->address;
 		$orderInfo->tag = $address->tag;
 		//保存发票信息
-		$userInv = new UserInv();
-		if( $invId )
-			$userInv->invId = $invId;
+        $userInv = UserInv::findFirst('userId = ' . $userId);
+        if(!is_object($userInv) || !$userInv) {
+            $userInv = new UserInv();
+            $userInv->userId = $userId;
+        }
+        if($userInv->userId == $userId && $userInv->invType != $invType)
+        {
+        $userInv->invId = $invId;
+        }
 		$userInv->setTransaction($transaction);
 		$userInv->invType = $invType;
 		$userInv->invPayee = $invPayee;
