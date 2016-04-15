@@ -71,6 +71,10 @@ if($section == "bill_manage"){
 			$smarty->display('second/bill_purchase_note_view.html');
 			break;
 
+		case 'generate_cash_view':
+			$smarty->display('second/bill_purchase_cash_view.html');
+			break;
+
 		case 'generate_note':
 			$smarty->display('second/bill_purchase_note.html');
 			break;
