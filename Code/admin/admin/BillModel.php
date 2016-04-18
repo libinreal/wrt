@@ -63,9 +63,136 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$this->pageAction();
 			}
 		}
-				
+		
+		/**
+		 * 票据查看|详情
+		 * 接口地址：http://admin.zj.dev/admin/BillModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(主键bill_id)：
+		 *      {
+		 *		    "command": "find",
+		 *		    "entity": "bill",
+		 *		    "parameters": {
+		 *                  "bill_id":2
+		 *                  }
+		 *      }
+		 *      
+		 *  返回的数据格式:
+		 * {
+		 *	    "error": 0,
+		 *	    "message": "",
+		 *	    "content":{ 
+		 *	    	"init":{	
+		 *	    		"bill_type":{"0":"xxx", "1":"xxx" },
+		 *	    		"currency":{"0":"xxx", "1":"xxx"},
+		 *	    		"status":{"0":"xxx", "1":"xxx"},
+		 *	    		"is_recourse":{"0":"xxx", "1":"xxx"},
+		 *	    		"payers":[
+		 *	    			{"user_id":1,"user_name":"xxx"}
+		 *	    		],
+		 *	    		"receivers":[
+		 *	    			{"user_id":1,"user_name":"xxx"}
+		 *	    		]
+		 *	    	}
+		 *	       "info":{
+		 *                  "bill_id":2 ,
+		 *                  "bill_type": 0 ,
+		 *                  "bill_num": "a000123" ,
+		 *                  "currency": 0 ,
+		 *                  "bill_amount":  100.00 ,
+		 *                  "customer_num": "ZJ001" ,
+		 *                  "contract_id": 6881 ,
+		 *                  "payment_rate": 0.1120 ,
+		 *                  "expire_amount": 10000.21 ,
+		 *                  "issuing_date": "2015-12-12" ,
+		 *                  "due_date": "2015-12-12" ,
+		 *                  "prompt_day": 60 ,
+		 *                  "drawer": "薛某" ,
+		 *                  "acceptor": "李某" ,  
+		 *                  "accept_num": "ZJ100" ,
+		 *                  "accept_date": "2015-12-12" ,
+		 *                  "remark": "虚拟数据" ,
+		 *                  "customer_id": 4 ,
+		 * 	                "receive_date": "2015-12-12" ,
+		 *                  "trans_amount": 100.10 ,
+		 *                  "saler": "乐某" ,
+		 *                  "receiver": "华某" ,
+		 *                  "balance": "中国建设银行" ,
+		 *                  "discount_rate": 98.00 ,
+		 *                  "serial_number": "a00112" ,
+		 *                  "status": 0 ,
+		 *                  "discount_amount": 90.00 ,
+		 *                  "is_recourse": 0 ,
+		 *                  "pay_user_id": 24 ,
+		 *                  "pay_bank_id": 2 ,
+		 *                  "pay_account": "62200121122330011" ,
+		 *                  "receive_user_id": 102 , 
+		 *                  "receive_bank_id": 1 ,
+		 *                  "receive_account": "62200121122330011"
+		 *          }
+		 *	}
+		 */			
 		public function findAction(){
+			$content = $this->content;
+			$bill_id = $content['parameters']['bill_id'];
+
+			if( !$bill_id )
+				make_json_response('', '-1', '票据ID为空');
+
+			$bill_type = array_merge( C('bill_type') );//
+			$currency = array_merge( C('bill_currency') );//
+			$status = array( "0" => "已扣减", "1" => "已恢复" );//
+
+			$is_recourse = array( "0" =>"否", "1" => "是");//
+			$sql = "SELECT `user_id`, `companyName` as `user_name` FROM " . $GLOBALS['ecs']->table('users') . ' WHERE `parent_id` = 0 OR `parent_id` IS NULL GROUP BY `companyName` ';
+			$users = $GLOBALS['db']->getAll( $sql );//
+			$new_users = array();
+			array_walk($users, function($v, $k) use( &$new_users ) {
+				$new_users[$v['user_id']] = $v['user_name'];
+			});
+
+
+			$sql = "SELECT `user_id`,`user_name` FROM " . $GLOBALS['ecs']->table('admin_user') . " where `suppliers_id` <> 0 OR `suppliers_id` IS NOT NULL";
+			$suppliers = $GLOBALS['db']->getAll( $sql );//
+			$new_suppliers = array();
+			array_walk($suppliers, function($v, $k) use( &$new_suppliers ) {
+				$new_suppliers[$v['user_id']] = $v['user_name'];
+			});
 			
+			$content = array();
+
+			$init['bill_type'] = $bill_type;
+			$init['currency'] = $currency;
+			$init['status'] = $status;
+			
+			$init['is_recourse'] = $is_recourse;
+			$init['payers'] = $payers;
+			$init['receivers'] = $receivers;
+
+			$content['init'] = $init;
+
+			$sql = "SELECT * FROM ". $GLOBALS['ecs']->table('bill') ." WHERE `bill_id` = $bill_id";
+			$bill = $GLOBALS['db']->getRow($sql, true);
+			
+			$sql = 'SELECT bank_id, bank_name FROM ' . $GLOBALS['ecs']->table('bank');
+			$banks = $GLOBALS['db']->getAll($sql);
+
+			if( empty( $bill ) ){
+				$bill = array();
+			}else{
+				$bill['bill_type'] = $bill_type[ $bill['bill_type'] ];
+				$bill['currency'] = $currency[ $bill['currency'] ];
+				$bill['status'] = $status[ $bill['status'] ];
+
+				$bill['pay_user'] = $bill['pay_user_id'] ? $new_users[ $bill['pay_user_id'] ] : '';
+				$bill['receive_user'] = $bill['receive_user_id'] ? $new_suppliers[ $bill['receive_user_id'] ] : '';
+				
+				$bill['receive_bank'] = $bill['receive_bank_id'] ? $banks[ $bill['receive_bank_id'] ] : '';
+				$bill['pay_bank'] = $bill['pay_bank_id'] ? $banks[ $bill['pay_bank_id'] ] : '';
+
+			}
+
+			make_json_response( $bill, '0' , '');
 		}
 
 		/**
@@ -669,7 +796,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "receive_bank_id": 1 ,
 		 *                  "receive_account": "62200121122330011"
 		 *          }
-		 
 		 *	}
 		 */
 		public function editInitAction()
@@ -729,7 +855,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		    "entity": "bill",
 		 *		    "parameters": {
 		 *                  "bill_id":2,
-		 *                  "status":1//1 通过 2 不通过
+		 *                  "review_status":1//1 通过 2 不通过
 		 *                  }
 		 *      }
 		 *      
@@ -744,15 +870,33 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content = $this->content;
 			$parameters = $content['parameters'];
 
-			$bill_id = $parameters['bill_id'];
-			$status = $parameters['status'];
+			$bill_id = intval( $parameters['bill_id'] );
+			$review_status = intval( $parameters['review_status'] );
+			$bill_table = $GLOBALS['ecs']->table('bill');
 
-			$sql = 'UPDATE ' . $GLOBALS['ecs']->table('bill') . ' SET `review_status` = ' . $status . ' WHERE `bill_id` = ' . $bill_id;
-			$review_ret = $GLOBALS['db']->query( $sql );
+			$admin = admin_info();
+
+			$review['review_user_id'] = $admin['user_id'];
+			$review['review_user'] = $admin['user_name'];
+			$review['review_status'] = $review_status;
+			$review['review_time'] = gmtime();
+
+			$review_sql = 'UPDATE ' . $bill_table . ' SET ';
+
+			foreach ($review as $key => $value) {
+				if( is_string( $value ) )
+					$review_sql .= '`' . $key . '` = \'' . $value .'\',';
+				else
+					$review_sql .= '`' . $key . '` = '  . $value . ',';
+			}
+
+			$review_sql  = substr($review_sql, 0, -1) . ' WHERE `bill_id` = ' . $bill_id . ' LIMIT 1';
+			$review_ret = $GLOBALS['db']->query( $review_sql );
 
 			if( $review_ret != false ){
 				make_json_response('', '0', '审核成功');
 			}
+
 			make_json_response('', '0', '审核失败');
 
 		}

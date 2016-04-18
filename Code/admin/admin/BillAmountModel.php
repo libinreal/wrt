@@ -350,8 +350,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( empty( $data['user_id'] ) )
 				make_json_response('', '-100', '客户id错误');
 
-			if( $data['bill_id'] == '0' ){
+			if( $data['bill_id'] == '0' ){//现金
 				$data['amount_rate'] = 1;//票据折算比例最大为1，现金额度默认为1
+			}else{//票据
+				$bill_table = $GLOBALS['ecs']->table('bill');
+				
+				$bill_review_sql = 'SELECT `review_status` FROM ' . $bill_table .
+									' WHERE `bill_id` = ' . $data['bill_id'];
+				$bill_review = $GLOBALS['db']->getOne( $bill_review_sql );
+				if( $bill_review != 1){
+					make_json_response('', '-1', '票据未审核通过，不能生成额度');
+				}
 			}
 
 			$dataKey = array_keys( $data );
@@ -725,7 +734,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			if( $review_ret ){
 
-				if( $bill_log_data['review_status'] == 0 && $review_status == 1 ){
+				if( $bill_log_data['review_status'] != 0 && $review_status == 1 ){
 					$users_table = $GLOBALS['ecs']->table('users');
 					$parent_id_sql ='SELECT `parent_id` FROM ' . $users_table . ' WHERE `user_id` = ' . $user_id;
 					$parent_id = $GLOBALS['db']->getOne( $parent_id_sql );
