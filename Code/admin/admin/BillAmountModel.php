@@ -59,14 +59,56 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif($this->command == 'addInit'){
 				//
 				$this->addInitAction();
+			}elseif($this->command == 'review'){
+				//
+				$this->reviewAction();
 			}else {
 				//
 				$this->pageAction();
 			}
 		}
-				
+		
+		/**
+		 * 分页显示
+		 * 接口地址：http://admin.zjgit.dev/admin/BillAmountModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
+	     *  {
+	     *      "entity": 'bill',
+	     *      "command": 'page',
+	     *      "parameters": {
+	     *         	"log_id":10
+	     *      }
+	     *  }
+	     *  返回的数据格式:
+		 * {
+		 *	    "error": 0,
+		 *	    "message": "",
+		 *	    "content":{ 
+		 *	    	"init":{	
+		 *	    		"customer":[
+		 *	    			{"user_id":1, "user_name":"xxx" }
+		 *	    		],//往来单位
+		 *	    		"amount_type":{"0":"xxx", "1":"xxx"},//单据类型
+		 *	    	},
+		 *	    	"info":{
+		 *	    		"bill_num":"ax134",//票据编号
+		 *	    		"user_name":"库某",//往来单位名称
+		 *	    		"user_id":1,//客户id（往来单位id）
+		 *	    		"bill_amount":100.00,//票面金额
+		 *	    		"discount_rate":1//折算比率
+		 *	    	}
+		 *	    }
+		 *	}
+		 */
 		public function findAction(){
+			$params = $this->content['parameters'];
+			$log_id = $params['log_id'];
+
+			$bill_amount_table = $GLOBALS["ecs"]->table("bill_amount_log");
+			$users_table = $GLOBALS['ecs']->table( 'users' );
 			
+			// $log_sql = 'SELECT * FROM ' . 
 		}
 		
 		/**
@@ -314,35 +356,35 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$sql = substr($sql, 0, -1) . ")";
-			// $GLOBALS['db']->query("START TRANSACTION");//开启事务
+			
 			$createBill = $GLOBALS['db']->query($sql);
-			//parentId
+			
 			$parent_id_sql ='SELECT `parent_id` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `user_id` = ' . $data['user_id'];
 			$parent_id = $GLOBALS['db']->getOne( $parent_id_sql );
 
 			if( $createBill )
 			{
-				$users_table = $GLOBALS['ecs']->table('users');
-				if( $data['bill_id'] != '0' && is_numeric( $data['bill_id'] ))//额度生成类型(0:商票,1:现金,2:承兑)
-					$users_sql = 'UPDATE ' . $users_table . ' SET `bill_amount_history` = `bill_amount_history` + ' . $data['amount'] .
-							',`bill_amount_valid` = `bill_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'] . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
-				else
-					$users_sql = 'UPDATE ' . $users_table . ' SET `cash_amount_history` = `cash_amount_history` + ' . $data['amount'] .
-							',`cash_amount_valid` = `cash_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'] . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
+				// $users_table = $GLOBALS['ecs']->table('users');
+				// if( $data['bill_id'] != '0' && is_numeric( $data['bill_id'] ))//额度生成类型(0:商票,1:现金,2:承兑)
+				// 	$users_sql = 'UPDATE ' . $users_table . ' SET `bill_amount_history` = `bill_amount_history` + ' . $data['amount'] .
+				// 			',`bill_amount_valid` = `bill_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'] . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
+				// else
+				// 	$users_sql = 'UPDATE ' . $users_table . ' SET `cash_amount_history` = `cash_amount_history` + ' . $data['amount'] .
+				// 			',`cash_amount_valid` = `cash_amount_valid` + ' . $data['amount'] . ' WHERE `user_id` = ' . $data['user_id'] . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
 				
-				$updateUsers = $GLOBALS['db']->query($users_sql);
+				// $updateUsers = $GLOBALS['db']->query($users_sql);
 
-				if( $updateUsers ) {
-					// $GLOBALS['db']->query("COMMIT");//事务提交
-					make_json_response("", "0", "额度生成单添加成功");//暂不返回自增id
-				}else{
-					// $GLOBALS['db']->query("ROLLBACK");//事务回滚
-					make_json_response("", "-1", "额度生成单添加失败");//暂不返回自增id
-				}
+				// if( $updateUsers ) {
+					
+				// 	make_json_response("", "0", "额度生成单添加成功");//暂不返回自增id
+				// }else{
+					
+					make_json_response("", "-1", "额度生成单添加成功");//暂不返回自增id
+				// }
 			}
 			else
 			{
-				// $GLOBALS['db']->query("ROLLBACK");//事务回滚
+				
 				make_json_response("", "-1", "额度生成单添加失败");
 			}
 		}
@@ -357,7 +399,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		    "entity": "bill_amount_log",
 		 *		    "parameters": {
 		 *                  "bill_amount_log_id":2 ,
-		 *					"amount_type": 0 ,//额度生成类型
 		 *                  "amount_rate": 1 ,//票据折算比率
 		 *                  "amount": 100 ,//生成的额度
 		 *                  "remark": "虚拟数据" ,
@@ -380,7 +421,16 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( !isset( $params['bill_amount_log_id'] ) )
 				make_json_response('', "-1", "票据ID错误");
 
-			$data['amount_type'] = intval( $params['amount_type'] );
+			$bill_amount_table = $GLOBALS['ecs']->table("bill_amount_log");
+
+			$review_status_sql = 'SELECT `review_status` FROM ' . $bill_amount_table . ' WHERE `bill_amount_log_id` = ' .
+								 $params['bill_amount_log_id'];
+			$review_status = $GLOBALS['db']->getOne( $review_status_sql );
+
+			if( $review_status == 1 ){//审核已通过
+				make_json_response('', '-1', '审核已通过，无法编辑');
+			}
+
 			$data['amount_rate'] = round( $params['amount_rate'], 4 );
 			$data['amount'] = round( ( double )( $params['amount'] ), 2 );
 			$data['remark'] = trim( $params['remark'] );
@@ -397,7 +447,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$pv = "'" . trim($pv) ."'";
 			}	
 
-			$sql = "UPDATE " . $GLOBALS['ecs']->table("bill_amount_log") . " SET";
+			$sql = "UPDATE " . $bill_amount_table . " SET";
 
 			foreach ($data as $p => $pv) {
 				$sql = $sql . " `" . $p . "` = " . $pv . ",";
@@ -528,7 +578,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		    "command": "editInit",
 		 *		    "entity": "bill_amount_log",
 		 *		    "parameters": {
-		 *		    		"type":0,//0: 商票 1: 现金
 		 *                  "bill_amount_log_id":2//额度生成单ID
 		 *                  }
 		 *      }
@@ -547,68 +596,150 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	       "info":{
 		 *                  "amount_type": 0 ,//额度生成类型
 		 *                  "amount_rate": 1 ,//票据折算比率
-		 *                  "amount": 100 ,//生成的额度
+		 *                  "amount": 100 ,//折后的额度
+		 *                  "bill_amount": 100 ,//票面金额
 		 *                  "remark": "虚拟数据" ,
-		 *                  "user_name": "钟某",//客户名称
-		 *                  "user_id": 4 ,
+		 *                  "user_name": "钟某",//来往单位
+		 *                  "user_id": 123,//来往单位id
 		 * 	                "bill_id": 0 ,//票据ID
+		 * 	                "bill_num": 'no1234'//票据编号
 		 * 	        }
 		 *	}
 		 */
 		public function editInitAction()
 		{
 			$content = $this->content;
-			$type = $content['parameters']['type'];
+			$bill_amount_id = $content['parameters']['bill_amount_log_id'];
 
-			if( $type == 0 )//商票
+			$bill_table = $GLOBALS['ecs']->table( 'bill' );
+			$bill_amount_table = $GLOBALS['ecs']->table( 'bill_amount_log' );
+			$users_table = $GLOBALS['ecs']->table( 'users' );
+
+			$bill_join_sql = 'SELECT b.`bill_amount`, b.`bill_num`, u.`user_id`, u.`companyName` as user_name, a.`bill_id`, a.`remark`, a.`amount_rate`, a.`amount`, ' .
+								 ' a.`amount_type`'.
+								 ' FROM ' . $bill_amount_table . ' AS a ' .
+								 ' LEFT JOIN ' . $bill_table . ' AS b ON a.`bill_id` = b.`bill_id` '.
+								 ' LEFT JOIN ' . $users_table . 'AS u ON a.`user_id` = u.`user_id` WHERE `bill_amount_log_id` = ' . $bill_amount_id;
+				
+			$bill_amount_log = $GLOBALS['db']->getRow( $bill_join_sql );//额度生成单内容
+
+			if( empty( $bill_amount_log ) ) {
+				make_json_response('', '-1', '票据额度查询失败');
+			}
+
+			$init = array();
+			if( $bill_amount_log['amount_type'] != 0 )//现金
 			{
-				$users_table = $GLOBALS['ecs']->table( 'users' );
-				$bill_amount_table = $GLOBALS['ecs']->table( 'bill_amount_log' );
-				$bill_amount_id = $content['parameters']['bill_amount_log_id'];
-
-				$sql = 'SELECT ba.`amount_type`, ba.`amount_rate`, ba.`amount`, ba.`remark`, u.`user_name`, ba.`user_id`, ba.`bill_id` FROM ' . $bill_amount_table .
-					   ' AS ba LEFT JOIN ' . $users_table . ' AS u ON ba.`user_id` = u.`user_id`' .
-					   ' WHERE `bill_amount_log_id` = ' . $bill_amount_id;
-				$bill_amount_log = $GLOBALS['db']->getRow( $sql );//额度生成单内容
-
-				$bill_table = $GLOBALS['ecs']->table( 'bill' );
-				$sql = 'SELECT `bill_num`,`bill_amount` FROM ' . $bill_table .
-						' WHERE `bill_id` = ' . $bill_amount_log['bill_id'];
-				$bill = $GLOBALS['db']->getRow( $sql );//票据内容(票据编号、票面金额)
-
-				if( empty( $bill ) )
-					make_json_response('', '-1', '生成单所用的票据不存在');
-
-				$result['info'] = array_merge( $bill_amount_log, $bill ); 		
-			} elseif ( $type == 1) {//现金
-				$users_table = $GLOBALS['ecs']->table( 'users' );
-				$sql = 'SELECT `user_id`, `user_name` FROM ' . $users_table;
+				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $users_table . ' WHERE `parent_id` = 0 OR `parent_id` IS NULL';
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 
 				$cash_amount_type = array_merge( C('cash_bill_amount_type') );
-				$init['amount_type'] = $cash_amount_type;
-
-				$bill_amount_table = $GLOBALS['ecs']->table( 'bill_amount_log' );
-				$bill_amount_id = $content['parameters']['bill_amount_log_id'];
-
-				$sql = 'SELECT ba.`amount_type`, ba.`amount`, ba.`remark`, u.`user_name`, ba.`user_id` FROM ' . $bill_amount_table .
-				       ' AS ba LEFT JOIN ' . $users_table . ' AS u on u.`user_id` = ba.`user_id`' .
-					   ' WHERE `bill_amount_log_id` = ' . $bill_amount_id;
-				$bill_amount_log = $GLOBALS['db']->getRow( $sql );//额度生成单内容
-
-				$result['info'] = $bill_amount_log;
-				$result['init'] = $init;
+				$init['amount_type'] = $cash_amount_type;				
 			}
-			else
-			{
-				make_json_response('', '-1', '生成单类型为空');
-			}
+
+			$result['info'] = $bill_amount_log;
+			$result['init'] = $init;
 
 			make_json_response( $result, '0' );
 		}
+
+		/**
+		 * 审核额度生成单
+		 * 接口地址：http://admin.zjgit.dev/admin/BillAmountModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(主键bill_amount_log_id)：
+		 *      {
+		 *		    "command": "review",
+		 *		    "entity": "bill_amount_log",
+		 *		    "parameters": {
+		 *                  "bill_log_id":2//额度生成单ID
+		 *                  "review_status":1//审核状态
+		 *                  }
+		 *      }
+		 *      
+		 *  返回的数据格式:
+		 * {
+		 *	    "error": 0,
+		 *	    "message": "",
+		 *	    "content":{ }
+		 *  }
+		 */
+		public function reviewAction(){
+			$content = $this->content;
+			$parameters = $content['parameters'];
+
+			$bill_log_id = intval( $params['bill_log_id'] );
+			$review_status = intval( $params['review_status'] );
+
+			if( !$bill_log_id || !$review_status ){
+				make_json_response('', '-1', '参数错误');
+			}
+
+			$bill_amount_table = $GLOBALS['ecs']->table('bill_amount_log');
+
+			//bill_log
+			$bill_log_sql = 'SELECT * FROM ' . $bill_amount_table . ' WHERE `bill_amount_log_id` = ' . $bill_log_id;
+			$bill_log_data = $GLOBALS['db']->getRow( $bill_log_sql );
+
+			$user_id = intval( $bill_log_data['user_id'] );//生成票据的关联客户
+			$bill_id = intval( $bill_log_data['bill_id'] );//额度对应的票据id
+			$amount = (double)( $bill_log_data['amount'] );
+
+			$admin = admin_info();
+
+			$review['review_user_id'] = $admin['user_id'];
+			$review['review_user'] = $admin['user_name'];
+			$review['review_status'] = $review_status;
+			$review['review_time'] = gmtime();
+
+			
+			$review_sql = 'UPDATE ' . $bill_amount_table . ' SET ';
+
+			foreach ($review as $key => $value) {
+				$review_sql .= '`' . $key . '` = ' . $value .',';
+			}
+
+			$review_sql  = substr($review_sql, 0, -1) . ' WHERE `bill_amount_log_id` = ' . $bill_log_id . ' LIMIT 1';
+			$GLOBALS['db']->query( $review_sql );
+			$review_ret = $GLOBALS['db']->affected_rows();
+
+			if( $review_ret ){
+
+				if( $bill_log_data['review_status'] == 0 && $review_status == 1 ){
+					$users_table = $GLOBALS['ecs']->table('users');
+					$parent_id_sql ='SELECT `parent_id` FROM ' . $users_table . ' WHERE `user_id` = ' . $user_id;
+					$parent_id = $GLOBALS['db']->getOne( $parent_id_sql );
+
+					if ( !$parent_id )
+						$parent_id = 0;
+
+					if( $bill_id != 0 )//额度生成类型(0:商票,1:现金,2:承兑)
+						$users_sql = 'UPDATE ' . $users_table . ' SET `bill_amount_history` = `bill_amount_history` + ' . $amount .
+								',`bill_amount_valid` = `bill_amount_valid` + ' . $amount . ' WHERE `user_id` = ' . $user_id . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
+					else
+						$users_sql = 'UPDATE ' . $users_table . ' SET `cash_amount_history` = `cash_amount_history` + ' . $amount .
+								',`cash_amount_valid` = `cash_amount_valid` + ' . $amount . ' WHERE `user_id` = ' . $user_id . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
+					
+					$updateUsers = $GLOBALS['db']->query( $users_sql );
+
+					if( $updateUsers ) {
+						make_json_response("", "0", "票据生成额度审核成功");
+					}
+
+				}else{
+					make_json_response("", "0", "票据生成额度审核成功");
+				}
+
+			}
+			
+			make_json_response('', '0', '票据生成额度审核失败');
+			
+		}
+
+
 		
 	}
-	$content = jsonAction( array( "editInit", "addInit" ) );
+	$content = jsonAction( array( "editInit", "addInit", 'review' ) );
 	$billAmountModel = new BillAmountModel($content);
 	$billAmountModel->run();

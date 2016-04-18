@@ -55,6 +55,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}elseif($this->command == 'addInit'){
 				//
 				$this->addInitAction();
+			}elseif($this->command == 'review'){
+				//
+				$this->reviewAction();
 			}else {
 				//
 				$this->pageAction();
@@ -714,6 +717,44 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$content['info'] = $bill;
 			make_json_response( $content, '0' , '');
+		}
+
+		/**
+		 * 审核
+		 * 接口地址：http://admin.zj.dev/admin/BillModel.php
+		 * 请求方法：POST
+		 * 传入的接口数据格式如下(主键bill_id)：
+		 *      {
+		 *		    "command": "review",
+		 *		    "entity": "bill",
+		 *		    "parameters": {
+		 *                  "bill_id":2,
+		 *                  "status":1//1 通过 2 不通过
+		 *                  }
+		 *      }
+		 *      
+		 *  返回的数据格式:
+		 * {
+		 *	    "error": 0,
+		 *	    "message": "审核成功",
+		 *	    "content":""
+		 * }
+		 */	    		
+		public function reviewAction(){
+			$content = $this->content;
+			$parameters = $content['parameters'];
+
+			$bill_id = $parameters['bill_id'];
+			$status = $parameters['status'];
+
+			$sql = 'UPDATE ' . $GLOBALS['ecs']->table('bill') . ' SET `review_status` = ' . $status . ' WHERE `bill_id` = ' . $bill_id;
+			$review_ret = $GLOBALS['db']->query( $sql );
+
+			if( $review_ret != false ){
+				make_json_response('', '0', '审核成功');
+			}
+			make_json_response('', '0', '审核失败');
+
 		}
 		
 	}
