@@ -870,7 +870,7 @@ class GoodsController extends ControllerBase {
 		$result = Users::find(array(
 				'conditions' => 'parent_id = '.$customerId.' or id='.$customerId,
 				'columns' => 'id',
-                'reivew_status' => 'reivewStatus'
+                'review_status' => 'reviewStatus'
 		));
 		$user = array();
 		if(is_object($result) && $result->count()) {
@@ -889,8 +889,8 @@ class GoodsController extends ControllerBase {
 		//查看总账号下的所有合同 包括子帐号
 		$result = ContractModel::find(array(
 
-			'conditions' => 'userId = '.$customerId .' AND reivewStatus =1',//合同子帐号=当前登录用户 并且审核状态是1
-			'columns' => 'id contract_id, name,reivewStatus reivew_status, num code',
+			'conditions' => 'userId = '.$customerId .' AND reviewStatus =1',//合同子帐号=当前登录用户 并且审核状态是1
+			'columns' => 'id contract_id, name,reviewStatus review_status, num code',
 /*
 			'conditions' => 'user_id in('.implode(',', $userId).')',
 			'columns' => 'contract_id, contract_name name, contract_num code'

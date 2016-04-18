@@ -35,7 +35,9 @@ class ContractModel extends ModelBase
             'cash_amount_valid' => 'cashValid',
             'user_id' => 'userId',
             'user_name' => 'userName',
-            'reivew_status'=> 'reivewStatus',
+            'review_status'=> 'reviewStatus',
+            'review_user' =>'reviewUser',
+            'review_time' => 'reviewTime',
         );
     }
     

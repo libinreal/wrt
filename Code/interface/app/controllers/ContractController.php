@@ -59,7 +59,7 @@ class ContractController extends ControllerBase
         
         //总账号显示 总账号与子帐号的所有合同
         $condition = 'userId in('.implode(',', $userId).')';
-        $condition .= ' AND reivewStatus=1';//状态是审核通过
+        $condition .= ' AND reviewStatus=1';//状态是审核通过
         if ($forward || !$currentId) {
         	//上一页操作 或 第一页操作
         	if (!empty($condition)) $condition .= ' AND ';
@@ -95,7 +95,7 @@ class ContractController extends ControllerBase
         		->limit($size)
         		->execute()
         		->toArray();
-        
+
         return ResponseApi::send($data);
     }
     
