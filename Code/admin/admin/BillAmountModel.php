@@ -74,10 +74,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
 	     *  {
-	     *      "entity": 'bill',
-	     *      "command": 'page',
+	     *      "entity": 'bill_amount_log',
+	     *      "command": 'find',
 	     *      "parameters": {
-	     *         	"log_id":10
+	     *         	"bill_amount_log_id":10
 	     *      }
 	     *  }
 	     *  返回的数据格式:
@@ -85,30 +85,46 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "error": 0,
 		 *	    "message": "",
 		 *	    "content":{ 
-		 *	    	"init":{	
-		 *	    		"customer":[
-		 *	    			{"user_id":1, "user_name":"xxx" }
-		 *	    		],//往来单位
-		 *	    		"amount_type":{"0":"xxx", "1":"xxx"},//单据类型
-		 *	    	},
-		 *	    	"info":{
-		 *	    		"bill_num":"ax134",//票据编号
-		 *	    		"user_name":"库某",//往来单位名称
-		 *	    		"user_id":1,//客户id（往来单位id）
-		 *	    		"bill_amount":100.00,//票面金额
-		 *	    		"discount_rate":1//折算比率
-		 *	    	}
+		 *	    		  "amount_type": 0 ,//额度生成类型
+		 *                  "amount_rate": 1 ,//票据折算比率
+		 *                  "amount": 100 ,//折后的额度
+		 *                  "bill_amount": 100 ,//票面金额
+		 *                  "remark": "虚拟数据" ,
+		 *                  "user_name": "钟某",//来往单位
+		 *                  "user_id": 123,//来往单位id
+		 * 	                "bill_id": 0 ,//票据ID
+		 * 	                "bill_num": 'no1234',//票据编号
+		 * 	                "review_user":'xxx',//审核人
+		 * 	                "review_time":'2016-04-18',//审核日期
+		 * 	                "review_status":0,//审核状态， 0:未审核 1：已通过 2：未通过
 		 *	    }
 		 *	}
 		 */
 		public function findAction(){
-			$params = $this->content['parameters'];
-			$log_id = $params['log_id'];
+			$content = $this->content;
+			$bill_amount_id = $content['parameters']['bill_amount_log_id'];
 
-			$bill_amount_table = $GLOBALS["ecs"]->table("bill_amount_log");
+			$bill_table = $GLOBALS['ecs']->table( 'bill' );
+			$bill_amount_table = $GLOBALS['ecs']->table( 'bill_amount_log' );
 			$users_table = $GLOBALS['ecs']->table( 'users' );
-			
-			// $log_sql = 'SELECT * FROM ' . 
+
+			$bill_join_sql = 'SELECT b.`bill_amount`, b.`bill_num`, u.`user_id`, u.`companyName` as user_name, a.`bill_id`, a.`remark`, a.`amount_rate`, a.`amount`, ' .
+								 ' a.`amount_type`, a.`review_user`, a.`review_status`, a.`review_time` '.
+								 ' FROM ' . $bill_amount_table . ' AS a ' .
+								 ' LEFT JOIN ' . $bill_table . ' AS b ON a.`bill_id` = b.`bill_id` '.
+								 ' LEFT JOIN ' . $users_table . 'AS u ON a.`user_id` = u.`user_id` WHERE `bill_amount_log_id` = ' . $bill_amount_id;
+				
+			$bill_amount_log = $GLOBALS['db']->getRow( $bill_join_sql );//额度生成单内容
+
+			if( empty( $bill_amount_log ) ) {
+				make_json_response('', '-1', '票据额度查询失败');
+			}
+
+			if($bill_amount_log['review_time'])
+				$bill_amount_log['review_time'] = date('Y-m-d H:i:s', $bill_amount_log['review_time']);
+			else
+				$bill_amount_log['review_time'] = '';
+			make_json_response( $bill_amount_log, '0' );
 		}
 		
 		/**
