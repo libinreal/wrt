@@ -685,8 +685,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content = $this->content;
 			$parameters = $content['parameters'];
 
-			$bill_log_id = intval( $params['bill_log_id'] );
-			$review_status = intval( $params['review_status'] );
+			$bill_log_id = intval( $parameters['bill_log_id'] );
+			$review_status = intval( $parameters['review_status'] );
 
 			if( !$bill_log_id || !$review_status ){
 				make_json_response('', '-1', '参数错误');
@@ -713,7 +713,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$review_sql = 'UPDATE ' . $bill_amount_table . ' SET ';
 
 			foreach ($review as $key => $value) {
-				$review_sql .= '`' . $key . '` = ' . $value .',';
+				if( is_string( $value ) )
+					$review_sql .= '`' . $key . '` = \'' . $value .'\',';
+				else
+					$review_sql .= '`' . $key . '` = '  . $value . ',';
 			}
 
 			$review_sql  = substr($review_sql, 0, -1) . ' WHERE `bill_amount_log_id` = ' . $bill_log_id . ' LIMIT 1';
