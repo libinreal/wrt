@@ -54,7 +54,6 @@ var BillAmount = {
 		var strJson = createJson("page", this.entity, params);
 		var that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -162,7 +161,6 @@ var BillAmount = {
 		var params = {"bill_id":0, "type": 1};
 		strJson = createJson("addInit", this.entity, params);
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -279,8 +277,10 @@ var BillAmount = {
 								}else{
 									operate_button = createButton('redirectToUrl("demo_template.php?section=bill_manage&act=generate_note_edit&log_id='+log_id+'")', '编辑');
 								}
-								operate_button = operate_button + createButton('BillAmount.checkReview(2)', '审核不通过');
-								operate_button = operate_button + createButton('BillAmount.checkReview(1)', '审核通过');
+								if(obj.content.is_review == 1){
+									operate_button = operate_button + createButton('BillAmount.checkReview(2)', '审核不通过');
+									operate_button = operate_button + createButton('BillAmount.checkReview(1)', '审核通过');
+								}
 							}else if(v == 1){
 								v = "已通过";
 							}else if(v == 2){

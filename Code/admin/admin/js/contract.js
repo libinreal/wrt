@@ -160,8 +160,10 @@ var Contract = {
 						if(value == 0){
 							value = "未审核";
 							operate_button = createButton('redirectToUrl("contract_manage.php?act=contractEdit&id='+id+'")', '编辑');
-							operate_button = operate_button + createButton('Contract.checkReview(2)', '审核不通过');
-							operate_button = operate_button + createButton('Contract.checkReview(1)', '审核通过');							
+							if(obj.content.data.is_review == 1){
+								operate_button = operate_button + createButton('Contract.checkReview(2)', '审核不通过');
+								operate_button = operate_button + createButton('Contract.checkReview(1)', '审核通过');
+							}			
 						}else if(value == 1){
 							value = "已通过";
 						}else if(value == 2){
