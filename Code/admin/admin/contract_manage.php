@@ -298,10 +298,15 @@ class Contract extends ManageModel
         ));
         $res = $this->db->getRow($this->sql);
         
+        if(empty($res)){
+            make_json_response('', '-1', '合同不存在');
+        }
+
         if ($res['end_time'] < date('Y-m-d')) {
         	$res['contract_status'] = 2;
         }
-        
+
+        $res['attachment_url'] = '/' . DATA_DIR . '/contract/' . $res['attachment'];
         //合同下的物料信息
         $this->table = 'contract_category';
         self::selectSql(array(
