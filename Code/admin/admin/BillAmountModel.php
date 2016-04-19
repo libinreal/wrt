@@ -678,7 +678,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		    "command": "review",
 		 *		    "entity": "bill_amount_log",
 		 *		    "parameters": {
-		 *                  "bill_log_id":2//额度生成单ID
+		 *                  "bill_amount_log_id":2//额度生成单ID
 		 *                  "review_status":1//审核状态
 		 *                  }
 		 *      }
@@ -694,7 +694,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content = $this->content;
 			$parameters = $content['parameters'];
 
-			$bill_log_id = intval( $parameters['bill_log_id'] );
+			$bill_log_id = intval( $parameters['bill_amount_log_id'] );
 			$review_status = intval( $parameters['review_status'] );
 
 			if( !$bill_log_id || !$review_status ){
