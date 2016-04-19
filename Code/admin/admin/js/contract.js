@@ -12,6 +12,7 @@ var Contract = {
 		'total_amount_valid',
 		'bill_amount_valid',
 		'cash_amount_valid',
+		'review_status',
 		'operate'
 	],
 	contract_supplier_order: [
@@ -35,6 +36,7 @@ var Contract = {
 			var search_type = $('#contract_search_form select[name=search_type]').val();
 			var search_value = $('#contract_search_form input[name=search_value]').val();
 			var contract_status = $('#contract_search_form select[name=contract_status]').val();
+			var review_status = $('#contract_search_form select[name=review_status]').val();
 			var start_time = $('#contract_search_form input[name=start_time]').val();
 			var end_time = $('#contract_search_form input[name=end_time]').val();
 			if(search_value != ''){
@@ -42,6 +44,9 @@ var Contract = {
 			}
 			if(contract_status != ''){
 				condition.contract_status = contract_status;
+			}
+			if(review_status != ''){
+				condition.review_status = review_status;
 			}
 			if(start_time != ''){
 				condition.start_time = start_time;
@@ -82,6 +87,17 @@ var Contract = {
 								row += createTd(parseFloat(value.bill_amount_valid) + parseFloat(value.cash_amount_valid));
 								continue;								
 							}
+							if(that.order_arr[i] == "review_status"){
+								if(value.review_status == 0){
+									value.review_status = "未审核";
+								}else if(value.review_status == 1){
+									value.review_status = "<span style='color:blue'>已通过</span>";
+								}else if(value.review_status == 2){
+									value.review_status = "<span style='color:red'>未通过</span>";
+								}
+								row += createTd(value.review_status);
+								continue;								
+							}
 							$.each(value, function(k, v){
 								if(k == that.order_arr[i]){
 									if(v == null){
@@ -93,7 +109,6 @@ var Contract = {
 							});
 							if(that.order_arr[i] == "operate"){
 								var edit = createLink(that.url+"?act=contractView&id="+value.contract_id, "查看");
-								edit += createLink(that.url+"?act=contractEdit&id="+value.contract_id, "编辑");
 								if(value.contract_type == "销售合同"){
 									edit += createLink(that.url+"?act=supplierSetEdit&id="+value.contract_id, "绑定供应商");
 								}
@@ -123,6 +138,7 @@ var Contract = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}
+			var operate_button = "";
 			$.each(obj.content.data, function(key, value){
 				if(key == "bank_id"){
 					that.getOrgList(value);
@@ -140,6 +156,19 @@ var Contract = {
 					}
 				}
 				if($("td#"+key).length && key != "rate"){
+					if(key == "review_status"){
+						if(value == 0){
+							value = "未审核";
+							operate_button = createButton('redirectToUrl("contract_manage.php?act=contractEdit&id='+id+'")', '编辑');
+							operate_button = operate_button + createButton('Contract.checkReview(2)', '审核不通过');
+							operate_button = operate_button + createButton('Contract.checkReview(1)', '审核通过');							
+						}else if(value == 1){
+							value = "已通过";
+						}else if(value == 2){
+							value = "未通过";
+						}
+						row += createTd(value);
+					}
 					$("td#"+key).text(value);
 				}
 				if($("select[name="+key+"]").length){
@@ -164,7 +193,7 @@ var Contract = {
 					$('#is_goods_type_visible').html(createWarn("物料类型不可用"));
 				}
 			});
-			$('#handle_button').html(createButton('redirectToUrl("contract_manage.php?act=contractList")', '返回列表') + createButton('Contract.getUpdate()', '保存'));
+			$('#handle_button span').html(operate_button);
 			var row = "";
 			if(obj.content.cat.length <= 0){
 				var goods_type = false;
@@ -284,7 +313,7 @@ var Contract = {
 				$('#message_area').html(createError(obj.message));
 			}else{
 				$('#message_area').html(createTip('保存成功'));
-				redirectToUrl("contract_manage.php?act=contractList");
+				redirectToUrl("contract_manage.php?act=contractView&id="+id);
 			}
 		}, "json");
 	},
@@ -780,6 +809,30 @@ var Contract = {
 					}
 				});
 				$('select[name=bank_id]').html(row);
+			}
+		}, "json");
+	},
+
+	//审核合同
+	checkReview: function(status){
+		var id = getQueryStringByName('id');
+		if(id == "" || !validateNumber(id)){
+			return false;
+		}
+		var params = {"contract_id":id, "review_status":status};
+		var strJson = createJson("review", "contract", params);
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				console.log(obj)
+				$("#handle_button span").html("");
+				if(status == 1){
+					$("td#review_status").text("已通过");
+				}else if(status == 2){
+					$("td#review_status").text("未通过");
+				}
 			}
 		}, "json");
 	}

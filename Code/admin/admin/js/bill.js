@@ -9,6 +9,7 @@ var Bill = {
 		"drawer",
 		"acceptor",
 		"status",
+		"review_status",
 		"operate"
 	],
 	bill_status: {},
@@ -71,8 +72,7 @@ var Bill = {
 						row += "<tr>";
 						for(var i=0;i<that.order_arr.length;i++){
 							if(that.order_arr[i] == "operate"){
-								var edit = createLink("demo_template.php?section=bill_manage&act=info&id="+value.bill_id, "编辑");
-								edit += createLink("demo_template.php?section=bill_manage&act=view&id="+value.bill_id, "查看");
+								var edit = createLink("demo_template.php?section=bill_manage&act=view&id="+value.bill_id, "查看");
 								if(value.used == false){
 									edit += createLink("demo_template.php?section=bill_manage&act=generate_note&bill_id="+value.bill_id, "生成票据采购额");
 								}
@@ -86,15 +86,15 @@ var Bill = {
 								if(that.order_arr[i] == "status"){
 									row += createTd(that.bill_status[value["status"]]);
 								}else{
-									row += createTd(subString(value[that.order_arr[i]],10,true));
+									row += createTd(subString(value[that.order_arr[i]],15,true));
 								}
 							}else{
 								row += createTd(createWarn('无数据'));
 							}
 						}
 						row += "</tr>";
-						$("#bill_list>tbody").html(row);
 					});
+					$("#bill_list>tbody").html(row);
 				}
 			}
 			
@@ -153,7 +153,7 @@ var Bill = {
 						$.each(value, function(k, v){
 							row += appendOption(v.user_id, v.user_name)
 						});
-						$("select[name=receive_user_id]").append(row);						
+						$("select[name=receive_user_id]").append(row);	
 					}else{
 						if($("select[name="+key+"]").length){
 							$.each(value, function(k, v){
