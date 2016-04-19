@@ -38,6 +38,7 @@ class ContractModel extends ModelBase
             'review_status'=> 'reviewStatus',
             'review_user' =>'reviewUser',
             'review_time' => 'reviewTime',
+            'review_user_id' => 'reviewUserId',
         );
     }
     
