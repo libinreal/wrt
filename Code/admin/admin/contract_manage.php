@@ -306,7 +306,10 @@ class Contract extends ManageModel
         	$res['contract_status'] = 2;
         }
 
+        $priv = admin_priv('contract_review', '', false);
         $res['attachment_url'] = '/' . DATA_DIR . '/contract/' . $res['attachment'];
+        $res['is_review'] = $priv ? 1 : 0;
+
         //合同下的物料信息
         $this->table = 'contract_category';
         self::selectSql(array(
@@ -338,6 +341,12 @@ class Contract extends ManageModel
      * }
      */
     public function review($entity, $parameters){
+
+        $priv = admin_priv('contract_review', '', false);
+        if( !$priv ){
+            make_json_response('', '-1', '没有审核权限');
+        }
+
         self::init($entity, 'contract');
         
         $id = $parameters['contract_id'];
