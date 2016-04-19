@@ -124,6 +124,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$bill_amount_log['review_time'] = date('Y-m-d H:i:s', $bill_amount_log['review_time']);
 			else
 				$bill_amount_log['review_time'] = '';
+
+			$priv = admin_priv('bill_amount_review', '', false);
+			$bill_amount_log['is_review'] = $priv ? 1 : 0;
+
 			make_json_response( $bill_amount_log, '0' );
 		}
 		
@@ -691,6 +695,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *  }
 		 */
 		public function reviewAction(){
+
+			$priv = admin_priv('bill_amount_review', '', false);
+			if( !$priv ){
+				make_json_response('', '-1', '没有审核权限');
+			}
+
 			$content = $this->content;
 			$parameters = $content['parameters'];
 

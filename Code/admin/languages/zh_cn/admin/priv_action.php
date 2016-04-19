@@ -145,4 +145,11 @@ $_LANG['order_recipient_list'] = '应收单列表';
 //银行管理
 $_LANG['bank_insert'] = '添加登记机构';
 $_LANG['bank_list'] = '登记机构列表';
+
+//审核
+$_LANG['reviews'] = '审核';
+$_LANG['contract_review'] = '合同审核';
+$_LANG['bill_review'] = '票据审核';
+$_LANG['bill_amount_review'] = '额度生成单审核';
+$_LANG['price_adjust_review'] = '加价规则审核';
 ?>
