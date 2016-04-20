@@ -52,14 +52,15 @@
 						<td class="title">审批备注：</td><td colspan="3"><textarea name="check_remark" style="width:80%"></textarea></td>
 					</tr>
 					<tr>
-						<td class="title">申请附件：</td><td colspan="3"><img src="" id="img" /></td>
+						<td class="title">申请附件：</td><td colspan="3"><img id="upload_url" />
+						<div id="img"></div></td>
 					</tr>
 				</tbody>
 			</table>
 			<div align="center" id="handle_button">
 				<span>
 				<input type="button" onclick="SelfCredit.setStatus(1);" value="通过" class="button">
-				<input type="button" onclick="SelfCredit.setStatus(0);" class="button" value=" 不通过 ">
+				<input type="button" onclick="SelfCredit.setStatus(3);" class="button" value=" 不通过 ">
 				</span>
 				<input type="button" onclick="history.back()" class="button" value=" 返回 ">
 			</div>

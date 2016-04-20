@@ -62,11 +62,11 @@
 						<td class="title">承兑日期：</td>
 						<td><input type="text" name="accept_date" id="accept_date" readonly></td>
 						<td class="title">备注：</td>
-						<td><textarea name="remark" cols="10"></textarea></td>
+						<td><textarea name="remark"></textarea></td>
 					</tr>
 					<tr>
 						<td class="title">往来单位：</td>
-						<td><select name="customer_id" id="customer_id" style="width:150px;">
+						<td><select name="customer_id" id="customer_id">
 						</select></td>
 						<td class="title">收票日：</td>
 						<td><input type="text" name="receive_date" id="receive_date" readonly></td>
@@ -85,7 +85,6 @@
 						<td></td><td></td>
 					</tr>
 					<tr>
-						<td></td><td></td><td></td><td></td>
 						<td class="title">折后额度：</td>
 						<td><input type="text" class="number" id="discount_amount" name="discount_amount" data-rule-required="true" data-rule-number="true"></td>
 						<td class="title">带追索权：</td>
@@ -93,6 +92,7 @@
 						<label>是</label><input type="radio" name="is_recourse" value="1">
 						<label>否</label><input type="radio" name="is_recourse" value="0">
 						</td>
+						<td colspan="4"></td>
 					</tr>
 				</tbody>
 			</table>
