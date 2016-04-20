@@ -63,7 +63,6 @@ var Contract = {
 		var strJson = createJson("contList", "contract", params);
 		var that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj);
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -168,6 +167,10 @@ var Contract = {
 							value = "已通过";
 						}else if(value == 2){
 							value = "未通过";
+							operate_button = createButton('redirectToUrl("contract_manage.php?act=contractEdit&id='+id+'")', '编辑');
+							if(obj.content.data.is_review == 1){
+								operate_button = operate_button + createButton('Contract.checkReview(1)', '审核通过');
+							}
 						}
 						row += createTd(value);
 					}
@@ -828,13 +831,15 @@ var Contract = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				console.log(obj)
-				$("#handle_button span").html("");
+				var handle_button = "";
 				if(status == 1){
 					$("td#review_status").text("已通过");
 				}else if(status == 2){
+					handle_button = createButton('redirectToUrl("contract_manage.php?act=contractEdit&id='+id+'")', '编辑');
+					handle_button = handle_button + createButton('Contract.checkReview(1)', '审核通过');				
 					$("td#review_status").text("未通过");
 				}
+				$("#handle_button span").html(handle_button);
 			}
 		}, "json");
 	}

@@ -239,6 +239,10 @@ var Bill = {
 								value = "已通过";
 							}else if(value == 2){
 								value = "未通过";
+								operate_button = createButton('redirectToUrl("demo_template.php?section=bill_manage&act=info&id='+id+'")', '编辑');
+								if(obj.content.is_review == 1){
+									operate_button = operate_button + createButton('Bill.checkReview(1)', '审核通过');
+								}
 							}
 						}
 						if(key == "pay_bank" || key == "receive_bank"){
@@ -303,13 +307,15 @@ var Bill = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				console.log(obj)
-				$("#handle_button span").html("");
+				var handle_button = "";
 				if(status == 1){
 					$("td#review_status").text("已通过");
 				}else if(status == 2){
+					handle_button = createButton('redirectToUrl("demo_template.php?section=bill_manage&act=info&id='+id+'")', '编辑');
+					handle_button = handle_button + createButton('Bill.checkReview(1)', '审核通过');
 					$("td#review_status").text("未通过");
 				}
+				$("#handle_button span").html(handle_button);
 			}
 		}, "json");
 	}
