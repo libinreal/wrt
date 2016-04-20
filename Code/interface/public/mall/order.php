@@ -151,37 +151,37 @@
 </script>
 <script id="tax-invoice-tmpl" type="text/html">
     <div class="form-item">
-        <div class="form-label"><span>*</span>公司名称：</div>
+        <div class="form-label"><span></span>公司名称：</div>
         <div class="form-value">
             <input type="text" name="invCompany" maxlength="50" value="<!--[= list.invCompany ]-->">
         </div>
     </div>
     <div class="form-item">
-        <div class="form-label"><span>*</span>开户银行：</div>
+        <div class="form-label"><span></span>开户银行：</div>
         <div class="form-value">
             <input type="text" name="invBankName" maxlength="50" value="<!--[= list.invBankName ]-->">
         </div>
     </div>
     <div class="form-item">
-        <div class="form-label"><span>*</span>开户银行账户：</div>
+        <div class="form-label"><span></span>开户银行账户：</div>
         <div class="form-value">
             <input type="text" name="invBankAccount" maxlength="50" value="<!--[= list.invBankAccount ]-->">
         </div>
     </div>
     <div class="form-item">
-        <div class="form-label" style="width: 120px; margin-left: -10px;"><span>*</span>税务登记证号码：</div>
+        <div class="form-label" style="width: 120px; margin-left: -10px;"><span></span>税务登记证号码：</div>
         <div class="form-value">
             <input type="text" name="invLicense" maxlength="50" value="<!--[= list.invLicense ]-->">
         </div>
     </div>
     <div class="form-item">
-        <div class="form-label"><span>*</span>公司注册地址：</div>
+        <div class="form-label"><span></span>公司注册地址：</div>
         <div class="form-value">
             <input type="text" name="invCompanyAddr" maxlength="50" value="<!--[= list.invCompanyAddr ]-->">
         </div>
     </div>
     <div class="form-item">
-        <div class="form-label"><span>*</span>电话号码：</div>
+        <div class="form-label"><span></span>电话号码：</div>
         <div class="form-value">
             <input type="text" name="invTel" maxlength="50" value="<!--[= list.invTel ]-->">
         </div>
