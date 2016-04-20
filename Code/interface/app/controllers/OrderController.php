@@ -1208,13 +1208,14 @@ class OrderController extends ControllerBase
 				}
 
 				$order->childOrderStatus = SOS_SEND_CC;//客户已验签(发货)
+				$order->status = POS_CHECK;
 			} else if( $order->childOrderStatus == SOS_SEND_PC2 ){
 
 				//合同额度 多退少补
 				//。。。。
 				
 				$order->childOrderStatus = SOS_ARR_CC;//客户已验签(到货)
-
+				$order->status = POS_BALANCE;
 				$order->contract_effect_time = time();//到货时间
 			} else {
 				return ResponseApi::send(null, Message::$_ERROR_LOGIC, "此订单当前不能验签");

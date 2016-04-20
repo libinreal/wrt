@@ -25,7 +25,6 @@ $admin_config = array(
                         POS_SUBMIT => '已下单',
                         POS_HANDLE => '处理中',
                         /* 前台  */
-                        POS_CONFIRM => '确认中',
                         POS_CHECK => '验收中',
                         POS_BALANCE => '对账中',
                         /* 前台  */
