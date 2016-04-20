@@ -48,7 +48,7 @@
 				<input type="hidden" name="apply_img" id="apply_img" value="<!--[= img ]-->">
 			</div>
 		</div>
-		<div class="form-item"><img id="apply_img_show" src="/apply_attachment/<!--[= img ]-->" width="150" style="margin:0 auto;"></div>
+		<div class="form-item"><img id="apply_img_show" src="<!--[= img ]-->" width="150" style="margin:0 auto;"></div>
 		<div class="form-buttons">
 			<input type="hidden" name="status" value="0">
 			<input class="button btn-secondary big" type="button" id="saveCredit" value="保存" />
