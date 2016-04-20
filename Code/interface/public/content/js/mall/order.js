@@ -88,6 +88,7 @@ define(function(require) {
         msgMaker: function(opt) {
             return '<span class="' + opt.type + '">' + opt.msg + '</span>';
         },
+        /*
         fields: {
             "invPayee": {
                 rule: "发票抬头: required;"
@@ -96,7 +97,7 @@ define(function(require) {
                 rule: "收票地址: required;"
             }
 
-        },
+        },*/
         //验证成功
         valid: function(form) {
             contractNo = $('input[name="contractSn"]').val();
