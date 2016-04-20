@@ -15,7 +15,8 @@ $Id: main.css 13991 2008-01-17 06:17:23Z maruitao $
 body {
     background: #E7E7E7;
     padding: 0;
-    margin: 0;
+    margin: 0 auto;
+    width: 1355px;
 }
 h1 {
     background: #F7F7F7;
@@ -255,14 +256,15 @@ h1 .action-span1 {
 
 .list-div th {
     line-height: 24px;
-    background: #d0d0d0;
+    background: #616e80;
     white-space: nowrap;
+    color: #fff;
 }
 
 .list-div td {
     background: #FFF;
-    line-height: 25px;
-    height: 25px;
+    line-height: 30px;
+    height: 30px;
     max-width: 260px;
     min-width: 60px;
     word-break: break-all;
@@ -450,11 +452,21 @@ td.micro-label {
 }
 
 input.button {
-    height: 25px;
-    line-height: 25px;
-    margin: 2px;
-    border: 1px solid #2D5082;
+    display: inline-block;
+    outline: none;
     cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font: 12px/100% Arial, Helvetica, sans-serif;
+    padding:3px;
+    text-shadow: 0 1px 1px rgba(0,0,0,.3);
+    -webkit-border-radius: .5em; 
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    box-shadow: 0 1px 2px rgba(0,0,0,.2);
+    color: #444;
 }
 
 input.capital {
@@ -1263,10 +1275,6 @@ em, cite, th {
     position: relative;
     min-width: 30px;
     background: #fff;
-}
-.table_info table td input{
-    height: 20px;
-    line-height: 20px;
 }
 .table_info table td select{
     line-height: 20px;

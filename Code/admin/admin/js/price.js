@@ -274,13 +274,13 @@ var Price = {
 					row += "<td class='title'>供应商：</td>";
 					row += "<td>"+suppliers_name+"</td>";
 					row += "<td class='title'>加价幅度：</td>";
-					if(v.review_status == 0){
+					if(v.review_status == 0 || v.review_status == 2){
 						row += "<td><input type='text' class='number' name='price_num_"+id+"' value="+v.price_num+"></td>";	
 					}else{
 						row += "<td><input type='text' class='number' name='price_num_"+id+"' value="+v.price_num+" disabled></td>";
 					}
 					row += "<td class='title'>加价比例：</td>";
-					if(v.review_status == 0){
+					if(v.review_status == 0 || v.review_status == 2){
 						row += "<td><input type='text' class='number' name='price_rate_"+id+"' value="+v.price_rate+"></td>";
 					}else{
 						row += "<td><input type='text' class='number' name='price_rate_"+id+"' value="+v.price_rate+" disabled></td>";
@@ -290,11 +290,14 @@ var Price = {
 					if(v.review_status == 0 && v.is_review == 1){
 						row += createButton('Price.checkReview(2, '+v.price_adjust_id+')', '不通过');
 						row += createButton('Price.checkReview(1, '+v.price_adjust_id+')', '通过');
+					}else if(v.review_status == 2 && v.is_review == 1){
+						row += createButton('Price.checkReview(1, '+v.price_adjust_id+')', '通过');
 					}
 					row	+= "<input type='button' class='button' value='删除' onclick='removeRow(this, "+v.price_adjust_id+")' />";
 					row += "<input type='hidden' name='cat_id_"+id+"' value='"+v.cat_id+"' />";
 					row += "<input type='hidden' name='brand_id_"+id+"' value='"+v.brand_id+"' />";
 					row += "<input type='hidden' name='suppliers_id_"+id+"' value='"+v.suppliers_id+"' />";
+					row += "<input type='hidden' name='review_status_"+id+"' value='"+v.review_status+"' />";
 					row += "<input type='hidden' name='price_adjust_id_"+id+"' value='"+v.price_adjust_id+"' /></td>";
 					row += "</tr>";
 				});
@@ -311,7 +314,8 @@ var Price = {
 		}else{
 			var arr = [];
 			$("#purchase_price_increase_table>tbody tr").each(function(index, elem){
-				if($(elem).find("input[name*='price_num']").val() != '' || $(elem).find("input[name*='price_rate']").val() != '') {
+				if(($(elem).find("input[name*='price_num']").val() != '' || $(elem).find("input[name*='price_rate']").val() != '') && $(elem).find("input[name*='review_status']").val() != 1) {
+					console.log($(elem).find("input[name*='review_status']").val())
 					if($(elem).find("input[name*='price_adjust_id']").val() != ''){
 						arr.push({"price_adjust_id":$(elem).find("input[name*='price_adjust_id']").val(),"cat_id":$(elem).find("input[name*='cat_id']").val(),"brand_id":$(elem).find("input[name*='brand_id']").val(),"suppliers_id":$(elem).find("input[name*='suppliers_id']").val(),"price_num":$(elem).find("input[name*='price_num']").val() == '' ? 0 : $(elem).find("input[name*='price_num']").val(),"price_rate":$(elem).find("input[name*='price_rate']").val() == '' ? 0 : $(elem).find("input[name*='price_rate']").val()})
 					}else{
@@ -319,6 +323,9 @@ var Price = {
 					}
 				}
 			});
+		}
+		if(arr.length == 0){
+			return false;
 		}
 		params = {"params": arr}
 		strJson = createJson("batchPrice", this.entity, params);

@@ -123,7 +123,7 @@ var Supplier = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -189,14 +189,14 @@ var Supplier = {
 					$("#logistics_operate").html(createLink("javascript:void(0);", "添加物流信息", "Supplier.addShippingLogInit("+id+",'"+obj.content.shipping.shipping_num+"')"));
 				}
 			}
-			$('#message_area').html('');
+			
 		},"json");
 	},
 
 	addShippingInfoInit: function(order_id){
 		$("#popupLayer").load("templates/supplier/addShippingInfo.html?order_id="+order_id);
 		popupLayer();
-		$('#message_area').html('');
+		
 	},
 
 	addShippingInfo: function(){
@@ -238,7 +238,7 @@ var Supplier = {
 	addShippingLogInit: function(order_id,shipping_num){
 		$("#popupLayer").load("templates/supplier/addShippingLog.html?order_id="+order_id+"&num="+shipping_num);
 		popupLayer();
-		$('#message_area').html('');
+		
 	},
 
 	addShippingLog: function(){
@@ -380,7 +380,7 @@ var Supplier = {
 				goods_type_exist = true;
 				return false;
 			}else{
-				$('#message_area').html('');
+				
 			}
 		});
 		if(goods_type_exist){
@@ -456,7 +456,7 @@ var Supplier = {
 				});
 				$("#handle_button>span").html(button);
 			}
-			$('#message_area').html('');
+			
 		}, "json");
 	},
 
@@ -531,7 +531,7 @@ var Supplier = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");		
 	},
 
@@ -572,7 +572,7 @@ var Supplier = {
 				});
 				$("#main_list>tbody").html(row);
 
-				$('#message_area').html('');		
+						
 			}
 		}, "json");		
 	},
@@ -715,7 +715,7 @@ var Supplier = {
 					});
 				}
 			}
-			$('#message_area').html('');
+			
 		}, "json");		
 	},
 

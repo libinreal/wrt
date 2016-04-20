@@ -174,7 +174,7 @@ class OrderController extends ControllerBase
 		//订单商品
 		$goods = OrderGoods::find(array(
 				'conditions' => 'orderId IN('.implode(',', $orders).')', 
-				'columns' => 'orderId,goodsId,goodsName,nums,goodsPrice'
+				'columns' => 'orderId,goodsId,goodsName,nums,send_number,goodsPrice'
 		))->toArray();
 		$hostGoods = array();
 		$lineGoods = array();
@@ -189,13 +189,13 @@ class OrderController extends ControllerBase
 		//拆单数量
 		$goodsId = array();
 		foreach ($hostGoods as $k=>$v) {
-			foreach ($lineGoods as $lk=>$lv) {
+			/*foreach ($lineGoods as $lk=>$lv) {
 				if ($lv['goodsId'] == $v['goodsId']) {
 					@$hostGoods[$k]['dnums'] += $lv['nums'];
 				} else {
 					@$hostGoods[$k]['dnums'] = 0;
 				}
-			}
+			}*/
 			$hostGoods[$k]['totalPrice'] = $v['nums']*$v['goodsPrice']; //价格小计
 			$goodsId[] = $v['goodsId'];
 		}

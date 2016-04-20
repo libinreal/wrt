@@ -287,13 +287,21 @@ var BillAmount = {
 									operate_button = createButton('redirectToUrl("demo_template.php?section=bill_manage&act=generate_note_edit&log_id='+log_id+'")', '编辑');
 								}
 								if(obj.content.is_review == 1){
-									operate_button = operate_button + createButton('BillAmount.checkReview(2)', '审核不通过');
+									operate_button = operate_button + createButton('BillAmount.checkReview(2, '+type+')', '审核不通过');
 									operate_button = operate_button + createButton('BillAmount.checkReview(1)', '审核通过');
 								}
 							}else if(v == 1){
 								v = "已通过";
 							}else if(v == 2){
 								v = "未通过";
+								if(type == 1){
+									operate_button = createButton('redirectToUrl("demo_template.php?section=bill_manage&act=generate_edit&log_id='+log_id+'")', '编辑');
+								}else{
+									operate_button = createButton('redirectToUrl("demo_template.php?section=bill_manage&act=generate_note_edit&log_id='+log_id+'")', '编辑');
+								}
+								if(obj.content.is_review == 1){
+									operate_button = operate_button + createButton('BillAmount.checkReview(1)', '审核通过');
+								}
 							}
 						}
 						$("td#"+k).text(v);
@@ -305,7 +313,7 @@ var BillAmount = {
 	},
 
 	//审核单据
-	checkReview: function(status){
+	checkReview: function(status, type){
 		var log_id = getQueryStringByName('log_id');
 		if(log_id == "" || !validateNumber(log_id)){
 			return false;
@@ -317,13 +325,19 @@ var BillAmount = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				console.log(obj)
-				$("#operate_button span").html("");
+				var operate_button = "";
 				if(status == 1){
 					$("td#review_status").text("已通过");
 				}else if(status == 2){
 					$("td#review_status").text("未通过");
+					if(type == 1){
+						operate_button = createButton('redirectToUrl("demo_template.php?section=bill_manage&act=generate_edit&log_id='+log_id+'")', '编辑');
+					}else{
+						operate_button = createButton('redirectToUrl("demo_template.php?section=bill_manage&act=generate_note_edit&log_id='+log_id+'")', '编辑');
+					}
+					operate_button = operate_button + createButton('BillAmount.checkReview(1)', '审核通过');
 				}
+				$("#operate_button span").html(operate_button);
 			}
 		}, "json");
 	}
