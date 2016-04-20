@@ -53,7 +53,6 @@ var SelfCredit = {
 		params.flag = check_status;
 		var strJson = createJson("applyCreditList", this.entity, params);
 		var that = this
-		console.log(strJson)
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -121,7 +120,7 @@ var SelfCredit = {
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				that.getList();
+				that.getList(false, 1);
 				$('#message_area').html(createTip('移除成功'));
 			}
 		}, "json");
@@ -165,8 +164,9 @@ var SelfCredit = {
 					}
 					if($("img#"+key).length){
 						if(value != ''){
-							$("img#"+key).attr("src","transfer.php?act=attach&url="+value);
+							$("img#"+key).attr("src",value);
 						}
+						$("div#img").text(obj.content.img);
 					}
 				});
 				if(obj.content.status==2||obj.content.status==3){
@@ -194,7 +194,6 @@ var SelfCredit = {
 
 		strJson = createJson("applyCreditStatus", this.entity, params);
 		var that = this
-		console.log('')
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -204,6 +203,7 @@ var SelfCredit = {
 				if($("select[name=status]").length){
 					$("select[name=status]>option[value="+status+"]").attr("selected","selected");
 				}
+				$("#handle_button span").html('');
 				return false;
 			}
 			
@@ -239,7 +239,7 @@ var SelfCredit = {
 			}else{
 				$('#message_area').html(createTip('移除成功'));
 			}
-			that.getList(false, 4);
+			that.getList(false, 0);
 		}, "json");
 	}
 }
