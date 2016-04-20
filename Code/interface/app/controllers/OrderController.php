@@ -391,6 +391,7 @@ class OrderController extends ControllerBase
 		$order->where('OrderInfo.id='.$childrenId);
 		$order->columns('
 				OrderInfo.orderSn, 
+				OrderInfo.status,
 				OrderInfo.childOrderStatus, 
 				FROM_UNIXTIME(OrderInfo.createAt, "%Y/%m/%d") createAt, 
 				OrderInfo.invType, 

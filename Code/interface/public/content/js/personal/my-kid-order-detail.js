@@ -14,6 +14,12 @@ define(function(require) {
             return '--';
         return config.KIDORDERSTATUS[content] || '--';
     });
+    // 模板帮助方法，确认父订单状态
+    template.helper('$getParentStatus', function(content) {
+        if (!content)
+            return '--';
+        return config.SENDORDERSTATUS[content] || '--';
+    });
     // 模板帮助方法，确认订单的发票类型
     template.helper('$getInvType', function(content) {
         if (!content)

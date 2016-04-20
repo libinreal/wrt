@@ -78,11 +78,11 @@
 	<div class="order-progress gray-box clearfix">
 		<div class="order-progress-bg"></div>
 		<ul>
-			<li class="<!--[= $checkStatus(0,childOrderStatus)]-->"><div><i>&nbsp;</i>订单提交</div></li>
-			<li class="<!--[= $checkStatus(1,childOrderStatus)]-->"><div><i>&nbsp;</i>订单确认</div></li>
-			<li class="<!--[= $checkStatus(6,childOrderStatus)]-->"><div><i>&nbsp;</i>物资验收</div></li>
-			<li class="<!--[= $checkStatus(8,childOrderStatus)]-->"><div><i>&nbsp;</i>订单对账</div></li>
-			<li class="<!--[= $checkStatus(9,childOrderStatus)]-->"><div><i>&nbsp;</i>订单完成</div></li>
+			<li class="<!--[= $checkStatus(0,status)]-->"><div><i>&nbsp;</i>订单提交</div></li>
+			<li class="<!--[= $checkStatus(1,status)]-->"><div><i>&nbsp;</i>订单确认</div></li>
+			<li class="<!--[= $checkStatus(2,status)]-->"><div><i>&nbsp;</i>物资验收</div></li>
+			<li class="<!--[= $checkStatus(3,status)]-->"><div><i>&nbsp;</i>订单对账</div></li>
+			<li class="<!--[= $checkStatus(4,status)]-->"><div><i>&nbsp;</i>订单完成</div></li>
 		</ul>
 		<div class="order-progress-statu clearfix">
 			<div class="order-operate-btns">
@@ -147,7 +147,7 @@
 				<th width="100">拆单时间：</th><td><!--[= createAt || '--']--></td>
 				</tr>
 				<tr>
-				<th width="100">订单状态：</th><td><!--[= $getStatus(childOrderStatus)]--></td>
+				<th width="100">订单状态：</th><td><!--[= $getParentStatus(status)]--></td>
 				<th width="100">子订单状态：</th><td colspan="3"><!--[= $getStatus(childOrderStatus)]--></td>
 				</tr>
 				</tbody>
