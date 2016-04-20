@@ -14,6 +14,11 @@ var BillAmount = {
 		1:"现金",
 		2:"承兑"
 	},
+	review_type_arr: [
+		"未审核",
+		'<span style="color:blue">已通过</span>',
+		'<span style="color:red">未通过</span>'
+	],
 	limit: 0,
 	offset: 20,
 	total_page: 0,
@@ -82,6 +87,10 @@ var BillAmount = {
 									var edit = createLink("demo_template.php?section=bill_manage&act=generate_view&log_id="+value.bill_amount_log_id, "详情");
 								}
 								row += createTd(edit);
+								continue;
+							}
+							if(that.order_arr[i] == "review_status"){
+								row += createTd(that.review_type_arr[value.review_status]);
 								continue;
 							}
 							if(value[that.order_arr[i]] != null){
