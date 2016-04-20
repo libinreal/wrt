@@ -272,6 +272,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "customer_name": ,//往来单位
 		 *                  "status": 0 ,//还票状态 0:未偿还 1:已偿还
 		 *                  "used":false//false:可以生成额度 true:不能生成额度
+		 *                  "review_status":1,
 		 *           }
 		 *	         ],
 		 *	         "total":3
@@ -284,7 +285,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bill_table = $GLOBALS["ecs"]->table("bill");
 			$user_table = $GLOBALS["ecs"]->table("users");
 
-			$sql = "SELECT a.`bill_id`, a.`bill_type`, a.`bill_num`, a.`due_date`, a.`bill_amount`, a.`drawer`, a.`acceptor`, a.`customer_id`,b.`companyName` as `customer_name`, a.`status` FROM $bill_table as a " .
+			$sql = "SELECT a.`bill_id`, a.`bill_type`, a.`bill_num`,a.`review_status`, a.`due_date`, a.`bill_amount`, a.`drawer`, a.`acceptor`, a.`customer_id`,b.`companyName` as `customer_name`, a.`status` FROM $bill_table as a " .
 				" left join $user_table as b on a.`customer_id` = b.`user_id` ";
 
 			$total_sql = "SELECT COUNT(*) as `total` FROM $bill_table as a " .
@@ -912,6 +913,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 		
 	}
-	$content = jsonAction( array( "editInit", "addInit", "listInit" ) );
+	$content = jsonAction( array( "editInit", "addInit", "listInit", 'review' ) );
 	$billModel = new BillModel($content);
 	$billModel->run();

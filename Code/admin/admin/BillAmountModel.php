@@ -166,6 +166,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "create_time": "2015-12-12",//创建日期
 		 *                  "create_by": "xxx" ,//创建人
 		 *                  "make_date"："2015-12-12"//单据日期
+		 *                  "review_status"：1//审核
 		 *           }
 		 *	         ],
 		 *	         "total":"3"
@@ -178,7 +179,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 			$bill_amount_table = $GLOBALS["ecs"]->table("bill_amount_log");
 			$users_table = $GLOBALS['ecs']->table( 'users' );
-			$sql = 'SELECT IFNULL( b.`issuing_date`, \'\') AS `make_date`, ba.`bill_amount_log_id`, ba.`amount_type`, ba.`amount`, ba.`user_id` as `customer_id`, u.`companyName` as `customer_name`, ba.`create_time`, ba.`create_by`' .
+			$sql = 'SELECT IFNULL( b.`issuing_date`, \'\') AS `make_date`, ba.`bill_amount_log_id`, ba.`review_status`, ba.`amount_type`, ba.`amount`, ba.`user_id` as `customer_id`, u.`companyName` as `customer_name`, ba.`create_time`, ba.`create_by`' .
 			  	   ' FROM ' . $bill_amount_table . ' AS ba LEFT JOIN ' . $users_table .
 				   ' AS u ON u.`user_id` = ba.`user_id` ' .
 				   ' LEFT JOIN `bill` AS b ON b.`bill_id` = ba.`bill_id` ';
