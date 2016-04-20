@@ -713,6 +713,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			$bill_amount_table = $GLOBALS['ecs']->table('bill_amount_log');
+			$bill_table = $GLOBALS['ecs']->table('bill');
 
 			//bill_log
 			$bill_log_sql = 'SELECT * FROM ' . $bill_amount_table . ' WHERE `bill_amount_log_id` = ' . $bill_log_id;
@@ -721,6 +722,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$user_id = intval( $bill_log_data['user_id'] );//生成票据的关联客户
 			$bill_id = intval( $bill_log_data['bill_id'] );//额度对应的票据id
 			$amount = (double)( $bill_log_data['amount'] );
+
+			/**
+			 * 如果是票据，必须为审核过的状态
+			 */
 
 			$admin = admin_info();
 
@@ -745,7 +750,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			if( $review_ret ){
 
-				if( $bill_log_data['review_status'] != 0 && $review_status == 1 ){
+				if( $bill_log_data['review_status'] != 1 && $review_status == 1 ){
 					$users_table = $GLOBALS['ecs']->table('users');
 					$parent_id_sql ='SELECT `parent_id` FROM ' . $users_table . ' WHERE `user_id` = ' . $user_id;
 					$parent_id = $GLOBALS['db']->getOne( $parent_id_sql );
@@ -761,17 +766,18 @@ require(dirname(__FILE__) . '/includes/init.php');
 								',`cash_amount_valid` = `cash_amount_valid` + ' . $amount . ' WHERE `user_id` = ' . $user_id . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
 					
 					$updateUsers = $GLOBALS['db']->query( $users_sql );
-
+					
 					if( $updateUsers ) {
 						make_json_response("", "0", "票据生成额度审核成功");
 					}
 
 				}else{
+					
 					make_json_response("", "0", "票据生成额度审核成功");
 				}
 
 			}
-			
+					
 			make_json_response('', '0', '票据生成额度审核失败');
 			
 		}

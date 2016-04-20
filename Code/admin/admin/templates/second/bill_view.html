@@ -24,11 +24,9 @@
 						<td class="title">票据编号：</td>
 						<td id="bill_num"></td>
 						<td class="title">票据类型：</td>
-						<td><select name="bill_type" disabled="disabled">
-						</select></td>
+						<td id="bill_type"></td>
 						<td class="title">币别：</td>
-						<td><select name="currency" disabled="disabled">
-						</select></td>
+						<td id="currency"></td>
 						<td class="title">票面金额：</td>
 						<td id="bill_amount"></td>
 					</tr>
@@ -64,8 +62,7 @@
 					</tr>
 					<tr>
 						<td class="title">往来单位：</td>
-						<td><select name="customer_id" id="customer_id" style="width:150px;" disabled="disabled">
-						</select></td>
+						<td id="customer_id"></td>
 						<td class="title">收票日：</td>
 						<td id="receive_date"></td>
 						<td class="title">交易金额：</td>
@@ -86,15 +83,20 @@
 						<td class="title">ID：</td>
 						<td id="bill_id"></td>
 						<td class="title">票据状态：</td>
-						<td><select name="status" disabled="disabled">
-						</select></td>
+						<td id="status"></td>
 						<td class="title">折后额度：</td>
 						<td id="discount_amount"></td>
 						<td class="title">带追索权：</td>
-						<td>
-						<label>是</label><input type="radio" name="is_recourse" value="1" disabled="disabled">
-						<label>否</label><input type="radio" name="is_recourse" value="0" disabled="disabled">
-						</td>
+						<td id="is_recourse"></td>
+					</tr>
+					<tr>
+						<td class="title">审核状态：</td>
+						<td id="review_status"></td>
+						<td class="title">审核人：</td>
+						<td id="review_user"></td>
+						<td class="title">审核时间：</td>
+						<td id="review_time" colspan="2"></td>
+						<td></td>
 					</tr>
 				</tbody>
 			</table>
@@ -102,28 +104,21 @@
 				<tbody>
 					<tr>
 						<td class="title">付款人：</td>
-						<td>
-						<select id="pay_user_id" name="pay_user_id" style="width:150px;" disabled="disabled"><option value="">选择付款人</option></select>
-						</td>
-						<td class="title">收款人：</td><td>
-						<select id="receive_user_id" name="receive_user_id" style="width:150px;" disabled="disabled"></select>
-						</td>
+						<td id="pay_user"></td>
+						<td class="title">收款人：</td>
+						<td id="receive_user"></td>
 					</tr>
 					<tr>
-						<td class="title">付款银行：</td><td>
-						<select id="pay_bank_id" name="pay_bank_id" disabled="disabled"></select>
-						</td>
-						<td class="title">收款银行：</td><td>
-						<select name="receive_bank_id"></select>
-						</td>
+						<td class="title">付款银行：</td>
+						<td id="pay_bank"></td>
+						<td class="title">收款银行：</td>
+						<td id="receive_bank"></td>
 					</tr>
 					<tr>
-						<td class="title">付款账号：</td><td>
-						<select id="pay_account" name="pay_account" disabled="disabled"></select>
-						</td>
-						<td class="title">收款账号：</td><td>
-						<select id="receive_account" name="receive_account" disabled="disabled"></select>
-						</td>
+						<td class="title">付款账号：</td>
+						<td id="pay_account"></td>
+						<td class="title">收款账号：</td>
+						<td id="receive_account"></td>
 					</tr>
 				</tbody>
 			</table>

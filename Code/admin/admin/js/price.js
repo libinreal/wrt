@@ -9,8 +9,12 @@ var Price = {
 		"price_num",
 		"price_rate",
 		"price_type",
-		"operate",
-		"checkout"
+		"operate"
+	],
+	review_type_arr: [
+		"未审核",
+		'<span style="color:blue">审核已通过</span>',
+		'<span style="color:red">审核未通过</span>'
 	],
 	limit: 0,
 	offset: 20,
@@ -250,8 +254,8 @@ var Price = {
 				}
 			}
 		}
-		strJson = createJson("getExistBatch", "price_adjust", params);
-		that = this
+		var strJson = createJson("getExistBatch", "price_adjust", params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -270,10 +274,24 @@ var Price = {
 					row += "<td class='title'>供应商：</td>";
 					row += "<td>"+suppliers_name+"</td>";
 					row += "<td class='title'>加价幅度：</td>";
-					row += "<td><input type='text' class='number' name='price_num_"+id+"' value="+v.price_num+" /></td>";
+					if(v.review_status == 0){
+						row += "<td><input type='text' class='number' name='price_num_"+id+"' value="+v.price_num+"></td>";	
+					}else{
+						row += "<td><input type='text' class='number' name='price_num_"+id+"' value="+v.price_num+" disabled></td>";
+					}
 					row += "<td class='title'>加价比例：</td>";
-					row += "<td><input type='text' class='number' name='price_rate_"+id+"' value="+v.price_rate+" /></td>";
-					row += "<td><input type='button' class='button' value='删除' onclick='removeRow(this, "+v.price_adjust_id+")' />";
+					if(v.review_status == 0){
+						row += "<td><input type='text' class='number' name='price_rate_"+id+"' value="+v.price_rate+"></td>";
+					}else{
+						row += "<td><input type='text' class='number' name='price_rate_"+id+"' value="+v.price_rate+" disabled></td>";
+					}
+					row += "<td>"+that.review_type_arr[v.review_status]+"</td>";
+					row += "<td>";
+					if(v.review_status == 0 && v.is_review == 1){
+						row += createButton('Price.checkReview(2, '+v.price_adjust_id+')', '不通过');
+						row += createButton('Price.checkReview(1, '+v.price_adjust_id+')', '通过');
+					}
+					row	+= "<input type='button' class='button' value='删除' onclick='removeRow(this, "+v.price_adjust_id+")' />";
 					row += "<input type='hidden' name='cat_id_"+id+"' value='"+v.cat_id+"' />";
 					row += "<input type='hidden' name='brand_id_"+id+"' value='"+v.brand_id+"' />";
 					row += "<input type='hidden' name='suppliers_id_"+id+"' value='"+v.suppliers_id+"' />";
@@ -320,6 +338,7 @@ var Price = {
 				}
 			}
 			$('#message_area').html(createTip('更新成功'));
+			Price.getExistBatch('search');
 		}, "json");
 	},
 	//删除批量加价中一条数据
@@ -419,6 +438,23 @@ var Price = {
 				$('#message_area').html(createTip('删除成功'));
 				that.getList();
 				return false;
+			}
+		}, "json");
+	},
+
+	//审核票据
+	checkReview: function(status, id){
+		if(id == "" || !validateNumber(id)){
+			return false;
+		}
+		var params = {"price_adjust_id":id, "review_status":status};
+		var strJson = createJson("review", "price_adjust", params);
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				Price.getExistBatch('search');
 			}
 		}, "json");
 	}

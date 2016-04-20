@@ -12,6 +12,15 @@ var Bill = {
 		"review_status",
 		"operate"
 	],
+	bill_type_arr: [
+		"商业承兑汇票",
+		"银行承兑汇票"
+	],
+	review_type_arr: [
+		"未审核",
+		'<span style="color:blue">已通过</span>',
+		'<span style="color:red">未通过</span>'
+	],
 	bill_status: {},
 	limit: 0,
 	offset: 20,
@@ -80,6 +89,14 @@ var Bill = {
 									edit += createLink("demo_template.php?section=bill_manage&act=repay&id="+value.bill_id, "还票");
 								}
 								row += createTd(edit);
+								continue;
+							}
+							if(that.order_arr[i] == "bill_type"){
+								row += createTd(that.bill_type_arr[value.bill_type]);
+								continue;
+							}
+							if(that.order_arr[i] == "review_status"){
+								row += createTd(that.review_type_arr[value.review_status]);
 								continue;
 							}
 							if(value[that.order_arr[i]] != null){
@@ -198,40 +215,35 @@ var Bill = {
 			return false;
 		}
 		var params = {"bill_id":id};
-		strJson = createJson("editInit", this.entity, params);
+		var strJson = createJson("find", this.entity, params);
 		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
-				// 初始化列表
-				TypeMode.getUsers("customer_id");
-				$.each(obj.content.init,function(key, value){
-					var row = "";
-					if(key == "payers"){
-						$.each(value, function(k, v){
-							row += appendOption(v.user_id, v.user_name)
-						});
-						$("select[name=pay_user_id]").append(row);
-					}else if(key == "receivers"){
-						$.each(value, function(k, v){
-							row += appendOption(v.user_id, v.user_name)
-						});
-						$("select[name=receive_user_id]").append(row);						
-					}else{
-						if($("select[name="+key+"]").length){
-							$.each(value, function(k, v){
-								row += appendOption(k, v)
-							});
-							$("select[name="+key+"]").append(row);
-						}
-					}
-				});
 				// 绑定数据
 				// 调用收付款列表
-				$.each(obj.content.info, function(key, value){
+				var operate_button = "";
+				$.each(obj.content, function(key, value){
 					if($("td#"+key).length){
+						if(key == "review_status"){
+							if(value == 0){
+								value = "未审核";
+								operate_button = createButton('redirectToUrl("demo_template.php?section=bill_manage&act=info&id='+id+'")', '编辑');
+								if(obj.content.is_review == 1){
+									operate_button = operate_button + createButton('Bill.checkReview(2)', '审核不通过');
+									operate_button = operate_button + createButton('Bill.checkReview(1)', '审核通过');
+								}
+							}else if(value == 1){
+								value = "已通过";
+							}else if(value == 2){
+								value = "未通过";
+							}
+						}
+						if(key == "pay_bank" || key == "receive_bank"){
+							value = value.bank_name
+						}
 						$("td#"+key).text(value)
 					}
 					if($("input[name="+key+"]").length){
@@ -250,13 +262,8 @@ var Bill = {
 						$("select[name="+key+"]>option[value="+value+"]").attr("selected","selected");
 					}
 				});
-				TypeMode.getParentUsers("customer_id", obj.content.info.customer_id);
-				TypeMode.getUserBanks("pay_bank_id", obj.content.info.pay_user_id, obj.content.info.pay_bank_id);
-				TypeMode.getUserBanksAccounts("pay_account", obj.content.info.pay_user_id, obj.content.info.pay_bank_id, obj.content.info.pay_account);
-				TypeMode.getAdminUserBanks("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.pay_bank_id);
-				TypeMode.getAdminUserBanksAccounts("receive_bank_id", obj.content.info.receive_user_id, obj.content.info.receive_bank_id);
+				$("#handle_button span").html(operate_button);
 			}
-			
 		},"json");
 	},
 
@@ -278,7 +285,31 @@ var Bill = {
 				$('#message_area').html(createError(obj.message));
 			}else if(obj.error == 0){
 				$('#message_area').html(createTip(obj.message));
-				redirectToUrl("demo_template.php?section=bill_manage&act=list");
+				redirectToUrl("demo_template.php?section=bill_manage&act=view&id="+id);
+			}
+		}, "json");
+	},
+
+	//审核票据
+	checkReview: function(status){
+		var id = getQueryStringByName('id');
+		if(id == "" || !validateNumber(id)){
+			return false;
+		}
+		var params = {"bill_id":id, "review_status":status};
+		var strJson = createJson("review", "bill", params);
+		$.post(this.url, strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				console.log(obj)
+				$("#handle_button span").html("");
+				if(status == 1){
+					$("td#review_status").text("已通过");
+				}else if(status == 2){
+					$("td#review_status").text("未通过");
+				}
 			}
 		}, "json");
 	}

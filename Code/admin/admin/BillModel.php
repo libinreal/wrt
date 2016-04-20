@@ -144,7 +144,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$status = array( "0" => "已扣减", "1" => "已恢复" );//
 
 			$is_recourse = array( "0" =>"否", "1" => "是");//
-			$sql = "SELECT `user_id`, `companyName` as `user_name` FROM " . $GLOBALS['ecs']->table('users') . ' WHERE `parent_id` = 0 OR `parent_id` IS NULL GROUP BY `companyName` ';
+			$sql = "SELECT `user_id`, `companyName` as `user_name` FROM " . $GLOBALS['ecs']->table('users');
 			$users = $GLOBALS['db']->getAll( $sql );//
 			$new_users = array();
 			array_walk($users, function($v, $k) use( &$new_users ) {
@@ -189,7 +189,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				
 				$bill['receive_bank'] = $bill['receive_bank_id'] ? $banks[ $bill['receive_bank_id'] ] : '';
 				$bill['pay_bank'] = $bill['pay_bank_id'] ? $banks[ $bill['pay_bank_id'] ] : '';
-
+				$bill['customer_name'] = $bill['customer_id'] ? $new_users[ $bill['customer_id'] ] : '';
+			
 			}
 
 			$priv = admin_priv('bill_review', '', false);
