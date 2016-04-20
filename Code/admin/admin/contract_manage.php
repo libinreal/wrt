@@ -77,7 +77,8 @@ $ApiList = array(
     'contInSups',
     'contToSup',
     'uploadify', 
-	'kidUser'
+	'kidUser',
+    'review'
 );
 
 /***
@@ -297,10 +298,18 @@ class Contract extends ManageModel
         ));
         $res = $this->db->getRow($this->sql);
         
+        if(empty($res)){
+            make_json_response('', '-1', '合同不存在');
+        }
+
         if ($res['end_time'] < date('Y-m-d')) {
         	$res['contract_status'] = 2;
         }
-        
+
+        $priv = admin_priv('contract_review', '', false);
+        $res['attachment_url'] = '/' . DATA_DIR . '/contract/' . $res['attachment'];
+        $res['is_review'] = $priv ? 1 : 0;
+
         //合同下的物料信息
         $this->table = 'contract_category';
         self::selectSql(array(
@@ -319,6 +328,56 @@ class Contract extends ManageModel
         make_json_result(array('cat'=>$cat, 'data'=>$res));
     }
     
+
+    /**
+     * 接口名称：合同审核
+     * {
+     *      "command" : "review", 
+     *      "entity"  : "contract", 
+     *      "parameters" : {
+     *          "contract_id":123 //id
+     *          "review_status":1//审核状态
+     *         }
+     * }
+     */
+    public function review($entity, $parameters){
+
+        $priv = admin_priv('contract_review', '', false);
+        if( !$priv ){
+            make_json_response('', '-1', '没有审核权限');
+        }
+
+        self::init($entity, 'contract');
+        
+        $id = $parameters['contract_id'];
+        $review_status = $parameters['review_status'];
+
+        $contract_table = $GLOBALS['ecs']->table('contract');
+        $review_sql = 'UPDATE ' . $contract_table . ' SET ';
+
+        $admin = admin_info();
+
+        $review['review_user_id'] = $admin['user_id'];
+        $review['review_user'] = $admin['user_name'];
+        $review['review_status'] = $review_status;
+        $review['review_time'] = gmtime();
+
+        foreach ($review as $key => $value) {
+            if( is_string( $value ) )
+                $review_sql .= '`' . $key . '` = \'' . $value .'\',';
+            else
+                $review_sql .= '`' . $key . '` = '  . $value . ',';
+        }
+
+        $review_sql  = substr($review_sql, 0, -1) . ' WHERE `contract_id` = ' . $id . ' LIMIT 1';
+        $review_ret = $GLOBALS['db']->query( $review_sql );
+
+        if( $review_ret != false ){
+            make_json_response('', '0', '审核成功');
+        }
+
+        make_json_response('', '0', '审核失败');
+    }
     
     /**
      * 合同列表
@@ -409,7 +468,8 @@ class Contract extends ManageModel
                 'c.cash_amount_history', 
                 'c.cash_amount_valid', 
                 'u.companyName', 
-                's.suppliers_name'
+                's.suppliers_name',
+                'c.review_status'
             ), 
             'as'     => 'c',
             'join'   => 'LEFT JOIN users AS u on c.customer_id=u.user_id LEFT JOIN suppliers as s on c.customer_id=s.suppliers_id', 

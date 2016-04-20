@@ -192,6 +192,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			}
 
+			$priv = admin_priv('bill_review', '', false);
+
+			$bill['is_review'] = $priv ? 1 : 0;
+
 			make_json_response( $bill, '0' , '');
 		}
 
@@ -867,6 +871,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 * }
 		 */	    		
 		public function reviewAction(){
+
+			$priv = admin_priv('bill_review', '', false);
+			if( !$priv ){
+				make_json_response('', '-1', '没有审核权限');
+			}
+
 			$content = $this->content;
 			$parameters = $content['parameters'];
 

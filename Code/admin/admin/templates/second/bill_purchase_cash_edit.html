@@ -29,10 +29,7 @@
 						<td class="title">来往单位：</td>
 						<td><select name="user_id" id="user_id" style="width:150px;" data-rule-required="true"></select></td>
 						<td class="title">单据类型：</td>
-						<td><select name="amount_type" id="amount_type" data-rule-required="true">
-							<option value="1">现金</option>
-							<option value="2">承兑</option>
-						</select></td>
+						<td><select name="amount_type" id="amount_type" data-rule-required="true"  disabled="disabled"></select></td>
 					</tr>
 					<tr>
 						<td class="title">录入金额：</td>
@@ -47,7 +44,10 @@
 			<input type="hidden" name="bill_id" value="0">
 			<input type="hidden" name="user_name">
 			</form>
-			<div align="center" id="operate_button"></div>
+			<div align="center">
+				<input type="button" class="button" value="返回" onclick="javascript:history.back();">&nbsp;
+				<input type="button" class="button" value="保存" onclick="BillAmount.getUpdateAction('cash')">
+			</div>
 		</div>
 	</div>
 		<!-- 底部 -->
