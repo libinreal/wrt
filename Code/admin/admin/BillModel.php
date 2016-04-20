@@ -913,6 +913,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 		}
 		
 	}
-	$content = jsonAction( array( "editInit", "addInit", "listInit" ) );
+	$content = jsonAction( array( "editInit", "addInit", "listInit", 'review' ) );
 	$billModel = new BillModel($content);
 	$billModel->run();

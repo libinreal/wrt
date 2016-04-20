@@ -136,7 +136,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$bank_id = $content['parameters']['bank_id'];
 
 					if( empty( $user_id ) || empty( $bank_id ) ){
-						make_json_response('', '-1', '用户id 或 银行id 不正确');
+						make_json_response( array(), '0');
+						// make_json_response('', '-1', '用户id 或 银行id 不正确');
 					}
 
 					$sql = 'SELECT `account` FROM ' . $GLOBALS['ecs']->table('user_bank_account') . ' WHERE `type` = 1 AND `user_id` = ' . $user_id.
