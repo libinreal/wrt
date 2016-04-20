@@ -204,8 +204,8 @@
 			<td><!--[= goods[i].goodsName]--></td>
 			<td><!--[= goods[i].attributes]--></td>
 			<td><!--[= goods[i].nums]--></td>
-			<td><!--[= goods[i].dnums]--></td>
-			<td><!--[= goods[i].nums - goods[i].dnums]--></td>
+			<td><!--[= goods[i].send_number]--></td>
+			<td><!--[= goods[i].nums - goods[i].send_number]--></td>
 			<td><!--[= goods[i].goodsPrice]--></td>
 			<td><!--[= goods[i].totalPrice]--></td>
 			<td><!--[= goods[i].suppliers || '--' ]--></td>
