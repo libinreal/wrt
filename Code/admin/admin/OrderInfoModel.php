@@ -1744,7 +1744,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			switch ( $buttons ) {
 				case '确认':
 					if( $order_status['child_order_status'] == SOS_UNCONFIRMED ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, SALE_ORDER_CONFIRMED);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, POS_HANDLE);
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						//******************  插入子订单的银行签名信息 BEGIN *****************
@@ -1858,7 +1858,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case '发货验签':
 					if( $order_status['child_order_status'] == SOS_SEND_CC ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC, SALE_ORDER_UNRECEIVE);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC, POS_CHECK);
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						if( $childer_order_update )
@@ -1871,7 +1871,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					
 					if( $order_status['child_order_status'] == SOS_SEND_CC ){//客户已验签
 						$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `bill_used` = 0, `cash_used`= 0' . ' WHERE `order_id` = ' . $order_id;
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, SALE_ORDER_CONFIRMED);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, POS_HANDLE);
 
 					}else{
 
@@ -1901,7 +1901,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 
 					if(  $order_status['child_order_status'] == SOS_SEND_PC ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP, SALE_ORDER_UNRECEIVE );
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP, POS_CHECK );
 					}
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
@@ -1985,7 +1985,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					if( $order_status['child_order_status'] == SOS_ARR_CC ){
 
 						$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `order_time` = %f WHERE `order_id` = ' . $order_id;
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC, SALE_ORDER_COMPLETE, gmtime() );
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC, POS_COMPLETE, gmtime() );
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						if( $childer_order_update )
@@ -1999,7 +1999,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						break;
 					}
 					$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `bill_used` = 0, `cash_used`= 0' . ' WHERE `order_id` = ' . $order_id;//扣除归0
-					$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CANCEL, SALE_ORDER_UNCONFIRMED);
+					$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CANCEL, POS_CANCEL);
 
 					$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 

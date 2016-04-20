@@ -82,9 +82,8 @@ define('COS_COMPLETE',               1); // 确认验收，待对账
 define('COS_CANCELED',               9); // 完成
 
  // 父订单状态（二期）
-define('POS_SUBMIT',                 0);// 已提交
+define('POS_SUBMIT',                 0);// 已下单
 define('POS_HANDLE',                 1); // 处理中
-define('POS_CONFIRM', 				 1);//确认中
 define('POS_CHECK', 				 2);//验收中
 define('POS_BALANCE', 				 3);//对账中
 define('POS_COMPLETE',               4); // 已完成
