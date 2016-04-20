@@ -189,7 +189,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				
 				$bill['receive_bank'] = $bill['receive_bank_id'] ? $banks[ $bill['receive_bank_id'] ] : '';
 				$bill['pay_bank'] = $bill['pay_bank_id'] ? $banks[ $bill['pay_bank_id'] ] : '';
-
+				$bill['customer_name'] = $bill['customer_id'] ? $new_users[ $bill['customer_id'] ] : '';
 			}
 
 			$priv = admin_priv('bill_review', '', false);
