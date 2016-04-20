@@ -40,7 +40,8 @@ $ApiList = array(
     'priceList', 
     'singlePrice', 
     'setPrice', 
-	'deleteGoodsPrice'
+	'deleteGoodsPrice',
+    'review'
 );
 /**
  * 加价管理API
@@ -277,6 +278,9 @@ class Price extends ManageModel
             if ($suppliersName === false) failed_json('查询供应商失败');
         }
         
+        $priv = admin_priv('price_adjust_review', '', false);
+        $is_review = $priv ? 1 : 0;
+
         //对接厂家、供应商名称
         foreach ($res as $k=>$v) {
             $res[$k]['cat_name'] = $catName;
@@ -312,6 +316,7 @@ class Price extends ManageModel
                     }
                 }
             }
+            $res[$k]['is_review'] = $is_review;
         }
         make_json_result($res);
     }
@@ -384,12 +389,7 @@ class Price extends ManageModel
             ),
             'where'  => 'price_type=0'
         ));
-        $goods = $this->db->getAll($this->sql);
-        if ($goods === false) {
-            failed_json('获取商品信息失败');
-        }
-        
-        
+       
         //修改批量加价信息
         if ($upData) {
             $this->batchUpdate($upData);
@@ -400,6 +400,13 @@ class Price extends ManageModel
             $data = $this->batchInsert($inData, $userId);
         }
         
+        /*
+        
+        $goods = $this->db->getAll($this->sql);
+        if ($goods === false) {
+            failed_json('获取商品信息失败');
+        }
+
         //匹配修改符合批量加价条件的商品加价规则
         if ($upData && $goods) {
         	//匹配4级加价规则
@@ -411,7 +418,8 @@ class Price extends ManageModel
         	//匹配4级加价规则
         	$this->batchGoods($data, $goods);
         }
-        
+        */
+       
         make_json_result(true);
     }
     
@@ -1223,7 +1231,83 @@ class Price extends ManageModel
         }
     }
     
-    
+    /**
+     * 审核
+     * {
+     *      "command" : "review", 
+     *      "entity"  : "price_adjust", 
+     *      "parameters" : {
+     *           "price_adjust_id" : "(int)", //编辑时传此值
+     *           "review_status":1//审核状态
+     *      }
+     * }
+     * 
+     */
+    public function review($entity, $parameters){
+
+        $priv = admin_priv('price_adjust_review', '', false);
+
+        if( !$priv ){
+            make_json_response('', '-1', '没有审核权限');
+        }
+
+        self::init($entity, 'price_adjust');
+        
+        //params
+        $price_adjust_id = $parameters['price_adjust_id'];
+        $review_status = $parameters['review_status'];
+        if ( empty($price_adjust_id) || empty($review_status)) {
+            failed_json('传参错误');
+        }
+        
+        $price_adjust_table = $GLOBALS['ecs']->table('price_adjust');    
+
+        $admin = admin_info();
+
+        $review['review_user_id'] = $admin['user_id'];
+        $review['review_user'] = $admin['user_name'];
+        $review['review_status'] = $review_status;
+        $review['review_time'] = gmtime();
+        $review['price_adjust_id'] = $price_adjust_id;
+
+        $upData = array( $review );  //update
+
+        $price_adjust_sql = 'SELECT `price_adjust_id`, `cat_id`, `brand_id`, `suppliers_id`, `price_num`, `price_rate` FROM ' .
+                            $price_adjust_table . ' WHERE `price_adjust_id` = ' . intval( $price_adjust_id );
+        $price_adjust = $GLOBALS['db']->getRow( $price_adjust_sql );
+
+        if( empty( $price_adjust ) ){
+            make_json_response( '' , '-1' , '加价规则不存在');
+        }
+
+        //获取批量加价的商品
+        $this->table = 'goods';
+        self::selectSql(array(
+            'fields' => array(
+                'goods_id',
+                'cat_id',
+                'brand_id',
+                'suppliers_id'
+            ),
+            'where'  => 'price_type=0'
+        ));
+
+        $goods = $this->db->getAll($this->sql);
+        if ($goods === false) {
+            failed_json('获取商品信息失败');
+        }
+        
+        //匹配修改符合批量加价条件的商品加价规则
+        {
+            //匹配4级加价规则
+            $this->batchGoods(array( $price_adjust ), $goods);
+        }
+
+        //修改批量加价信息
+        $this->batchUpdate( $upData );
+
+        make_json_response('', '0', '审核成功');
+    }
 }
 $json = jsonAction($ApiList);
 $price = Price::getIns();
