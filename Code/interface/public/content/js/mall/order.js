@@ -94,28 +94,8 @@ define(function(require) {
             },
             "invAddress": {
                 rule: "收票地址: required;"
-            },
-            "invCompany": {
-                rule: "公司名称: required;"
-            },
-            "invCompanyAddr": {
-                rule: "公司地址: required;"
-            },
-            "invBankName": {
-                rule: "开户银行: required;"
-            },
-            "invBankAccount": {
-                rule: "开户银行账户: required;"
-            },
-            "invLicense": {
-                rule: "税务登记证号码: required;"
-            },
-            "invCompanyAddr": {
-                rule: "公司注册地址: required;"
-            },
-            "invTel": {
-                rule: "电话号码: required;"
             }
+
         },
         //验证成功
         valid: function(form) {
