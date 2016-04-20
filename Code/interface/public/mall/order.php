@@ -128,13 +128,13 @@
 </script>
 <script id="invoice-tmpl" type="text/html">
     <div class="form-item">
-        <div class="form-label"><span>*</span>发票抬头：</div>
+        <div class="form-label"><span></span>发票抬头：</div>
         <div class="form-value">
             <input type="text" name="invPayee" maxlength="50" value="<!--[= list.invPayee ]-->">
         </div>
     </div>
     <div class="form-item">
-        <div class="form-label"><span>*</span>收票地址：</div>
+        <div class="form-label"><span></span>收票地址：</div>
         <div class="form-value">
             <input type="text" name="invAddress" maxlength="200" value="<!--[= list.invAddress ]-->">
         </div>
