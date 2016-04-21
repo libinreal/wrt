@@ -91,7 +91,7 @@
 		<div class="shopping-num clearfix">
 			<label class="fl">数量：</label>
 			<span class="jianfa sub fl"></span>
-			<input class="numbers" value="<!--[= list[i].nums]-->" onkeyup="this.value=this.value.replace(/\D/g,'')"/>
+			<input class="numbers" value="<!--[= list[i].nums]-->" onchange="this.value=this.value.replace(/\D/g,'')"/>
 			<span class="jiafa add"></span>
 		</div>
 		<div class="shopping-price">

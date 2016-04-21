@@ -162,12 +162,16 @@ var SaleOrder = {
 			}else{
 				$.each(obj.content.info, function(k, v){
 					if($("#"+k).length){
-						$("#"+k).text(v);
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
 				$.each(obj.content.invoice, function(k, v){
 					if($("#"+k).length){
-						$("#"+k).text(v);
+						if(k == "inv_type"){
+							$("#"+k).text(that.invoice_type[v]);
+						}else{
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
+						}
 					}
 				});
 				var row = "";
@@ -452,10 +456,10 @@ var SaleOrder = {
 			}else{
 				$.each(obj.content.info, function(k, v){
 					if($("#"+k).length){
-						$("#"+k).text(v);
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 					if($("."+k).length){
-						$("."+k).text(v);
+						$("."+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
 				$.each(obj.content.invoice, function(k, v){
@@ -463,16 +467,13 @@ var SaleOrder = {
 						if(k == "inv_type"){
 							$("#"+k).text(that.invoice_type[v]);
 						}else{
-							$("#"+k).text(v);	
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);	
 						}
 					}
 				});
 				$.each(obj.content.goods, function(k, v){
 					if($("#"+k).length){
-						$("#"+k).text(v);
-					}
-					if($("."+k).length){
-						$("."+k).text(v);
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
 				// 订单状态相应操作
@@ -649,14 +650,18 @@ var SaleOrder = {
 						$("textarea[name="+key+"]").text(value);
 					}
 				});
-				$.each(obj.content.info,function(key, value){
-					if($("#"+key).length){
-						$("#"+key).text(value);	
+				$.each(obj.content.info,function(k, v){
+					if($("#"+k).length){
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
-				$.each(obj.content.invoice,function(key, value){
-					if($("#"+key).length){
-						$("#"+key).text(value);	
+				$.each(obj.content.invoice,function(k, v){
+					if($("#"+k).length){
+						if(k == "inv_type"){
+							$("#"+k).text(that.invoice_type[v]);
+						}else{
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
+						}
 					}
 				});
 				var row = "";
@@ -773,13 +778,20 @@ var SaleOrder = {
 						$("textarea[name="+key+"]").text(value);
 					}
 				});
-				$.each(obj.content.info,function(key, value){
-					if($("#"+key).length){
-						$("#"+key).text(value);	
+				$.each(obj.content.info,function(k, v){
+					if($("#"+k).length){
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
-
-				
+				$.each(obj.content.invoice,function(k, v){
+					if($("#"+k).length){
+						if(k == "inv_type"){
+							$("#"+k).text(that.invoice_type[v]);
+						}else{
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
+						}
+					}
+				});
 			}
 		}, "json");
 	},
@@ -1092,7 +1104,6 @@ var SaleOrder = {
 	        result.errorInfo = "";
 	        result.data = signData.data;
 	    }
-
 	    return result;
 	}
 }

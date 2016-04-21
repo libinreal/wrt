@@ -11,7 +11,14 @@ var PurchaseOrder = {
 		"status",
 		"operate"
 	],
-	order_status: {},
+	order_status: {
+		"0":"已下单",
+		"1":"<span style='color:#00f;'>确认中</span>",
+		"2":"<span style='color:#00f;'>验收中</span>",
+		"3":"<span style='color:#00f;'>对账中</span>",
+		"4":"<span style='color:#999;'>已完成</span>",
+		"5":"<span style='color:#999;'>订单取消</span>"
+	},
 	suborder_status: {},
 	order_detail_arr: [
 		"goods_sn",
@@ -140,13 +147,13 @@ var PurchaseOrder = {
 			}else{
 				$.each(obj.content.info, function(k, v){
 					if($("td#"+k).length){
-						$("td#"+k).text(v);
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 					if($("select[name="+k+"]").length){
 						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");
 					}
 					if($("."+k).length){
-						$("."+k).text(v);
+						$("."+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
 				$.each(obj.content.invoice, function(k, v){
@@ -154,13 +161,13 @@ var PurchaseOrder = {
 						if(k == "inv_type"){
 							$("#"+k).text(that.invoice_type[v]);	
 						}else{
-							$("#"+k).text(v);
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 						}
 					}
 				});
 				$.each(obj.content.goods, function(k, v){
 					if($("#"+k).length){
-						$("#"+k).text(v);
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
 				// 订单状态相应操作
@@ -295,9 +302,18 @@ var PurchaseOrder = {
 						$("textarea[name="+key+"]").text(value);
 					}
 				});
-				$.each(obj.content.info,function(key, value){
-					if($("#"+key).length){
-						$("#"+key).text(value);	
+				$.each(obj.content.info,function(k, v){
+					if($("#"+k).length){
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
+					}
+				});
+				$.each(obj.content.invoice,function(k, v){
+					if($("#"+k).length){
+						if(k == "inv_type"){
+							$("#"+k).text(that.invoice_type[v]);
+						}else{
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
+						}
 					}
 				});
 				var row = "";
@@ -312,9 +328,7 @@ var PurchaseOrder = {
 					}
 					row += "</tr>";
 					$("#price_log_list>tbody").html(row);
-				});
-
-						
+				});	
 			}
 		}, "json");
 	},
@@ -405,12 +419,20 @@ var PurchaseOrder = {
 						$("textarea[name="+key+"]").text(value);
 					}
 				});
-				$.each(obj.content.info,function(key, value){
-					if($("#"+key).length){
-						$("#"+key).text(value);	
+				$.each(obj.content.info,function(k, v){
+					if($("#"+k).length){
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
-				
+				$.each(obj.content.invoice,function(k, v){
+					if($("#"+k).length){
+						if(k == "inv_type"){
+							$("#"+k).text(that.invoice_type[v]);
+						}else{
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
+						}
+					}
+				});
 			}
 		}, "json");		
 	},
