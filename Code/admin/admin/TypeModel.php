@@ -114,7 +114,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case 'parent_users':
 					$sql = 'SELECT `user_id`,`user_name`,`companyName`,`customNo` FROM ' . $GLOBALS['ecs']->table('users') .
-						   '`parent_id` IS NULL AND `parent_id` = 0';
+						   ' WHERE `parent_id` IS NULL AND `parent_id` = 0';
 					break;
 				case 'admin_users':
 					$sql = 'SELECT `user_id`,`user_name` FROM ' . $GLOBALS['ecs']->table('admin_user');
