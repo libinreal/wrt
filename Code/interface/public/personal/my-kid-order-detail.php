@@ -204,7 +204,7 @@
 				    	<td><!--[= goodsPriceSendBuyer || '--']--></td>
 				    	<td><!--[= goodsNumberSendBuyer || '--']--></td>
 				    	<td><!--[= shippingFeeSendBuyer || '--']--></td>
-				    	<td><!--[= financialSendRate || '--']--></td>
+				    	<td><!--[= financialSend || '--']--></td>
 				    	<td><!--[= orderAmountSendBuyer || '--']--></td>
 				    </tr>
 				    <tr>
@@ -219,7 +219,7 @@
 				    	<td><!--[= goodsPriceArrBuyer || '--']--></td>
 				    	<td><!--[= goodsNumberArrBuyer || '--']--></td>
 				    	<td><!--[= shippingFeeArrBuyer || '--']--></td>
-				    	<td><!--[= financialArrRate || '--']--></td>
+				    	<td><!--[= financialArr || '--']--></td>
 				    	<td><!--[= orderAmountArrBuyer || '--']--></td>
 				    </tr>
 				</table>

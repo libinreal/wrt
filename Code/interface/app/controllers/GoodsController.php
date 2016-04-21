@@ -1678,7 +1678,7 @@ class GoodsController extends ControllerBase {
 	    	->toArray();
     	$amount = 0;
     	foreach ($result as $k=>$v) {
-    		$amount += $this->showShopPrice($v);
+    		$amount += ( $this->showShopPrice($v) * $v['nums']);
     	}
 		return $amount;
     }
@@ -1740,6 +1740,7 @@ class GoodsController extends ControllerBase {
      */
     private function showShopPrice($arr, $value = 'vipPrice')
     {
+    	
     	if ($arr[$value] && $arr['price_num']) {
     		return $arr[$value] + $arr['price_num'];
     	} elseif ($arr[$value]) {

@@ -96,7 +96,7 @@
 		</div>
 		<div class="shopping-price">
 			<p>交易单价：</p>
-			<p><span><!--[== $formatCurrency(list[i].price)]--></span> 信用B</p>
+			<p><span data="<!--[= list[i].price]-->"><!--[== $formatCurrency(list[i].price)]--></span> 信用B</p>
 		</div>
 		<a class="delOrNot" href="#"></a>
 	</div>

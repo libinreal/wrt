@@ -170,7 +170,7 @@ define(function(require) {
     function calculate(data) {
         var totalPrice = 0;
         for (var i = 0; i < data.length; i++) {
-            totalPrice += (parseInt(data[i].nums) * parseInt(data[i].price));
+            totalPrice += (parseFloat(data[i].nums) * parseFloat(data[i].price));
         }
         hasGodds = totalPrice != 0;
         $('#total-price').text(totalPrice.toFixed(2));

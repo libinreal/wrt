@@ -156,7 +156,7 @@ define(function(require) {
             p = content;
             f = '.00';
         }
-        return p + '<span class="f-s">' + f + '</span>';
+        return p + '<span data="'+ p+f +'" class="f-s">' + f + '</span>';
     });
 
 });

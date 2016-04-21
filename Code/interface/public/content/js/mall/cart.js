@@ -232,7 +232,7 @@ define(function(require) {
     function calculate() {
         var totalPrice = 0;
         $(".numbers").each(function() {
-            totalPrice += parseInt($(this).val()) * parseFloat($(this).parent().next().find("span").html());
+            totalPrice += parseInt($(this).val()) * parseFloat($(this).parent().next().find("span").attr('data'));
             $(".totalprice").html(totalPrice.toFixed(2));
         });
     }
