@@ -13,7 +13,7 @@ var SaleOrder = {
 	],
 	order_status: {
 		"0":"已下单",
-		"1":"<span style='color:#00f;'>确认中</span>",
+		"1":"<span style='color:#00f;'>处理中</span>",
 		"2":"<span style='color:#00f;'>验收中</span>",
 		"3":"<span style='color:#00f;'>对账中</span>",
 		"4":"<span style='color:#999;'>已完成</span>",

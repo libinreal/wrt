@@ -257,6 +257,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$v['shipping'] = $v['shipping_fee_arr_saler'];
 					}
 					$v['order_sn'] = $v['order_sn'] ? $v['order_sn'] . '-cg' : '';//订单编号
+					
+					if( $v['order_status'] > 2)
+						$v['order_status'] -= 1;
 					$v['status'] = $v['order_status'];//状态
 					//规格、型号、材质
 					$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $v['goods_id'];
