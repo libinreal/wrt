@@ -47,7 +47,6 @@ define(function(require) {
         }
         syncCart(id, v, function(response) {
             if (response.code != 0) {
-                log(copyNum)
                 that.val(copyNum[id]);
             }
             calculate();
@@ -236,5 +235,4 @@ define(function(require) {
             $(".totalprice").html(totalPrice.toFixed(2));
         });
     }
-
 });
