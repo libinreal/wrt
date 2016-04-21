@@ -110,11 +110,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case 'users':
 					$sql = 'SELECT `user_id`,`user_name`,`companyName`,`customNo` FROM ' . $GLOBALS['ecs']->table('users') .
-						   ' WHERE `user_name` IS NOT NULL GROUP BY `companyName`';
+						   '';
 					break;
 				case 'parent_users':
 					$sql = 'SELECT `user_id`,`user_name`,`companyName`,`customNo` FROM ' . $GLOBALS['ecs']->table('users') .
-						   ' WHERE `user_name` IS NOT NULL AND `parent_id` IS NOT NULL AND `parent_id` <> 0 GROUP BY `companyName`';
+						   '`parent_id` IS NULL AND `parent_id` = 0';
 					break;
 				case 'admin_users':
 					$sql = 'SELECT `user_id`,`user_name` FROM ' . $GLOBALS['ecs']->table('admin_user');
