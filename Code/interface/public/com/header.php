@@ -11,10 +11,10 @@
             <ul>
                 <li><a class="icon link icon-home" href="../mall/">首页</a></li>
                 <li>
-                    <form class="search" action="../mall/search.html">
-                <input type="text" class="search_input" name="key" placeholder="请输入关键字">
-                <input type="submit" class="search_bg" value="">
-            </form>
+                <form class="search" action="../mall/search.html">
+                    <input type="text" class="search_input" name="key" placeholder="请输入关键字">
+                    <input type="submit" class="search_bg" value="">
+                </form>
                 </li>
             </ul>
         </div>

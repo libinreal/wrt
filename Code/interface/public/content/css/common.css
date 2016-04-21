@@ -1,5 +1,4 @@
 /*reset start*/
-
 body, p, blockquote, figure, hr, h1, h2, h3, h4, h5, h6, ul, menu, dir, ol, dl, dd, fieldset, input[type=radio], input[type=checkbox], input[type=range], pre, xmp, plaintext, listing {
     margin: 0;
     white-space: inherit;
@@ -270,7 +269,6 @@ input[type="submit"] {
 }
 /* form common end */
 /*header start*/
-
 .header {
     position: relative;
     height: 53px;

@@ -140,13 +140,13 @@ var PurchaseOrder = {
 			}else{
 				$.each(obj.content.info, function(k, v){
 					if($("td#"+k).length){
-						$("td#"+k).text(v);
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 					if($("select[name="+k+"]").length){
 						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");
 					}
 					if($("."+k).length){
-						$("."+k).text(v);
+						$("."+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
 				$.each(obj.content.invoice, function(k, v){
@@ -154,13 +154,13 @@ var PurchaseOrder = {
 						if(k == "inv_type"){
 							$("#"+k).text(that.invoice_type[v]);	
 						}else{
-							$("#"+k).text(v);
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 						}
 					}
 				});
 				$.each(obj.content.goods, function(k, v){
 					if($("#"+k).length){
-						$("#"+k).text(v);
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
 				// 订单状态相应操作
@@ -295,9 +295,18 @@ var PurchaseOrder = {
 						$("textarea[name="+key+"]").text(value);
 					}
 				});
-				$.each(obj.content.info,function(key, value){
-					if($("#"+key).length){
-						$("#"+key).text(value);	
+				$.each(obj.content.info,function(k, v){
+					if($("#"+k).length){
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
+					}
+				});
+				$.each(obj.content.invoice,function(k, v){
+					if($("#"+k).length){
+						if(k == "inv_type"){
+							$("#"+k).text(that.invoice_type[v]);
+						}else{
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
+						}
 					}
 				});
 				var row = "";
@@ -312,9 +321,7 @@ var PurchaseOrder = {
 					}
 					row += "</tr>";
 					$("#price_log_list>tbody").html(row);
-				});
-
-						
+				});	
 			}
 		}, "json");
 	},
@@ -405,12 +412,20 @@ var PurchaseOrder = {
 						$("textarea[name="+key+"]").text(value);
 					}
 				});
-				$.each(obj.content.info,function(key, value){
-					if($("#"+key).length){
-						$("#"+key).text(value);	
+				$.each(obj.content.info,function(k, v){
+					if($("#"+k).length){
+						$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
 					}
 				});
-				
+				$.each(obj.content.invoice,function(k, v){
+					if($("#"+k).length){
+						if(k == "inv_type"){
+							$("#"+k).text(that.invoice_type[v]);
+						}else{
+							$("#"+k).html((v==''||v==null) ? createWarn('无数据') : v);
+						}
+					}
+				});
 			}
 		}, "json");		
 	},
