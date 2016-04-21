@@ -20,6 +20,10 @@ var SaleOrder = {
 		"5":"<span style='color:#999;'>订单取消</span>"
 	},
 	suborder_status: {},
+	invoice_type: [
+		"增值税发票",
+		"普通发票"
+	],
 	order_detail_arr: [
 		"goods_sn",
 		"goods_name",
@@ -430,7 +434,6 @@ var SaleOrder = {
 					});
 				}
 			}
-			
 		}, "json");
 	},
 
@@ -457,7 +460,11 @@ var SaleOrder = {
 				});
 				$.each(obj.content.invoice, function(k, v){
 					if($("#"+k).length){
-						$("#"+k).text(v);
+						if(k == "inv_type"){
+							$("#"+k).text(that.invoice_type[v]);
+						}else{
+							$("#"+k).text(v);	
+						}
 					}
 				});
 				$.each(obj.content.goods, function(k, v){
@@ -605,8 +612,8 @@ var SaleOrder = {
 		}
 		$("input[name=order_id]").val(order_id);
 		var params = {"params":{"order_id":order_id}};
-		strJson = createJson("initPriceSend", this.entity, params);
-		that = this
+		var strJson = createJson("initPriceSend", this.entity, params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
@@ -647,6 +654,11 @@ var SaleOrder = {
 						$("#"+key).text(value);	
 					}
 				});
+				$.each(obj.content.invoice,function(key, value){
+					if($("#"+key).length){
+						$("#"+key).text(value);	
+					}
+				});
 				var row = "";
 				$.each(obj.content.price_log,function(key, value){
 					row += "<tr>";
@@ -660,8 +672,6 @@ var SaleOrder = {
 					row += "</tr>";
 					$("#price_log_list>tbody").html(row);
 				});
-
-						
 			}
 		}, "json");
 	},

@@ -169,7 +169,7 @@ var Supplier = {
 					$("#logistics_operate").html(createLink("javascript:void(0);", "新增物流", "Supplier.addShippingInfoInit("+id+")"));
 				}else{
 					var table='<table cellpadding="0" cellspacing="1"><thead><tr>';
-					table += '<td class="title text-right" width="100">物流公司：</td><td>'+obj.content.shipping.company_name+'</td>';
+					table += '<td class="title text-right" width="100">物流公司：</td><td>'+decodeURI(obj.content.shipping.company_name)+'</td>';
 					table += '<td class="title text-right" width="100">物流单号：</td><td>'+obj.content.shipping.shipping_num+'</td>';
 					table += '<td class="title text-right" width="100">联系电话：</td><td>'+obj.content.shipping.tel+'</td>';
 					table += '<td class="title text-right" width="100">发货时间：</td><td>'+obj.content.shipping.shipping_time+'</td>';
@@ -181,7 +181,7 @@ var Supplier = {
 						table += '<tbody>';
 						table += '<tr><td class="title">日期</td><td class="title" colspan="7">动态</td></tr>';
 						$.each(obj.content.shipping.log, function(k, v){
-							table += '<tr><td>'+v.date+'</td><td colspan="7">'+v.content+'</td></tr>';
+							table += '<tr><td>'+v.date+'</td><td colspan="7">'+decodeURI(v.content)+'</td></tr>';
 						});
 						table += '</tbody></table>';
 						$("#logistics_info").html(table);

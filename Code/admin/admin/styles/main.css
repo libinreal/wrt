@@ -80,7 +80,7 @@ h1 .action-span1 {
 #footer {
     background: #F7F7F7;
     border: 1px solid #d0d0d0;
-    padding: 15px;
+    padding: 10px 15px;
     color: #9CACAF;
     margin: 10px 0;
     text-align: center;
@@ -118,7 +118,7 @@ h1 .action-span1 {
     width:175px;
     background:#616e80;
     margin:0;
-    padding: 0;
+    padding: 10px 0 10px 0;
     float:left;
     height: 620px;
     position: relative;
@@ -127,7 +127,7 @@ h1 .action-span1 {
     height: 100%;
     overflow-y:auto;
     overflow-x:hidden;
-    padding:15px 15px 0 0;
+    padding:0;
 }
 .menutwo{
     height:35px;
@@ -142,11 +142,20 @@ h1 .action-span1 {
 .icon_01_cat_and_goods{
     background:url("/admin/images/icon11_min.png") no-repeat center center;
 }
+.icon_03_exchange{
+    background:url("/admin/images/icon11_min.png") no-repeat center center;    
+}
 .icon_04_wrnews{
     background:url("/admin/images/icon44_min.png") no-repeat center center;
 }
 .icon_05_baseData{
     background:url("/admin/images/icon77_min.png") no-repeat center center;    
+}
+.icon_06_credit{
+    background:url("/admin/images/icon77_min.png") no-repeat center center; 
+}
+.icon_07_customize{
+    background:url("/admin/images/icon55_min.png") no-repeat center center;    
 }
 .icon_08_engineering{
     background:url("/admin/images/icon12_min.png") no-repeat center center; 
@@ -259,15 +268,12 @@ h1 .action-span1 {
 .list-div table {
     width: 100%;
 }
-
-.list-div thead {
-    border-bottom: 1px solid #ccc;
-}
 .list-div th {
     line-height:24px;
-    background:#efefef;
+    background:#ccc;
     white-space: nowrap;
     color:#333;
+    font-weight: bold;
 }
 
 .list-div td {

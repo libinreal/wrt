@@ -122,7 +122,6 @@ var PurchaseOrder = {
 					});
 				}
 			}
-			
 		}, "json");
 	},
 
@@ -140,8 +139,8 @@ var PurchaseOrder = {
 				return false;
 			}else{
 				$.each(obj.content.info, function(k, v){
-					if($("#"+k).length){
-						$("#"+k).text(v);
+					if($("td#"+k).length){
+						$("td#"+k).text(v);
 					}
 					if($("select[name="+k+"]").length){
 						$("select[name="+k+"]>option[value="+v+"]").attr("selected","selected");
@@ -151,7 +150,7 @@ var PurchaseOrder = {
 					}
 				});
 				$.each(obj.content.invoice, function(k, v){
-					if($("#"+k).length){
+					if($("td#"+k).length){
 						if(k == "inv_type"){
 							$("#"+k).text(that.invoice_type[v]);	
 						}else{
@@ -192,7 +191,6 @@ var PurchaseOrder = {
 				}
 				if(count == 0){
 					$("#logistics_info").html('<div style="text-align:center">'+createWarn("暂无物流信息")+'</div>');
-					$("#logistics_operate").html(createLink("javascript:void(0);", "新增物流", "PurchaseOrder.addShippingInfoInit("+order_id+")"));
 				}else{
 					var table='<table cellpadding="0" cellspacing="1"><thead><tr>';
 					table += '<td class="title text-right" width="100">物流公司：</td><td>'+obj.content.shipping.company_name+'</td>';
@@ -212,7 +210,6 @@ var PurchaseOrder = {
 						table += '</tbody></table>';
 						$("#logistics_info").html(table);
 					}
-					$("#logistics_operate").html(createLink("javascript:void(0);", "添加物流信息", "PurchaseOrder.addShippingLogInit("+order_id+",'"+obj.content.shipping.shipping_num+"')"));
 				}
 			}
 			
@@ -231,42 +228,6 @@ var PurchaseOrder = {
 		
 	},
 
-	addShippingInfo: function(){
-		var table='<table cellpadding="0" cellspacing="0"><thead><tr>';
-		table += '<td class="title text-right" width="100">物流公司：</td><td>'+$("input[name=company_name]").val()+'</td>';
-		table += '<td class="title text-right" width="100">物流单号：</td><td>'+$("input[name=shipping_num]").val()+'</td>';
-		table += '<td class="title text-right" width="100">联系电话：</td><td>'+$("input[name=tel]").val()+'</td>';
-		table += '<td class="title text-right" width="100">发货时间：</td><td>'+$("input[name=shipping_time]").val()+'</td>';
-		table += '</tr></thead>';
-		table += '<tbody><tr><td colspan="20">'+createWarn("暂无动态")+'</td></tr>';
-		table += '</tbody></table>';
-		$("#logistics_info").html(table);
-		var order_id = getQueryStringByName('order_id');
-		if(order_id===""||!validateNumber(order_id)){
-			return false;
-		}
-		if($("#logistics_form").valid() == false){
-			return false;
-		}
-		$("input[name=order_id]").val(order_id);
-		var formData = $("#logistics_form").FormtoJson();
-		var params = {"params":formData};
-		var strJson = createJson("addShippingInfo", this.entity, params);
-		var shipping_num = $('input[name="shipping_num"]').val();
-		that = this
-		$.post(this.url, strJson, function(obj){
-			if(obj.error == -1){
-				$('#message_area').html(createError(obj.message));
-				return false;
-			}else{
-				$('#logistics_form').html('<div style="text-align:center">'+createTip(obj.message)+'<input type="button" class="button close" href="javascript:void(0)" onclick="popupLayer()" value=" 关闭 " /></div>');
-				$("#logistics_operate").html(createLink("javascript:void(0);", "添加物流信息", "PurchaseOrder.addShippingLogInit("+order_id+",'"+shipping_num+"')"));
-				return false;
-			}
-		}, "json");
-		popupLayer();
-	},
-
 	addShippingLogInit: function(order_id,shipping_num){
 		$("#popupLayer").load("templates/second/addShippingLog_purchase.html?order_id="+order_id+"&num="+shipping_num);
 		popupLayer();
@@ -274,7 +235,7 @@ var PurchaseOrder = {
 	},
 
 	addShippingLog: function(){
-		var order_id = getQueryStringByName('order_id');
+		var order_id = getQueryStringByName('id');
 		if(order_id===""||!validateNumber(order_id)){
 			return false;
 		}
