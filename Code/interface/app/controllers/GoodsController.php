@@ -916,6 +916,7 @@ class GoodsController extends ControllerBase {
 		$invPayee = $this->request->getPost('invPayee');
 		$invAddress = $this->request->getPost('invAddress');
 		$invContent = $this->request->getPost('invContent');
+		$invContext = $this->request->getPost('invContext');
         //增值发票
         $invCompany = $this->request->getPost('invCompany');
         $invBankName = $this->request->getPost('invBankName');
@@ -1060,6 +1061,7 @@ class GoodsController extends ControllerBase {
         $userInv->invFax = $invFax;
 
 		$userInv->inv_remark = $invContent;
+		$userInv->inv_context = $invContext;
 		try {
 			if(!$userInv->save()) {
 				foreach($userInv->getMessages() as $message) {
@@ -1075,6 +1077,7 @@ class GoodsController extends ControllerBase {
 		$orderInfo->invPayee = $invPayee;
 		$orderInfo->invAddress = $invAddress;
 		$orderInfo->invContent = $invContent;
+		$orderInfo->invContext = $invContext;
 
         //增值发票添加字段
         $orderInfo->invCompany = $invCompany;

@@ -164,8 +164,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//订单详情
 			$order_sql = 'SELECT odr.`order_status`, odr.`order_sn`, odr.`user_id`, usr.`user_name`, usr.`companyName` as `company_name`, odr.`add_time`, odr.`contract_sn`, '. "ifnull(crt.contract_name, '') as contract_name," .//订单相关
 						 ' odr.`consignee`, odr.`address`, odr.`mobile`, odr.`sign_building`, ' .
-					 	 ' odr.`inv_type`, odr.`inv_payee`, odr.`inv_bank_name`, odr.`inv_bank_account`, odr.`inv_bank_address`, odr.`inv_tel`, odr.`inv_fax` ' .	//发票相关
-						 'FROM ' .$order_info_table . ' AS odr LEFT JOIN ' . $user_table . '  AS usr ON odr.`user_id` = usr.`user_id` LEFT JOIN ' . $contract_table . ' AS crt ON odr.`contract_sn` = crt.`contract_num` ' . 
+					 	 ' odr.`inv_type`, odr.`inv_payee`, odr.`inv_company`, odr.`inv_context`, odr.`inv_content`, odr.`inv_bank_name`, odr.`inv_bank_account`, odr.`inv_bank_address`, odr.`inv_tel`, odr.`inv_fax` ' .	//发票相关
+						 ' FROM ' .$order_info_table . ' AS odr LEFT JOIN ' . $user_table . '  AS usr ON odr.`user_id` = usr.`user_id` LEFT JOIN ' . $contract_table . ' AS crt ON odr.`contract_sn` = crt.`contract_num` ' . 
 						 ' WHERE odr.`order_id` = ' . $order_id;
 			$order_info = $GLOBALS['db']->getRow( $order_sql );
 
@@ -199,20 +199,25 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//发票内容
 			$invoice = array();
 			$invoice['inv_type'] = $order_info['inv_type'];//类型
-			$invoice['inv_payee'] = $order_info['inv_payee'];//公司名称
+			$invoice['inv_payee'] = $order_info['inv_payee'] ? $order_info['inv_payee'] : strval( $order_info['inv_company'] );//发票抬头
 			$invoice['inv_bank_name'] = $order_info['inv_bank_name'];//银行
 			$invoice['inv_bank_account'] = $order_info['inv_bank_account'];//帐号
 			$invoice['inv_bank_address'] = $order_info['inv_bank_address'];//银行地址
 			$invoice['inv_tel'] = $order_info['inv_tel'];//联系电话
 			$invoice['inv_fax'] = $order_info['inv_fax'];//联系传真
+			$invoice['inv_content'] = $order_info['inv_content'];//发票备注
+			$invoice['inv_context'] = $order_info['inv_context'];//发票内容
 
 			unset( $order_info['inv_type'] );
 			unset( $order_info['inv_payee'] );
+			unset( $order_info['inv_company'] );
 			unset( $order_info['inv_bank_name'] );
 			unset( $order_info['inv_bank_account'] );
 			unset( $order_info['inv_bank_address'] );
 			unset( $order_info['inv_tel'] );
 			unset( $order_info['inv_fax'] );
+			unset( $order_info['inv_content'] );
+			unset( $order_info['inv_context'] );
 
 			//物料详情
 			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
@@ -1399,7 +1404,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//订单详情
 			$order_sql = 'SELECT odr.`order_status`, odr.`child_order_status`, odr.`order_sn`, odr.`user_id`, usr.`user_name`, usr.`companyName` as `company_name`, odr.`add_time`, odr.`pay_id`, odr.`contract_sn`, '. "ifnull(crt.contract_name, '') as contract_name," .//订单相关
 						 ' odr.`consignee`, odr.`address`, odr.`mobile`, odr.`sign_building`, ' .
-					 	 ' odr.`inv_type`, odr.`inv_payee`, odr.`inv_bank_name`, odr.`inv_bank_account`, odr.`inv_bank_address`, odr.`inv_tel`, odr.`inv_fax`, ' .	//发票相关
+					 	 ' odr.`inv_type`, odr.`inv_payee`, odr.`inv_bank_name`, odr.`inv_bank_account`, odr.`inv_bank_address`, odr.`inv_tel`, odr.`inv_fax`, odr.`inv_content`, odr.`inv_context`, odr.`inv_company`,  ' .	//发票相关
 					 	 ' odr.`shipping_fee_send_buyer`, odr.`shipping_fee_arr_buyer`, odr.`shipping_fee_send_saler`, odr.`shipping_fee_arr_saler`, ' .//商品资料
 					 	 ' odr.`financial_send`, odr.`financial_arr`, odr.`financial_send_rate`, ' .//金融费
 					 	 ' odr.`order_amount_send_buyer`, odr.`order_amount_arr_buyer`, odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`, ' .//总金额
@@ -1414,15 +1419,27 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$order_info['order_id'] = $order_id;
 
-			//发票内容
 			$invoice = array();
 			$invoice['inv_type'] = $order_info['inv_type'];//类型
-			$invoice['inv_payee'] = $order_info['inv_payee'];//公司名称
+			$invoice['inv_payee'] = $order_info['inv_payee'] ? $order_info['inv_payee'] : strval( $order_info['inv_company'] );//发票抬头
 			$invoice['inv_bank_name'] = $order_info['inv_bank_name'];//银行
 			$invoice['inv_bank_account'] = $order_info['inv_bank_account'];//帐号
 			$invoice['inv_bank_address'] = $order_info['inv_bank_address'];//银行地址
 			$invoice['inv_tel'] = $order_info['inv_tel'];//联系电话
 			$invoice['inv_fax'] = $order_info['inv_fax'];//联系传真
+			$invoice['inv_content'] = $order_info['inv_content'];//发票备注
+			$invoice['inv_context'] = $order_info['inv_context'];//发票内容
+
+			unset( $order_info['inv_type'] );
+			unset( $order_info['inv_payee'] );
+			unset( $order_info['inv_company'] );
+			unset( $order_info['inv_bank_name'] );
+			unset( $order_info['inv_bank_account'] );
+			unset( $order_info['inv_bank_address'] );
+			unset( $order_info['inv_tel'] );
+			unset( $order_info['inv_fax'] );
+			unset( $order_info['inv_content'] );
+			unset( $order_info['inv_context'] );
 
 			//商品详情
 			$order_goods_table = $GLOBALS['ecs']->table('order_goods');
@@ -1521,31 +1538,31 @@ require(dirname(__FILE__) . '/includes/init.php');
 				}				
 
 
-				$sale_status = C('sale_status');//销售订单状态,用于页面显示
+				$sale_status = C('order_status');//销售订单状态,用于页面显示
 				$childer_order_status = C('childer_order_status');//验签状态
 				switch ( $order_info['child_order_status'] ) {
 					case SOS_UNCONFIRMED://未确认
-						$order_info['order_status'] = $sale_status[SALE_ORDER_UNCONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_SUBMIT];
 						$order_info['check_status'] = $childer_order_status[SOS_UNCONFIRMED];
 						$buttons = array('发货改价', '确认', '撤销订单');
 						break;
 					case SOS_CONFIRMED://已确认
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_HANDLE];
 						$order_info['check_status'] = $childer_order_status[SOS_CONFIRMED];
 						$buttons = array('发货改价', '撤销订单');
 						break;
 					case SOS_SEND_CC://客户已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_CC];
 						$buttons = array('发货验签', '取消验签');
 						break;
 					case SOS_SEND_PC://平台已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC];
 						$buttons = array('采购下单');//'取消验签',
 						break;
 					case SOS_SEND_PP://平台已推单(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PP];
 						$buttons = array('到货改价');//销售价格修改
 
@@ -1599,41 +1616,41 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					//************************** 采购发货中 BEGIN **************************
 					case SOS_SEND_SC://供应商已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_SC];
 						$buttons = array();
 						break;
 					case SOS_SEND_PC2://平台已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC2];
 						$buttons = array('到货改价');
 						break;
 					//************************** 采购发货中 END **************************
 					
 					case SOS_ARR_CC://客户已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_UNRECEIVE];
+						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
 						$buttons = array('到货验签');
 						break;
 					case SOS_ARR_PC://平台已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
+						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC];
 						$buttons = array();
 						break;
 
 					//************************** 采购到货中 BEGIN **************************
 					case SOS_ARR_SC://供应商已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
+						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_SC];
 						$buttons = array();
 						break;
 					case SOS_ARR_PC2://平台已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
+						$order_info['order_status'] = $sale_status[POS_COMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC2];
 						$buttons = array();
 						break;
 					case SOS_CANCEL://验签已取消
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CANCEL];
+						$order_info['order_status'] = $sale_status[POS_CANCEL];
 						$order_info['check_status'] = $childer_order_status[SOS_CANCEL];
 						$buttons = array();
 						break;
@@ -1646,14 +1663,6 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$buttons = array();
 						break;
 				}
-
-				unset( $order_info['inv_type'] );
-				unset( $order_info['inv_payee'] );
-				unset( $order_info['inv_bank_name'] );
-				unset( $order_info['inv_bank_account'] );
-				unset( $order_info['inv_bank_address'] );
-				unset( $order_info['inv_tel'] );
-				unset( $order_info['inv_fax'] );
 
 				unset($order_info['shipping_fee_send_saler']);
 				unset($order_info['shipping_fee_arr_saler']);
@@ -2224,6 +2233,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$add_shipping_log_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_log` = \'' . $shipping_log_str .
 									 '\' WHERE `order_id` = ' . $order_id; 
+
 			$add_shipping_log = $GLOBALS['db']->query( $add_shipping_log_sql );
 
 			if( $add_shipping_log ){
@@ -2351,9 +2361,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_sql = 'SELECT og.`goods_id`, og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`,' .
 						 ' o.`suppers_id` as `default_suppliers_id`, g.`cat_id`, o.`bill_used_days`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
-						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`,' .
+						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,' .
 						 ' o.`shipping_fee_send_buyer`, o.`financial_send`, o.`financial_send_rate`, o.`order_amount_send_buyer`,' .
-						 ' o.`shipping_fee_send_saler`, o.`order_amount_send_saler` ' .
+						 ' o.`shipping_fee_send_saler`, o.`order_amount_send_saler`, ' .
+						 ' o.`inv_type`,o.`inv_payee`,o.`inv_bank_name`,o.`inv_bank_account`,o.`inv_bank_address`,o.`inv_tel`, o.`inv_fax`, o.`inv_content`, o.`inv_context`, o.`inv_company` ' .
 						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' . 
 						 $order_goods_table . ' AS og ON og.`order_id` = o.`order_id` LEFT JOIN ' .
 						 $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
@@ -2368,67 +2379,67 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			//订单详情
-			$sale_status = C('sale_status');//销售订单状态,用于页面显示
+			$sale_status = C('order_status');//销售订单状态,用于页面显示
 			$childer_order_status = C('childer_order_status');//验签状态
 			$order_info['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
 			switch ( $order_info['child_order_status'] ) {
 					case SOS_UNCONFIRMED://未确认
-						$order_info['order_status'] = $sale_status[SALE_ORDER_UNCONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_SUBMIT];
 						$order_info['check_status'] = $childer_order_status[SOS_UNCONFIRMED];
 		
 						break;
 					case SOS_CONFIRMED://已确认
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_HANDLE];
 						$order_info['check_status'] = $childer_order_status[SOS_CONFIRMED];
 		
 						break;
 					case SOS_SEND_CC://客户已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_CC];
 		
 						break;
 					case SOS_SEND_PC://平台已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC];
 		
 						break;
 					case SOS_SEND_PP://平台已推单(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PP];
 						break;
 						
 					case SOS_SEND_SC://供应商已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_SC];
 		
 						break;
 					case SOS_SEND_PC2://平台已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC2];
 		
 						break;
 					case SOS_ARR_CC://客户已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_UNRECEIVE];
+						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
 		
 						break;
 					case SOS_ARR_PC://平台已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
+						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC];
 		
 						break;
 					case SOS_ARR_SC://供应商已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
+						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_SC];
 		
 						break;
 					case SOS_ARR_PC2://平台已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
+						$order_info['order_status'] = $sale_status[POS_COMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC2];
 		
 						break;
 					case SOS_CANCEL://验签已取消
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CANCEL];
+						$order_info['order_status'] = $sale_status[POS_CANCEL];
 						$order_info['check_status'] = $childer_order_status[SOS_CANCEL];
 		
 						break;
@@ -2466,11 +2477,28 @@ require(dirname(__FILE__) . '/includes/init.php');
 			unset( $order_info['mobile'] );
 			unset( $order_info['sign_building'] );
 
-			$invoice['inv_type'] = $order_info['inv_type'];
-			$invoice['inv_payee'] = $order_info['inv_payee'];
+			//发票内容
+			$invoice = array();
+			$invoice['inv_type'] = $order_info['inv_type'];//类型
+			$invoice['inv_payee'] = $order_info['inv_payee'] ? $order_info['inv_payee'] : strval( $order_info['inv_company'] );//发票抬头
+			$invoice['inv_bank_name'] = $order_info['inv_bank_name'];//银行
+			$invoice['inv_bank_account'] = $order_info['inv_bank_account'];//帐号
+			$invoice['inv_bank_address'] = $order_info['inv_bank_address'];//银行地址
+			$invoice['inv_tel'] = $order_info['inv_tel'];//联系电话
+			$invoice['inv_fax'] = $order_info['inv_fax'];//联系传真
+			$invoice['inv_content'] = $order_info['inv_content'];//发票备注
+			$invoice['inv_context'] = $order_info['inv_context'];//发票内容
 
 			unset( $order_info['inv_type'] );
 			unset( $order_info['inv_payee'] );
+			unset( $order_info['inv_company'] );
+			unset( $order_info['inv_bank_name'] );
+			unset( $order_info['inv_bank_account'] );
+			unset( $order_info['inv_bank_address'] );
+			unset( $order_info['inv_tel'] );
+			unset( $order_info['inv_fax'] );
+			unset( $order_info['inv_content'] );
+			unset( $order_info['inv_context'] );
 
 			//总额计算
 			/*if( empty( $order_info['price_num'] ) ){
@@ -2848,8 +2876,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_sql = 'SELECT og.`goods_id`, og.`goods_price_arr_buyer`, og.`goods_number_arr_buyer`, og.`goods_price_arr_saler`, og.`goods_number_arr_saler`,' .
 						 ' o.`order_amount_arr_saler`,o.`order_amount_arr_buyer`,o.`suppers_id` as `default_suppliers_id`, g.`cat_id`, ' .
 						 ' o.`add_time`,o.`child_order_status`,o.`contract_sn`, o.`order_sn`, ifnull( c.`contract_name`, \'\' ) AS `contract_name`,u.`user_name`, u.`companyName` AS `company_name`,' .//订单信息
-						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`,o.`inv_type`,o.`inv_payee`, o.`bill_used_days`, ' .
-						 ' o.`shipping_fee_arr_buyer`, o.`financial_arr`, o.`financial_arr_rate`, o.`shipping_fee_arr_saler` ' .
+						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`, o.`bill_used_days`, ' .
+						 ' o.`shipping_fee_arr_buyer`, o.`financial_arr`, o.`financial_arr_rate`, o.`shipping_fee_arr_saler`, ' .
+						 ' o.`inv_type`,o.`inv_payee`,o.`inv_bank_name`,o.`inv_bank_account`,o.`inv_bank_address`,o.`inv_tel`, o.`inv_fax`, o.`inv_content`, o.`inv_context`, o.`inv_company` ' .
 						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' . 
 						 $order_goods_table . ' AS og ON og.`order_id` = o.`order_id` LEFT JOIN ' .
 						 $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
@@ -2886,62 +2915,67 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info['suppers_id'] = $suppliers;
 
 			//订单详情
-			$sale_status = C('sale_status');//销售订单状态,用于页面显示
+			$sale_status = C('order_status');//销售订单状态,用于页面显示
 			$childer_order_status = C('childer_order_status');//验签状态
 			$order_info['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
 			switch ( $order_info['child_order_status'] ) {
 					case SOS_UNCONFIRMED://未确认
-						$order_info['order_status'] = $sale_status[SALE_ORDER_UNCONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_SUBMIT];
 						$order_info['check_status'] = $childer_order_status[SOS_UNCONFIRMED];
 			
 						break;
 					case SOS_CONFIRMED://已确认
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_HANDLE];
 						$order_info['check_status'] = $childer_order_status[SOS_CONFIRMED];
 			
 						break;
 					case SOS_SEND_CC://客户已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_CC];
 			
 						break;
 					case SOS_SEND_PC://平台已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC];
 			
 						break;
+					case SOS_SEND_PP://平台已推单(发货)
+						$order_info['order_status'] = $sale_status[POS_CHECK];
+						$order_info['check_status'] = $childer_order_status[SOS_SEND_PP];
+			
+						break;
 					case SOS_SEND_SC://供应商已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_SC];
 			
 						break;
 					case SOS_SEND_PC2://平台已验签(发货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CONFIRMED];
+						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC2];
 			
 						break;
 					case SOS_ARR_CC://客户已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_UNRECEIVE];
+						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
 			
 						break;
 					case SOS_ARR_PC://平台已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
+						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC];
 			
 						break;
 					case SOS_ARR_SC://供应商已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
+						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_SC];
 			
 						break;
 					case SOS_ARR_PC2://平台已验签(到货)
-						$order_info['order_status'] = $sale_status[SALE_ORDER_COMPLETE];
+						$order_info['order_status'] = $sale_status[POS_COMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC2];
 			
 						break;
 					case SOS_CANCEL://验签已取消
-						$order_info['order_status'] = $sale_status[SALE_ORDER_CANCEL];
+						$order_info['order_status'] = $sale_status[POS_CANCEL];
 						$order_info['check_status'] = $childer_order_status[SOS_CANCEL];
 			
 						break;
@@ -2979,11 +3013,28 @@ require(dirname(__FILE__) . '/includes/init.php');
 			unset( $order_info['mobile'] );
 			unset( $order_info['sign_building'] );
 
-			$invoice['inv_type'] = $order_info['inv_type'];
-			$invoice['inv_payee'] = $order_info['inv_payee'];
+			//发票内容
+			$invoice = array();
+			$invoice['inv_type'] = $order_info['inv_type'];//类型
+			$invoice['inv_payee'] = $order_info['inv_payee'] ? $order_info['inv_payee'] : strval( $order_info['inv_company'] );//发票抬头
+			$invoice['inv_bank_name'] = $order_info['inv_bank_name'];//银行
+			$invoice['inv_bank_account'] = $order_info['inv_bank_account'];//帐号
+			$invoice['inv_bank_address'] = $order_info['inv_bank_address'];//银行地址
+			$invoice['inv_tel'] = $order_info['inv_tel'];//联系电话
+			$invoice['inv_fax'] = $order_info['inv_fax'];//联系传真
+			$invoice['inv_content'] = $order_info['inv_content'];//发票备注
+			$invoice['inv_context'] = $order_info['inv_context'];//发票内容
 
 			unset( $order_info['inv_type'] );
 			unset( $order_info['inv_payee'] );
+			unset( $order_info['inv_company'] );
+			unset( $order_info['inv_bank_name'] );
+			unset( $order_info['inv_bank_account'] );
+			unset( $order_info['inv_bank_address'] );
+			unset( $order_info['inv_tel'] );
+			unset( $order_info['inv_fax'] );
+			unset( $order_info['inv_content'] );
+			unset( $order_info['inv_context'] );
 
 			//支付方式
 			$pay_id = array();

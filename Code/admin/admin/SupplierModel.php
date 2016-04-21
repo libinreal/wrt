@@ -579,6 +579,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 
 					$v['order_status'] = '';
+					$v['order_sn'] .= '-cg';
 					//订单状态转换
 					if (!empty($childer_map)) {
 						foreach ($childer_map as $pk => $pv) {

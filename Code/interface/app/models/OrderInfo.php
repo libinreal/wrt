@@ -577,6 +577,7 @@ class OrderInfo extends \PhpRudder\Mvc\ModelBase
             'inv_company' => 'invCompany',
             'inv_company_addr' => 'invCompanyAddr',
             'inv_license' => 'invLicense',
+            'inv_context' => 'invContext',
             'bill_used_days' => 'billUsedDays',
 
         	'shipping_info'    => 'shippingInfo', 

@@ -50,7 +50,8 @@ class UserInv extends \Phalcon\Mvc\Model
             'inv_type' => 'invType',
             'inv_payee' => 'invPayee',
             'inv_address' => 'invAddress',
-        	'inv_remark' => 'inv_remark',
+            'inv_remark' => 'inv_remark',
+        	'inv_context' => 'inv_context',
            //增值税发票
             'inv_payee' =>'invPayee',
             'inv_company' => 'invCompany',

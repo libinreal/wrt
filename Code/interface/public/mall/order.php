@@ -140,6 +140,12 @@
         </div>
     </div>
     <div class="form-item">
+        <div class="form-label">内<em class="e2"></em>容：</div>
+        <div class="form-value">
+            <textarea class="textarea" name="inv_context" maxlength="200"><!--[= list.inv_context ]--></textarea>
+        </div>
+    </div>
+    <div class="form-item">
         <div class="form-label">备<em class="e2"></em>注：</div>
         <div class="form-value">
             <textarea class="textarea" name="inv_remark" maxlength="200"><!--[= list.inv_remark ]--></textarea>
@@ -190,6 +196,12 @@
         <div class="form-label"><span></span>传真号码：</div>
         <div class="form-value">
             <input type="text" name="invFax" maxlength="50" value="<!--[= list.invFax ]-->" >
+        </div>
+    </div>
+    <div class="form-item">
+        <div class="form-label">内<em class="e2"></em>容：</div>
+        <div class="form-value">
+            <textarea class="textarea" name="inv_context" maxlength="200"><!--[= list.inv_context ]--></textarea>
         </div>
     </div>
     <div class="form-item">
