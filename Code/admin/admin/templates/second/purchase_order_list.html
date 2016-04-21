@@ -106,9 +106,6 @@ $(document).ready(function(){
 });
 TypeMode.getPurchaseOrderStatus('order_status', 'init');
 function init(){
-	$("#order_status>option").each(function(index, elem){
-		PurchaseOrder.order_status[$(elem).val()] = $(elem).text();
-	});
 	PurchaseOrder.getList();
 }
 function first(){
