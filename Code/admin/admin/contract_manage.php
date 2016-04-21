@@ -310,6 +310,11 @@ class Contract extends ManageModel
         $res['attachment_url'] = '/' . DATA_DIR . '/contract/' . $res['attachment'];
         $res['is_review'] = $priv ? 1 : 0;
 
+        if( $res['review_time'] )
+            $res['review_time'] = date('Y-m-d H:i:s', $res['review_time']);
+        else
+            $res['review_time'] = '';
+
         //合同下的物料信息
         $this->table = 'contract_category';
         self::selectSql(array(

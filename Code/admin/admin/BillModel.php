@@ -196,7 +196,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$priv = admin_priv('bill_review', '', false);
 
 			$bill['is_review'] = $priv ? 1 : 0;
-
+			if( $bill['review_time'] )
+				$bill['review_time'] = date('Y-m-d H:i:s', $bill['review_time']);
+			else
+				$bill['review_time'] = '';
+			
 			make_json_response( $bill, '0' , '');
 		}
 

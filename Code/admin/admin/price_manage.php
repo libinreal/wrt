@@ -317,6 +317,10 @@ class Price extends ManageModel
                 }
             }
             $res[$k]['is_review'] = $is_review;
+            if( $res[$k]['review_time'] )
+                $res[$k]['review_time'] = date('Y-m-d H:i:s', $res[$k]['review_time']);
+            else
+                $res[$k]['review_time'] = '';
         }
         make_json_result($res);
     }
