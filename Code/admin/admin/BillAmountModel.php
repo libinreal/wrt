@@ -85,9 +85,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "error": 0,
 		 *	    "message": "",
 		 *	    "content":{ 
+		 *	    		  "bill_amount_log_id":1,//流水id
+		 *	    		  "create_time":2015-10-11//创建日期
+		 *	    		  "bill_create_time":2015-10-11//单据创建日期
+		 *	    		  "bill_create_user":2015-10-11//单据创建人
+		 *	    		  "bill_modify_user":2015-10-11//单据修改人
+		 *	    		  "bill_modify_time":2015-10-11//单据修改日期
+		 *	    		  
 		 *	    		  "amount_type": 0 ,//额度生成类型
+		 *	    		  
 		 *                  "amount_rate": 1 ,//票据折算比率
-		 *                  "amount": 100 ,//折后的额度
+		 *                  "amount": 100 ,//生成额度
 		 *                  "bill_amount": 100 ,//票面金额
 		 *                  "remark": "虚拟数据" ,
 		 *                  "user_name": "钟某",//来往单位
@@ -108,7 +116,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bill_amount_table = $GLOBALS['ecs']->table( 'bill_amount_log' );
 			$users_table = $GLOBALS['ecs']->table( 'users' );
 
-			$bill_join_sql = 'SELECT b.`bill_amount`, b.`bill_num`, u.`user_id`, u.`companyName` as user_name, a.`bill_id`, a.`remark`, a.`amount_rate`, a.`amount`, ' .
+			$bill_join_sql = 'SELECT b.`bill_amount`, b.`bill_num`, b.`create_time` AS `bill_create_time`, '.
+								 ' b.`create_user_name` AS `bill_create_user`, b.`modify_user_name` AS `bill_modify_user`,b.`modify_time` AS `bill_modify_time`,' .
+								 ' u.`user_id`, u.`companyName` as user_name, a.`bill_id`, a.`create_time`, a.`remark`, a.`amount_rate`, a.`amount`, ' .
 								 ' a.`amount_type`, a.`review_user`, a.`review_status`, a.`review_time` '.
 								 ' FROM ' . $bill_amount_table . ' AS a ' .
 								 ' LEFT JOIN ' . $bill_table . ' AS b ON a.`bill_id` = b.`bill_id` '.
@@ -124,6 +134,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$bill_amount_log['review_time'] = date('Y-m-d H:i:s', $bill_amount_log['review_time']);
 			else
 				$bill_amount_log['review_time'] = '';
+			$bill_amount_log['create_time'] = date('Y-m-d H:i:s', $bill_amount_log['create_time']);
+
+			$bill_amount_log['bill_create_time'] = date('Y-m-d H:i:s', $bill_amount_log['bill_create_time']);
+			$bill_amount_log['bill_modify_time'] = date('Y-m-d H:i:s', $bill_amount_log['bill_modify_time']);
 
 			$priv = admin_priv('bill_amount_review', '', false);
 			$bill_amount_log['is_review'] = $priv ? 1 : 0;
@@ -349,7 +363,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$data['remark'] = trim( $params['remark'] );
 			$data['user_id'] = intval( $params['user_id'] );
 			$data['bill_id'] = intval( $params['bill_id'] );
-			$data['create_time'] = time();
+			$data['create_time'] = gmtime();
 			$data['create_by'] = $create_by['user_name'];
 			
 			if( empty( $data['user_id'] ) )
@@ -409,7 +423,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				// 	make_json_response("", "0", "额度生成单添加成功");//暂不返回自增id
 				// }else{
 					
-					make_json_response("", "-1", "额度生成单添加成功");//暂不返回自增id
+					make_json_response("", "0", "额度生成单添加成功");//暂不返回自增id
 				// }
 			}
 			else
@@ -752,18 +766,25 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				if( $bill_log_data['review_status'] != 1 && $review_status == 1 ){
 					$users_table = $GLOBALS['ecs']->table('users');
-					$parent_id_sql ='SELECT `parent_id` FROM ' . $users_table . ' WHERE `user_id` = ' . $user_id;
-					$parent_id = $GLOBALS['db']->getOne( $parent_id_sql );
+					$child_id_sql ='SELECT `user_id` FROM ' . $users_table . ' WHERE `parent_id` = ' . $user_id;
+					$child_ids = $GLOBALS['db']->getAll( $child_id_sql );
 
-					if ( !$parent_id )
-						$parent_id = 0;
+					$bill_user_id_arr = array( $user_id );
+					if ( empty( $child_ids ) ){
+						$child_ids = array();
+					}else{
+						foreach ($child_ids as $v) {
+							$bill_user_id_arr[] = $v['user_id'];
+						}
+					}
+					$bill_user_id_str = implode(',', $bill_user_id_arr);
 
 					if( $bill_id != 0 )//额度生成类型(0:商票,1:现金,2:承兑)
 						$users_sql = 'UPDATE ' . $users_table . ' SET `bill_amount_history` = `bill_amount_history` + ' . $amount .
-								',`bill_amount_valid` = `bill_amount_valid` + ' . $amount . ' WHERE `user_id` = ' . $user_id . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
+								',`bill_amount_valid` = `bill_amount_valid` + ' . $amount . ' WHERE `user_id` IN (' . $bill_user_id_str . ')';
 					else
 						$users_sql = 'UPDATE ' . $users_table . ' SET `cash_amount_history` = `cash_amount_history` + ' . $amount .
-								',`cash_amount_valid` = `cash_amount_valid` + ' . $amount . ' WHERE `user_id` = ' . $user_id . ' OR `user_id` = ' . $parent_id . ' LIMIT 2';
+								',`cash_amount_valid` = `cash_amount_valid` + ' . $amount . ' WHERE `user_id` IN (' . $bill_user_id_str . ')';
 					
 					$updateUsers = $GLOBALS['db']->query( $users_sql );
 					

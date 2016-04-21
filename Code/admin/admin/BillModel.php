@@ -461,6 +461,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$data['receive_bank_id'] = intval( $params['receive_bank_id'] );
 			$data['receive_account'] = trim( $params['receive_account'] . '' );
 
+			$admin = admin_info();
+
+			$data['create_user_id'] = $admin['user_id'];
+			$data['create_user_name'] = $admin['user_name'];
+			$data['create_time'] = gmtime();
+
 			$dataKey = array_keys( $data );
 			$bill_table = $GLOBALS['ecs']->table('bill');
 			$sql = "INSERT INTO $bill_table (";
@@ -581,17 +587,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$data['receive_bank_id'] = intval( $params['receive_bank_id'] );
 			$data['receive_account'] = trim( $params['receive_account'] . '' );
 
-			foreach ($data as $p => &$pv) {
-				if( is_null( $pv ) )
-					$pv = 0;
-				elseif( is_string( $pv ) )
-					$pv = "'" . trim($pv) ."'";
-			}	
+			$admin = admin_info();
+
+			$data['modify_user_id'] = $admin['user_id'];
+			$data['modify_user_name'] = $admin['user_name'];
+			$data['modify_time'] = gmtime();
 
 			$sql = "UPDATE " . $GLOBALS['ecs']->table("bill") . " SET";
 
 			foreach ($data as $p => $pv) {
-				$sql = $sql . " `" . $p . "` = " . $pv . ",";
+				if( is_string( $pv ) )
+					$sql = $sql . " `" . $p . "` = '" . $pv . "',";
+				else
+					$sql = $sql . " `" . $p . "` = " . $pv . ",";
 			}
 			$sql = substr($sql, 0, -1) ." WHERE `bill_id` = " . $params['bill_id'];
 			
