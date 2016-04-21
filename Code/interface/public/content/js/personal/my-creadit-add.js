@@ -17,7 +17,6 @@ define(function(require)
 		renderFor : 'contract-list-tmpl', 
 		renderEle : '#contract_list'
 	});
-	alert('test')
 	//upload attachment
     $('#uploadFile').fileupload({
         url: config.applyAttachment,
