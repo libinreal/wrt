@@ -1288,6 +1288,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$sql = 'SELECT odr.`order_id`, odr.`child_order_status`, odr.`order_sn`, odr.`add_time`, ' .
 				   ' odr.`shipping_fee_send_saler`, odr.`shipping_fee_arr_saler`, odr.`best_time`, odr.`suppers_id`,' .
+				   ' odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`, ' .
 				   ' og.`goods_sn`, og.`goods_name`, og.`goods_number_arr_saler`, og.`goods_number_send_saler`, og.`goods_price_send_saler`,og.`goods_price_arr_saler`,' .
 				   ' og.`goods_id`, ' .
 				   ' odr.`consignee`, odr.`address`, odr.`mobile`, odr.`sign_building`, odr.`shipping_info`, odr.`shipping_log`, ' .
@@ -1321,10 +1322,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$order_info['shipping_fee'] = $order_info['shipping_fee_send_saler'];//发货
 					$order_info['goods_number'] = $order_info['goods_number_send_saler'];//发货
 					$order_info['goods_price'] = $order_info['goods_price_send_saler'];//发货
+					$order_info['order_amount'] = $order_info['order_amount_send_saler'];//到货
 				}else{
 					$order_info['shipping_fee'] = $order_info['shipping_fee_arr_saler'];//到货
 					$order_info['goods_number'] = $order_info['goods_number_arr_saler'];//到货
 					$order_info['goods_price'] = $order_info['goods_price_arr_saler'];//到货
+					$order_info['order_amount'] = $order_info['order_amount_arr_saler'];//到货
 				}
 				
 				//物流
