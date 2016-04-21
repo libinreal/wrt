@@ -182,6 +182,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 				case POS_HANDLE:
 					$order_info['order_status'] = $order_status_cfg[POS_HANDLE];
 					break;
+				case POS_CHECK:
+					$order_info['order_status'] = $order_status_cfg[POS_CHECK];
+					break;
+				case POS_BALANCE:
+					$order_info['order_status'] = $order_status_cfg[POS_BALANCE];
+					break;	
 				case POS_COMPLETE:
 					$order_info['order_status'] = $order_status_cfg[POS_COMPLETE];
 					break;
@@ -1994,7 +2000,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					if( $order_status['child_order_status'] == SOS_ARR_CC ){
 
 						$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `order_time` = %f WHERE `order_id` = ' . $order_id;
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC, POS_COMPLETE, gmtime() );
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC, POS_BALANCE, gmtime() );
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						if( $childer_order_update )
