@@ -258,8 +258,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 					$v['order_sn'] = $v['order_sn'] ? $v['order_sn'] . '-cg' : '';//订单编号
 					
-					if( $v['order_status'] > 2)
-						$v['order_status'] -= 1;
+					/*if( $v['order_status'] > 2)
+						$v['order_status'] -= 1;*/
 					$v['status'] = $v['order_status'];//状态
 					//规格、型号、材质
 					$goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $v['goods_id'];
@@ -1527,7 +1527,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				
 				case '发货验签':
 					if( $order_status['child_order_status'] == SOS_SEND_SC ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC2, SALE_ORDER_UNRECEIVE);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PC2, PURCHASE_ORDER_UNCOMPLETE);
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						if( $childer_order_update )
@@ -1540,7 +1540,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					
 					if( $order_status['child_order_status'] == SOS_SEND_SC ){//供应商已验签
 						$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d' . ' WHERE `order_id` = ' . $order_id;
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP, SALE_ORDER_UNRECEIVE);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_SEND_PP, PURCHASE_ORDER_UNCOMPLETE);
 
 					}else{
 
@@ -1558,7 +1558,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			
 				case '到货验签':
 					if( $order_status['child_order_status'] == SOS_ARR_SC ){
-						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC2, SALE_ORDER_COMPLETE);
+						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC2, POS_COMPLETE);
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
 						if( $childer_order_update )
