@@ -910,6 +910,7 @@ class GoodsController extends ControllerBase {
 		if (!$this->request->isPost()) {
 			return ResponseApi::send(null, Message::$_ERROR_CODING, "只支持POST请求");
 		}
+
 		//发票信息
 		$invId = $this->request->getPost('invId');
 		$invType = $this->request->getPost('invType');
