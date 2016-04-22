@@ -31,6 +31,11 @@
 			<labe>订单状态：</labe>
 			<select id="order_status" name="status">
 				<option value="">全部</option>
+				<option value="0">未确定</option>
+				<option value="1">已确认</option>
+				<option value="3">待完成</option>
+				<option value="4">已完成</option>
+				<option value="5">订单取消</option>
 			</select>
 			&nbsp;
 		</div>
@@ -104,10 +109,7 @@ $(document).ready(function(){
         elem: '#due_date2'
     });
 });
-TypeMode.getPurchaseOrderStatus('order_status', 'init');
-function init(){
-	PurchaseOrder.getList();
-}
+PurchaseOrder.getList();
 function first(){
 	PurchaseOrder.current_page = 1;
 	PurchaseOrder.limit = 0;

@@ -12,7 +12,7 @@ var PurchaseOrder = {
 		"operate"
 	],
 	order_status: {
-		"0":"未确认",
+		"0":"未确定",
 		"1":"<span style='color:#00f;'>已确认</span>",
 		"2":"<span style='color:#00f;'>待完成</span>",
 		"3":"<span style='color:#00f;'>待完成</span>",
