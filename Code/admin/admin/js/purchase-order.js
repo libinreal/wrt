@@ -116,7 +116,10 @@ var PurchaseOrder = {
 								if(that.order_arr[i] == "add_time"){
 									row += createTd(timestampToDate(value[that.order_arr[i]]));
 								}else if(that.order_arr[i] == "status"){
-									row += createTd(that.order_status[value.status] === undefined ? "未知状态" : that.order_status[value.status]);
+									row += createTd(that.order_status[value.status] === undefined ? createTd(createWarn('未知状态')) : that.order_status[value.status]);
+								}else if(that.order_arr[i] == "order_sn"){
+									edit = createLink("demo_template.php?section=purchase_order_manage&act=detail&id="+value.order_id, value[that.order_arr[i]]);
+									row += createTd(edit);
 								}else{
 									row += createTd(value[that.order_arr[i]]);
 								}

@@ -148,11 +148,12 @@ var SelfCredit = {
 					}
 					if($("input[name="+key+"]").length){
 						if(obj.content.status==2||obj.content.status==3){
-							$("input[name="+key+"]").attr("disabled","disabled")	
-						}
-						if(key == 'check_amount'){
-							$("input[name="+key+"]").val(obj.content.apply_amount);
-							return;
+							$("input[name="+key+"]").attr("disabled","disabled")
+						}else{
+							if(key == 'check_amount'){
+								$("input[name="+key+"]").val(obj.content.apply_amount);
+								return;
+							}
 						}
 						$("input[name="+key+"]").val(value);
 					}

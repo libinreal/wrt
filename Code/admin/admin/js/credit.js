@@ -65,10 +65,9 @@ var Credit = {
 			return false;
 		}
 		var params = {"credit_id": id, "params":{}};
-		strJson = createJson("creditInfo", this.entity, params);
-		that = this
+		var strJson = createJson("creditInfo", this.entity, params);
+		var that = this
 		$.post(this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error){
 				$('#message_area').html(createError(obj.message));
 				return false;
@@ -81,7 +80,6 @@ var Credit = {
 					}
 				});
 			}
-			
 		},"json");
 	},
 
