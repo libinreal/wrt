@@ -911,7 +911,7 @@ class GoodsController extends ControllerBase {
 			return ResponseApi::send(null, Message::$_ERROR_CODING, "只支持POST请求");
 		}
 
-		$bestTime = $this->request->getPost('vtime');
+		$bestTime = $this->request->getPost('stime');
 		//发票信息
 		$invId = $this->request->getPost('invId');
 		$invType = $this->request->getPost('invType');
