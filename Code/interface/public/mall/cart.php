@@ -34,7 +34,7 @@
 				</div>
 					<div class="settlement-total"><span class="settlement-label">总价金额：</span><span class="totalprice"></span> 信用B</div>			
 					<div class="cart-btm">
-						<a href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10048426" target="_blank" class="call-service">物融客服</a>
+						<!--<a href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10048426" target="_blank" class="call-service">物融客服</a>-->
 						<button class="payfor">去结算</button>
 					</div>
 			</div>

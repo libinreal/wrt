@@ -3,13 +3,13 @@
 <head>
     <title>供应商管理中心</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link href="../admin/styles/general.css" rel="stylesheet" type="text/css">
-    <link href="../styles/main.css" rel="stylesheet" type="text/css">
     <script type="text/javascript" src="../admin/images/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="../admin/images/jquery.validate.min.js"></script>
     <style type="text/css">
         body {
-            margin: 0px;padding: 0px;
+            background: #E7E7E7;
+            padding: 0;
+            margin: 0 auto;
+            width: 100%;
         }
         *{
             margin:0;
@@ -60,7 +60,7 @@
         .login_logo{width: 250px;height: 50px;background: url("/admin/images/login_logo.gif") no-repeat;margin: 25px auto;}
         .login_txt {height: 20px;line-height: 20px;font-size: 16px;font-weight: 600;text-align: center;}
         .input_text{width: 351px;height: 95px;overflow: hidden;margin-bottom: 18px;}
-        .input_text input{display: block;width: 349px;height: 38px;border: 1px solid #ccc;border-radius:5px;margin-bottom: 15px;padding-left: 45px;}
+        .input_text input{display: block;width: 300px;height: 38px;border: 1px solid #ccc;border-radius:5px;margin-bottom: 15px;padding-left: 45px;}
         .remember_pwd{display: block;width: 351px;height: 16px;line-height: 16px;margin-bottom: 22px;}
         .remember_pwd span{font-size: 14px;}
         .goLogin{width: 351px;height: 45px;background: url("../admin/images/subBtn.png") no-repeat;cursor: pointer;}

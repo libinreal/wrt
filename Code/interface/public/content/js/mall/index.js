@@ -161,6 +161,14 @@ define(function(require) {
             return;
         }
     });
+    $('#zj-userinfo').on('click', '.icon-logout', function(e) {
+        e.preventDefault();
+        Ajax.custom({
+            url: config.logout
+        }, function(response) {
+            location.href = config.index;
+        })
+    });
 
     //首次登陆弹出城市选择框
     if (!area) {

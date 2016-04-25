@@ -73,7 +73,7 @@ define(function(require) {
         }else{
             tempAddress = result.body;
             $('.address-list').show();
-            setAddressId();
+//            setAddressId();
         }
     });
 

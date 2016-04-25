@@ -39,7 +39,7 @@
 			<a class="filter-orderby-item" data-key="level" href="#" style="display: none;"><span>信誉等级</span></a>
 			<a class="filter-orderby-item" data-key="storeNum" href="#"><span>可供数量</span></a>
 		</div>
-		<a class="btn-kefu" href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10046053" target="_blank">物融客服</a>
+		<!--<a class="btn-kefu" href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10046053" target="_blank">物融客服</a>-->
 	</div>
 </div>
 <div class="section">

@@ -118,7 +118,7 @@
 				<span class="look-label">计重方式：</span><span class="look-value"><!--[= list[i].unit]--></span>
 			</p>
 			<p>
-				<span class="look-label">购买数量：</span><span class="look-value amount"><!--[= list[i].nums]-->件</span>
+				<span class="look-label">购买数量：</span><span class="look-value amount"><!--[= list[i].nums]--><!--[= list[i].unit]--></span>
 				<span class="look-label lastmarg">交易单价：</span><span class="look-value"><span class="c-red"><!--[== $formatCurrency(list[i].price)]--></span> 信用B</span>
 			</p>
 		</div>

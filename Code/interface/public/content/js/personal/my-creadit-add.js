@@ -39,6 +39,7 @@ define(function(require)
         		$(this).val('');
         		$('#apply_img').val('');
         	} else {
+                alert('图片上传成功');
         		$('#apply_img').val(data.result.body[0]);
         	}
             

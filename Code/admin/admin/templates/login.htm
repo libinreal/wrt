@@ -3,13 +3,13 @@
 <head>
     <title>中交物融平台 管理中心</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link href="styles/general.css" rel="stylesheet" type="text/css">
-    <link href="styles/main.css" rel="stylesheet" type="text/css">
-    <script type="text/javascript" src="/admin/images/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="/admin/images/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="../admin/js/jquery-1.8.3.min.js"></script>
     <style type="text/css">
         body {
-            margin: 0px;padding: 0px;
+            background: #E7E7E7;
+            padding: 0;
+            margin: 0 auto;
+            width: 100%;
         }
         *{
             margin:0;
@@ -68,7 +68,7 @@
     </style>
 
 </head>
-<body style="background:url('/admin/images/admin-bg.png') no-repeat";>
+<body>
 <div class="loginBox">
     <div class="login_area">
         <form id="login" action="privilege.php" method="post" name="myform" onsubmit="return fnGetLogin();">
@@ -84,6 +84,7 @@
         </form>
     </div>
 </div>
+<div class="bg"><img src="../admin/images/admin-bg.png"></div>
 <div class="Copyright"><img src="/admin/images/bottom-copy.png"></div>
 <script type="text/javascript">
 

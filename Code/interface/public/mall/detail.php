@@ -179,7 +179,7 @@
 			<a href="#" class="shop-car" id="add-cart">加入购物车</a>
 			<!--<a href="../customize/apply.html?goodsId=<!--[= id]-->" target="_blank" class="applying">申请定制</a>-->
 			<a href="#" class="collect <!--[= (hasFavorites == 1) ? 'active' : '']-->">收藏</a>
-			<a href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10048426" target="_blank" class="call-service">物融客服</a>
+			<!--<a href="http://lc.talk99.cn/chat/chat/p.do?c=10033976&f=10043368&g=10048426" target="_blank" class="call-service">物融客服</a>-->
 		</div>
 	</div>
 </script>

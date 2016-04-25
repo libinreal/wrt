@@ -360,14 +360,7 @@ define(function(require) {
         Ajax.custom({
             url: config.logout
         }, function(response) {
-            if (response.code != 0) {
-                loginbar.show();
-                userbar.hide();
-                return;
-            }
-
-            loginbar.show();
-            userbar.hide();
+            location.href = config.index;
         })
     });
 
