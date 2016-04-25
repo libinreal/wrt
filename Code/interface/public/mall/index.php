@@ -548,9 +548,9 @@
 				</div>
 			</div>
 		</div>
-		<div style="left-menu">
-			<a>首页</a>
-			<a>建材商城</a>
+		<div class="left-menu">
+			<a href="#">首页</a>
+			<a href="#">建材商城</a>
 		</div>
 		<div style="width:300px;height:300px;position:absolute;right:0;top:50px;z-index:2;">
 			<div id="zj-userinfo" class="userinfo"></div>

@@ -758,9 +758,25 @@ background: #fff;
     float: right;
 }
 /* 左侧导航end */
-/**/
+/*left-menu*/
+.left-menu{
+    position: absolute;
+    z-index: 3;
+    width: 196px;
+    top: 0;
+    left: 210px;
+}
+.left-menu a{
+    display: inline-block;
+    height:38px;
+    line-height: 38px;
+    margin-left: 20px;
+}
+.left-menu a:hover{
+    text-decoration: none;
+    border-bottom: 3px solid #075aa6;
+}
 /* 右侧内容start */
-
 .mall-content .right-content {
     width: 1064px;
     margin:0 auto;

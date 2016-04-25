@@ -82,7 +82,7 @@ h1 .action-span1 {
     border: 1px solid #d0d0d0;
     padding: 10px 15px;
     color: #9CACAF;
-    margin: 10px 0;
+    margin:0;
     text-align: center;
     clear: both;
 }
@@ -118,7 +118,7 @@ h1 .action-span1 {
     width:175px;
     background:#616e80;
     margin:0;
-    padding: 10px 0 10px 0;
+    padding: 16px 0;
     float:left;
     height: 620px;
     position: relative;
@@ -130,7 +130,7 @@ h1 .action-span1 {
     padding:0;
 }
 .menutwo{
-    height:35px;
+    height:38px;
     width:160px;
     padding:0 15px;
 }
