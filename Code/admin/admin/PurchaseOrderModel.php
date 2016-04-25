@@ -1561,7 +1561,39 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_ARR_PC2, POS_COMPLETE);
 						$childer_order_update = $GLOBALS['db']->query( $childer_order_update_sql );
 
-						if( $childer_order_update )
+						$all_child_stat_sql = 'SELECT `child_order_status` FROM ' . $order_info_table . ' WHERE `parent_order_id` = ' .
+										      $order_status['parent_order_id'];
+						$all_child_stats = $GLOBALS['db']->getAll( $all_child_stat_sql );
+
+						$c = true;
+						foreach ($all_child_stats as $stat) {
+							if( $stat['child_order_status'] < SOS_ARR_PC2 ){
+								$c = false;
+								break;
+							}
+
+						}
+
+
+						$order_num_sql = 'SELECT `goods_number`, `send_number` FROM ' . $order_goods_table . ' WHERE `order_id` = ' .
+									 $order_status['parent_order_id'];
+						$order_num = $GLOBALS['db']->getAll( $order_num_sql );
+						foreach ($order_num as $num) {
+							if( $num['goods_number'] > $num['send_number'] ){
+								$c = false;
+								break;
+							}
+						}
+
+
+						$update_parent_stat = true;
+						if( $c ){
+							$update_parent_stat_sql = 'UPDATE ' . $order_info_table . ' SET `order_status` = ' . POS_COMPLETE .
+													 ' WHERE `order_id` = ' . $order_status['parent_order_id'] . ' LIMIT 1';
+							$update_parent_stat = $GLOBALS['db']->query( $update_parent_stat_sql );
+						}
+						
+						if( $childer_order_update && $update_parent_stat )
 							make_json_response('', '0', '到货验签 成功');
 						else
 							make_json_response('', '-1', '到货验签 失败');

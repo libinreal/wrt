@@ -614,7 +614,6 @@ class OrderInfo extends \PhpRudder\Mvc\ModelBase
     			'zipcode',
     			'tel',
     			'email',
-    			'best_time',
     			'postscript',
     			'shipping_id',
     			'shipping_name',
