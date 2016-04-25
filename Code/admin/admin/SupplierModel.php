@@ -852,7 +852,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_goods['order_id'] = $order_info['order_id'];
 				$order_goods['order_sn'] = $order_info['order_sn'];
 				$order_goods['goods_sn'] = $order_info['goods_sn'];
-				$order_goods['goods_name'] = $order_info['goods_name'];
+				$order_goods['goods_name'] = urlencode( $order_info['goods_name'] );
 				// $order_goods['add_time'] = date('Y-m-d H:i:s', $order_info['add_time']);
 				//物流费
 				if( $order_goods['child_order_status'] <= SOS_SEND_PC2){
@@ -877,7 +877,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					foreach ($goods_attr as $value) {
 						$attr_arr[] = $value['attr_value'];
 					}
-					$order_goods['attr'] = implode('/', $attr_arr);
+					$order_goods['attr'] = urlencode( implode('/', $attr_arr) );
 				}
 
 				$order_sn_str .= $order_info['order_sn'] . '-cg,';
@@ -1173,7 +1173,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$content = array();
 
 				$orders = json_decode( $order_pay['goods_json'] ,true );
-				
+				foreach ($orders as &$v) {
+					$v['goods_name'] = urldecode( $v['goods_name'] );
+					$v['attr'] = urldecode( $v['attr'] );
+				}
+
+
 				if( empty( $orders ) ){
 					$orders = array();
 				}

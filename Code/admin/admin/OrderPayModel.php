@@ -222,49 +222,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$sql_order_pay = 'SELECT * FROM ' . $order_pay_table . ' WHERE order_pay_id = '.$params['order_pay_id'];
 				$order_pay_info = $GLOBALS['db']->getRow($sql_order_pay);
-				
-				$sql_order_goods = 'SELECT  og.goods_id,og.goods_name,og.goods_sn,og.goods_number_send_saler,og.goods_price_send_saler,og.goods_number_arr_saler,'.
-						'og.goods_price_arr_saler,oi.order_sn,oi.shipping_fee_arr_saler,oi.shipping_fee_send_saler,oi.order_amount_arr_saler,'.
-						'oi.order_amount_send_saler,oi.`child_order_status` FROM '.
-						'order_goods og,order_info oi WHERE og.order_id = oi.order_id AND  og.order_id in ('.$order_pay_info['order_id_str'].')';
-				$order_goods = $GLOBALS['db']->getAll($sql_order_goods);
+				$order_goods = array_values( json_decode( $order_pay_info['goods_json'], true ) );
 				//获取商品属性
-				foreach ($order_goods as $key => $value){
-					$attributes = getAttributesByCatId(getCatIdByGoodsId($value['goods_id']));
-					$str = '';
-					foreach ($attributes as $v){
-						$str .= $v['attr_name'].':'.$v['attr_values'];
-					}
-					$order_goods[$key]['attributes'] = $str;
-					$order_goods[$key]['order_sn'] = $value['order_sn'].'-CG';
-					
-					//物流费
-					if( $value['child_order_status'] <= SOS_SEND_PC2){
-						$order_goods[$key]['shipping_fee'] = $value['shipping_fee_send_saler'];//发货
-						$order_goods[$key]['goods_price'] = $value['goods_price_send_saler'];//发货
-						$order_goods[$key]['goods_number'] = $value['goods_number_send_saler'];//发货
-						$order_goods[$key]['order_amount'] = $value['order_amount_send_saler'];//发货
-					}else{
-						$order_goods[$key]['shipping_fee'] = $value['shipping_fee_arr_saler'];//到货
-						$order_goods[$key]['goods_number'] = $value['goods_number_arr_saler'];//到货
-						$order_goods[$key]['goods_price'] = $value['goods_price_arr_saler'];//到货
-						$order_goods[$key]['order_amount'] = $value['order_amount_arr_saler'];//到货
-					}
-					unset($order_goods[$key]['shipping_fee_send_saler']);
-					unset($order_goods[$key]['goods_price_send_saler']);
-					unset($order_goods[$key]['goods_number_send_saler']);
-					unset($order_goods[$key]['order_amount_send_saler']);
-
-					unset($order_goods[$key]['shipping_fee_arr_saler']);
-					unset($order_goods[$key]['goods_number_arr_saler']);
-					unset($order_goods[$key]['goods_price_arr_saler']);
-					unset($order_goods[$key]['order_amount_arr_saler']);
-					
-					
-					
-
-
+				foreach ($order_goods as &$value){
+					$value['goods_name'] = urldecode( $value['goods_name'] );
+					$value['attributes'] = urldecode( $value['attr'] );
+					$value['order_amount'] = $value['total'];
+					$value['order_sn'] .= '-cg';
+					unset( $value['attr'] );
 				}
+				unset( $value );
+
 				$content = array();
 
 
