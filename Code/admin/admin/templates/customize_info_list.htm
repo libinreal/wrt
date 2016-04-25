@@ -20,6 +20,7 @@
                 <th><a href="javascript:listTable.sort('createAt'); ">{$lang.createAt}</a>{$sort_createAt}</th>
                 <th>{$lang.handler}</th>
             </tr>
+            {if $applyinfo_list|@count neq 0 }
             {foreach from=$applyinfo_list item=list}
             <tr>
                 <td align="center"><span>{$list.id}</span></td>
@@ -42,9 +43,10 @@
                     <a href="customize_info.php?act=applyinfo&applyId={$list.id}" style="padding-left: 10px;">查看详情</a>
                 </td>
             </tr>
-            {foreachelse}
-            <tr><td class="no-records" colspan="10">{$lang.no_customize_info}</td></tr>
             {/foreach}
+            {else}
+            <tr><td class="no-records" colspan="10">{$lang.no_customize_info}</td></tr>
+            {/if}
             <tr>
                 <td align="right" nowrap="true" colspan="10">{include file="page.htm"}</td>
             </tr>

@@ -249,6 +249,11 @@ elseif ($_REQUEST['act'] == 'update')
     $db->query($sql);
     $user_sql = "UPDATE " .$ecs->table('admin_user'). " SET action_list = '$act_list' ".
            "WHERE role_id = '$_POST[id]'";
+
+    $cur_user = admin_info();           
+    if( $cur_user['role_id'] = $_POST['id'] )
+        $_SESSION['action_list'] = $act_list;
+
     $db->query($user_sql);
     /* 提示信息 */
     $link[] = array('text' => $_LANG['back_admin_list'], 'href'=>'role.php?act=list');

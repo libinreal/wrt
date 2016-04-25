@@ -23,7 +23,7 @@ class cls_session
     var $db             = NULL;
     var $session_table  = '';
 
-    var $max_life_time  = 1800; // SESSION 杩囨湡鏃堕棿
+    var $max_life_time  = 86400; // SESSION 杩囨湡鏃堕棿
 
     var $session_name   = '';
     var $session_id     = '';
@@ -31,7 +31,7 @@ class cls_session
     var $session_expiry = '';
     var $session_md5    = '';
 
-    var $session_cookie_path   = '/';
+    var $session_cookie_path   = '/tmp/zj_session';
     var $session_cookie_domain = '';
     var $session_cookie_secure = false;
 
