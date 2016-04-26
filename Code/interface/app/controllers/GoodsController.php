@@ -634,7 +634,7 @@ class GoodsController extends ControllerBase {
 		$goodsDetail['vipPrice'] = $this->showShopPrice($goodsDetail);
 
 		$shipping_data = ShippingPrice::findFirst(
-							array( 'columns' => 'shippingFee',
+							array( 'columns' => 'shippingFee,desc',
 									'bind' => array(
 											$goodsDetail['catId'],
 											$goodsDetail['suppliersId']
@@ -653,8 +653,10 @@ class GoodsController extends ControllerBase {
 			}else{
 				$goodsDetail['shipping_fee'] = $shipping_fee;
 			}
+			$goodsDetail['shipping_fee_desc'] = $shipping_data->desc;
 		}else{
 			$goodsDetail['shipping_fee'] = '0元/公里';
+			$goodsDetail['shipping_fee_desc'] = '';
 		}
 
 		return ResponseApi::send(compact('goodsDetail', 'nav'));
