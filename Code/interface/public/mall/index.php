@@ -552,7 +552,7 @@
 			<a href="#">首页</a>
 			<a href="#">建材商城</a>
 		</div>
-		<div style="width:300px;height:300px;position:absolute;right:0;top:50px;z-index:2;">
+		<div style="width:300px;height:300px;position:absolute;right:0;top:50px;z-index:1;">
 			<div id="zj-userinfo" class="userinfo"></div>
 
 			<div class="jj_notice">
@@ -622,23 +622,21 @@
 	<div class="avator">
 	<a class="authority" href="../personal/my-info.html"><img src="<!--[= account.icon || '../content/images/mall/person_logo.png']-->" /></a>
 	</div>
-	<div class="userinfo-item clearfix">
-		<div class="userinfo-yhm">
-		<span class="label label-user">欢迎回来，</span>
-		<span class="value"><!--[= account.account]--></span>
-		</div>
-		<div class="userinfo-link">
-			<a class="auth link" href="../personal/">个人中心</a>
-			<a class="auth link" href="../personal/my-order.html">我的订单</a>
-			<a class="link icon icon-logout" href="#">退出</a>
-		</div>
+	<div class="userinfo-yhm">
+	<span class="label label-user">Hi，</span>
+	<span class="value"><!--[= account.account]--></span>
+	</div>
+	<div class="userinfo-link">
+		<a class="auth link" href="../personal/">个人中心</a>
+		<a class="auth link" href="../personal/my-order.html">我的订单</a>
+		<a class="link icon icon-logout" href="#">退出</a>
 	</div>
 </script>
 <script id="zj-nouser-tmpl" type="text/html">
-	<div class="avator">
-		<a class="authority" href="../personal/my-info.html"><img src="../content/images/mall/person_logo.png" /></a>
-	</div>
 	<div class="userinfo-tip">
+		<div class="avator">
+			<a class="authority" href="../personal/my-info.html"><img src="../content/images/mall/person_logo.png" /></a>
+		</div>
 		<div class="userinfo-tip-text">您好，欢迎来到物融通！</div>
 		<div class="userinfo-link">
 		<a class="auth link" href="../personal/">请登录</a>

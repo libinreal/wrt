@@ -316,6 +316,7 @@
     background-color: rgba(1,92,173,0.6);
     overflow: hidden;
     height: 250px;
+    z-index: 0;
 }
 .userinfo a:link, .userinfo a:visited, .userinfo a:active {
     color: #fff;
@@ -326,8 +327,6 @@
 .userinfo .avator {
     width: 56px;
     height: 56px;
-    margin: 40px auto 10px auto;
-    position:relative;
 }
 .userinfo .avator img {
     display: block;
@@ -338,6 +337,10 @@
 .userinfo .userinfo-tip {
     text-align: center;
     position:relative;
+    margin-top: 40px;
+}
+.userinfo .userinfo-tip .avator{
+    margin: 0 auto;
 }
 .userinfo .userinfo-tip-text{
     color: #fff;
