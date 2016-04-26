@@ -1463,15 +1463,23 @@ table.t_1{
 }
 .error{
     color:red;
-    line-height: 20px;
+    line-height: 100px;
+    font-size: 16px;
+    font-weight: bold;
+}
+#loading{
+    font-size: 16px;
+    line-height: 100px;
+    font-weight: bold;    
 }
 .warn{
     color:#f57900;
-    line-height: 20px;
+    font-size: 16px;
+    line-height: 100px;
+    font-weight: bold;
 }
 .tips{
     color: blue;
-    line-height: 20px;
     font-size: 16px;
     line-height: 100px;
     font-weight: bold;
