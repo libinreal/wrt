@@ -31,7 +31,7 @@
 </div>
 
 <div class="section">
-	<div style="width: 1260px;height:40px;position:relative;margin:0 auto;">
+	<div style="width:1000px;height:40px;position:relative;margin:0 auto;">
 		<div class="left-bar">
 			<div class="fli">商品分类</div>
 			<ul class="menu" id="zj-categorys">

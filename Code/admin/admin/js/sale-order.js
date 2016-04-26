@@ -127,13 +127,8 @@ var SaleOrder = {
 								continue;
 							}
 							if(value[that.order_arr[i]] != null || value[that.order_arr[i]] != ''){
-								if(that.order_arr[i] == "add_time" || that.order_arr[i] == "best_time"){
-									if(value[that.order_arr[i]] != ""){
-										row += createTd(timestampToDate(value[that.order_arr[i]]));
-									}else{
-										row += createTd(createWarn('无数据'));
-									}
-									
+								if(that.order_arr[i] == "add_time"){
+									row += createTd(timestampToDate(value[that.order_arr[i]]));
 								}else if(that.order_arr[i] == "order_status"){
 									row += createTd(that.order_status[value.order_status] === undefined ? "未知状态" : that.order_status[value.order_status]);
 								}else{
