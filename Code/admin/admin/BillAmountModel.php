@@ -595,7 +595,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				$result['info'] = $bill; 		
 			} elseif ( $type == 1) {//现金
-				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `companyName` IS NOT NULL AND ( `parent_id` <> 0 AND `parent_id` IS NOT NULL)';
+				$sql = 'SELECT `user_id`, `companyName` AS `user_name` FROM ' . $GLOBALS['ecs']->table('users') . ' WHERE `parent_id` = 0 OR `parent_id` IS NULL';
 				$users = $GLOBALS['db']->getAll( $sql );
 				$init['customer'] = $users;
 

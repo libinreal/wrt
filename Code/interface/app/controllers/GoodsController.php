@@ -912,7 +912,7 @@ class GoodsController extends ControllerBase {
 		if (!$this->request->isPost()) {
 			return ResponseApi::send(null, Message::$_ERROR_CODING, "只支持POST请求");
 		}
-
+		// var_dump( $this->request->getPost() );exit;
 		$bestTime = $this->request->getPost('stime');
 		//发票信息
 		$invId = $this->request->getPost('invId');
@@ -1043,16 +1043,20 @@ class GoodsController extends ControllerBase {
 		$orderInfo->tag = $address->tag;
 		$orderInfo->vtime = $bestTime ? $bestTime : '';
 		//保存发票信息
-        $userInv = UserInv::findFirst('userId = ' . $userId);
+        $userInv = UserInv::findFirst(
+        	 array( 
+				'userId = ?1 AND invType = ?2',
+				'bind' => array(
+						1 => $userId,
+						2 => $invType
+						)
+				
+			)
+        );
         if(!is_object($userInv) || !$userInv) {
             $userInv = new UserInv();
             $userInv->userId = $userId;
         }
-        if($userInv->userId == $userId && $userInv->invType != $invType)
-        {
-        $userInv->invId = $invId;
-        }
-		$userInv->setTransaction($transaction);
 		$userInv->invType = $invType;
 		$userInv->invPayee = $invPayee;
 		$userInv->invAddress = $invAddress;
@@ -1066,7 +1070,8 @@ class GoodsController extends ControllerBase {
         $userInv->invFax = $invFax;
 
 		$userInv->inv_remark = $invContent;
-		$userInv->inv_context = $invContext;
+		$userInv->inv_context = $invContext;//发票内容
+
 		try {
 			if(!$userInv->save()) {
 				foreach($userInv->getMessages() as $message) {
@@ -1074,7 +1079,6 @@ class GoodsController extends ControllerBase {
 				}
 			}
 		} catch (\Exception $ex) {
-			$manager->rollback($transaction);
 			return ResponseApi::send(null, Message::$_ERROR_SYSTEM, $ex->getMessage());
 		}
 		//订单中的发票信息
@@ -1082,7 +1086,7 @@ class GoodsController extends ControllerBase {
 		$orderInfo->invPayee = $invPayee;
 		$orderInfo->invAddress = $invAddress;
 		$orderInfo->invContent = $invContent;
-		$orderInfo->invContext = $invContext;
+		$orderInfo->invContext = $invContext;//发票内容
 
         //增值发票添加字段
         $orderInfo->invCompany = $invCompany;
