@@ -1734,6 +1734,17 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$shipping_fee = trim( strval( $params['shipping_fee'] ) );
 			$desc = trim( strval( $params['desc'] ) );
 
+			/**检查是否最低层分类**/
+			$category_table = $GLOBALS['ecs']->table('category');
+			$cat_sql = 'SELECT `parent_id` FROM ' . $category_table . ' WHERE `cat_id` = ' . $cat_id;
+			$cat_parent_id = $GLOBALS['db']->getOne( $cat_sql );
+
+			if( !$cat_parent_id ){
+				make_json_response('', '-1', '请选择物料的最底层分类');
+			}
+
+
+
 			$shipping_sql = 'INSERT INTO ' . $shipping_table . ' (';
 
 			$shipping['goods_category_id'] = $cat_id;
