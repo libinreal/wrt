@@ -781,7 +781,7 @@ background: #fff;
 }
 /* 右侧内容start */
 .mall-content .right-content {
-    width: 1064px;
+    width: 1000px;
     margin:0 auto;
 }
 .right-content .img-list {
@@ -876,7 +876,6 @@ background: #fff;
     color: #00aeef;
 }
 .sort-list .detail-list {
-    width: 868px;
     float: left;
 }
 .sort-list .recommend {
@@ -923,7 +922,7 @@ background: #fff;
     width: 186px;
     height: 295px;
     margin-right: 1px;
-    padding: 20px 15px 15px 15px;
+    padding: 20px 8px 15px 8px;
     background-color: #ffffff;
 }
 .sort-list .thumb {
