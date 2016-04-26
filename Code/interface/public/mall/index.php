@@ -550,7 +550,7 @@
 		</div>
 		<div class="left-menu">
 			<a href="#">首页</a>
-			<a href="#">建材商城</a>
+			<a href="/">基建商城</a>
 		</div>
 		<div style="width:300px;height:300px;position:absolute;right:0;top:50px;z-index:1;">
 			<div id="zj-userinfo" class="userinfo"></div>

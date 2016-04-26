@@ -1451,12 +1451,15 @@ table.t_1{
     text-align: center;
     position: fixed;
     top: 30%;
-    left: 50%;
+    left: 45%;
     z-index: 100;
     background: #fff;
     padding: 5px;
-    border: 2px solid #ccc;
+    border: 1px solid #ccc;
+    border-radius: 15px;
     display: none;
+    width: 200px;
+    height: 100px;
 }
 .error{
     color:red;
@@ -1469,6 +1472,9 @@ table.t_1{
 .tips{
     color: blue;
     line-height: 20px;
+    font-size: 16px;
+    line-height: 100px;
+    font-weight: bold;
 }
 
 /** 物流列表样式 **/

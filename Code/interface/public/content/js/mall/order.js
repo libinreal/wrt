@@ -110,7 +110,6 @@ define(function(require) {
                 Tools.showAlert('您的购物车没有数据，请重新添加');
                 return;
             }
-
             Ajax.submit({
                 url: config.addorder,
                 data: $('#order-form'),

@@ -486,6 +486,8 @@ var SaleOrder = {
 							button += '<input type="button" class="button" onclick="redirectToUrl(\'demo_template.php?section=sale_order&act=change_receive_price&order_id='+order_id+'\')" value="'+v+'" >';
 						}else if(v == "发货验签" || v == "到货验签"){
 							button += '<input type="button" class="button" onclick="SaleOrder.getSign(this, 1)" value="'+v+'" >';
+						}else if(v == "确认"){
+							button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this);" value="'+v+'" >';
 						}else{
 							button += '<input type="button" class="button" onclick="SaleOrder.updateChilderStatus(this)" value="'+v+'" >';
 						}
@@ -961,6 +963,9 @@ var SaleOrder = {
 			}else{
 				$('#message_area').html(createTip(obj.message));
 				_this.updateButtonStatus();
+				if(handle="确认"){
+					history.back();
+				}
 			}
 		}, "json");
 	},

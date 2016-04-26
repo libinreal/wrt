@@ -128,9 +128,15 @@ var SelfCredit = {
 
 	getDetail: function(){
 		var id = getQueryStringByName('id');
+		var flag = getQueryStringByName('id');
 		if(id===""||!validateNumber(id)){
 			return false;
 		}
+		/*if(flag == 1){
+			var params = {"apply_id":id, "flag":1};
+		}else{
+			var params = {"apply_id":id};
+		}*/
 		var params = {"apply_id":id};
 		var strJson = createJson("applyCreditSingle", this.entity, params);
 		var that = this
@@ -170,8 +176,9 @@ var SelfCredit = {
 						$("div#img").text(obj.content.img);
 					}
 				});
+				var handle_button = '<input type="button" onclick="SelfCredit.setStatus(1);" value="通过" class="button"><input type="button" onclick="SelfCredit.setStatus(3);" class="button" value=" 不通过 ">';
 				if(obj.content.status==2||obj.content.status==3){
-					$("#handle_button span").html('')
+					$("#handle_button span").html(handle_button);
 				}
 			}
 			

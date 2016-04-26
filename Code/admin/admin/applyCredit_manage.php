@@ -219,10 +219,10 @@ class ApplyCredit extends ManageModel
 		}
 		
 		//是否查看已删除的数据
-		$flag = $parameters['flag'];
+		/*$flag = $parameters['flag'];
 		if (!$flag) {
 			$where = ' AND status!=4';
-		}
+		}*/
 		
 		//授信详情
 		self::selectSql(array(

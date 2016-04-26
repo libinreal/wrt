@@ -197,7 +197,6 @@
             } else {
                 formData = data.data;
             }
-
             $.ajax({
                 url: data.url,
                 data: formData,

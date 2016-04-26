@@ -84,7 +84,9 @@
 		<div class="contract-list-col credit-list-col c6"><!--[= list[i].check_remark || '--']--></div>
 		<div class="contract-list-col credit-list-col c7"><!--[= list[i].status || '--']--></div>
 		<div class="contract-list-col credit-list-col c8">
+		<!--[if(list[i].status!="审批通过"){]-->
 		<a href="my-credit-edit.html?apply_id=<!--[= list[i].apply_id]-->" style="display:inline;">编辑</a>&nbsp;&nbsp;
+		<!--[}]-->
 		<a href="my-credit-detail.html?apply_id=<!--[= list[i].apply_id]-->" style="display:inline;">详情</a>
 		</div>
     <!--[}]-->

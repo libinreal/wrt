@@ -24,6 +24,7 @@ var Supplier = {
 		"goods_price",
 		"goods_number",
 		"shipping_fee",
+		"order_amount",
 		"purchase_pay_status"
 	],
 	render_arr: [
@@ -278,13 +279,6 @@ var Supplier = {
 			}else{
 				$("#paginate").html(createPaginate(that.url, obj.content.total, that.current_page, that.limit, that.offset));
 				// 物料类别
-				var row = '';
-				$.each(obj.content.cat, function(k, v){
-					row += appendOption(v.cat_id, v.cat_name);
-				});
-				$("#cat").html(row);
-				$("#cat_id_edit").html(row);
-					
 				var row = "";
 				$.each(obj.content.data,function(key, value){
 					row += "<tr id='list_"+value.shipping_fee_id+"'>";
@@ -386,24 +380,18 @@ var Supplier = {
 			$('#message_area').html(createError("物料类别已存在"));
 			return false;
 		}
-		var row = "<tr>";
-		row += "<td>"+$("#cat>option:selected").text()+"</td>";
-		row += "<td>"+$("input[name=shipping_fee]").val()+"</td>";
-		row += "<td>"+$("input[name=desc]").val()+"</td>";
-		row += "<td></td>";
-		$("#main_list>tbody").prepend(row);
 		
 		var formData = $("#main_form").FormtoJson();
 		var params = {"params":formData};
 		strJson = createJson("addCategoryShippingFee", this.entity, params);
 		var that = this;
 		$.post(this.url, strJson, function(obj){
-			console.log(obj)
 			if(obj.error == -1){
 				$('#message_area').html(createError(obj.message));
 				return false;
 			}else{
 				$('#message_area').html(createTip(obj.message));
+				that.setShippingFeeInit();
 				return false;
 			}
 		}, "json");
@@ -511,7 +499,7 @@ var Supplier = {
 							if(that.order_arr[i] == "order_sn"){
 								var edit = "";
 								edit += "<input type='checkbox' name='order_id[]' value='"+value.order_id+"' />";
-								edit += value[that.order_arr[i]];
+								edit += createLink('demo_template.php?section=supplier&act=order_detail&id='+value.order_id,value[that.order_arr[i]]);
 								row += createTd(edit);
 								continue;
 							}
@@ -561,6 +549,12 @@ var Supplier = {
 							row += createTd(edit);
 							continue;
 						}
+						if(that.render_arr[i] == "order_sn"){
+							var edit = "";
+							edit = createLink('demo_template.php?section=supplier&act=order_detail&id='+value.order_id,value[that.order_arr[i]]);
+							row += createTd(edit);
+							continue;
+						}
 						if(value[that.render_arr[i]] != null){
 							row += createTd(subString(value[that.render_arr[i]],10,true));
 						}else{
@@ -582,6 +576,7 @@ var Supplier = {
 		}
 		var params = {};
 		var strJson = createJson("upload", id, params, "object");
+		console.log(strJson)
         $.ajaxFileUpload({
             url:this.url,
             fileElementId:id,//file标签的id
@@ -794,13 +789,13 @@ var Supplier = {
 				var row = "";
 				$.each(obj.content.file_0,function(key, value){
 					row += "<tr>";
-					row += createTd("<a href='."+value.upload_url+"' target='_blank'>"+value.upload_name+"</a>");
+					row += createTd("<a href='.."+value.upload_url+"' target='_blank'>"+value.upload_name+"</a>");
 				});
 				$("#left_list>tbody").html(row);
 				row ="";
 				$.each(obj.content.file_1,function(key, value){
 					row += "<tr>";
-					row += createTd("<a href='."+value.upload_url+"' target='_blank'>"+value.upload_name+"</a>");
+					row += createTd("<a href='.."+value.upload_url+"' target='_blank'>"+value.upload_name+"</a>");
 				});
 				$("#right_list>tbody").html(row);
 				row = "";
@@ -814,6 +809,12 @@ var Supplier = {
 					row += "<tr>";
 					for(var i=0;i<that.render_arr.length;i++){
 						if(that.render_arr[i] == "operate"){
+							continue;
+						}
+						if(that.render_arr[i] == "order_sn"){
+							var edit = "";
+							edit = createLink('demo_template.php?section=supplier&act=order_detail&id='+value.order_id,value[that.order_arr[i]]);
+							row += createTd(edit);
 							continue;
 						}
 						if(value[that.render_arr[i]] != null){
@@ -1052,5 +1053,48 @@ var Supplier = {
 	    }
 
 	    return result;
+	},
+
+	// 获取物料类别列表
+	getGoodsTypeList: function(){
+		strJson = createJson("catList", "goods_type", {});
+		that = this
+		$.post("contract_manage.php", strJson, function(obj){
+			if(obj.error == -1){
+				$('#message_area').html(createError(obj.message));
+				return false;
+			}else{
+				var row = '';
+				$.each(obj.content, function(k,v){
+					if(v.list.length == 0){
+						row += appendOption(v.cat_id, v.cat_name, 0, 1);
+						return;
+					}else{
+						row += appendOption(v.cat_id, v.cat_name, 0, 0);
+						$.each(v.list, function(k1, v1){
+							if(v1.list.length == 0){
+								row += appendOption(v1.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;"+v1.cat_name, 0, 1);
+								return;
+							}else{
+								row += appendOption(v1.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;"+v1.cat_name, 0, 0);
+								$.each(v1.list, function(k2, v2){
+									if(v1.list.length == 0){
+										row += appendOption(v2.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+v2.cat_name, 0, 1);
+										return;
+									}else{
+										row += appendOption(v2.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+v2.cat_name, 0, 0);
+										$.each(v2.list, function(k3, v3){
+											row += appendOption(v3.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+v3.cat_name, 0, 1);
+										});										
+									}
+								});								
+							}
+						});
+					}
+				});
+				$("select[name=cat_id]").append(row);
+			}
+			
+		}, "json");
 	}
 }
