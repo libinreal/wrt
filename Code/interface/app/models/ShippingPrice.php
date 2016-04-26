@@ -45,7 +45,7 @@ class ShippingPrice extends \Phalcon\Mvc\Model
             'goods_category_id' => 'catId',
             'suppliers_id' => 'suppliersId',
             'shipping_fee' => 'shippingFee',
-            'desc' => 'desc'
+            'desc' => 'des'
         );
     }
 
