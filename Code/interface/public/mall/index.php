@@ -619,18 +619,34 @@
 </div>
 
 <script id="zj-userinfo-tmpl" type="text/html">
-	<div class="avator">
-	<a class="authority" href="../personal/my-info.html"><img src="<!--[= account.icon || '../content/images/mall/person_logo.png']-->" /></a>
+	<div class="userinfo-item">
+		<div class="avator">
+		<a class="authority" href="../personal/my-info.html"><img src="<!--[= account.icon || '../content/images/mall/person_logo.png']-->" /></a>
+		</div>
+		<div class="userinfo-yhm">
+		<div class="label">Hi，<!--[= account.account]--></div>
+		<div class="label"><!--[= account.companyName]--></div>
+		<div class="label"><!--[= account.superiors]--></div>
+		</div>
+		<div class="userinfo-link">
+			<a class="auth link" href="../personal/">个人中心</a>
+			<a class="link icon icon-logout" href="#">安全退出</a>
+		</div>
+		<div class="clearfix"></div>
+		<div class="userinfo-text">
+		<div class="label">可用采购额度：￥ <!--[= account.billAmountValid]--></div>
+		<div class="label">可用现金额度：￥ <!--[= account.cashAmountValid]--></div>
+		</div>
+		<div class="clearfix"></div>
+		<div class="userinfo-button">
+		<div class="userinfo-link"><a class="auth link" href="../personal/my-order.html">我的订单</a></div>
+		<div class="userinfo-link"><a class="auth link" href="../personal/my-contract.html">我的合同</a></div>
+		<div class="clearfix"></div>
+		<div class="userinfo-link"><a class="auth link" href="../personal/my-security.html">安全中心</a></div>
+		<div class="userinfo-link"><a class="auth link" href="#">我的供应商</a></div>
+		</div>
 	</div>
-	<div class="userinfo-yhm">
-	<span class="label label-user">Hi，</span>
-	<span class="value"><!--[= account.account]--></span>
-	</div>
-	<div class="userinfo-link">
-		<a class="auth link" href="../personal/">个人中心</a>
-		<a class="auth link" href="../personal/my-order.html">我的订单</a>
-		<a class="link icon icon-logout" href="#">退出</a>
-	</div>
+
 </script>
 <script id="zj-nouser-tmpl" type="text/html">
 	<div class="userinfo-tip">

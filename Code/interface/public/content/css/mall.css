@@ -325,8 +325,8 @@
     color: #015cad;
 } 
 .userinfo .avator {
-    width: 56px;
-    height: 56px;
+    width:60px;
+    height:60px;
 }
 .userinfo .avator img {
     display: block;
@@ -346,29 +346,40 @@
     color: #fff;
     line-height: 50px;
 }
-.userinfo .userinfo-item:first-child{
-    padding-bottom: 10px;
-}
 .userinfo .userinfo-item{
+    margin: 20px 0;
 }
-.userinfo .userinfo-xydj{
-    width: 136px;
-}
-.userinfo .userinfo-cged{
-    width: 333px;
-    height: 28px;
-    overflow: hidden;
-}
-.userinfo .userinfo-szdq{
-    /*width: 200px;*/
+.userinfo .userinfo-item .avator{
+    margin: 8px 10px;
+    float: left;
 }
 .userinfo .userinfo-yhm{
-    text-align: center;
-    line-height: 50px;
-    color: #fff;
+    float: left;
+    width: 120px;
+    overflow: hidden;
 }
-.userinfo .userinfo-link{
+.userinfo .userinfo-yhm .label{
+    color: #fff;
+    line-height: 25px;
+}
+.userinfo .userinfo-text{
+    color: #fff;
+    margin:0 20px;
+}
+.userinfo .userinfo-text .label{
+    line-height: 25px;
+}
+.userinfo .userinfo-item .userinfo-link{
     text-align: center;
+    float: left;
+}
+.userinfo .userinfo-item .userinfo-link a{
+    display: block;
+    margin-bottom: 10px;
+}
+.userinfo .userinfo-item .userinfo-button{
+    width: 200px;
+    margin:10px auto;
 }
 .userinfo .label-grade {
     background: url(../images/mall/credit_grade.png) no-repeat center left;
