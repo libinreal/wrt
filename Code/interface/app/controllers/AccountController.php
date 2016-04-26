@@ -435,7 +435,10 @@ class AccountController extends ControllerBase
 							credits,
 							department,
 							creditLevel,
+							billAmountValid,
+                        cashAmountValid,
 							icon',
+
 
 		))->toArray();
 		$userInfo['icon'] = preg_match('/^pics.*/', $userInfo['icon']) ? ($this->get_url() . $userInfo['icon']) : $userInfo['icon'];
