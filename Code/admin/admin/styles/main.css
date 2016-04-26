@@ -1460,6 +1460,9 @@ table.t_1{
     display: none;
     width: 200px;
     height: 100px;
+    -moz-box-shadow:4px 4px 3px rgba(20%,20%,40%,0.5);
+    -webkit-box-shadow:4px 4px 3px rgba(20%,20%,40%,0.5);
+    box-shadow:4px 4px 3px rgba(20%,20%,40%,0.5);
 }
 .error{
     color:red;
