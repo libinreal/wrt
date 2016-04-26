@@ -66,6 +66,32 @@ if ($_REQUEST['act'] == 'list' || $_REQUEST['act'] == 'trash')
     $smarty->assign('use_storage',  empty($_CFG['use_storage']) ? 0 : 1);
 
     $goods_list = goods_list($_REQUEST['act'] == 'list' ? 0 : 1);
+
+    if( $_REQUEST['act'] == 'list' ){
+        $goods_attr_table = $GLOBALS['ecs']->table('goods_attr');//规格/型号/材质
+        $suppliers_table = $GLOBALS['ecs']->table('suppliers');//供应商
+        foreach ($goods_list['goods'] as &$order_goods) {
+            
+            //规格、型号、材质
+            $goods_attr_sql = 'SELECT `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $order_goods['goods_id'];
+            $goods_attr = $GLOBALS['db']->getAll( $goods_attr_sql );
+            if( empty( $goods_attr ) ){
+                $order_goods['attr'] = '';
+            }else{
+                $attr_arr = array();
+                foreach ($goods_attr as $value) {
+                    $attr_arr[] = $value['attr_value'];
+                }
+                $order_goods['attr'] = implode('/', $attr_arr);
+            }
+
+            $suppliers_sql = 'SELECT `suppliers_name` FROM ' . $suppliers_table . ' WHERE `suppliers_id` = ' . $order_goods['suppliers_id'];
+            $suppliers = $GLOBALS['db']->getRow( $suppliers_sql );
+            $order_goods['suppliers_name'] = $suppliers['suppliers_name'];
+
+        }
+    }
+
     $smarty->assign('goods_list',   $goods_list['goods']);
     $smarty->assign('filter',       $goods_list['filter']);
     $smarty->assign('record_count', $goods_list['record_count']);

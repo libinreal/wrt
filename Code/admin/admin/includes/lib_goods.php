@@ -925,7 +925,7 @@ function goods_list($is_delete, $real_goods=1, $conditions = '')
 //                    " FROM " . $GLOBALS['ecs']->table('goods') . " AS g WHERE suppliers_id=".$_SESSION['suppliers_id']." AND user_id=".$_SESSION['admin_id']." AND is_delete='$is_delete' $where" .
 //                    " ORDER BY $filter[sort_by] $filter[sort_order] ".
 //                    " LIMIT " . $filter['start'] . ",$filter[page_size]";
-        $sql = "SELECT rg.region_name ,g.goods_id, g.goods_name, g.goods_type, g.goods_sn, g.shop_price,g.market_price, g.is_on_sale, g.is_best, g.is_new, g.is_hot, g.sort_order, g.goods_number, g.integral, " .
+        $sql = "SELECT rg.region_name ,g.goods_id, g.add_time, g.suppliers_id, g.goods_name, g.goods_type, g.goods_sn, g.shop_price,g.market_price, g.is_on_sale, g.is_best, g.is_new, g.is_hot, g.sort_order, g.goods_number, g.integral, " .
                     " (promote_price > 0 AND promote_start_date <= '$today' AND promote_end_date >= '$today') AS is_promote ".
                     " FROM " . $GLOBALS['ecs']->table('goods') . " AS g INNER JOIN ".$GLOBALS['ecs']->table('region')." AS rg ON g.area_id=rg.region_id WHERE  g.user_id=".$_SESSION['admin_id']." AND g.is_delete='$is_delete' $where" .
                     " ORDER BY $filter[sort_by] $filter[sort_order] ".

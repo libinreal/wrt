@@ -15,6 +15,9 @@
                     <a href="javascript:listTable.sort('goods_id'); ">{$lang.record_id}</a>{$sort_goods_id}
                 </th>
                 <th><a href="javascript:listTable.sort('goods_name'); ">{$lang.goods_name}</a></th>
+
+                <th>{$lang.goods_suppliers}</th>
+                <th>{$lang.goods_attri}</th>
                 <th>{$lang.region_name}</th>
                 <th><a href="javascript:listTable.sort('shop_price'); ">{$lang.shop_price}</a>{$sort_shop_price}</th>
                 <th><a href="javascript:listTable.sort('is_on_sale'); ">{$lang.is_on_sale}</a>{$sort_is_on_sale}</th>
@@ -22,6 +25,7 @@
                 {if $use_storage}
                 <th><a href="javascript:listTable.sort('goods_number'); ">{$lang.goods_number}</a>{$sort_goods_number}</th>
                 {/if}
+                <th>{$lang.goods_pub_time}</th>
                 <th>{$lang.handler}</th>
             <tr>
                 {if $goods_list|@count neq 0 }
@@ -29,6 +33,9 @@
             <tr>
                 <td><input type="checkbox" name="checkboxes[]" value="{$goods.goods_id}" />{$goods.goods_id}</td>
                 <td class="first-cell" style="{if $goods.is_promote}color:red;{/if}"><span onclick="listTable.edit(this, 'edit_goods_name', {$goods.goods_id})">{$goods.goods_name|escape:html}</span></td>
+
+                <td class="first-cell">{$goods.suppliers_name|escape:html}</td>
+                <td class="first-cell">{$goods.attr|escape:html}</td>
                 <td class="first-cell" style="text-align: center;">
                     {if $goods.region_name eq '中国' }全部区域{else}{$goods.region_name|escape:html}{/if}
 
@@ -39,6 +46,8 @@
                 {if $use_storage}
                 <td align="right"><span onclick="listTable.edit(this, 'edit_goods_number', {$goods.goods_id})">{$goods.goods_number}</span></td>
                 {/if}
+
+                <td class="first-cell">{$goods.add_time|date_format:''}</td>
                 <td align="center">
 
                     <a href="goods.php?act=edit&goods_id={$goods.goods_id}{if $code neq 'real_goods'}{/if}" title="{$lang.edit}"><img src="images/icon_edit.gif" width="16" height="16" border="0" /></a>

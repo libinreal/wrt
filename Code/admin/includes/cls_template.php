@@ -645,7 +645,9 @@ class cls_template
                     case 'truncate':
                         $p = 'sub_str(' . $p . ",$s[1])";
                         break;
-
+                    case 'date_format':
+                        $p = "date('Y-m-d H:i:s'," . $p . ')';
+                        break;    
                     case 'strip_tags':
                         $p = 'strip_tags(' . $p . ')';
                         break;

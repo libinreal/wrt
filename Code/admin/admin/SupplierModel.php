@@ -486,6 +486,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *                  "goods_price": "薛某" ,//单价
 		 *                  "goods_number": 12 ,  //数量
 		 *                  "shipping_fee": 300.00 ,//物流费
+		 *                  "order_amount":1000,//订单总额
 		 *                  "purchase_pay_status": 0,//订单状态
 		 *           }
 		 *	         ],
@@ -509,7 +510,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$sql = 'SELECT odr.`order_id` , odr.`order_sn`, og.`goods_id`, og.`goods_name`, og.`goods_sn`, odr.`add_time`, ' .
 				   ' og.`goods_price_send_saler`, og.`goods_price_arr_saler`, og.`goods_number_send_saler`, og.`goods_number_arr_saler`,' .
-				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status`,odr.`purchase_pay_status` ' .
+				   ' odr.`shipping_fee_send_saler`,odr.`shipping_fee_arr_saler`, odr.`child_order_status`,odr.`purchase_pay_status`, ' .
+				   ' odr.`order_amount_arr_saler`, odr.`order_amount_send_saler` '
 				   ' FROM ' . $order_table .
 				   ' AS odr LEFT JOIN ' . $order_goods_table . ' AS og ON odr.`order_id` = og.`order_id`' .
 				   ' WHERE odr.`suppers_id` = ' . $suppliers_id . ' AND odr.`child_order_status` >= ' . SOS_SEND_PP . ' AND ' .//订单为已推给当前登录的供应商
@@ -572,10 +574,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$v['shipping_fee'] = $v['shipping_fee_send_saler'];//发货
 						$v['goods_price'] = $v['goods_price_send_saler'];//发货
 						$v['goods_number'] = $v['goods_number_send_saler'];//发货
+						$v['goods_number'] = $v['goods_number_send_saler'];//发货
+						$v['order_amount'] = $v['order_amount_send_saler'];//发货
 					}else{
 						$v['shipping_fee'] = $v['shipping_fee_arr_saler'];//到货
 						$v['goods_number'] = $v['goods_number_arr_saler'];//到货
 						$v['goods_price'] = $v['goods_price_arr_saler'];//到货
+						$v['goods_price'] = $v['goods_price_arr_saler'];//到货
+						$v['order_amount'] = $v['order_amount_arr_saler'];//到货
 					}
 
 					$v['order_status'] = '';
@@ -1885,8 +1891,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 		    }
 		    
 		    $category_table = $GLOBALS['ecs']->table('category');
-			$cat_sql = 'SELECT `cat_id`,`cat_name` FROM ' . $category_table;
+			$cat_sql = 'SELECT `cat_id`,`cat_name`,`parent_id` FROM ' . $category_table;
 			$cat_arr = $GLOBALS['db']->getAll( $cat_sql );
+			
+			//物料类别层级显示
+        	$cat_arr = $this->levelCat(0, $cat_arr);
 
 			$shipping_table = $GLOBALS['ecs']->table('shipping_price');
 
@@ -1906,6 +1915,47 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content['total'] = $shipping_total['total'];
 			make_json_response($content, '0', '初始化物流费用设置成功');
 		}
+
+		/**
+	     * 层级显示物料类别
+	     * @param int $parentId 父级id
+	     * @param array $cateList
+	     * @return 0|array
+	     */
+	    private function levelCat($parentId, $cateList) 
+	    {
+	    	$result = $this->getKidCates($parentId, $cateList);
+	    	$data   = array();
+	    	if($result){//如果有子类
+	    		foreach ($result as $k=>$v){
+	    			$v['list'] = $this->levelCat($v['cat_id'], $cateList); //调用函数，传入参数，继续查询下级
+	    			$data[] = $v; //组合数组
+	    		}
+	    		return $data;
+	    	}
+
+	    	return 0;
+	    }
+
+	    /**
+	     * 获取子集物料
+	     * @param int $parentId
+	     * @param array $result
+	     * @return NULL|array
+	     */
+	    private function getKidCates($parentId, $result) 
+	    {
+	    	$data = array();$i = 0;
+	    	if (!$result) return null;
+	    	foreach ($result as $k=>$v) {
+	    		if ($v['parent_id'] == $parentId) {
+	    			$data[$i]['cat_id']   = $v['cat_id'];
+	    			$data[$i]['cat_name'] = $v['cat_name'];
+	    			$i++;
+	    		}
+	    	}
+	    	return $data;
+	    }
 
 		/**
 		 * 接口名称：移除物料类别的物流费
