@@ -182,29 +182,29 @@ define(function(require) {
         }
     }
     //选择发票类型
-    showInv(0)
+    showInv(1)
     $("#tax-invoice-radio").click(function(){
-        showInv(1);
+        showInv(0);
     })
     $("#invoice-radio").click(function(){
-        showInv(0);
+        showInv(1);
     })
     // 发票信息
     function showInv(type){
         if(type == 1){
-            $("#invoice").hide();
-            $("#tax-invoice").show();
-            $('#invtype1').addClass('active');
-            $('#invtype2').removeClass('active');
-            $('#invtype1 input').attr('checked',true);
-            $('#invtype2 input').removeAttr('checked');           
-        }else{
             $("#invoice").show();
             $("#tax-invoice").hide();
             $('#invtype1').removeClass('active');
             $('#invtype2').addClass('active');
             $('#invtype1 input').removeAttr('checked');
-            $('#invtype2 input').attr('checked',true);           
+            $('#invtype2 input').attr('checked',true);         
+        }else{
+            $("#invoice").hide();
+            $("#tax-invoice").show();
+            $('#invtype1').addClass('active');
+            $('#invtype2').removeClass('active');
+            $('#invtype1 input').attr('checked',true);
+            $('#invtype2 input').removeAttr('checked');      
         }
         //发票信息
         Ajax.custom({
@@ -213,12 +213,12 @@ define(function(require) {
             if (response.code != 0) {
                 return;
             }
-            if(type == '0'){
+            if(type == 1){
                 var result = template.render('invoice-tmpl', {
                     'list': response.body || []
                 });
-                $('#tax-invoice').html('');
                 $('#invoice').html(result);
+                $('#tax-invoice').html('');
             }else{
                 var result = template.render('tax-invoice-tmpl', {
                     'list': response.body || []
