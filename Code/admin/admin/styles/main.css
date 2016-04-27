@@ -1481,13 +1481,16 @@ span.error{
     line-height: 100px;
     font-weight: bold;    
 }
-.warn{
+span.warn{
     color:#f57900;
     font-size: 16px;
     line-height: 100px;
     font-weight: bold;
 }
-.tips{
+div.warn{
+    color:#f57900;    
+}
+span.tips{
     color: blue;
     font-size: 16px;
     line-height: 100px;
