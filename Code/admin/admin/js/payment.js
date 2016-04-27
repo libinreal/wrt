@@ -115,7 +115,8 @@ var Payment = {
 				var row = "";
 				$.each(obj.content.file_0,function(key, value){
 					row += "<tr>";
-					row += createTd(value.upload_name);
+                    var link = createLink(".."+value.upload_url, value.upload_name, false, "blank")
+					row += createTd(link);
 					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
 					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_id+"'>";
 					row += createTd(edit);
@@ -124,7 +125,8 @@ var Payment = {
 				row ="";
 				$.each(obj.content.file_1,function(key, value){
 					row += "<tr>";
-					row += createTd(value.upload_name);
+                    var link = createLink(".."+value.upload_url, value.upload_name, false, "blank")
+					row += createTd(link);
 					var edit = createButton("Supplier.delUpload(this,"+value.upload_id+")", "删除");
 					edit += "<input type='hidden' name='upload_id[]' value='"+value.upload_id+"'>";
 					row += createTd(edit);
@@ -144,7 +146,12 @@ var Payment = {
 						row += "<tr>";
 						for(var i=0;i<that.goods_arr.length;i++){
 							if(value[that.goods_arr[i]] != null){
-								row += createTd(value[that.goods_arr[i]]);
+                                if(that.goods_arr[i] == "order_sn"){
+                                    var link = createLink('demo_template.php?section=purchase_order_manage&act=detail&id='+value.order_id, value[that.goods_arr[i]])
+                                    row += createTd(link);
+                                }else{
+                                    row += createTd(value[that.goods_arr[i]]);
+                                }
 							}else{
 								row += createTd(createWarn('无数据'));
 							}
