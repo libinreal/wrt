@@ -253,7 +253,7 @@ var TypeMode = {
 				$('#message_area').html(createError(object.message));
 				return false;
 			}else{
-				var row = '';
+				var row = '<option value="">全部</option>';
 				$.each(object.content, function(k, v){
 					row += appendOption(k, v);
 				})
