@@ -33,8 +33,10 @@
     		<div class="large-info">
     			<label><span>品名：</span><!--[= list[i].name]--><!--[for(j = 0; j < list[i].attr.length; j++){]-->
     			<span class="left_margin_s"><!--[= list[i].attr[j].name]-->：</span><!--[= list[i].attr[j].value]-->
-    			<!--[}]--></label>
-    			<label><span>厂家：</span><!--[= list[i].factoryName || '--']--><span class="left_margin_c">提货地点：</span><!--[= list[i].shiplocal]--><span class="left_margin_c">可销售数量：</span><font class="font-color"><!--[= list[i].storeNum]--></font> <!--[= list[i].unit]--></label>
+    			<!--[}]-->
+                <span class="left_margin_s">商品分类：</span><!--[= list[i].cat_name]-->
+                </label>
+    			<label><span>厂家：</span><!--[= list[i].factoryName || '--']--><span class="left_margin_c">提货地点：</span><!--[= list[i].shiplocal]--><span class="left_margin_c">可销售数量：</span><font class="font-color"><!--[= list[i].storeNum]--></font> <!--[= list[i].unit]--><span class="left_margin_c">物流费：</span><font class="font-color"><!--[= list[i].shipping_fee]--></font> </label>
     		</div>
     		<div class="price large-price">
     			<div class="vip">
