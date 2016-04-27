@@ -177,7 +177,7 @@ var SelfCredit = {
 					}
 				});
 				var handle_button = '<input type="button" onclick="SelfCredit.setStatus(1);" value="通过" class="button"><input type="button" onclick="SelfCredit.setStatus(3);" class="button" value=" 不通过 ">';
-				if(obj.content.status==2||obj.content.status==3){
+				if(obj.content.status==0){
 					$("#handle_button span").html(handle_button);
 				}
 			}
