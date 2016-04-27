@@ -1476,6 +1476,12 @@ span.error{
     line-height: 100px;
     font-weight: bold;
 }
+span.tips{
+    color:blue;
+    font-size: 16px;
+    line-height: 100px;
+    font-weight: bold;
+}
 #loading{
     font-size: 16px;
     line-height: 100px;
