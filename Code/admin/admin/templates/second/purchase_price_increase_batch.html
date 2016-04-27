@@ -74,7 +74,7 @@ $(document).ready(function(){
 function addRow(elem){
 	if(!$("select[name=cat_id] option:selected").data("val")){
 		alert('不能添加');
-		return false;		
+		return false;
 	}
 	var cat_id = $("select[name=cat_id]>option:selected").val();
 	var brand_id = $("select[name=brand_id]>option:selected").val() == "" ? 0 : $("select[name=brand_id]>option:selected").val();
