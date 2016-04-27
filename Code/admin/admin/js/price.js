@@ -156,19 +156,20 @@ var Price = {
 			}else{
 				var row = '';
 				$.each(obj.content, function(k,v){
-					if(v.list.length == 0){
+                    console.log(v.list.length)
+					if(v.list.length === undefined){
 						row += appendOption(v.cat_id, v.cat_name, 0, 1);
 						return;
 					}else{
 						row += appendOption(v.cat_id, v.cat_name, 0, 0);
 						$.each(v.list, function(k1, v1){
-							if(v1.list.length == 0){
+							if(v1.list.length === undefined){
 								row += appendOption(v1.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;"+v1.cat_name, 0, 1);
 								return;
 							}else{
 								row += appendOption(v1.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;"+v1.cat_name, 0, 0);
 								$.each(v1.list, function(k2, v2){
-									if(v1.list.length == 0){
+									if(v2.list.length === undefined){
 										row += appendOption(v2.cat_id, "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+v2.cat_name, 0, 1);
 										return;
 									}else{
