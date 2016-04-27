@@ -1153,7 +1153,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$childer_order['order_sn'] = $childer_sn_new;
 			$childer_order['parent_order_id'] = $parent_order['order_id'];
 			$childer_order['parent_order_sn'] = $parent_order['order_sn'];
-
+			$childer_order['best_time'] = $parent_order['best_time'];
+			
 			$childer_order['goods_amount'] = $send_number * $goods_price;
 			$childer_order['order_amount'] = $send_number * $goods_price;
 
@@ -1179,7 +1180,6 @@ require(dirname(__FILE__) . '/includes/init.php');
             $childer_order['financial_arr_rate'] = 0;
             $childer_order['financial_send'] = $finance_manual;//只保存手动更改的金融费
             $childer_order['financial_arr'] = 0;
-
 
             $childer_order['suppers_id'] = $suppliers_id;
             $childer_order['child_order_status'] = SOS_UNCONFIRMED;//子订单状态-未确认
@@ -2657,10 +2657,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$order_info['financial_send'] = $financial_send;
 			$order_info['shipping_fee_send_buyer'] = $shipping_fee_send_buyer;
-			$order_info['shipping_fee_send_saler'] = $shipping_fee_send_saler;
+			// $order_info['shipping_fee_send_saler'] = $shipping_fee_send_saler;
 
 			$order_info['order_amount_send_buyer'] = $order_amount_send_buyer;
-			$order_info['order_amount_send_saler'] = $order_amount_send_saler;
+			// $order_info['order_amount_send_saler'] = $order_amount_send_saler;
 			$order_info['pay_id'] = $pay_id;
 
 			$order_info_update_sql = 'UPDATE ' . $order_info_table .' SET ';
@@ -2679,10 +2679,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_goods = array();
 
 				$order_goods['goods_number_send_buyer'] = $goods_number_send_buyer;
-				$order_goods['goods_number_send_saler'] = $goods_number_send_saler;
+				// $order_goods['goods_number_send_saler'] = $goods_number_send_saler;
 
 				$order_goods['goods_price_send_buyer'] = $goods_price_send_buyer;
-				$order_goods['goods_price_send_saler'] = $goods_price_send_saler;
+				// $order_goods['goods_price_send_saler'] = $goods_price_send_saler;
 
 				foreach ($order_goods as $cn => $cv) {
 					$order_goods_update_sql .= '`' . $cn . '` = ' . $cv . ',';
@@ -2709,6 +2709,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 					
 					$goods_attr_str = implode('/', $goods_attr_val);
 
+					/*
+					
 					$price_log = array();
 					$price_log['order_id'] = $order_id;
 					$price_log['goods_name'] = $order_status['goods_name'];
@@ -2720,7 +2722,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$supplier_name = empty( $supplier ) ? '' : $supplier['suppliers_name'];
 
 					$price_log['suppliers_name'] = $supplier_name;
-					$price_log['suppliers_price'] = $goods_price_send_saler;
+					// $price_log['suppliers_price'] = $goods_price_send_saler;
 					$price_log['actual_price'] = $goods_price_send_buyer;
 
 					$price_log['shipping_fee'] = $shipping_fee_send_buyer;
@@ -2748,7 +2750,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$price_log_sql = substr($price_log_sql, 0, -1) . ')';
 					
 					$GLOBALS['db']->query( $price_log_sql );//保存到历史报价
-
+					*/
 					// 销售订单.发货验签价格更新
 					
 					$sign_find_sql = 'SELECT `submit_data`, `sign_data`, `sign_id` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 1 AND `order_sn` = \'' . $order_sn . '\'';

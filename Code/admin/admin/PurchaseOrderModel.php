@@ -1185,7 +1185,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bank_sign_table = $GLOBALS['ecs']->table('bank_sign');//银行签名
 
 			//检查订单状态
-			$order_info_sql = 'SELECT o.`order_sn`, o.`child_order_status`, og.`goods_name`, g.`goods_id`, g.`price_num`, g.`price_rate` FROM ' . $order_info_table .
+			$order_info_sql = 'SELECT o.`order_sn`, o.`child_order_status`, o.`order_amount_send_buyer`, o.`shipping_fee_send_buyer`, og.`goods_number_send_buyer`, og.`goods_price_send_buyer`, og.`goods_name`, o.`suppers_id`, g.`goods_id`, g.`price_num`, g.`price_rate` FROM ' . $order_info_table .
 							  ' AS o LEFT JOIN ' . $order_goods_table . ' AS og ON o.`order_id` = og.`order_id` ' .
 							  ' LEFT JOIN ' . $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 					 		  ' WHERE o.`order_id` = ' . $order_id;
@@ -1193,7 +1193,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 			if( !$order_status ){
 				make_json_response('', '-1', '订单不存在');
 			}
-
+			$suppers_id = $order_status['suppers_id'];
+			
 			$order_sn = $order_status['order_sn'];
 			if( $order_status['child_order_status'] >= SOS_SEND_SC ){//平台已验签(发货)
 				make_json_response('', '-1', '发货验签完毕，无法发货改价');
@@ -1244,7 +1245,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 				if ( $order_goods_update ) {
 
-					/*
+					
 					//保存报价到`price_log`
 					$price_log_table = $GLOBALS['ecs']->table( 'price_log' );
 					$price_log_sql = 'INSERT INTO ' . $price_log_table . ' (';
@@ -1272,11 +1273,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 					$price_log['suppliers_name'] = $supplier_name;
 					$price_log['suppliers_price'] = $goods_price_send_saler;
-					$price_log['actual_price'] = $goods_price_send_buyer;
+					$price_log['actual_price'] = $goods_price_send_saler;
 
-					$price_log['shipping_fee'] = $shipping_fee_send_buyer;
-					$price_log['financial'] = $financial_send;
-					$price_log['total'] = $order_amount_send_buyer;
+					$price_log['shipping_fee'] = $shipping_fee_send_saler;
+					$price_log['financial'] = $order_status['order_amount_send_buyer'] - $order_status['goods_number_send_buyer'] * $order_status['goods_price_send_buyer'] - $order_status['shipping_fee_send_buyer'];
+					$price_log['total'] = $order_amount_send_saler;
 
 					//支付方式
 					$pay_cfg = C('payment');
@@ -1299,7 +1300,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$price_log_sql = substr($price_log_sql, 0, -1) . ')';
 					
 					$GLOBALS['db']->query( $price_log_sql );//保存到历史报价
-					*/
+					
 
 					$sign_find_sql = 'SELECT `sign_id`, `submit_data`, `sign_data` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 3 AND `order_sn` = \'' . $order_sn . '\'';
 					$sign_find = $GLOBALS['db']->getRow( $sign_find_sql );
