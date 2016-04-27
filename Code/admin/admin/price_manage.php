@@ -1280,6 +1280,19 @@ class Price extends ManageModel
                             $price_adjust_table . ' WHERE `price_adjust_id` = ' . intval( $price_adjust_id );
         $price_adjust = $GLOBALS['db']->getRow( $price_adjust_sql );
 
+        /** 上级分类 begin **/
+        $category_table =$GLOBALS['ecs']->table('category');
+        $parent_cats_sql = 'SELECT `cat_id`,`parent_id` FROM ' . $category_table;
+        $categorys = $GLOBALS['db']->getAll( $parent_cats_sql );
+
+        $parent_cat_arr = array();
+        foreach ($categorys as $v) {
+            if( $v['cat_id'] == 1 ){
+                $parent_cat_arr[] = $v['cat_id'];
+            }
+        }
+        /** 上级分类 end **/
+
         if( empty( $price_adjust ) ){
             make_json_response( '' , '-1' , '加价规则不存在');
         }
