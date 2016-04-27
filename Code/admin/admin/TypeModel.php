@@ -164,10 +164,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 
 					$sql = 'SELECT `account` FROM ' . $GLOBALS['ecs']->table('user_bank_account') . ' WHERE `type` = 0 AND `user_id` = ' . $user_id.
-							' AND `bank_id` = ' . $bank_id;							
+							' AND `bank_id` = ' . $bank_id;
 					break;
 				case 'order_status':
-					$content = array_merge( array("" => "全部" ), C('order_status') );
+					$content =  C('order_status');
 					break;
 				case 'payment':
 					$content = C('payment');
