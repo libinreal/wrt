@@ -211,7 +211,7 @@ var createWarn = function(text){
 	return str;
 }
 var createTip = function(text){
-	var str = '<div class="tips">'+text+'</div>';
+	var str = '<span class="tips">'+text+'</span>';
 	return str;
 }
 var createLoading = function(){
