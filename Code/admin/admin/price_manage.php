@@ -1285,12 +1285,32 @@ class Price extends ManageModel
         $parent_cats_sql = 'SELECT `cat_id`,`parent_id` FROM ' . $category_table;
         $categorys = $GLOBALS['db']->getAll( $parent_cats_sql );
 
-        $parent_cat_arr = array();
+        $cat_arr1 = $cat_arr2 = $cat_arr3 = array();
         foreach ($categorys as $v) {
-            if( $v['cat_id'] == 1 ){
-                $parent_cat_arr[] = $v['cat_id'];
+            if( $v['parent_id'] == $price_adjust['cat_id'] ){
+                $cat_arr1[] = $v['cat_id'];
             }
         }
+
+        if( !empty( $cat_arr1 ) )
+            foreach ($cat_arr1 as $c) {
+                foreach ($categorys as $v) {
+                    if( $v['parent_id'] == $c['cat_id'] ){
+                        $cat_arr2[] = $v['cat_id'];
+                    }
+                }
+            }
+
+        if( !empty( $cat_arr2 ) )
+            foreach ($cat_arr2 as $c) {
+                foreach ($categorys as $v) {
+                    if( $v['parent_id'] == $c['cat_id'] ){
+                        $cat_arr3[] = $v['cat_id'];
+                    }
+                }
+            }
+
+        $price_adjust['cat_arr'] = array_merge( array( $price_adjust['cat_id'] ), $cat_arr1, $cat_arr2, $cat_arr3 );
         /** 上级分类 end **/
 
         if( empty( $price_adjust ) ){
