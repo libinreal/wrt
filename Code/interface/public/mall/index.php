@@ -594,7 +594,124 @@
 		</div>
 	</div>
 </div><!--//section-->
+<style>
+			.con_width{
+				width: 1000px;
+				margin: 0 auto;
+			}
+			.con_pic li{
+				margin-top: 15px;
+			}
+			.con_pic li img{
+				width: 1000px;
+				height: auto;
+			}
+			.con_name{
+				margin-top: 15px;
+			}
+			.con_name .n_left{
+				float: left;
+				color: #4a4a4a;
+				font-size: 24px;
+			}
+			.con_name .n_right{
+				float: right;
+				
+			}
+			.con_name .n_right a{
+				color: #4a4a4a;
+				font-size: 16px;
+			}
+			.n_clear{
+				clear: both;
+			}
+			.con_lj{
+				margin-bottom:20px;
+			}
+			.con_lj li{
+				float: left;
+				width: 167px;
+				border-right: 1px solid #e5e5e5;
+				border-top: 1px solid #e5e5e5;
+				border-bottom: 1px solid #e5e5e5;
+				height: 53px;
+				margin-top: 15px;
+			
+			}
+			.con_lj .name{
+				background: #f9f9f9;
+				width: 157px;
+				border-left: 1px solid #e5e5e5;
+				text-align: center;
+				line-height: 53px;
+				
+			}
+			.con_lj .name a{
+				color: #4a4a4a;
+				font-size: 16px;
+			}
+			.con_lj li img{
+			max-width: 160px;
+			max-height: 50px;
+			}
+		</style>
 
+<div class="con_width">
+				<!--调用的图片开始-->
+		<ul class="con_pic">
+			<li><a href=""><img src="img/tu.png" alt="" /></a></li>
+			<li><a href=""><img src="img/tu.png" alt="" /></a></li>
+			<li><a href=""><img src="img/tu.png" alt="" /></a></li>
+		</ul>	
+		<!--调用的图片结束-->
+		<!--友情链接开始-->
+		<!--标题开始-->
+		<div class="con_name">
+			<div class="n_left">
+				合作单位
+			</div>
+			<div class="n_right"><a href="">更多 &raquo;</a></div>
+			<div class="n_clear"></div>
+		</div>
+		<!--标题结束-->
+		
+		<div class="con_lj">
+			<!--链接第一行开始-->
+		<ul>
+			<li class="name"><a href="">组织机构</a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+		
+		</ul>
+		<div class="n_clear"></div>
+		<!--链接第2行开始-->
+		<ul>
+			<li class="name"><a href="">组织机构</a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+		
+		</ul>
+		<div class="n_clear"></div>
+		<!--链接第3行开始-->
+		<ul>
+			<li class="name"><a href="">组织机构</a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+			<li><a href=""><img src="img/lj.png" alt="" /></a></li>
+		
+		</ul>
+		<div class="n_clear"></div>
+</div>
+		<!--友情链接结束-->
+		</div>
 <?php include '../com/footer.php';?>
 
 <div class="modal modal3 fade" id="modal-province">
@@ -756,6 +873,22 @@
 		<a href="<!--[= $getLink(code,list[i].id)]-->" title="<!--[= list[i].name]-->"><img src="<!--[= $absImg(list[i].logo)]-->"/></a>	
 	<!--[}]-->	 
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--删除-->
+<div style="display:none">
 <script id="zj-goods-tmpl" type="text/html">
 	<!--[for(i = 0; i < list.length; i++) {]-->
 	<div class="sort-list floor<!--[= (i + 1)]--> clearfix">
@@ -799,6 +932,17 @@
 	</div>
 	<!--[}]-->
 </script>
+</div>
+
+
+
+
+
+
+
+
+
+
 
 <script src="../content/js/module/seajs/2.2.0/sea.js"></script>
 <script src="../content/js/module/seajs/2.2.0/sea-config.js"></script>
