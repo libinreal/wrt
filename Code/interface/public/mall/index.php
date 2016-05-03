@@ -654,6 +654,10 @@
 			max-width: 160px;
 			max-height: 50px;
 			}
+			#zj-goods{
+				display:none;
+				
+			}
 		</style>
 
 <div class="con_width">
