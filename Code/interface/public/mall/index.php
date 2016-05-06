@@ -545,6 +545,7 @@
 				<div class="clearfix">
 					<a class="service" href="../help/people-service.html">客服中心</a>
 					<a class="help" href="../help/">帮助中心</a>
+				
 				</div>
 			</div>
 		</div>
@@ -564,15 +565,15 @@
 			</div>
 		</div>
 	</div>
-	<div class="banner">
+	<div class="banner" >
 
 	<!-- 代码begin -->
 <div class="flexslider">
 	<ul class="slides">
 		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-01-20/569f2cbeccda7.jpg) 50% 0 no-repeat;" onclick="javascript:window.location.href='http://wwww.baidu.com'"></li>
-		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-04-01/56fe5ea7e87a0.jpg) 50% 0 no-repeat;"></li>
-		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-04-25/571d7e80e813c.png) 50% 0 no-repeat;"></li>
-		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-03-09/56dfecd1615fb.jpg) 50% 0 no-repeat;"></li>
+		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-04-01/56fe5ea7e87a0.jpg) 50% 0 no-repeat;" onclick="javascript:window.location.href='http://wwww.baidu.com'" ></li>
+		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-04-25/571d7e80e813c.png) 50% 0 no-repeat;" onclick="javascript:window.location.href='http://wwww.baidu.com'"></li>
+		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-03-09/56dfecd1615fb.jpg) 50% 0 no-repeat;" onclick="javascript:window.location.href='http://wwww.baidu.com'"></li>
 	</ul>
 </div>
 <!-- 代码end -->
