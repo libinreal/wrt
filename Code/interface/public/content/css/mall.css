@@ -2528,3 +2528,154 @@ a.operate-cart:hover,.payfor:hover,.kefu-btm:hover {
 .number-o2-time input[readonly] {
     background-color: #fff;
 }
+
+/*首页更改代码   mh 2016.05.06*/
+.con_width{
+				width: 1000px;
+				margin: 0 auto;
+			}
+			.con_pic li{
+				margin-top: 15px;
+			}
+			.con_pic li img{
+				width: 1000px;
+				height: auto;
+			}
+			.con_name{
+				margin-top: 15px;
+			}
+			.con_name .n_left{
+				float: left;
+				color: #4a4a4a;
+				font-size: 24px;
+			}
+			.con_name .n_right{
+				float: right;
+				
+			}
+			.con_name .n_right a{
+				color: #4a4a4a;
+				font-size: 16px;
+			}
+			.n_clear{
+				clear: both;
+			}
+			.con_lj{
+				margin-bottom:20px;
+			}
+			.con_lj li{
+				float: left;
+				width: 167px;
+				border-right: 1px solid #e5e5e5;
+				border-top: 1px solid #e5e5e5;
+				border-bottom: 1px solid #e5e5e5;
+				height: 53px;
+				margin-top: 15px;
+			
+			}
+			.con_lj .name{
+				background: #f9f9f9;
+				width: 157px;
+				border-left: 1px solid #e5e5e5;
+				text-align: center;
+				line-height: 53px;
+				
+			}
+			.con_lj .name a{
+				color: #4a4a4a;
+				font-size: 16px;
+			}
+			.con_lj li img{
+			max-width: 160px;
+			max-height: 50px;
+			}
+			#zj-goods{
+				display:none;
+				
+			}
+			
+			/* flexslider */
+
+.flexslider {
+	position: relative;
+	height: 400px;
+	overflow: hidden;
+	background: url(../images/mall/loading.gif) 50% no-repeat;
+}
+
+.slides {
+	position: relative;
+	z-index: 1;
+}
+
+.slides li {
+	height: 400px;
+	cursor: pointer
+}
+
+.flex-control-nav {
+	position: absolute;
+	bottom: 10px;
+	z-index: 2;
+	width: 100%;
+	text-align: center;
+}
+
+.flex-control-nav li {
+	display: inline-block;
+	width: 12px;
+	height: 13px;
+	margin: 0 5px;
+	*display: inline;
+	zoom: 1;
+}
+
+.flex-control-nav a {
+	display: inline-block;
+	width: 12px;
+	height: 13px;
+	line-height: 40px;
+	overflow: hidden;
+	background: url(../images/mall/dot.png) right 0 no-repeat;
+	cursor: pointer;
+}
+
+.flex-control-nav .flex-active {
+	background-position: 0 0;
+}
+
+.flex-direction-nav {
+	position: absolute;
+	z-index: 3;
+	width: 100%;
+	top: 45%;
+}
+
+.flex-direction-nav li a {
+	display: block;
+	width: 50px;
+	height: 50px;
+	overflow: hidden;
+	cursor: pointer;
+	position: absolute;
+}
+
+.flex-direction-nav li a.flex-prev {
+	left: 40px;
+	background: url(../images/mall/prev.png) center center no-repeat;
+	-webkit-opacity: 0.7;
+	-moz-opacity: 0.7;
+	-ms-opacity: 0.7;
+	-o-opacity: 0.7;
+	opacity: 0.7;
+}
+
+.flex-direction-nav li a.flex-next {
+	right: 40px;
+	background: url(../images/mall/next.png) center center no-repeat;
+	-webkit-opacity: 0.7;
+	-moz-opacity: 0.7;
+	-ms-opacity: 0.7;
+	-o-opacity: 0.7;
+	opacity: 0.7;
+}
