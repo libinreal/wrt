@@ -731,6 +731,7 @@ background: #fff;
     background-position: 20px -523px;
     /*background: url(../images/mall/technology.png) no-repeat 20px center;*/
 }
+
 .left-bar .lli {
     background: #015cad;
     width: 100%;
@@ -747,11 +748,15 @@ background: #fff;
 .left-bar .lli a {
     display: block;
     color: #fff;
-    padding: 14px 14px 14px;
+    padding: 14px 0 14px;
     text-align: center;
     background-repeat:  no-repeat;
     background-position: center 7px;
 }
+
+
+
+
 .left-bar .lli a:hover{
     border-radius:5px;
     color:#fff;
@@ -766,11 +771,14 @@ background: #fff;
     background-image: url(../images/mall/wr.png);
 }
 .left-bar .lli a.service {
-    float: left;
+   width:46%;
+   display:inline-block
 }
 .left-bar .lli a.help {
-    float: right;
+  width:46%;
+   display:inline-block
 }
+
 /* 左侧导航end */
 /*left-menu*/
 .left-menu{
