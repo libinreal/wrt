@@ -566,11 +566,16 @@
 	</div>
 	<div class="banner">
 
-		<div class="bd">
-			<ul>	
-			<li style="background: url('http://www.ejianlian.com/Uploads/banner/2016-01-20/569f2cbeccda7.jpg') 50% 50% no-repeat;"><a href="http://www.ejianlian.com/Merchant/login/login" target="_blank"></a></li>
-			</ul>
-	     </div>
+	<!-- 代码begin -->
+<div class="flexslider">
+	<ul class="slides">
+		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-01-20/569f2cbeccda7.jpg) 50% 0 no-repeat;" onclick="javascript:window.location.href='http://wwww.baidu.com'"></li>
+		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-04-01/56fe5ea7e87a0.jpg) 50% 0 no-repeat;"></li>
+		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-04-25/571d7e80e813c.png) 50% 0 no-repeat;"></li>
+		<li style="background:url(http://www.ejianlian.com/Uploads/banner/2016-03-09/56dfecd1615fb.jpg) 50% 0 no-repeat;"></li>
+	</ul>
+</div>
+<!-- 代码end -->
 	</div>
 	<div class="page-vertical">
 		<div style="clear:both;height:15px;"></div>
@@ -594,71 +599,7 @@
 		</div>
 	</div>
 </div><!--//section-->
-<style>
-			.con_width{
-				width: 1000px;
-				margin: 0 auto;
-			}
-			.con_pic li{
-				margin-top: 15px;
-			}
-			.con_pic li img{
-				width: 1000px;
-				height: auto;
-			}
-			.con_name{
-				margin-top: 15px;
-			}
-			.con_name .n_left{
-				float: left;
-				color: #4a4a4a;
-				font-size: 24px;
-			}
-			.con_name .n_right{
-				float: right;
-				
-			}
-			.con_name .n_right a{
-				color: #4a4a4a;
-				font-size: 16px;
-			}
-			.n_clear{
-				clear: both;
-			}
-			.con_lj{
-				margin-bottom:20px;
-			}
-			.con_lj li{
-				float: left;
-				width: 167px;
-				border-right: 1px solid #e5e5e5;
-				border-top: 1px solid #e5e5e5;
-				border-bottom: 1px solid #e5e5e5;
-				height: 53px;
-				margin-top: 15px;
-			
-			}
-			.con_lj .name{
-				background: #f9f9f9;
-				width: 157px;
-				border-left: 1px solid #e5e5e5;
-				text-align: center;
-				line-height: 53px;
-				
-			}
-			.con_lj .name a{
-				color: #4a4a4a;
-				font-size: 16px;
-			}
-			.con_lj li img{
-			max-width: 160px;
-			max-height: 50px;
-			}
-			#zj-goods{
-				display:none;
-				
-			}
-		</style>
+
 
 <div class="con_width">
 				<!--调用的图片开始-->
@@ -953,6 +894,17 @@
 <script>
 	seajs.use('../content/js/mall/index');
 </script>
-
+<!-- js调用部分begin -->
+<script src="../content/js/mall/jquery-2.1.1.min.js"></script>
+<script src="../content/js/mall/jquery.flexslider-min.js"></script>
+<script>
+$(function(){
+	$('.flexslider').flexslider({
+		directionNav: true,
+		pauseOnAction: false
+	});
+});
+</script>
+<!-- js调用部分end -->
 </body>
 </html>
