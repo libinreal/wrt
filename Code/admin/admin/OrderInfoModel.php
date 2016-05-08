@@ -6,32 +6,32 @@
 define('IN_ECS', true);
 //
 require(dirname(__FILE__) . '/includes/init.php');
-	
+
 	/**
 	 * 主要作用是：仅仅只做模板输出。具体数据需要POST调用 class里面的方法。
 	 */
 	if ($_REQUEST['act'] == 'edit' || $_REQUEST['act'] == 'add' ) {
-		
-		
+
+
 		$smarty->display('admin_bill.html');
 		exit;
 	}
 
 	class OrderInfoModel {
-		
+
 		//$_POST
 		protected $content = false;
 		//
 		protected $command = false;
-		
+
 		//
 		public function __construct($content){
 			$this->content = $content;
 			$this->command = $content['command'];
 		}
-		
+
 		/**
-		 * 
+		 *
 		 */
 		public function run(){
 			if ($this->command == 'find') {
@@ -89,7 +89,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$this->getFinaceFeeAction();
 			}
 		}
-		
+
 		/**
 		 * 接口名称：订单详情
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
@@ -108,13 +108,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *  {
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "",
-		 *	    "content": { 
+		 *	    "content": {
 		 *	    	"info":
 		 *	        {
 		 *	        	"order_id":1,//订单编号
 		 *	        	"order_status":0,//0 新增 1 已完成 2处理中 3已撤单
 		 *	        	"order_sn":"os122311",//订单编号
-		 *	        	"user_id":1,//客户编号 
+		 *	        	"user_id":1,//客户编号
 		 *	        	"user_name":"王x",//客户名称
 		 *	        	"add_time":"2015-01-01:11",//下单时间
 		 *	        	"contract_sn":"10000",//销售合同号
@@ -145,7 +145,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	        }
 		 *	        ]
 		 *	    }
-		 *	 }   
+		 *	 }
 		 */
 		public function findAction(){
 			$content = $this->content;
@@ -165,7 +165,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_sql = 'SELECT odr.`order_status`, odr.`order_sn`, odr.`user_id`, usr.`user_name`, usr.`companyName` as `company_name`, odr.`add_time`, odr.`contract_sn`, '. "ifnull(crt.contract_name, '') as contract_name," .//订单相关
 						 ' odr.`consignee`, odr.`address`, odr.`mobile`, odr.`sign_building`, ' .
 					 	 ' odr.`inv_type`, odr.`inv_payee`, odr.`inv_company`, odr.`inv_context`, odr.`inv_content`, odr.`inv_bank_name`, odr.`inv_bank_account`, odr.`inv_bank_address`, odr.`inv_tel`, odr.`inv_fax` ' .	//发票相关
-						 ' FROM ' .$order_info_table . ' AS odr LEFT JOIN ' . $user_table . '  AS usr ON odr.`user_id` = usr.`user_id` LEFT JOIN ' . $contract_table . ' AS crt ON odr.`contract_sn` = crt.`contract_num` ' . 
+						 ' FROM ' .$order_info_table . ' AS odr LEFT JOIN ' . $user_table . '  AS usr ON odr.`user_id` = usr.`user_id` LEFT JOIN ' . $contract_table . ' AS crt ON odr.`contract_sn` = crt.`contract_num` ' .
 						 ' WHERE odr.`order_id` = ' . $order_id;
 			$order_info = $GLOBALS['db']->getRow( $order_sql );
 
@@ -187,7 +187,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case POS_BALANCE:
 					$order_info['order_status'] = $order_status_cfg[POS_BALANCE];
-					break;	
+					break;
 				case POS_COMPLETE:
 					$order_info['order_status'] = $order_status_cfg[POS_COMPLETE];
 					break;
@@ -234,7 +234,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_goods_sql = 'SELECT og.`goods_id`, og.`goods_name`, og.`goods_sn`, og.`goods_price`, og.`goods_number`, og.`send_number`, sp.`suppliers_name` FROM ' .
 							   $order_goods_table . //物料编码 名称 下单数 已拆 未拆 供应商
 							   ' AS og LEFT JOIN '. $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
-						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' . 
+						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' .
 							   ' WHERE og.`order_id` = ' . $order_id . ' AND sp.`suppliers_name` IS NOT NULL';
 			$order_goods_arr = $GLOBALS['db']->getAll($order_goods_sql);
 
@@ -260,12 +260,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$order_good['attr'] = implode('/', $attr_arr);
 					}
 				}
-				
+
 				unset( $order_good );
 			}else{
 				$order_goods_arr = array();
 			}
-				
+
 			$content = array();
 
 			$content['info'] = $order_info;
@@ -274,9 +274,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 			make_json_response($content, '0', '订单详情查询成功');
 
 		}
-		
+
 		/**
-		 * 接口名称：订单列表  
+		 * 接口名称：订单列表
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(具体参数在parameters下的params， "where"可以为空，有则 表示搜索条件，"limit"表示页面首条记录所在行数, "offset"表示要显示的数量)：
@@ -300,7 +300,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *  {
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "订单查询成功",
-		 *	    "content": { 
+		 *	    "content": {
 		 *	    	"data":[
 		 *	        {
 		 *	        		"order_id":1, //订单ID
@@ -322,7 +322,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		public	function pageAction(){
 			$content = $this->content;
 			$params = $content['parameters']['params'];
-			
+
 			$contract_table = $GLOBALS["ecs"]->table("contract");
 			$user_table = $GLOBALS["ecs"]->table("users");
 			$order_table = $GLOBALS['ecs']->table('order_info');
@@ -332,9 +332,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 				   ' FROM ' . $order_table .
 				   ' AS odr';
 
-			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr'; 	
-		
-			$where = array();	
+			$total_sql = 'SELECT COUNT(*) as `total` FROM ' . $order_table .' AS odr';
+
+			$where = array();
 			if( isset($params['where']) )
 				$where = $params['where'];
 
@@ -359,7 +359,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$order_ids = implode(',', $order_sn_id);
 
 						$where_str = ' WHERE odr.`order_id` IN(' . $order_ids . ')';
-					}	
+					}
 				}
 				if( isset( $like["user_name"] ) ){
 					$user_name_sql = 'SELECT `user_id` FROM ' . $user_table . ' WHERE `companyName` like \'%' . $like['user_name'] . '%\' ORDER BY `user_id` ASC';
@@ -382,7 +382,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				if( isset( $like["contract_name"] ) && $like['contract_name'] ){
 					$contract_name_sql = 'SELECT `contract_id` FROM ' . $contract_table . ' WHERE `contract_name` like \'%' . $like['contract_name'] . '%\' ORDER BY `contract_id` ASC';
 					$contract_name_arr = $GLOBALS['db']->getAll( $contract_name_sql );
-					
+
 					if( !empty( $contract_name_arr ) ){
 						$contract_id = array();
 						foreach ($contract_name_arr as $k => $v) {
@@ -397,14 +397,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 				}
 			}
-			
+
 			if( isset( $where["status"] ) )
 			{
 				if( $where_str )
 					$where_str .= " AND odr.`order_status` = " . $where['status'];
 				else
 					$where_str .= " WHERE odr.`order_status` = " . $where['status'];
-			}	
+			}
 
 			if( isset( $where["due_date1"] ) && isset( $where["due_date2"] ) )
 			{
@@ -445,8 +445,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				   $where_str . 'ORDER BY odr.`add_time` DESC' .
 				   ' LIMIT ' . $params['limit'].','.$params['offset'];
 			$orders = $GLOBALS['db']->getAll($sql);
-			
-			$total_sql = $total_sql . 
+
+			$total_sql = $total_sql .
 						' LEFT JOIN ' . $user_table . ' as usr ON odr.`user_id` = usr.`user_id` '.
 				   		' LEFT JOIN ' . $contract_table . ' as crt ON odr.`contract_sn` = crt.`contract_num` ' .
 						$where_str;
@@ -482,7 +482,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response("", "-1", "订单查询失败");
 			}
 		}
-		
+
 		/**
 		 * 接口名称：子订单列表
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
@@ -538,7 +538,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//所有子订单id
 			$all_order_sql = 'SELECT `order_id` FROM ' . $order_info_table . ' WHERE `parent_order_id` = ' . $order_id;
 			$all_order_id = $GLOBALS['db']->getAll( $all_order_sql );
-				
+
 			if( empty( $all_order_id ) ){
 
 				$content = array();
@@ -546,7 +546,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$content['total'] = 0;
 
 				make_json_response($content, '0', '查询子订单成功');
-			}	
+			}
 
 			$all_order_id_arr = array();
 
@@ -584,10 +584,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				else
 					$goods_attr_val[ $v['goods_id'] ] = array( $v['attr_value'] );
 			}
-			
+
 			foreach( $goods_attr_val as &$v ){
 				$v = implode('/', $v);
-			}	
+			}
 			unset($v);
 
 			foreach ($childer_orders as &$v) {
@@ -600,7 +600,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content['data'] = $childer_orders;
 			$content['total'] = count( $all_order_id );
 			make_json_response($content, '0', '子订单查询成功');
-			
+
 		}
 
 		/**
@@ -645,7 +645,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    }
 		 *	    ]
 		 *	}
-		 *	
+		 *
 		 */
 		public function searchChilderListAction(){
 			$content = $this->content;
@@ -677,7 +677,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$user_table = $GLOBALS['ecs']->table('users');
 					$users_sql = 'SELECT `user_id` FROM ' . $user_table . ' WHERE `companyName` like \'%' . $like["user_name"] . '%\'';
 					$resultUsers = $GLOBALS['db']->getAll($users_sql);
-					
+
 					if( empty( $resultUsers ) )
 					{
 						$content = array();
@@ -693,7 +693,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						{
 							$users[] = $u['user_id'];
 						}
-						
+
 						$users_ids = implode(',', $users);
 						$where_str = ' WHERE odr.`user_id` in(' . $users_ids . ')';
 					}
@@ -724,7 +724,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					if( $where_str )
 						$where_str .= " AND odr.`contract_sn` IN(" . $contracts_str . ")";
 					else
-						$where_str .= " WHERE odr.`contract_sn` IN(" . $contracts_str . ")";				
+						$where_str .= " WHERE odr.`contract_sn` IN(" . $contracts_str . ")";
 
 				}
 
@@ -797,7 +797,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$content['total'] = 0;
 
 				make_json_response($content, '0', '查询子订单成功');
-			}	
+			}
 
 			$order_str = ' ORDER BY odr.`add_time` DESC';
 			$limit_str = ' LIMIT ' . intval( $params['limit'] ) . ',' . intval( $params['offset'] );
@@ -829,10 +829,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				else
 					$goods_attr_val[ $v['goods_id'] ] = array( $v['attr_value'] );
 			}
-			
+
 			foreach( $goods_attr_val as &$v ){
 				$v = implode('/', $v);
-			}	
+			}
 			unset($v);
 
 			foreach ($childer_orders as &$v) {
@@ -847,14 +847,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 			make_json_response($content, '0', '子订单查询成功');
 
 		}
-		
+
 		public	function updateAction(){
 			$content = $this->content;
 			$params = $content['parameters'];
 
-			
+
 		}
-		
+
 		/**
 		 * 接口名称：子订单拆分初始化
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
@@ -872,7 +872,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *  {
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "订单物品拆分信息获取成功",
-		 *	    "content": { 
+		 *	    "content": {
 		 *	    	"good":
 		 *	        {
 		 *	        	"goods_name":1, //商品名
@@ -932,7 +932,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			//商品详情
 			$good_sql = 'SELECT og.`goods_name`, og.`goods_price_send_buyer` as `goods_price`, og.`goods_number`, og.`send_number`, og.`goods_sn`, s.`suppliers_name`, s.`suppliers_id`, ' .
 						' o.`contract_sn`, ' .
-						' IFNULL(c.rate,0.00) AS `rate`, g.`cat_id` FROM ' . $order_goods_table . 
+						' IFNULL(c.rate,0.00) AS `rate`, g.`cat_id` FROM ' . $order_goods_table .
 						' AS og LEFT JOIN ' . $goods_table . ' AS g ON g.`goods_id` = og.`goods_id` LEFT JOIN ' . $suppliers_table .
 						' AS s ON s.`suppliers_id` = g.`suppliers_id` ' . ' LEFT JOIN ' . $order_info_table .' AS o ON o.`order_id` = og.`order_id` ' .
 						' LEFT JOIN ' . $contract_table . ' AS c ON c.`contract_num` = o.`contract_sn` ' .
@@ -962,7 +962,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$shipping_price = $GLOBALS['db']->getRow( $shipping_price_sql );
 			$order['shipping_price_info'] = '';
 			$order['shipping_price'] = 0;
-			
+
 			if( !empty( $shipping_price ) ){
 
 				$m_arr = array();
@@ -971,7 +971,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				}
 				$order['shipping_price_info'] = $shipping_price['shipping_fee'];
 			}
-			
+
 			$goods['remain_number'] = $goods['goods_number'] - $goods['send_number'];//未拆单
 			$order['split_number'] = $goods['remain_number'];//拆单数量
 			$order['finance'] = round( $goods['goods_price'] * $goods['split_number'] * $goods['rate'], 2 );//金融费
@@ -1006,7 +1006,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order['remain_number'] = $goods['remain_number'];
 			$order['goods_price'] = $goods['goods_price'];
 			$order['rate'] = $goods['rate'];
-			
+
 			unset($goods['remain_number']);
 			unset($goods['goods_price']);
 			unset($goods['rate']);
@@ -1045,8 +1045,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "订单物品拆分成功",
 		 *	    "content": {}
-		 *	}   
-		 */	        	
+		 *	}
+		 */
 		public function splitAction()
 		{
 			$content = $this->content;
@@ -1079,7 +1079,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
 			$sql = 'SELECT * FROM ' . $order_goods_table . ' WHERE `goods_id` = ' . $goods_id .' AND `order_id` = '. $order_id;
 			$order_good = $GLOBALS['db']->getRow( $sql );
-			
+
 			if( empty( $order_good ) ){
 				make_json_response('', '-1', '主订单id和商品id不正确');
 			}
@@ -1094,11 +1094,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$parent_order = $GLOBALS['db']->getRow( $order_info_sql );
 			if( empty($parent_order) )
 				make_json_response('', '-1', '主订单id错误');
-			
+
 			if( $parent_order['parent_order_id'] || $parent_order['parent_order_sn'] ){
 				make_json_response('', '-1', '已经拆分的子订单不能被再次拆分');
 			}
-			
+
 			//*****************金融费计算 BEGIN **************
 			$contract_sn = $parent_order['contract_sn'];
 			if( empty( $finance) ){
@@ -1118,7 +1118,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$goods_total_price -= $contract_amount['cash_amount_valid'];
 						$finance = round( ( $goods_total_price * $bill_used_days * $finance_rate ) / 100 , 2);
 					}
-					
+
 				}
 
 			}
@@ -1147,14 +1147,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}else{
 				$childer_sn_new = $parent_order['order_sn'] . '-1';
 			}
-			
+
 			//复制主订单信息
 			$childer_order = $parent_order;
 			$childer_order['order_sn'] = $childer_sn_new;
 			$childer_order['parent_order_id'] = $parent_order['order_id'];
 			$childer_order['parent_order_sn'] = $parent_order['order_sn'];
 			$childer_order['best_time'] = $parent_order['best_time'];
-			
+
 			$childer_order['goods_amount'] = $send_number * $goods_price;
 			$childer_order['order_amount'] = $send_number * $goods_price;
 
@@ -1176,6 +1176,7 @@ require(dirname(__FILE__) . '/includes/init.php');
             $childer_order['invoice_no'] = '';
             $childer_order['money_paid'] = 0;
 
+            $childer_order['bill_used_days'] = $bill_used_days;
             $childer_order['financial_send_rate'] = $finance_rate * 100;
             $childer_order['financial_arr_rate'] = 0;
             $childer_order['financial_send'] = $finance_manual;//只保存手动更改的金融费
@@ -1197,15 +1198,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$order_amount_send_saler = $goods_price_send_saler * $send_number + $shipping_fee;
 			$childer_order['order_amount_send_saler'] = $order_amount_send_saler;
 			//***************采购发货信息 END***************
-				
+
             $childer_order['order_amount_arr_buyer'] = 0;
             $childer_order['order_amount_arr_saler'] = 0;
 
 			unset( $childer_order['order_id'] );
-			
+
 			$childer_order_sql = 'INSERT INTO ' . $order_info_table .'(';
 			$childer_order_keys = array_keys( $childer_order );
-			
+
 			foreach ($childer_order_keys as $v) {
 				$childer_order_sql .= '`' . $v .'`,';
 			}
@@ -1220,7 +1221,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$childer_order_sql = $childer_order_sql . $v . ',';
 			}
 			$childer_order_sql = substr($childer_order_sql, 0, -1) . ")";
-			
+
 			// $GLOBALS['db']->query("START TRANSACTION");//开启事务
 			$createOrder = $GLOBALS['db']->query($childer_order_sql);
 			// $new_order_id = $GLOBALS['db']->insert_id();
@@ -1239,13 +1240,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 				// $order_good['check_price'] = $goods_price;
 				$order_good['check_number'] = $send_number;
 				$order_good['goods_number_send_buyer'] = $send_number;//发货数量
-				$order_good['goods_price_send_buyer'] = $goods_price;//发货单价	
+				$order_good['goods_price_send_buyer'] = $goods_price;//发货单价
 
 				$order_good['goods_number_send_saler'] = $send_number;//发货数量
 				$order_good['goods_price_send_saler'] = $goods_price_send_saler;//发货单价
 				$order_good_keys = array_keys( $order_good );
 				$order_good_sql = 'INSERT INTO ' . $order_goods_table .'(';
-				
+
 				foreach ($order_good_keys as $v) {
 					$order_good_sql .= '`' . $v .'`,';
 				}
@@ -1268,13 +1269,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$order_info_sql = 'UPDATE ' . $order_goods_table . ' SET `send_number` = `send_number` + ' . $send_number .
 										' WHERE `order_id` = ' . $order_id . ' AND `goods_id` = ' . $goods_id . ' LIMIT 1';
 					$order_info_update = $GLOBALS['db']->query( $order_info_sql );
-					
+
 					$parent_order_sql = ' UPDATE ' . $order_info_table . ' SET `order_status` = ' .
 							       		POS_HANDLE . ' WHERE `order_id` = ' . $parent_order['order_id'] . ' LIMIT 1'; //父订单状态-处理中
-					$parent_order_update = $GLOBALS['db']->query( $parent_order_sql );		       		
-						
+					$parent_order_update = $GLOBALS['db']->query( $parent_order_sql );
 
-					if( $order_info_update && $parent_order_update ){					
+
+					if( $order_info_update && $parent_order_update ){
 						make_json_response('', '0', '订单拆分成功');
 					}else{
 						$GLOBALS['db']->query('DELETE FROM ' . $order_info_table . ' WHERE `order_sn` = ' . $childer_sn_new);
@@ -1315,20 +1316,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *  {
 		 *		"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "",
-		 *	    "content": { 
+		 *	    "content": {
 		 *	    	"info"://订单
 		 *	        {
 		 *	        	"order_id":1,//订单id
 		 *	        	"order_status":0,//订单状态 0 '未确认', 1 '已确认', 2 '待收货', 3 '已完成', 4 '订单取消'
 		 *	        	"order_sn":"os122311",//订单编号
-		 *	        	"user_id":1,//下单人id 
+		 *	        	"user_id":1,//下单人id
 		 *	        	"user_name":"王x",//下单人
 		 *	        	"add_time":"2015-01-01:11",//拆单时间
 		 *	        	"contract_sn":"10000",//合同号
 		 *	        	"contract_name":"钢材销售",//合同名称
 		 *	        	"company_name":"中铁一局",//公司名称
 		 *          	"check_status":0,//验签状态
-		 * 
+		 *
 		 *	        	"consignee":"aa",//收货人
 		 *	        	"address":"xx地址",//收货地址
 		 *	        	"mobile":"13011111111",//手机号码
@@ -1344,7 +1345,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	        	"goods_id":1,//商品id
 		 *	        	"goods_name":"螺纹hb400",//商品名称
 		 *	        	"attr":"45/T450/gangjin",//规格/型号/材质
-		 *	        	
+		 *
 		 *	        	"goods_number_send_buyer":90,//销售信息.发货数量 = 子订单数量
 		 *	        	"goods_price_send_buyer":20, //销售信息.发货单价 = 采购信息.发货单价 + 加价幅度
 		 *	        	"shipping_fee_send_buyer":120,//销售信息.发货物流费
@@ -1362,7 +1363,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	        	"shipping_fee_send_saler":120,//采购信息.发货物流费
 		 *	        	"payment_send":100,//采购信息.发货付款方式
 		 *	        	"order_amount_send_saler":1800,//采购信息.发货总金额 = 物流费 + 金融费 + 单价 * 数量
-		 *	        	
+		 *
 		 *          	"goods_number_arr_saler":90,//采购信息.到货数量 = 实际到货数量
 		 *	        	"goods_price_arr_saler":20, //采购信息.到货单价 = 采购信息.发货单价
 		 *	        	"shipping_fee_arr_saler":120,//采购信息.到货物流费
@@ -1390,7 +1391,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	         	"取消验签"
 		 *	        ]
 		 *	    }
-		 *	 }   
+		 *	 }
 		 */
 		public function childerDetailAction()
 		{
@@ -1416,7 +1417,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					 	 ' odr.`order_amount_send_buyer`, odr.`order_amount_arr_buyer`, odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`, ' .//总金额
 					 	 ' odr.`shipping_info`, odr.`shipping_log`, ' .//物流信息
 					 	 ' odr.`suppers_id` ' .//供应商信息
-						 'FROM ' .$order_info_table . ' AS odr LEFT JOIN ' . $user_table . '  AS usr ON odr.`user_id` = usr.`user_id` LEFT JOIN ' . $contract_table . ' AS crt ON odr.`contract_sn` = crt.`contract_num` ' . 
+						 'FROM ' .$order_info_table . ' AS odr LEFT JOIN ' . $user_table . '  AS usr ON odr.`user_id` = usr.`user_id` LEFT JOIN ' . $contract_table . ' AS crt ON odr.`contract_sn` = crt.`contract_num` ' .
 						 ' WHERE odr.`order_id` = ' . $order_id;
 			$order_info = $GLOBALS['db']->getRow( $order_sql );
 
@@ -1457,7 +1458,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 							   'og.`goods_number_arr_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`, og.`goods_price_arr_buyer`, og.`goods_price_arr_saler` FROM ' .
 							   $order_goods_table . //物料编码 名称 下单数 供应商
 							   ' AS og LEFT JOIN '. $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
-						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' . 
+						 	   'LEFT JOIN ' . $suppliers_table . ' AS sp ON g.`suppliers_id` = sp.`suppliers_id`' .
 							   ' WHERE og.`order_id` = ' . $order_id;
 			$order_good = $GLOBALS['db']->getRow($order_goods_sql);
 
@@ -1484,7 +1485,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					}
 				// }
 				// unset( $order_good );
-				
+
 				//采购信息
 				// $order_good['goods_price_arr_saler'] = $order_good['goods_price_send_saler'];//销售订单 商品记录 价格
 				// $order_good['goods_number_send_saler'] = $order_good['goods_number_send_buyer'];//销售订单 商品记录 数量
@@ -1503,7 +1504,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_good['shipping_fee_arr_buyer'] = $order_info['shipping_fee_arr_buyer'];//销售订单 物流
 				$order_good['financial_send'] = $order_info['financial_send'];//销售订单 发货金融费
 				$order_good['financial_arr'] = $order_info['financial_arr'];//销售订单 到货金融费
-				
+
 				$order_good['order_amount_send_buyer'] = $order_info['order_amount_send_buyer'];//销售订单 发货总金融
 				$order_good['order_amount_arr_buyer'] = $order_info['order_amount_arr_buyer'];//销售订单 到货总金融
 
@@ -1528,9 +1529,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 					unset( $order_info['suppers_id'] );
 					$suppliers = $GLOBALS['db']->getOne( $suppliers_sql );
 					$suppliers_name = empty( $suppliers ) ? '' : $suppliers;
-				}	
+				}
 				$order_info['suppliers_name'] = $suppliers_name;
-				
+
 
 				if( empty( $order_info['shipping_log'] ) ){
 					$shipping['log'] = array();
@@ -1541,7 +1542,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						foreach( $shipping['log'] as &$l )
 							$l['content'] = urldecode( $l['content'] );
 					}
-				}				
+				}
 
 
 				$sale_status = C('order_status');//销售订单状态,用于页面显示
@@ -1618,7 +1619,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 						//***************到货改价数据初始化 END**********
 
-						break;	
+						break;
 
 					//************************** 采购发货中 BEGIN **************************
 					case SOS_SEND_SC://供应商已验签(发货)
@@ -1632,7 +1633,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$buttons = array('到货改价');
 						break;
 					//************************** 采购发货中 END **************************
-					
+
 					case SOS_ARR_CC://客户已验签(到货)
 						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
@@ -1661,7 +1662,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$buttons = array();
 						break;
 					//************************** 采购到货中 END **************************
-					
+
 					default://未命名状态
 						$cs = $order_info['child_order_status'];
 						$order_info['order_status'] = $sale_status[SALE_ORDER_UNCONFIRMED];
@@ -1688,7 +1689,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				$order_good = array();
 				$buttons = array();
 			}
-							
+
 			$content = array();
 
 			$content['info'] = $order_info;
@@ -1701,7 +1702,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 		}
 
-	
+
 		/**
 		 * 接口名称:子订单详情- 平台操作按钮对应的接口("确认"  "发货验签" "取消验签"...)
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
@@ -1816,7 +1817,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						    $sign_purchase_send[$sf] = $submit_purchase_send[$sf];
 						    $sign_purchase_arr[$sf] = $submit_purchase_arr[$sf];
 						}
-						
+
 						//签名相关序列化（取签名数据）
 						$sign_sale_send = serialize( $sign_sale_send );
 					    $sign_sale_arr = serialize( $sign_sale_arr );
@@ -1863,12 +1864,12 @@ require(dirname(__FILE__) . '/includes/init.php');
 					    $GLOBALS['db']->autoInsertMut( $sign_table, $mut_data );//插入4条签名数据到 `bank_sign`
 
 						//******************  插入子订单的银行签名信息 END *****************
-						
+
 						if( $childer_order_update )
 							make_json_response('', '0', '确认 成功');
 						else
 							make_json_response('', '-1', '确认 失败');
-					}		
+					}
 
 					break;
 				case '发货验签':
@@ -1880,10 +1881,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 							make_json_response('', '0', '发货验签 成功');
 						else
 							make_json_response('', '-1', '发货验签 失败');
-					}					
+					}
 					break;
 				case '取消验签':
-					
+
 					if( $order_status['child_order_status'] == SOS_SEND_CC ){//客户已验签
 						$childer_order_update_sql = 'UPDATE ' . $order_info_table . ' SET `child_order_status` = %d, `order_status` = %d, `bill_used` = 0, `cash_used`= 0' . ' WHERE `order_id` = ' . $order_id;
 						$childer_order_update_sql = sprintf($childer_order_update_sql, SOS_CONFIRMED, POS_HANDLE);
@@ -1930,7 +1931,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					 	 ' odr.`financial_send`, odr.`financial_send_rate`, ' .//金融费
 					 	 ' odr.`order_amount_send_buyer`, odr.`order_amount_arr_buyer`, odr.`order_amount_send_saler`, odr.`order_amount_arr_saler`, ' .//总金额
 					 	 ' odr.`shipping_info`, odr.`shipping_log` ' .//物流信息
-						 'FROM ' .$order_info_table . ' AS odr' . 
+						 'FROM ' .$order_info_table . ' AS odr' .
 						 ' WHERE odr.`order_id` = ' . $order_id;
 					$order_info = $GLOBALS['db']->getRow( $order_sql );
 
@@ -1942,7 +1943,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$order_goods_sql = 'SELECT og.`goods_number_send_buyer`, og.`goods_number_send_saler`, og.`goods_number_arr_buyer`, ' .
 									   'og.`goods_number_arr_saler`, og.`goods_price_send_buyer`, og.`goods_price_send_saler`, og.`goods_price_arr_buyer`, og.`goods_price_arr_saler` FROM ' .
 									   $order_goods_table . //物料编码 名称 下单数 供应商
-									   ' AS og ' . 
+									   ' AS og ' .
 									   ' WHERE og.`order_id` = ' . $order_id;
 					$order_good = $GLOBALS['db']->getRow($order_goods_sql);
 
@@ -2007,7 +2008,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 							make_json_response('', '0', '到货验签 成功');
 						else
 							make_json_response('', '-1', '到货验签 失败');
-					}					
+					}
 					break;
 				case '撤销订单'://更改子订单状态 恢复主订单商品对应子订单的数量 判断是否可以取消主订单
 					if( $order_status['child_order_status'] >= SOS_SEND_PC ){//已验签的 无法取消订单
@@ -2025,7 +2026,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$send_number_data = $GLOBALS['db']->getRow( $order_sql );
 
 					$send_number_new = ( $send_number_data['send_number'] - $order_status['goods_number'] < 0 ) ? 0 : ( $send_number_data['send_number'] - $order_status['goods_number'] );
-					
+
 					$update_order_sql = 'UPDATE ' . $order_goods_table . ' SET `send_number` = ' . $send_number_new .
 										' WHERE `order_id` = ' . $order_status['parent_order_id'] . ' AND `goods_id` =' . $order_status['goods_id'] . ' LIMIT 1';
 					$update_parent = $GLOBALS['db']->query( $update_order_sql );//echo '  '	. $update_order_sql;
@@ -2062,9 +2063,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 						make_json_response('', '0', '撤销订单 成功');
 					else
 						make_json_response('', '-1', '撤销订单 失败');
-					break;	
+					break;
 				default:
-					
+
 					break;
 			}
 
@@ -2099,16 +2100,16 @@ require(dirname(__FILE__) . '/includes/init.php');
 					break;
 				case SOS_ARR_PC:
 					$msg = sprintf($msg, $childer_order_status[SOS_ARR_PC]);
-					break;		
+					break;
 				case SOS_ARR_SC:
 					$msg = sprintf($msg, $childer_order_status[SOS_ARR_SC]);
 					break;
 				case SOS_ARR_PC2:
 					$msg = sprintf($msg, $childer_order_status[SOS_ARR_PC2]);
-					break;		
+					break;
 				case SOS_CANCEL:
 					$msg = sprintf($msg, $childer_order_status[SOS_CANCEL]);
-					break;	
+					break;
 				default:
 					$msg = sprintf($msg, '未知');
 					break;
@@ -2158,16 +2159,16 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$shipping_time = strval( trim( $params['shipping_time'] ) );
 
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
-			
+
 			$shipping_info['company_name'] = urlencode($company_name);
 			$shipping_info['shipping_num'] = urlencode($shipping_num);
 			$shipping_info['tel'] = urlencode($tel);
 			$shipping_info['shipping_time'] = $shipping_time;
 
 			$shippinf_info_str = json_encode( $shipping_info );
-			
+
 			$add_shipping_info_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_info` = \'' . $shippinf_info_str .
-									 '\' WHERE `order_id` = ' . $order_id; 
+									 '\' WHERE `order_id` = ' . $order_id;
 			$add_shipping = $GLOBALS['db']->query( $add_shipping_info_sql );
 
 			if( $add_shipping ){
@@ -2235,10 +2236,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$shipping_log_temp['date'] = $shipping_date;
 			array_push( $shipping_log, $shipping_log_temp );
 
-			$shipping_log_str = json_encode( $shipping_log );	
+			$shipping_log_str = json_encode( $shipping_log );
 
 			$add_shipping_log_sql = 'UPDATE ' . $order_info_table . ' SET `shipping_log` = \'' . $shipping_log_str .
-									 '\' WHERE `order_id` = ' . $order_id; 
+									 '\' WHERE `order_id` = ' . $order_id;
 
 			$add_shipping_log = $GLOBALS['db']->query( $add_shipping_log_sql );
 
@@ -2246,7 +2247,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '0', '物流信息动态添加成功');
 			} else {
 				make_json_response('', '-1', '物流信息动态添加失败');
-			}			
+			}
 		}
 
 		/**
@@ -2267,20 +2268,20 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *  {
 	     *  	"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "发货改价信息获取成功",
-		 *	    "content": 
+		 *	    "content":
 		 *	    {
 		 *	        "info":
-		 *	        { 	
+		 *	        {
 		 *	        	"order_status":"",//订单状态 0 '未确认', 1 '已确认', 2 '待收货', 3 '已完成', 4 '订单取消'
 		 *	        	"order_sn":"os122311",//订单编号
-		 *	        	"user_id":1,//下单人id 
+		 *	        	"user_id":1,//下单人id
 		 *	        	"user_name":"王x",//下单人
 		 *	        	"add_time":"2015-01-01:11",//拆单时间
 		 *	        	"contract_sn":"10000",//合同号
 		 *	        	"contract_name":"钢材销售",//合同名称
 		 *	        	"company_name":"中铁一局",//公司名称
 		 *          	"check_status":"",//验签状态
-		 * 
+		 *
 		 *	        	"consignee":"aa",//收货人
 		 *	        	"address":"xx地址",//收货地址
 		 *	        	"mobile":"13011111111",//手机号码
@@ -2294,7 +2295,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    	"form":
 		 *	    	{
 		 *	    		"order_id":142,
-		 *	    	 	"goods_price_send_buyer":100,//客户价格.物料单价 
+		 *	    	 	"goods_price_send_buyer":100,//客户价格.物料单价
 		 *	    	  	"goods_number_send_buyer":100,//客户价格.物料数量
 		 *	    	   	"suppers_id"://客户价格.实际供应商列表
 		 *	    	    [
@@ -2309,7 +2310,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    	    "shipping_fee_send_buyer":82,//客户价格.物流费用
 		 *	    	    "financial_send":1,//客户价格.金融费用
 		 *      	    "order_amount_send_buyer":200,//客户价格.发货总价
-		 *      	    
+		 *
 		 *	    	 	"goods_price_send_saler":100,//供应商价格.物料单价
 		 *	    	 	"goods_number_send_saler":100,//供应商价格.物料数量
 		 *	    	  	"shipping_fee_send_saler":82,//供应商价格.物流费用
@@ -2338,9 +2339,9 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    	 	"price_date":"2016-01-07 10:09:00"//报价日期
 		 *	    	 ]
 		 *	    	 }
-		 *	    }  	
+		 *	    }
 	     *  }
-		 * 
+		 *
 		 */
 		public function initPriceSendAction()
 		{
@@ -2371,7 +2372,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						 ' o.`shipping_fee_send_buyer`, o.`financial_send`, o.`financial_send_rate`, o.`order_amount_send_buyer`,' .
 						 ' o.`shipping_fee_send_saler`, o.`order_amount_send_saler`, ' .
 						 ' o.`inv_type`,o.`inv_payee`,o.`inv_bank_name`,o.`inv_bank_account`,o.`inv_bank_address`,o.`inv_tel`, o.`inv_fax`, o.`inv_content`, o.`inv_context`, o.`inv_company` ' .
-						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' . 
+						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' .
 						 $order_goods_table . ' AS og ON og.`order_id` = o.`order_id` LEFT JOIN ' .
 						 $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 						 ' LEFT JOIN ' . $user_table . ' AS u ON u.`user_id` = o.`user_id` ' .
@@ -2392,64 +2393,64 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_UNCONFIRMED://未确认
 						$order_info['order_status'] = $sale_status[POS_SUBMIT];
 						$order_info['check_status'] = $childer_order_status[SOS_UNCONFIRMED];
-		
+
 						break;
 					case SOS_CONFIRMED://已确认
 						$order_info['order_status'] = $sale_status[POS_HANDLE];
 						$order_info['check_status'] = $childer_order_status[SOS_CONFIRMED];
-		
+
 						break;
 					case SOS_SEND_CC://客户已验签(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_CC];
-		
+
 						break;
 					case SOS_SEND_PC://平台已验签(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC];
-		
+
 						break;
 					case SOS_SEND_PP://平台已推单(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PP];
 						break;
-						
+
 					case SOS_SEND_SC://供应商已验签(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_SC];
-		
+
 						break;
 					case SOS_SEND_PC2://平台已验签(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC2];
-		
+
 						break;
 					case SOS_ARR_CC://客户已验签(到货)
 						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
-		
+
 						break;
 					case SOS_ARR_PC://平台已验签(到货)
 						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC];
-		
+
 						break;
 					case SOS_ARR_SC://供应商已验签(到货)
 						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_SC];
-		
+
 						break;
 					case SOS_ARR_PC2://平台已验签(到货)
 						$order_info['order_status'] = $sale_status[POS_COMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC2];
-		
+
 						break;
 					case SOS_CANCEL://验签已取消
 						$order_info['order_status'] = $sale_status[POS_CANCEL];
 						$order_info['check_status'] = $childer_order_status[SOS_CANCEL];
-		
+
 						break;
-					
+
 					default://未命名状态
 						$order_info['order_status'] = '未知';
 						$order_info['check_status'] = '未知';
@@ -2579,7 +2580,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		        "financial_send": "0.00",//客户价格.金融费用
 		 *		        "financial_send_rate": "0.00",//客户价格.金融费率 (小数数字)
 		 *		        "pay_id":0//支付方式id
-	     * 
+	     *
 	     *          }
 	     *      }
 	     *  }
@@ -2589,7 +2590,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    "message": "发货改价成功",
 		 *	    "content": {}
 		 *	}
-		 * 
+		 *
 		 */
 		public function updatePriceSendAction()
 		{
@@ -2602,7 +2603,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			if( !isset( $params['suppers_id'] ) ){
 				make_json_response('', '-1', '请选择供应商');
-			}	
+			}
 			$order_id = intval( $params['order_id'] );
 
 			$order_info_table = $GLOBALS['ecs']->table('order_info');
@@ -2616,7 +2617,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$bank_sign_table = $GLOBALS['ecs']->table('bank_sign');//银行签名
 
 			//检查订单状态
-			$order_info_sql = 'SELECT o.`child_order_status`, o.`order_sn`, og.`goods_name`, g.`goods_id`, g.`price_num`, g.`price_rate` FROM ' . $order_info_table .
+			$order_info_sql = 'SELECT o.`child_order_status`, o.`order_sn`, o.`order_amount_send_buyer`, og.`goods_name`, g.`goods_id`, g.`price_num`, g.`price_rate` FROM ' . $order_info_table .
 							  ' AS o LEFT JOIN ' . $order_goods_table . ' AS og ON o.`order_id` = og.`order_id` ' .
 							  ' LEFT JOIN ' . $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 					 		  ' WHERE o.`order_id` = ' . $order_id;
@@ -2661,6 +2662,15 @@ require(dirname(__FILE__) . '/includes/init.php');
 
 			$order_info['order_amount_send_buyer'] = $order_amount_send_buyer;
 			// $order_info['order_amount_send_saler'] = $order_amount_send_saler;
+
+			//调整用户改价后的额度
+			$cost_more = $order_amount_send_buyer - $order_status['order_amount_send_buyer'];
+			if( $cost_more > 0 ){//大于改价前
+
+
+
+			}
+
 			$order_info['pay_id'] = $pay_id;
 
 			$order_info_update_sql = 'UPDATE ' . $order_info_table .' SET ';
@@ -2698,7 +2708,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$price_log_table = $GLOBALS['ecs']->table( 'price_log' );
 					$price_log_sql = 'INSERT INTO ' . $price_log_table . ' (';
 
-					//商品属性	
+					//商品属性
 					$goods_attr_sql = 'SELECT `goods_id`, `attr_value` FROM ' . $goods_attr_table .' WHERE `goods_id` = ' . $order_status['goods_id'];
 					$goods_attr_arr = $GLOBALS['db']->getAll( $goods_attr_sql );
 
@@ -2706,11 +2716,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 					foreach ($goods_attr_arr as $v) {
 						$goods_attr_val[] = $v['attr_value'];
 					}
-					
+
 					$goods_attr_str = implode('/', $goods_attr_val);
 
 					/*
-					
+
 					$price_log = array();
 					$price_log['order_id'] = $order_id;
 					$price_log['goods_name'] = $order_status['goods_name'];
@@ -2748,11 +2758,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$price_log_sql = $price_log_sql . $v . ",";
 					}
 					$price_log_sql = substr($price_log_sql, 0, -1) . ')';
-					
+
 					$GLOBALS['db']->query( $price_log_sql );//保存到历史报价
 					*/
 					// 销售订单.发货验签价格更新
-					
+
 					$sign_find_sql = 'SELECT `submit_data`, `sign_data`, `sign_id` FROM ' . $bank_sign_table . ' WHERE `sign_type` = 1 AND `order_sn` = \'' . $order_sn . '\'';
 					$sign_find = $GLOBALS['db']->getRow( $sign_find_sql );
 
@@ -2801,13 +2811,13 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *  {
 	     *  	"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "到货改价信息获取成功",
-		 *	    "content": 
+		 *	    "content":
 		 *	    {
 		 *	    	"info":
-		 *	        { 	
+		 *	        {
 		 *	        	"order_status":"",//订单状态 0 '未确认', 1 '已确认', 2 '待收货', 3 '已完成', 4 '订单取消'
 		 *	        	"order_sn":"os122311",//订单编号
-		 *	        	"user_id":1,//下单人id 
+		 *	        	"user_id":1,//下单人id
 		 *	        	"user_name":"王x",//下单人
 		 *	        	"add_time":"2015-01-01:11",//拆单时间
 		 *	        	"contract_sn":"10000",//合同号
@@ -2843,7 +2853,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    	    "shipping_fee_arr_buyer":82,//客户价格.物流费用
 		 *	    	    "financial_arr":1,//客户价格.金融费用
 		 *      	    "order_amount_arr_buyer":200,//客户价格.发货总价
-		 *      	
+		 *
 		 *	    	 	"goods_price_arr_saler":100,//供应商价格.物料单价
 		 *	    	 	"goods_number_arr_saler":100,//供应商价格.物料数量
 		 *	    	  	"shipping_fee_arr_saler":82,//供应商价格.物流费用
@@ -2856,7 +2866,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *	    	    }
 		 *	    	    ]
 		 *	    	}
-		 *	    }  	
+		 *	    }
 	     *  }
 		 */
 		public function initPriceArrAction()
@@ -2887,7 +2897,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						 ' o.`consignee`,o.`address`,o.`mobile`,o.`sign_building`, o.`bill_used_days`, ' .
 						 ' o.`shipping_fee_arr_buyer`, o.`financial_arr`, o.`financial_arr_rate`, o.`shipping_fee_arr_saler`, ' .
 						 ' o.`inv_type`,o.`inv_payee`,o.`inv_bank_name`,o.`inv_bank_account`,o.`inv_bank_address`,o.`inv_tel`, o.`inv_fax`, o.`inv_content`, o.`inv_context`, o.`inv_company` ' .
-						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' . 
+						 ' FROM ' . $order_info_table . ' AS o LEFT JOIN ' .
 						 $order_goods_table . ' AS og ON og.`order_id` = o.`order_id` LEFT JOIN ' .
 						 $goods_table . ' AS g ON og.`goods_id` = g.`goods_id` ' .
 						 ' LEFT JOIN ' . $user_table . ' AS u ON u.`user_id` = o.`user_id` ' .
@@ -2930,64 +2940,64 @@ require(dirname(__FILE__) . '/includes/init.php');
 					case SOS_UNCONFIRMED://未确认
 						$order_info['order_status'] = $sale_status[POS_SUBMIT];
 						$order_info['check_status'] = $childer_order_status[SOS_UNCONFIRMED];
-			
+
 						break;
 					case SOS_CONFIRMED://已确认
 						$order_info['order_status'] = $sale_status[POS_HANDLE];
 						$order_info['check_status'] = $childer_order_status[SOS_CONFIRMED];
-			
+
 						break;
 					case SOS_SEND_CC://客户已验签(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_CC];
-			
+
 						break;
 					case SOS_SEND_PC://平台已验签(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC];
-			
+
 						break;
 					case SOS_SEND_PP://平台已推单(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PP];
-			
+
 						break;
 					case SOS_SEND_SC://供应商已验签(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_SC];
-			
+
 						break;
 					case SOS_SEND_PC2://平台已验签(发货)
 						$order_info['order_status'] = $sale_status[POS_CHECK];
 						$order_info['check_status'] = $childer_order_status[SOS_SEND_PC2];
-			
+
 						break;
 					case SOS_ARR_CC://客户已验签(到货)
 						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_CC];
-			
+
 						break;
 					case SOS_ARR_PC://平台已验签(到货)
 						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC];
-			
+
 						break;
 					case SOS_ARR_SC://供应商已验签(到货)
 						$order_info['order_status'] = $sale_status[POS_BALANCE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_SC];
-			
+
 						break;
 					case SOS_ARR_PC2://平台已验签(到货)
 						$order_info['order_status'] = $sale_status[POS_COMPLETE];
 						$order_info['check_status'] = $childer_order_status[SOS_ARR_PC2];
-			
+
 						break;
 					case SOS_CANCEL://验签已取消
 						$order_info['order_status'] = $sale_status[POS_CANCEL];
 						$order_info['check_status'] = $childer_order_status[SOS_CANCEL];
-			
+
 						break;
-					
+
 					default://未命名状态
 						$order_info['order_status'] = '未知';
 						$order_info['check_status'] = '未知';
@@ -3058,7 +3068,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 			$content['invoice'] = $invoice;
 			$content['form'] = $order_info;
 
-			make_json_response($content, '0', '到货改价初始化成功');	
+			make_json_response($content, '0', '到货改价初始化成功');
 
 		}
 
@@ -3087,7 +3097,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 		 *		        "financial_arr": "0.00",//客户价格.金融费用
 		 *		        "financial_arr_rate": "0.00",//客户价格.金融费率 (小数数字)
 		 *	    	    "pay_id":0//支付方式id
-		 *	    	
+		 *
 	     *           }
 	     *      }
 	     *  }
@@ -3216,7 +3226,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 						$submit_data = unserialize( $sign_find['submit_data'] );
 						$sign_data = unserialize( $sign_find['sign_data'] );
 
-						$sign_data['extraData'] = $submit_data['extraData'] = '1:' . $order_sn . ':' . $goods_price_arr_buyer . ':' . $goods_number_arr_buyer;//销售到货						
+						$sign_data['extraData'] = $submit_data['extraData'] = '1:' . $order_sn . ':' . $goods_price_arr_buyer . ':' . $goods_number_arr_buyer;//销售到货
 						$sign_data['allGoodsMoney'] = $submit_data['allGoodsMoney'] = sprintf('%0.2f', $order_amount_arr_buyer);//销售金额
 
 						$submit_data = serialize( $submit_data );
@@ -3238,22 +3248,22 @@ require(dirname(__FILE__) . '/includes/init.php');
 							$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $adjust_count . ' WHERE `contract_num` = \'' .
 										  $contract_sn . '\' LIMIT 1';
 							$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` - ' .$adjust_count . ' WHERE `order_id` = ' .
-										  $order_id . ' LIMIT 1'; 
+										  $order_id . ' LIMIT 1';
 						}else{//返还票据（现金）
 							if( $cash_used == 0 ){//只有票据
 								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_valid` = `bill_amount_valid` + ' . $adjust_count . ' WHERE `contract_num` = \'' .
 										  	  $contract_sn . '\' LIMIT 1';
 								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `bill_used` = `bill_used` - ' .$adjust_count . ' WHERE `order_id` = ' .
-										  $order_id . ' LIMIT 1'; 
+										  $order_id . ' LIMIT 1';
 							}else{//票据 + 现金
 								$adjust_bill = $adjust_count - $cash_used;
 								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` + ' . $cash_used . ', `bill_amount_valid` = `bill_amount_valid` + ' . $adjust_bill . ' WHERE `contract_num` = \'' .
 										  	  $contract_sn . '\' LIMIT 1';
 								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` - ' .$cash_used . ',`bill_used` = `bill_used` - ' . $adjust_bill . ' WHERE `order_id` = ' .
-										  $order_id . ' LIMIT 1';										  	 
+										  $order_id . ' LIMIT 1';
 							}
-						}	
-						
+						}
+
 					}else if( $adjust_count < 0 ) {//追加
 
 						$contract_amount_sql = 'SELECT `cash_amount_valid`, `bill_amount_valid` FROM ' . $contract_table . ' WHERE `contract_num` = \'' .
@@ -3264,19 +3274,19 @@ require(dirname(__FILE__) . '/includes/init.php');
 							$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = `cash_amount_valid` - ' . abs( $adjust_count ) . ' WHERE `contract_num` = \'' .
 										  $contract_sn . '\' LIMIT 1';
 							$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` + ' . abs( $adjust_count ) . ' WHERE `order_id` = ' .
-										  $order_id . ' LIMIT 1'; 			  
+										  $order_id . ' LIMIT 1';
 						}else{//追加票据（现金）
 							if( $contract_amount['cash_amount_valid'] == 0 ){//只有票据
 								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `bill_amount_valid` = `bill_amount_valid` - ' . abs( $adjust_count ) . ' WHERE `contract_num` = \'' .
 										  	  $contract_sn . '\' LIMIT 1';
 								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `bill_used` = `bill_used` + ' . abs( $adjust_count ) . ' WHERE `order_id` = ' .
-										  $order_id . ' LIMIT 1'; 		 
+										  $order_id . ' LIMIT 1';
 							}else{//票据 + 现金
 								$adjust_bill = abs( $contract_amount['cash_amount_valid'] + $adjust_count );
 								$adjust_sql = 'UPDATE ' . $contract_table . ' SET `cash_amount_valid` = 0 ' . ', `bill_amount_valid` = `bill_amount_valid` - ' . $adjust_bill . ' WHERE `contract_num` = \'' .
 										  	  $contract_sn . '\' LIMIT 1';
 								$amount_used_sql = 'UPDATE ' . $order_info_table . ' SET `cash_used` = `cash_used` + ' . $contract_amount['cash_amount_valid'] . ',`bill_used` = `bill_used` + ' . $adjust_bill . ' WHERE `order_id` = ' .
-										  $order_id . ' LIMIT 1';										  	 			  	  
+										  $order_id . ' LIMIT 1';
 							}
 						}
 					}
@@ -3292,8 +3302,8 @@ require(dirname(__FILE__) . '/includes/init.php');
 				}
 			}else{
 				make_json_response('', '-1', '到货改价失败');
-			}	
-			
+			}
+
 		}
 
 		/**
@@ -3317,10 +3327,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *  {
 	     * 		"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "获取客户物料价格成功",
-		 *	    "content": 
+		 *	    "content":
 		 *	    {
 		 *	    	"goods_price"://供应商的物料单价
-		 *	    }  	
+		 *	    }
 	     *  }
 		 */
 		public function getSuppliersPriceAction()
@@ -3344,11 +3354,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response($content, '-1', '订单不存在');
 			}else{
 
-				$content['goods_price'] = $goods_price[0]['shop_price'];	
+				$content['goods_price'] = $goods_price[0]['shop_price'];
 
 				foreach ($goods_price as $gp) {
 					if($gp['goods_id'] == $goods_id ){
-						$content['goods_price'] = $gp['shop_price'];		
+						$content['goods_price'] = $gp['shop_price'];
 						break;
 					}
 				}
@@ -3357,14 +3367,14 @@ require(dirname(__FILE__) . '/includes/init.php');
 			}
 
 			make_json_response($content, '0', '获取客户物料价格成功');
-					 		  
+
 		}
 
 		/**
 		 * @param $suppliers_id
 		 * @param $goods_id
 		 * @param $cat_id
-		 * 
+		 *
 		 * @return $price 供应商报价
 		 */
 		private function _getSuppliersPrice($suppliers_id = 0 , $goods_id = 0, $cat_id = 0)
@@ -3413,10 +3423,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *  {
 	     * 		"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "获取金融费成功",
-		 *	    "content": 
+		 *	    "content":
 		 *	    {
 		 *	    	"finace":21//金融费
-		 *	    }  	
+		 *	    }
 	     *  }
 		 */
 		public function getFinaceFeeAction()
@@ -3455,11 +3465,11 @@ require(dirname(__FILE__) . '/includes/init.php');
 					$total -= $amount['cash_amount_valid'];
 					$finance = round( ( $total * $bill_used_days * $rate ) / 100 , 2);
 				}
-				
+
 			}
 
 			$content['finance'] = $finance;
-			
+
 			make_json_response( $content, '0', '获取金融费成功' );
 		}
 
@@ -3509,7 +3519,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 					if( $cancel_query ){
 						make_json_response('', '0', '取消订单成功');
 					}else{
-						make_json_response('', '-1', '取消订单失败');		
+						make_json_response('', '-1', '取消订单失败');
 					}
 
 				}else{
@@ -3519,10 +3529,10 @@ require(dirname(__FILE__) . '/includes/init.php');
 				make_json_response('', '-1', '取消订单失败');
 			}
 		}
-		
+
 		/**
 		 * 接口名称:取消未处理
-		 * 
+		 *
 		 * 接口地址：http://admin.zj.dev/admin/OrderInfoModel.php
 		 * 请求方法：POST
 		 * 传入的接口数据格式如下(具体参数在parameters下的params)：
@@ -3540,7 +3550,7 @@ require(dirname(__FILE__) . '/includes/init.php');
 	     *  {
 	     * 		"error": "0",("0": 成功 ,"-1": 失败)
 		 *	    "message": "取消未处理成功",
-		 *	    "content": {}  	
+		 *	    "content": {}
 	     *  }
 		 */
 		public function removeGoodsAction()

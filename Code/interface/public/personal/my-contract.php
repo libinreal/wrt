@@ -17,8 +17,8 @@
 			<div class="breadcrumbs">
 				<a href="../mall/">首页</a> &gt; <a href="index.html">个人中心</a> &gt; <span id="type-name">我的合同</span>
 				<a href="javascript:history.go(-1);" class="return">返回 &gt;</a>
-			</div>	
-			
+			</div>
+
 			<div class="order-list gray-box">
                 <div class="order-list-header clearfix">
                     <div style="height:10px;"></div>
@@ -53,7 +53,7 @@
     </thead>
     <tbody>
     <tr>
-    <th class="gray-span">公司名称:</th><td><!--[= list[i].userName || '--']--></td>
+    <th class="gray-span">公司名称:</th><td><!--[= list[i].companyName || '--']--></td>
     <th class="gray-span">合同编号:</th><td><!--[= list[i].num || '--']--></td>
     </tr>
     <tr>
